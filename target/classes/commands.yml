@@ -231,7 +231,7 @@ commands:
           - "warp"
     # The guild command.
     guild:
-      # Enables / disables the use of the "party" bungee command.
+      # Enables / disables the use of the "guild" bungee command.
       enabled: true
       # Main command that the aliases point to.
       base: "guild"
