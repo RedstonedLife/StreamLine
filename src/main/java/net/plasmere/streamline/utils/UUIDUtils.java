@@ -24,6 +24,10 @@ public class UUIDUtils {
         if (username.equals("%")) return username;
         if (username.contains("-")) return username;
 
+        if (ConfigUtils.offlineMode) {
+            return StreamLine.offlineStats.getUUID(username);
+        }
+
         try {
             String finalUsername = username.replace("\"", "").toLowerCase(Locale.ROOT);
             return cachedUUIDs.get(username, (u) -> fetch(finalUsername));
@@ -37,6 +41,10 @@ public class UUIDUtils {
     public static String getCachedName(String uuid) {
         if (uuid.equals("%")) return uuid;
         if (! uuid.contains("-")) return uuid;
+
+        if (ConfigUtils.offlineMode) {
+            return StreamLine.offlineStats.getPlayerName(uuid);
+        }
 
         try {
             return Objects.requireNonNull(cachedNames.get(uuid, (u) -> getName(uuid))).replace("\"", "");
