@@ -11,6 +11,7 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
+import net.plasmere.streamline.objects.DataChannel;
 import net.plasmere.streamline.objects.Guild;
 import net.plasmere.streamline.objects.Party;
 import net.plasmere.streamline.objects.enums.ChatChannel;
@@ -33,7 +34,7 @@ public class DiscordData {
     private Configuration conf;
     private final String fileString = "discord-data.yml";
     private final File file = new File(StreamLine.getInstance().getConfDir(), fileString);
-    public TreeMap<Long, SingleSetThree<String, String, Boolean>> loadedChannels = new TreeMap<>();
+    public TreeMap<Long, DataChannel> loadedChannels = new TreeMap<>();
 
     public TreeMap<String, Integer> toVerify = new TreeMap<>();
 
@@ -206,40 +207,37 @@ public class DiscordData {
         if (user == null) return;
         if (! isChannel(channelID)) return;
 
-        SingleSetThree<String, String, Boolean> channelData = getChannel(channelID);
-
-        MessagingUtils.logWarning("DD > Member id : " + userID + " | Message : " + message);
-        MessagingUtils.logWarning("DD > channelData : < " + channelData.key + " , " + channelData.middle + " >");
+        DataChannel channelData = getChannel(channelID);
 
         if (! isVerified(userID)) {
-            if (channelData.key.equals(ChatChannel.GLOBAL.toString())) {
-                if (channelData.middle.equals("")) {
+            if (channelData.type.equals(ChatChannel.GLOBAL)) {
+                if (channelData.identifier.equals("")) {
                     MessagingUtils.sendGlobalMessageFromDiscord(user.getName(), StreamLine.serverConfig.getDefaultFormatGlobal(MessageServerType.DISCORD), message);
                 } else {
-                    MessagingUtils.sendPermissionedMessage(channelData.middle, StreamLine.serverConfig.getDefaultFormatGlobal(MessageServerType.DISCORD)
+                    MessagingUtils.sendPermissionedMessage(channelData.identifier, StreamLine.serverConfig.getDefaultFormatGlobal(MessageServerType.DISCORD)
                             .replace("%sender_display%", user.getName())
                             .replace("%message%", message));
                 }
             }
 
-            if (channelData.key.equals(ChatChannel.LOCAL.toString())) {
-                ServerInfo server = StreamLine.getInstance().getProxy().getServerInfo(channelData.middle);
+            if (channelData.type.equals(ChatChannel.LOCAL)) {
+                ServerInfo server = StreamLine.getInstance().getProxy().getServerInfo(channelData.identifier);
 
                 if (server == null) return;
 
                 MessagingUtils.sendServerMessageFromDiscord(user.getName(), server, StreamLine.serverConfig.getDefaultFormatLocal(MessageServerType.DISCORD), message);
             }
 
-            if (channelData.key.equals(ChatChannel.GUILD.toString())) {
-                Guild guild = GuildUtils.getGuild(channelData.middle);
+            if (channelData.type.equals(ChatChannel.GUILD)) {
+                Guild guild = GuildUtils.getGuild(channelData.identifier);
 
                 if (guild == null) return;
 
                 GuildUtils.sendChatFromDiscord(user.getName(), guild, StreamLine.serverConfig.getDefaultFormatGuild(MessageServerType.DISCORD), message);
             }
 
-            if (channelData.key.equals(ChatChannel.PARTY.toString())) {
-                Party party = PartyUtils.getParty(channelData.middle);
+            if (channelData.type.equals(ChatChannel.PARTY)) {
+                Party party = PartyUtils.getParty(channelData.identifier);
 
                 if (party == null) return;
 
@@ -253,19 +251,19 @@ public class DiscordData {
                 return;
             }
 
-            if (channelData.key.equals(ChatChannel.GLOBAL.toString())) {
-                if (channelData.middle.equals("")) {
+            if (channelData.type.equals(ChatChannel.GLOBAL)) {
+                if (channelData.identifier.equals("")) {
                     MessagingUtils.sendGlobalMessageFromDiscord(player
                             , StreamLine.serverConfig.getDefaultFormatGlobal(MessageServerType.DISCORD), message);
                 } else {
-                    MessagingUtils.sendPermissionedMessage(channelData.middle, StreamLine.serverConfig.getDefaultFormatGlobal(MessageServerType.DISCORD)
+                    MessagingUtils.sendPermissionedMessage(channelData.identifier, StreamLine.serverConfig.getDefaultFormatGlobal(MessageServerType.DISCORD)
                             .replace("%sender_display%", PlayerUtils.getJustDisplayBungee(player))
                             .replace("%message%", message));
                 }
             }
 
-            if (channelData.key.equals(ChatChannel.LOCAL.toString())) {
-                ServerInfo server = StreamLine.getInstance().getProxy().getServerInfo(channelData.middle);
+            if (channelData.type.equals(ChatChannel.LOCAL)) {
+                ServerInfo server = StreamLine.getInstance().getProxy().getServerInfo(channelData.identifier);
 
                 if (server == null) {
                     MessagingUtils.logWarning("Could not send bungee message for " + userID + " | Context : server == null");
@@ -275,8 +273,8 @@ public class DiscordData {
                 MessagingUtils.sendServerMessageFromDiscord(player, server, StreamLine.serverConfig.getDefaultFormatLocal(MessageServerType.DISCORD), message);
             }
 
-            if (channelData.key.equals(ChatChannel.GUILD.toString())) {
-                Guild guild = GuildUtils.getGuild(channelData.middle);
+            if (channelData.type.equals(ChatChannel.GUILD)) {
+                Guild guild = GuildUtils.getGuild(channelData.identifier);
 
                 if (guild == null) {
                     return;
@@ -285,8 +283,8 @@ public class DiscordData {
                 GuildUtils.sendChatFromDiscord(player, guild, StreamLine.serverConfig.getDefaultFormatGuild(MessageServerType.DISCORD), message);
             }
 
-            if (channelData.key.equals(ChatChannel.PARTY.toString())) {
-                Party party = PartyUtils.getParty(channelData.middle);
+            if (channelData.type.equals(ChatChannel.PARTY)) {
+                Party party = PartyUtils.getParty(channelData.identifier);
 
                 if (party == null) return;
 
@@ -301,14 +299,14 @@ public class DiscordData {
         TreeSet<Long> toReturn = new TreeSet<>();
 
         for (Long id : loadedChannels.keySet()) {
-            SingleSetThree<String, String, Boolean> set = loadedChannels.get(id);
+            DataChannel set = loadedChannels.get(id);
 
             if (type.equals(ChatChannel.GLOBAL)) {
-                if (set.key.equals(type.toString())) toReturn.add(id);
+                if (set.type.equals(type)) toReturn.add(id);
                 continue;
             }
 
-            if (set.key.equals(type.toString()) && set.middle.equals(identifier)) toReturn.add(id);
+            if (set.type.equals(type) && set.identifier.equals(identifier)) toReturn.add(id);
         }
 
         return toReturn;
@@ -344,14 +342,16 @@ public class DiscordData {
         return false;
     }
 
-    public void addChannel(long channelID, String type, String identifier, boolean bypass) {
-        addChannel(channelID, new SingleSet<>(type, identifier), bypass);
+    public void addChannel(long channelID, String type, String identifier, boolean bypass, boolean joins, boolean leaves) {
+        addChannel(channelID, new DataChannel(type, identifier, bypass, joins, leaves));
     }
 
-    public void addChannel(long channelID, SingleSet<String, String> set, boolean bypass) {
-        conf.set("channels." + channelID + ".type", set.key);
-        conf.set("channels." + channelID + ".identifier", set.value);
-        conf.set("channels." + channelID + ".bypass", bypass);
+    public void addChannel(long channelID, DataChannel dataChannel) {
+        conf.set("channels." + channelID + ".type", dataChannel.type);
+        conf.set("channels." + channelID + ".identifier", dataChannel.identifier);
+        conf.set("channels." + channelID + ".bypass", dataChannel.bypass);
+        conf.set("channels." + channelID + ".joins", dataChannel.joins);
+        conf.set("channels." + channelID + ".leaves", dataChannel.leaves);
         saveConfig();
         reloadConfig();
         loadChannels();
@@ -378,16 +378,48 @@ public class DiscordData {
     }
 
     public boolean ifChannelBypassesByChannelId(long channelID) {
-        return getChannel(channelID).last;
+        return getChannel(channelID).bypass;
     }
 
-    public SingleSetThree<String, String, Boolean> getChannel(long channelID) {
+    public TreeMap<Long, Boolean> ifChannelJoins(ChatChannel type, String identifier) {
+        TreeSet<Long> channels = getChannelsByData(type, identifier);
+        TreeMap<Long, Boolean> toReturn = new TreeMap<>();
+
+        for (long l : channels) {
+            toReturn.put(l, ifChannelJoinsByChannelId(l));
+        }
+
+        return toReturn;
+    }
+
+    public boolean ifChannelJoinsByChannelId(long channelID) {
+        return getChannel(channelID).joins;
+    }
+
+    public TreeMap<Long, Boolean> ifChannelLeaves(ChatChannel type, String identifier) {
+        TreeSet<Long> channels = getChannelsByData(type, identifier);
+        TreeMap<Long, Boolean> toReturn = new TreeMap<>();
+
+        for (long l : channels) {
+            toReturn.put(l, ifChannelLeavesByChannelId(l));
+        }
+
+        return toReturn;
+    }
+
+    public boolean ifChannelLeavesByChannelId(long channelID) {
+        return getChannel(channelID).leaves;
+    }
+
+    public DataChannel getChannel(long channelID) {
         reloadConfig();
 
-        return new SingleSetThree<>(
+        return new DataChannel(
                 conf.getString("channels." + channelID + ".type"),
                 conf.getString("channels." + channelID + ".identifier"),
-                conf.getBoolean("channels." + channelID + ".bypass")
+                conf.getBoolean("channels." + channelID + ".bypass"),
+                conf.getBoolean("channels." + channelID + ".joins"),
+                conf.getBoolean("channels." + channelID + ".leaves")
         );
     }
 

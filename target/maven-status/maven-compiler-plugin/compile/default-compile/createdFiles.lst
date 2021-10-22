@@ -124,6 +124,7 @@ net\plasmere\streamline\discordbot\ReadyListener.class
 net\plasmere\streamline\objects\Guild$Level.class
 net\plasmere\streamline\utils\PartyUtils.class
 net\plasmere\streamline\commands\messaging\MessageCommand.class
+net\plasmere\streamline\objects\DataChannel.class
 net\plasmere\streamline\scripts\Script.class
 net\plasmere\streamline\utils\PluginUtils.class
 net\plasmere\streamline\objects\enums\ChatChannel.class
