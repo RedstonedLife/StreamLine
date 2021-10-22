@@ -456,6 +456,7 @@ public class TextUtils {
         if (user == null) return of;
 
         return of
+                .replace("%player_uuid%", user.uuid)
                 .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
                 .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
@@ -485,6 +486,7 @@ public class TextUtils {
         if (user == null) return of;
 
         return of
+                .replace("%user_uuid%", user.uuid)
                 .replace("%user_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%user_normal%", PlayerUtils.getOffOnRegBungee(user))
                 .replace("%user_display%", PlayerUtils.getOffOnDisplayBungee(user))
@@ -514,6 +516,7 @@ public class TextUtils {
         if (user == null) return of;
 
         return of
+                .replace("%sender_uuid%", user.uuid)
                 .replace("%sender_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%sender_normal%", PlayerUtils.getOffOnRegBungee(user))
                 .replace("%sender_display%", PlayerUtils.getOffOnDisplayBungee(user))
@@ -543,6 +546,7 @@ public class TextUtils {
         if (user == null) return of;
 
         return of
+                .replace("%player_uuid%", user.uuid)
                 .replace("%player_absolute%", PlayerUtils.getAbsoluteDiscord(user))
                 .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(user))
                 .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(user))
@@ -572,6 +576,7 @@ public class TextUtils {
         if (user == null) return of;
 
         return of
+                .replace("%user_uuid%", user.uuid)
                 .replace("%user_absolute%", PlayerUtils.getAbsoluteDiscord(user))
                 .replace("%user_normal%", PlayerUtils.getOffOnRegDiscord(user))
                 .replace("%user_display%", PlayerUtils.getOffOnDisplayDiscord(user))
@@ -601,6 +606,7 @@ public class TextUtils {
         if (user == null) return of;
 
         return of
+                .replace("%sender_uuid%", user.uuid)
                 .replace("%sender_absolute%", PlayerUtils.getAbsoluteDiscord(user))
                 .replace("%sender_normal%", PlayerUtils.getOffOnRegDiscord(user))
                 .replace("%sender_display%", PlayerUtils.getOffOnDisplayDiscord(user))

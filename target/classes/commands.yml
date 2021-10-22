@@ -664,6 +664,21 @@ commands:
           - "bt"
           - "btp"
           - "btele"
+      # The bteleport command.
+      script:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "slscript"
+        # Custom permission.
+        permission: "streamline.command.script"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "sls"
+          - "bscript"
+          - "slscr"
+          - "streamlinescript"
+          - "script"
     # For configs commands...
     configs:
       # The settings command.

@@ -23,6 +23,7 @@ net\plasmere\streamline\utils\InstanceHolder.class
 net\plasmere\streamline\config\from\From.class
 net\plasmere\streamline\events\EventsHandler$WildCardCheck.class
 net\plasmere\streamline\commands\staff\punishments\KickCommand.class
+net\plasmere\streamline\config\from\From_1_0_14_2.class
 net\plasmere\streamline\utils\PartyUtils$1.class
 net\plasmere\streamline\utils\GuildUtils$1.class
 net\plasmere\streamline\listeners\ChatListener.class
@@ -31,6 +32,7 @@ net\plasmere\streamline\objects\enums\MessageServerType.class
 net\plasmere\streamline\commands\staff\DeleteStatCommand.class
 net\plasmere\streamline\StreamLine.class
 net\plasmere\streamline\objects\messaging\BungeeMessage.class
+net\plasmere\streamline\scripts\Script$1.class
 net\plasmere\streamline\events\EventsReader.class
 net\plasmere\streamline\commands\staff\GuildsCommand.class
 net\plasmere\streamline\commands\staff\events\EventReloadCommand.class
@@ -41,7 +43,9 @@ net\plasmere\streamline\utils\UUIDUtils.class
 net\plasmere\streamline\utils\PlayerUtils.class
 net\plasmere\streamline\utils\TimeUtil.class
 net\plasmere\streamline\config\DiscordBotConfUtils.class
+net\plasmere\streamline\scripts\ScriptAs.class
 net\plasmere\streamline\commands\staff\ReloadCommand.class
+net\plasmere\streamline\discordbot\BoostListener.class
 net\plasmere\streamline\objects\exceptions\OfflinePlayerException.class
 net\plasmere\streamline\commands\GuildCommand.class
 net\plasmere\streamline\events\EventsHandler.class
@@ -73,6 +77,7 @@ net\plasmere\streamline\objects\savable\users\Player$1.class
 net\plasmere\streamline\objects\timers\PlaytimeTimer.class
 net\plasmere\streamline\config\from\From$1.class
 net\plasmere\streamline\discordbot\commands\OnlineCommand.class
+net\plasmere\streamline\commands\staff\ScriptCommand.class
 net\plasmere\streamline\discordbot\commands\ChannelCommand.class
 net\plasmere\streamline\utils\holders\ViaHolder.class
 net\plasmere\streamline\objects\configs\ServerConfig.class
@@ -98,6 +103,7 @@ net\plasmere\streamline\objects\savable\users\Player.class
 net\plasmere\streamline\objects\configs\ServerPermissions.class
 net\plasmere\streamline\objects\savable\users\SavableUser.class
 net\plasmere\streamline\commands\ReportCommand.class
+net\plasmere\streamline\scripts\ScriptsHandler.class
 net\plasmere\streamline\commands\staff\spy\GSPYCommand.class
 net\plasmere\streamline\listeners\ProxyPingListener.class
 net\plasmere\streamline\commands\messaging\ReplyCommand.class
@@ -117,6 +123,7 @@ net\plasmere\streamline\discordbot\ReadyListener.class
 net\plasmere\streamline\objects\Guild$Level.class
 net\plasmere\streamline\utils\PartyUtils.class
 net\plasmere\streamline\commands\messaging\MessageCommand.class
+net\plasmere\streamline\scripts\Script.class
 net\plasmere\streamline\utils\PluginUtils.class
 net\plasmere\streamline\objects\enums\ChatChannel.class
 net\plasmere\streamline\objects\configs\Lobbies.class

@@ -2025,3 +2025,8 @@ chat-channels:
     switch: "&eChangement du &bCanal Textuel &ede %old_channel% à &e%new_channel%l&8!"
   p-officer:
     switch: "&eChangement du &bCanal Textuel &ede %old_channel% à &e%new_channel%l&8!"
+
+# For the script command...
+script:
+  message: "&eJe viens d'exécuter le script &a%script% &eau &d%player_formatted%&e!"
+  no-script: "&cAucun script valide sous ce nom!"
