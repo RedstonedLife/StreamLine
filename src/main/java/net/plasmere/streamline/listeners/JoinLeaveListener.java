@@ -62,6 +62,10 @@ public class JoinLeaveListener implements Listener {
     public void onJoin(PostLoginEvent ev) {
         ProxiedPlayer player = ev.getPlayer();
 
+        if (ConfigUtils.offlineMode) {
+            StreamLine.offlineStats.addStat(player.getUniqueId().toString(), player.getName());
+        }
+
         if (holder.enabled && holder.isGeyserPlayer(player) && !file.hasProperty(player.getUniqueId().toString())) {
             file.updateKey(holder.getGeyserUUID(player.getName()), player.getName());
         }
@@ -300,9 +304,13 @@ public class JoinLeaveListener implements Listener {
 
         ev.setTarget(server);
 
-        SingleSet<Boolean, ChatChannel> get1 = StreamLine.discordData.ifHasChannelsAsSet(ChatChannel.LOCAL, stat.getServer().getInfo().getName());
-        if (get1.key) {
-            StreamLine.discordData.sendDiscordLeaveChannel(player, ChatChannel.LOCAL, stat.getServer().getInfo().getName());
+        try {
+            SingleSet<Boolean, ChatChannel> get1 = StreamLine.discordData.ifHasChannelsAsSet(ChatChannel.LOCAL, stat.getServer().getInfo().getName());
+            if (get1.key) {
+                StreamLine.discordData.sendDiscordLeaveChannel(player, ChatChannel.LOCAL, stat.getServer().getInfo().getName());
+            }
+        } catch (Exception e) {
+            // do nothing.
         }
 
         stat.setLatestServer(server.getName());

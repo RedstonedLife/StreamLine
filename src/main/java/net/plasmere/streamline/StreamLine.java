@@ -56,6 +56,7 @@ public class StreamLine extends Plugin {
 	public static LPHolder lpHolder;
 	public static ServerConfig serverConfig;
 	public static DiscordData discordData;
+	public static OfflineStats offlineStats;
 
 	public final static String customChannel = "streamline:channel";
 
@@ -464,6 +465,9 @@ public class StreamLine extends Plugin {
 
 		// Scripts.
 		loadScripts();
+
+		// Offline Stats.
+		offlineStats = new OfflineStats();
 
 		// Servers by Versions.
 		if (viaHolder.enabled) {

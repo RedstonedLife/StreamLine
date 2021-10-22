@@ -485,7 +485,7 @@ public class DiscordData {
     }
 
     public void addChannel(long channelID, DataChannel dataChannel) {
-        conf.set("channels." + channelID + ".type", dataChannel.type);
+        conf.set("channels." + channelID + ".type", dataChannel.type.toString());
         conf.set("channels." + channelID + ".identifier", dataChannel.identifier);
         conf.set("channels." + channelID + ".bypass", dataChannel.bypass);
         conf.set("channels." + channelID + ".joins", dataChannel.joins);

@@ -8,6 +8,8 @@ link-prefix: "&b&o&n"
 
 ### MODULE SETTINGS ###
 modules:
+  # Toggles offline / online UUID things...
+  offline-mode: false
   # Permission that you will give to all of your staff.
   # (Used for staff chats and other staff determined staff modules...)
   staff-permission: "streamline.staff"
@@ -144,27 +146,27 @@ modules:
           local:
             title: "LOCAL CHAT FOR <to_upper>%server%"
             message: "%message%"
-            joins: "Joined the server"
-            leaves: "Left the server"
+            joins: "%player_absolute% joined"
+            leaves: "%player_absolute% left"
             use-avatar: true
           global:
             title: "GLOBAL CHAT"
             message: "%message%"
-            joins: "Joined the server"
-            leaves: "Left the server"
+            joins: "%player_absolute% joined"
+            leaves: "%player_absolute% left"
             use-avatar: true
           guild:
-            title: "GUILD CHAT FOR <to_upper>%guild_name% (OWNED BY: <to_upper>%leader_formatted%)"
+            title: "GUILD CHAT FOR <to_upper>%guild_name% (OWNED BY: <to_upper>%leader_absolute%)"
             message: "%message%"
-            joins: "Joined the server"
-            leaves: "Left the server"
+            joins: "%player_absolute% joined"
+            leaves: "%player_absolute% left"
             use-avatar: true
           party:
             # %party% = the party leader's name.
-            title: "PARTY CHAT FOR <to_upper>%leader_formatted%'S PARTY"
+            title: "PARTY CHAT FOR <to_upper>%leader_absolute%'S PARTY"
             message: "%message%"
-            joins: "Joined the server"
-            leaves: "Left the server"
+            joins: "%player_absolute% joined"
+            leaves: "%player_absolute% left"
             use-avatar: true
       console:
         # %party% = the party leader's name.

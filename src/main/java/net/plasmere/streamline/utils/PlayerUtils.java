@@ -1660,8 +1660,6 @@ public class PlayerUtils {
         return StreamLine.getInstance().getProxy().getPlayers();
     }
 
-
-
     public static List<ProxiedPlayer> getServeredPPlayers(String serverName) {
         List<ProxiedPlayer> players = new ArrayList<>();
 

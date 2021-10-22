@@ -92,6 +92,7 @@ net\plasmere\streamline\discordbot\commands\StaffChatCommand.class
 net\plasmere\streamline\events\enums\Condition.class
 net\plasmere\streamline\commands\staff\events\BTagCommand.class
 net\plasmere\streamline\commands\PingCommand.class
+net\plasmere\streamline\objects\configs\OfflineStats.class
 net\plasmere\streamline\config\CommandsConfUtils.class
 net\plasmere\streamline\commands\staff\PartiesCommand.class
 net\plasmere\streamline\objects\lists\SingleSetThree.class

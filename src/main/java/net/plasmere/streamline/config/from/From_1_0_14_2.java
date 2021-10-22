@@ -20,20 +20,24 @@ public class From_1_0_14_2 extends From{
 
     @Override
     public void setupConfigFix() {
+        addUpdatedConfigEntry("modules.offline-mode", false);
+
         addUpdatedConfigEntry("modules.bungee.stats.delete-bad", true);
 
         addUpdatedConfigEntry("modules.bungee.scripts.enabled", true);
         addUpdatedConfigEntry("modules.bungee.scripts.create-default", true);
-        addUpdatedConfigEntry("modules.bungee.scripts.upon-boosts.run", "boost.sl");
 
-        addUpdatedConfigEntry("modules.bungee.proxy-chat.discord-data.channels.local.joins", "Joined the server");
-        addUpdatedConfigEntry("modules.bungee.proxy-chat.discord-data.channels.local.leaves", "Left the server");
-        addUpdatedConfigEntry("modules.bungee.proxy-chat.discord-data.channels.global.joins", "Joined the server");
-        addUpdatedConfigEntry("modules.bungee.proxy-chat.discord-data.channels.global.leaves", "Left the server");
-        addUpdatedConfigEntry("modules.bungee.proxy-chat.discord-data.channels.guild.joins", "Joined the server");
-        addUpdatedConfigEntry("modules.bungee.proxy-chat.discord-data.channels.guild.leaves", "Left the server");
-        addUpdatedConfigEntry("modules.bungee.proxy-chat.discord-data.channels.party.joins", "Joined the server");
-        addUpdatedConfigEntry("modules.bungee.proxy-chat.discord-data.channels.party.leaves", "Left the server");
+        addUpdatedConfigEntry("modules.discord.boosts.enabled", true);
+        addUpdatedConfigEntry("modules.discord.boosts.upon-boosts.run", "boost.sl");
+
+        addUpdatedConfigEntry("modules.discord.proxy-chat.discord-data.channels.local.joins", "Joined the server");
+        addUpdatedConfigEntry("modules.discord.proxy-chat.discord-data.channels.local.leaves", "Left the server");
+        addUpdatedConfigEntry("modules.discord.proxy-chat.discord-data.channels.global.joins", "Joined the server");
+        addUpdatedConfigEntry("modules.discord.proxy-chat.discord-data.channels.global.leaves", "Left the server");
+        addUpdatedConfigEntry("modules.discord.proxy-chat.discord-data.channels.guild.joins", "Joined the server");
+        addUpdatedConfigEntry("modules.discord.proxy-chat.discord-data.channels.guild.leaves", "Left the server");
+        addUpdatedConfigEntry("modules.discord.proxy-chat.discord-data.channels.party.joins", "Joined the server");
+        addUpdatedConfigEntry("modules.discord.proxy-chat.discord-data.channels.party.leaves", "Left the server");
     }
 
     @Override

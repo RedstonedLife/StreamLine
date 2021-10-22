@@ -50,6 +50,10 @@ public class UUIDUtils {
     static public String fetch(String username) {
         if (username.contains("-")) return getName(username);
 
+        if (ConfigUtils.offlineMode) {
+            return StreamLine.offlineStats.getUUID(username);
+        }
+
         try {
             if (StreamLine.geyserHolder.enabled) {
                 if (StreamLine.geyserHolder.isGeyserPlayer(username)) {
@@ -92,6 +96,11 @@ public class UUIDUtils {
 
     public static String getName(String uuid) {
         if (! uuid.contains("-")) return fetch(uuid);
+
+        if (ConfigUtils.offlineMode) {
+            return StreamLine.offlineStats.getPlayerName(uuid);
+        }
+
         try {
             if (StreamLine.geyserHolder.enabled) {
                 String name = StreamLine.geyserHolder.file.getName(uuid);

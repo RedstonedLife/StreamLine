@@ -14,6 +14,8 @@ public class ConfigUtils {
     // ... Basics.
     // Links.
     public static String linkPre = StreamLine.config.getConfString("link-prefix");
+    // Offline mode.
+    public static boolean offlineMode = StreamLine.config.getConfBoolean("modules.offline-mode");
 //    public static String linkSuff = StreamLine.config.getConfString("link.suffix");// ... ... Modules.
     public static String staffPerm = StreamLine.config.getConfString("modules.staff-permission");
     public static boolean doNotAutoUpdateConfigs = StreamLine.config.getConfBoolean("modules.automatically-update-configs");
