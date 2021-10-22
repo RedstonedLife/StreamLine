@@ -201,6 +201,144 @@ public class DiscordData {
         }
     }
 
+    public void sendDiscordJoinChannel(CommandSender player, ChatChannel type, String identifier) {
+        TreeSet<Long> channels = getChannelsByData(type, identifier);
+
+        for (Long channel : channels) {
+            if (type.equals(ChatChannel.LOCAL)) {
+                MessagingUtils.sendDiscordEBMessage(
+                        new DiscordMessage(
+                                player,
+                                TextUtils.formatted(ConfigUtils.moduleDPCDDLocalTitle.replace("%server%", PlayerUtils.getServer(player))),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDLocalJoins, player),
+                                channel.toString()),
+                        ConfigUtils.moduleDPCDDLocalUseAvatar
+                );
+            }
+
+            if (type.equals(ChatChannel.GLOBAL)) {
+                MessagingUtils.sendDiscordEBMessage(
+                        new DiscordMessage(
+                                player,
+                                TextUtils.formatted(ConfigUtils.moduleDPCDDGlobalTitle.replace("%server%", "network")),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGlobalJoins, player),
+                                channel.toString()),
+                        ConfigUtils.moduleDPCDDGlobalUseAvatar
+                );
+            }
+
+            if (type.equals(ChatChannel.GUILD)) {
+                Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
+
+                if (guild == null) return;
+
+                MessagingUtils.sendDiscordEBMessage(
+                        new DiscordMessage(
+                                player,
+                                TextUtils.formatted(ConfigUtils.moduleDPCDDGuildTitle
+                                        .replace("%guild_name%", guild.name)
+                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.leaderUUID).latestName)
+                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                                ),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGuildJoins, player),
+                                channel.toString()),
+                        ConfigUtils.moduleDPCDDGuildUseAvatar
+                );
+            }
+
+            if (type.equals(ChatChannel.PARTY)) {
+                Party party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
+
+                if (party == null) return;
+
+                MessagingUtils.sendDiscordEBMessage(
+                        new DiscordMessage(
+                                player,
+                                TextUtils.formatted(ConfigUtils.moduleDPCDDPartyTitle
+                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.leaderUUID).latestName)
+                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                                ),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDPartyJoins, player),
+                                channel.toString()),
+                        ConfigUtils.moduleDPCDDPartyUseAvatar
+                );
+            }
+        }
+    }
+
+    public void sendDiscordLeaveChannel(CommandSender player, ChatChannel type, String identifier) {
+        TreeSet<Long> channels = getChannelsByData(type, identifier);
+
+        for (Long channel : channels) {
+            if (type.equals(ChatChannel.LOCAL)) {
+                MessagingUtils.sendDiscordEBMessage(
+                        new DiscordMessage(
+                                player,
+                                TextUtils.formatted(ConfigUtils.moduleDPCDDLocalTitle.replace("%server%", PlayerUtils.getServer(player))),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDLocalLeaves, player),
+                                channel.toString()),
+                        ConfigUtils.moduleDPCDDLocalUseAvatar
+                );
+            }
+
+            if (type.equals(ChatChannel.GLOBAL)) {
+                MessagingUtils.sendDiscordEBMessage(
+                        new DiscordMessage(
+                                player,
+                                TextUtils.formatted(ConfigUtils.moduleDPCDDGlobalTitle.replace("%server%", "network")),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGlobalLeaves, player),
+                                channel.toString()),
+                        ConfigUtils.moduleDPCDDGlobalUseAvatar
+                );
+            }
+
+            if (type.equals(ChatChannel.GUILD)) {
+                Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
+
+                if (guild == null) return;
+
+                MessagingUtils.sendDiscordEBMessage(
+                        new DiscordMessage(
+                                player,
+                                TextUtils.formatted(ConfigUtils.moduleDPCDDGuildTitle
+                                        .replace("%guild_name%", guild.name)
+                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.leaderUUID).latestName)
+                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                                ),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGuildLeaves, player),
+                                channel.toString()),
+                        ConfigUtils.moduleDPCDDGuildUseAvatar
+                );
+            }
+
+            if (type.equals(ChatChannel.PARTY)) {
+                Party party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
+
+                if (party == null) return;
+
+                MessagingUtils.sendDiscordEBMessage(
+                        new DiscordMessage(
+                                player,
+                                TextUtils.formatted(ConfigUtils.moduleDPCDDPartyTitle
+                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.leaderUUID).latestName)
+                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                                ),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDPartyLeaves, player),
+                                channel.toString()),
+                        ConfigUtils.moduleDPCDDPartyUseAvatar
+                );
+            }
+        }
+    }
+
     public void sendBungeeChannel(long userID, long channelID, String message) {
         User user = StreamLine.getJda().getUserById(userID);
 

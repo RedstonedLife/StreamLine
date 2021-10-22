@@ -12,8 +12,10 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.enums.Condition;
+import net.plasmere.streamline.objects.DataChannel;
 import net.plasmere.streamline.objects.GeyserFile;
 import net.plasmere.streamline.objects.Party;
+import net.plasmere.streamline.objects.enums.ChatChannel;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.Guild;
@@ -180,6 +182,25 @@ public class JoinLeaveListener implements Listener {
             }
         }
 
+        SingleSet<Boolean, ChatChannel> get = StreamLine.discordData.ifHasChannelsAsSet(ChatChannel.GUILD, stat.guild);
+        if (get.key) {
+            StreamLine.discordData.sendDiscordJoinChannel(player, ChatChannel.GUILD, stat.guild);
+        }
+
+        Party party = PartyUtils.getParty(stat.uuid);
+
+        if (party != null) {
+            SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatChannel.PARTY, party.leaderUUID);
+            if (get2.key) {
+                StreamLine.discordData.sendDiscordJoinChannel(player, ChatChannel.PARTY, party.leaderUUID);
+            }
+        }
+
+        SingleSet<Boolean, ChatChannel> get3 = StreamLine.discordData.ifHasChannelsAsSet(ChatChannel.GLOBAL, "");
+        if (get3.key) {
+            StreamLine.discordData.sendDiscordJoinChannel(player, ChatChannel.GLOBAL, "");
+        }
+
         if (ConfigUtils.events) {
             for (Event event : EventsHandler.getEvents()) {
                 if (! EventsHandler.checkTags(event, stat)) continue;
@@ -279,7 +300,17 @@ public class JoinLeaveListener implements Listener {
 
         ev.setTarget(server);
 
+        SingleSet<Boolean, ChatChannel> get1 = StreamLine.discordData.ifHasChannelsAsSet(ChatChannel.LOCAL, stat.getServer().getInfo().getName());
+        if (get1.key) {
+            StreamLine.discordData.sendDiscordLeaveChannel(player, ChatChannel.LOCAL, stat.getServer().getInfo().getName());
+        }
+
         stat.setLatestServer(server.getName());
+
+        SingleSet<Boolean, ChatChannel> get = StreamLine.discordData.ifHasChannelsAsSet(ChatChannel.LOCAL, server.getName());
+        if (get.key) {
+            StreamLine.discordData.sendDiscordJoinChannel(player, ChatChannel.LOCAL, server.getName());
+        }
 
         if (ConfigUtils.events) {
             for (Event event : EventsHandler.getEvents()) {
@@ -440,6 +471,20 @@ public class JoinLeaveListener implements Listener {
             }
         }
 
+        SingleSet<Boolean, ChatChannel> get = StreamLine.discordData.ifHasChannelsAsSet(ChatChannel.GUILD, stat.guild);
+        if (get.key) {
+            StreamLine.discordData.sendDiscordLeaveChannel(player, ChatChannel.GUILD, stat.guild);
+        }
+
+        Party party = PartyUtils.getParty(stat.uuid);
+
+        if (party != null) {
+            SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatChannel.PARTY, party.leaderUUID);
+            if (get2.key) {
+                StreamLine.discordData.sendDiscordLeaveChannel(player, ChatChannel.PARTY, party.leaderUUID);
+            }
+        }
+
         try {
             for (ProxiedPlayer pl : StreamLine.getInstance().getProxy().getPlayers()){
                 Player p = PlayerUtils.getOrCreatePlayerStat(pl);
@@ -456,6 +501,11 @@ public class JoinLeaveListener implements Listener {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        SingleSet<Boolean, ChatChannel> get3 = StreamLine.discordData.ifHasChannelsAsSet(ChatChannel.GLOBAL, "");
+        if (get3.key) {
+            StreamLine.discordData.sendDiscordLeaveChannel(player, ChatChannel.GLOBAL, "");
         }
 
         if (ConfigUtils.events) {

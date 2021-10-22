@@ -144,19 +144,27 @@ modules:
           local:
             title: "LOCAL CHAT FOR <to_upper>%server%"
             message: "%message%"
+            joins: "Joined the server"
+            leaves: "Left the server"
             use-avatar: true
           global:
             title: "GLOBAL CHAT"
             message: "%message%"
+            joins: "Joined the server"
+            leaves: "Left the server"
             use-avatar: true
           guild:
             title: "GUILD CHAT FOR <to_upper>%guild_name% (OWNED BY: <to_upper>%leader_formatted%)"
             message: "%message%"
+            joins: "Joined the server"
+            leaves: "Left the server"
             use-avatar: true
           party:
             # %party% = the party leader's name.
             title: "PARTY CHAT FOR <to_upper>%leader_formatted%'S PARTY"
             message: "%message%"
+            joins: "Joined the server"
+            leaves: "Left the server"
             use-avatar: true
       console:
         # %party% = the party leader's name.
