@@ -1,4 +1,4 @@
-package net.plasmere.streamline.commands.staff;
+package net.plasmere.streamline.commands.staff.scripts;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;

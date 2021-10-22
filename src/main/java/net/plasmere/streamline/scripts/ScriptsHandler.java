@@ -41,4 +41,8 @@ public class ScriptsHandler {
 
         return null;
     }
+
+    public static void unloadScripts() {
+        scripts = new ArrayList<>();
+    }
 }

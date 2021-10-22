@@ -37,6 +37,7 @@ net\plasmere\streamline\events\EventsReader.class
 net\plasmere\streamline\commands\staff\GuildsCommand.class
 net\plasmere\streamline\commands\staff\events\EventReloadCommand.class
 net\plasmere\streamline\discordbot\MessageListener.class
+net\plasmere\streamline\commands\staff\scripts\ScriptCommand.class
 net\plasmere\streamline\config\from\From$FileType.class
 net\plasmere\streamline\objects\savable\users\ConsolePlayer.class
 net\plasmere\streamline\utils\UUIDUtils.class
@@ -47,6 +48,7 @@ net\plasmere\streamline\scripts\ScriptAs.class
 net\plasmere\streamline\commands\staff\ReloadCommand.class
 net\plasmere\streamline\discordbot\BoostListener.class
 net\plasmere\streamline\objects\exceptions\OfflinePlayerException.class
+net\plasmere\streamline\commands\staff\scripts\ScriptReloadCommand.class
 net\plasmere\streamline\commands\GuildCommand.class
 net\plasmere\streamline\events\EventsHandler.class
 net\plasmere\streamline\commands\staff\InfoCommand.class
@@ -77,7 +79,6 @@ net\plasmere\streamline\objects\savable\users\Player$1.class
 net\plasmere\streamline\objects\timers\PlaytimeTimer.class
 net\plasmere\streamline\config\from\From$1.class
 net\plasmere\streamline\discordbot\commands\OnlineCommand.class
-net\plasmere\streamline\commands\staff\ScriptCommand.class
 net\plasmere\streamline\discordbot\commands\ChannelCommand.class
 net\plasmere\streamline\utils\holders\ViaHolder.class
 net\plasmere\streamline\objects\configs\ServerConfig.class

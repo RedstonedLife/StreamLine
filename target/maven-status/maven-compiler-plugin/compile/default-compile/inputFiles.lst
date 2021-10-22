@@ -12,6 +12,8 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\DeleteStatCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\OneSecondTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\TeleportCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\scripts\ScriptReloadCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\scripts\ScriptCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\StaffChatCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\Bans.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\GCQuickCommand.java
@@ -101,7 +103,6 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\punishments\BanCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\PartyCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\scripts\ScriptsHandler.java
-C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\ScriptCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\PlayerSaveTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\PlaytimeTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\savable\users\SavableUser.java

@@ -275,11 +275,16 @@ public class CommandsConfUtils {
     public static String comBTeleportBase = StreamLine.config.getCommandString("commands.bungee.staff.bteleport.base");
     public static List<String> comBTeleportAliases = StreamLine.config.getCommandStringList("commands.bungee.staff.bteleport.aliases");
     public static String comBTeleportPerm = StreamLine.config.getCommandString("commands.bungee.staff.bteleport.permission");
-    // Scripts.
+    // Script.
     public static boolean comBScript = StreamLine.config.getCommandBoolean("commands.bungee.staff.script.enabled");
     public static String comBScriptBase = StreamLine.config.getCommandString("commands.bungee.staff.script.base");
     public static List<String> comBScriptAliases = StreamLine.config.getCommandStringList("commands.bungee.staff.script.aliases");
     public static String comBScriptPerm = StreamLine.config.getCommandString("commands.bungee.staff.script.permission");
+    // Script Reload.
+    public static boolean comBScriptRe = StreamLine.config.getCommandBoolean("commands.bungee.staff.script-reload.enabled");
+    public static String comBScriptReBase = StreamLine.config.getCommandString("commands.bungee.staff.script-reload.base");
+    public static List<String> comBScriptReAliases = StreamLine.config.getCommandStringList("commands.bungee.staff.script-reload.aliases");
+    public static String comBScriptRePerm = StreamLine.config.getCommandString("commands.bungee.staff.script-reload.permission");
     // // Configs.
     // Settings.
     public static boolean comBSettings = StreamLine.config.getCommandBoolean("commands.bungee.configs.settings.enabled");

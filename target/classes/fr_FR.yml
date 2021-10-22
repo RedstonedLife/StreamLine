@@ -2030,3 +2030,4 @@ chat-channels:
 script:
   message: "&eJe viens d'exécuter le script &a%script% &eau &d%player_formatted%&e!"
   no-script: "&cAucun script valide sous ce nom!"
+  reload: "&eScripts rechargés! (&b%count%&e)"

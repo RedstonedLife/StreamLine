@@ -13,6 +13,8 @@ import net.plasmere.streamline.commands.staff.punishments.BanCommand;
 import net.plasmere.streamline.commands.staff.punishments.IPBanCommand;
 import net.plasmere.streamline.commands.staff.punishments.KickCommand;
 import net.plasmere.streamline.commands.staff.punishments.MuteCommand;
+import net.plasmere.streamline.commands.staff.scripts.ScriptCommand;
+import net.plasmere.streamline.commands.staff.scripts.ScriptReloadCommand;
 import net.plasmere.streamline.commands.staff.settings.LanguageCommand;
 import net.plasmere.streamline.commands.staff.settings.SettingsEditCommand;
 import net.plasmere.streamline.commands.staff.spy.GSPYCommand;
@@ -165,6 +167,9 @@ public class PluginUtils {
         // // Scripts.
         if (CommandsConfUtils.comBScript) {
             registerCommand(plugin, new ScriptCommand(CommandsConfUtils.comBScriptBase, CommandsConfUtils.comBScriptPerm, stringListToArray(CommandsConfUtils.comBScriptAliases)));
+        }
+        if (CommandsConfUtils.comBScriptRe) {
+            registerCommand(plugin, new ScriptReloadCommand(CommandsConfUtils.comBScriptReBase, CommandsConfUtils.comBScriptRePerm, stringListToArray(CommandsConfUtils.comBScriptReAliases)));
         }
 
         // All players.

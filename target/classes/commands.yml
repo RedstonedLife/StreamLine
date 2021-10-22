@@ -664,7 +664,7 @@ commands:
           - "bt"
           - "btp"
           - "btele"
-      # The bteleport command.
+      # The script command.
       script:
         # Enables / disables the use of the command.
         enabled: true
@@ -679,6 +679,18 @@ commands:
           - "slscr"
           - "streamlinescript"
           - "script"
+      # The bteleport command.
+      script-reload:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "slsr"
+        # Custom permission.
+        permission: "streamline.command.script-reload"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "reloadslsc"
+          - "rslsc"
     # For configs commands...
     configs:
       # The settings command.

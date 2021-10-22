@@ -31,9 +31,11 @@ public class From_1_0_14_2 extends From{
     public void setupLocalesFix() {
         addUpdatedLocalesEntry("script.message", "&eJust ran script &a%script% &eon &d%player_formatted%&e!", "en_US");
         addUpdatedLocalesEntry("script.no-script", "&cNo valid script by this name!", "en_US");
+        addUpdatedLocalesEntry("script.reload", "&eReloaded scripts! (&b%count%&e)", "en_US");
 
         addUpdatedLocalesEntry("script.message", "&eJe viens d'exécuter le script &a%script% &eau &d%player_formatted%&e!", "fr_FR");
         addUpdatedLocalesEntry("script.no-script", "&cAucun script valide sous ce nom!", "fr_FR");
+        addUpdatedLocalesEntry("script.reload", "&eScripts rechargés! (&b%count%&e)", "fr_FR");
     }
 
     @Override
@@ -52,5 +54,10 @@ public class From_1_0_14_2 extends From{
         addUpdatedCommandsEntry("commands.bungee.staff.script.base", "slscript");
         addUpdatedCommandsEntry("commands.bungee.staff.script.permission", "streamline.command.script");
         addUpdatedCommandsEntry("commands.bungee.staff.script.aliases", Arrays.asList("sls", "bscript", "slscr", "streamlinescript", "script"));
+
+        addUpdatedCommandsEntry("commands.bungee.staff.script-reload.enabled", true);
+        addUpdatedCommandsEntry("commands.bungee.staff.script-reload.base", "slsr");
+        addUpdatedCommandsEntry("commands.bungee.staff.script-reload.permission", "streamline.command.script-reload");
+        addUpdatedCommandsEntry("commands.bungee.staff.script-reload.aliases", Arrays.asList("reloadslsc", "rslsc"));
     }
 }

@@ -1611,4 +1611,9 @@ public class MessageConfUtils {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("script.no-script");
     }
+
+    public static String scriptReload() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("script.reload");
+    }
 }

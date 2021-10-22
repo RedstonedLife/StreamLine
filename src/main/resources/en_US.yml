@@ -2035,3 +2035,4 @@ chat-channels:
 script:
   message: "&eJust ran script &a%script% &eon &d%player_formatted%&e!"
   no-script: "&cNo valid script by this name!"
+  reload: "&eReloaded scripts! (&b%count%&e)"
