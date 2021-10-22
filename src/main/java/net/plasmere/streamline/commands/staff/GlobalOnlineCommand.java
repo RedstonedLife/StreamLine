@@ -136,19 +136,11 @@ public class GlobalOnlineCommand extends Command {
         for (ProxiedPlayer player : players){
             Server server = playerServers.get(player);
             if (! (i == players.size() - 1))
-                text.append(MessageConfUtils.onlineMessageBPlayersBulkNotLast()
-                        .replace("%player_absolute%", player.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(player)))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(player)))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(player)))
+                text.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.onlineMessageBPlayersBulkNotLast(), player)
                         .replace("%server%", server.getInfo().getName())
                 );
             else
-                text.append(MessageConfUtils.onlineMessageBPlayersBulkLast()
-                        .replace("%player_absolute%", player.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(player)))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(player)))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(player)))
+                text.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.onlineMessageBPlayersBulkLast(), player)
                         .replace("%server%", server.getInfo().getName())
                 );
             i++;

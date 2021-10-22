@@ -1601,4 +1601,14 @@ public class MessageConfUtils {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("chat-channels.p-officer.switch");
     }
+
+    public static String scriptMessage() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("script.message");
+    }
+
+    public static String scriptNoScript() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("script.no-script");
+    }
 }

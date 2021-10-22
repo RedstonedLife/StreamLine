@@ -72,6 +72,9 @@ public class ConfigUtils {
     public static String moduleDPCConsoleTitle = StreamLine.config.getConfString("modules.discord.proxy-chat.console.title");
     public static String moduleDPCConsoleMessage = StreamLine.config.getConfString("modules.discord.proxy-chat.console.message");
     public static boolean moduleDPCConsoleUseAvatar = StreamLine.config.getConfBoolean("modules.discord.proxy-chat.console.use-avatar");
+    // Boosts.
+    public static boolean boostsEnabled = StreamLine.config.getConfBoolean("modules.discord.boosts.enabled");
+    public static String boostsUponBoostRun = StreamLine.config.getConfString("modules.discord.boosts.upon-boosts.run");
     // ... Bungee.
     // Reports.
     public static boolean moduleReportsBConfirmation = StreamLine.config.getConfBoolean("modules.bungee.reports.send-confirmation");
@@ -222,4 +225,7 @@ public class ConfigUtils {
     // Chat History.
     public static boolean chatHistoryEnabled = StreamLine.config.getConfBoolean("modules.bungee.chat-history.enabled");
     public static boolean chatHistoryLoadHistoryStartup = StreamLine.config.getConfBoolean("modules.bungee.chat-history.load-history-on-startup");
+    // Scripts.
+    public static boolean scriptsEnabled = StreamLine.config.getConfBoolean("modules.bungee.scripts.enabled");
+    public static boolean scriptsCreateDefault = StreamLine.config.getConfBoolean("modules.bungee.scripts.create-default");
 }

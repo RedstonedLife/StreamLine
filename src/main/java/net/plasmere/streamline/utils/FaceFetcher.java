@@ -16,11 +16,7 @@ public class FaceFetcher {
     public static String getPlaceholdersApplied(Player player, String string) {
         Guild guild = GuildUtils.getGuild(player);
 
-        return string
-                .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(player))
-                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
+        return TextUtils.replaceAllPlayerBungee(string, player)
                 .replace("%player_uuid%", player.uuid)
                 .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
                 .replace("%guild_name%", guild == null ? "" : guild.name)

@@ -26,28 +26,16 @@ public class SudoCommand extends Command implements TabExecutor {
             ProxiedPlayer sudoOn = StreamLine.getInstance().getProxy().getPlayer(args[0]);
 
             if (sudoOn.hasPermission(ConfigUtils.noSudoPerm)){
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.sudoNoSudo()
-                        .replace("%player_absolute%", sudoOn.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(sudoOn)))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(sudoOn)))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(sudoOn)))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.sudoNoSudo(), sudoOn)
                 );
                 return;
             }
 
             if (StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(sudoOn, TextUtils.argsToStringMinus(args, 0))){
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.sudoWorked()
-                        .replace("%player_absolute%", sender.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.sudoWorked(), sender)
                 );
             } else {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.sudoNoWork()
-                        .replace("%player_absolute%", sender.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.sudoNoWork(), sender)
                 );
             }
         }

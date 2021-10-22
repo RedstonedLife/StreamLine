@@ -6,10 +6,8 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.config.Configuration;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import org.apache.commons.collections4.list.TreeList;
@@ -454,57 +452,177 @@ public class TextUtils {
         return false;
     }
 
-    public static String replaceAllPlayer(String of, SavableUser user) {
+    public static String replaceAllPlayerBungee(String of, SavableUser user) {
         if (user == null) return of;
 
         return of
                 .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
                 .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user));
+                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                .replace("%player_points%", String.valueOf(user.points))
+                .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
+                .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
+                .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
+                .replace("%player_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
+                .replace("%player_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteBungee(user))
+                .replace("%player_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
+                .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
+                .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
+                ;
     }
 
-    public static String replaceAllPlayer(String of, String uuid) {
-        return replaceAllPlayer(of, PlayerUtils.getOrGetSavableUser(uuid));
+    public static String replaceAllPlayerBungee(String of, String uuid) {
+        return replaceAllPlayerBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static String replaceAllPlayer(String of, CommandSender sender) {
-        return replaceAllPlayer(of, PlayerUtils.getOrGetSavableUser(sender));
+    public static String replaceAllPlayerBungee(String of, CommandSender sender) {
+        return replaceAllPlayerBungee(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
-    public static String replaceAllUser(String of, SavableUser user) {
+    public static String replaceAllUserBungee(String of, SavableUser user) {
         if (user == null) return of;
 
         return of
                 .replace("%user_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%user_normal%", PlayerUtils.getOffOnRegBungee(user))
                 .replace("%user_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                .replace("%user_formatted%", PlayerUtils.getJustDisplayBungee(user));
+                .replace("%user_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                .replace("%user_points%", String.valueOf(user.points))
+                .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
+                .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
+                .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
+                .replace("%user_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
+                .replace("%user_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteBungee(user))
+                .replace("%user_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
+                .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
+                .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
+                ;
     }
 
-    public static String replaceAllUser(String of, String uuid) {
-        return replaceAllUser(of, PlayerUtils.getOrGetSavableUser(uuid));
+    public static String replaceAllUserBungee(String of, String uuid) {
+        return replaceAllUserBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static String replaceAllUser(String of, CommandSender sender) {
-        return replaceAllUser(of, PlayerUtils.getOrGetSavableUser(sender));
+    public static String replaceAllUserBungee(String of, CommandSender sender) {
+        return replaceAllUserBungee(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
-    public static String replaceAllSender(String of, SavableUser user) {
+    public static String replaceAllSenderBungee(String of, SavableUser user) {
         if (user == null) return of;
 
         return of
                 .replace("%sender_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%sender_normal%", PlayerUtils.getOffOnRegBungee(user))
                 .replace("%sender_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                .replace("%sender_formatted%", PlayerUtils.getJustDisplayBungee(user));
+                .replace("%sender_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                .replace("%sender_points%", String.valueOf(user.points))
+                .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
+                .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
+                .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
+                .replace("%sender_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
+                .replace("%sender_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteBungee(user))
+                .replace("%sender_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
+                .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
+                .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
+                ;
     }
 
-    public static String replaceAllSender(String of, String uuid) {
-        return replaceAllSender(of, PlayerUtils.getOrGetSavableUser(uuid));
+    public static String replaceAllSenderBungee(String of, String uuid) {
+        return replaceAllSenderBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static String replaceAllSender(String of, CommandSender sender) {
-        return replaceAllSender(of, PlayerUtils.getOrGetSavableUser(sender));
+    public static String replaceAllSenderBungee(String of, CommandSender sender) {
+        return replaceAllSenderBungee(of, PlayerUtils.getOrGetSavableUser(sender));
+    }
+
+    public static String replaceAllPlayerDiscord(String of, SavableUser user) {
+        if (user == null) return of;
+
+        return of
+                .replace("%player_absolute%", PlayerUtils.getAbsoluteDiscord(user))
+                .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(user))
+                .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(user))
+                .replace("%player_formatted%", PlayerUtils.getJustDisplayDiscord(user))
+                .replace("%player_points%", String.valueOf(user.points))
+                .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
+                .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
+                .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
+                .replace("%player_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
+                .replace("%player_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteDiscord(user))
+                .replace("%player_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayDiscord(user))
+                .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
+                .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
+                ;
+    }
+
+    public static String replaceAllPlayerDiscord(String of, String uuid) {
+        return replaceAllPlayerDiscord(of, PlayerUtils.getOrGetSavableUser(uuid));
+    }
+
+    public static String replaceAllPlayerDiscord(String of, CommandSender sender) {
+        return replaceAllPlayerDiscord(of, PlayerUtils.getOrGetSavableUser(sender));
+    }
+
+    public static String replaceAllUserDiscord(String of, SavableUser user) {
+        if (user == null) return of;
+
+        return of
+                .replace("%user_absolute%", PlayerUtils.getAbsoluteDiscord(user))
+                .replace("%user_normal%", PlayerUtils.getOffOnRegDiscord(user))
+                .replace("%user_display%", PlayerUtils.getOffOnDisplayDiscord(user))
+                .replace("%user_formatted%", PlayerUtils.getJustDisplayDiscord(user))
+                .replace("%user_points%", String.valueOf(user.points))
+                .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
+                .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
+                .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
+                .replace("%user_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
+                .replace("%user_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteDiscord(user))
+                .replace("%user_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayDiscord(user))
+                .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
+                .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
+                ;
+    }
+
+    public static String replaceAllUserDiscord(String of, String uuid) {
+        return replaceAllUserDiscord(of, PlayerUtils.getOrGetSavableUser(uuid));
+    }
+
+    public static String replaceAllUserDiscord(String of, CommandSender sender) {
+        return replaceAllUserDiscord(of, PlayerUtils.getOrGetSavableUser(sender));
+    }
+
+    public static String replaceAllSenderDiscord(String of, SavableUser user) {
+        if (user == null) return of;
+
+        return of
+                .replace("%sender_absolute%", PlayerUtils.getAbsoluteDiscord(user))
+                .replace("%sender_normal%", PlayerUtils.getOffOnRegDiscord(user))
+                .replace("%sender_display%", PlayerUtils.getOffOnDisplayDiscord(user))
+                .replace("%sender_formatted%", PlayerUtils.getJustDisplayDiscord(user))
+                .replace("%sender_points%", String.valueOf(user.points))
+                .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
+                .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
+                .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
+                .replace("%sender_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
+                .replace("%sender_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteDiscord(user))
+                .replace("%sender_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayDiscord(user))
+                .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
+                .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
+                ;
+    }
+
+    public static String replaceAllSenderDiscord(String of, String uuid) {
+        return replaceAllSenderDiscord(of, PlayerUtils.getOrGetSavableUser(uuid));
+    }
+
+    public static String replaceAllSenderDiscord(String of, CommandSender sender) {
+        return replaceAllSenderDiscord(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 }

@@ -51,6 +51,7 @@ public class OneSecondTimer implements Runnable {
             }
 
             PlayerUtils.tickTeleport();
+            PlayerUtils.tickBoosts();
         } catch (ConcurrentModificationException e) {
             if (ConfigUtils.debug) e.printStackTrace();
         }

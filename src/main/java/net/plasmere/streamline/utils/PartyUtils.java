@@ -215,11 +215,7 @@ public class PartyUtils {
             }
 
             if (to.online) {
-                MessagingUtils.sendBPUserMessage(party, player, to.player, inviteUser
-                        .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(to))
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(to))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(to))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(to))
+                MessagingUtils.sendBPUserMessage(party, player, to.player, TextUtils.replaceAllPlayerBungee(inviteUser, to)
                 );
             }
 
@@ -238,18 +234,10 @@ public class PartyUtils {
                 }
 
                 if (pl.equals(from)) {
-                    MessagingUtils.sendBPUserMessage(party, player, member, inviteLeader
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(to))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(to))
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(to))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(to))
+                    MessagingUtils.sendBPUserMessage(party, player, member, TextUtils.replaceAllPlayerBungee(inviteLeader, to)
                     );
                 } else {
-                    MessagingUtils.sendBPUserMessage(party, player, member, inviteMembers
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(to))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(to))
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(to))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(to))
+                    MessagingUtils.sendBPUserMessage(party, player, member, TextUtils.replaceAllPlayerBungee(inviteMembers, to)
                     );
                 }
             }
@@ -261,11 +249,7 @@ public class PartyUtils {
             if (ConfigUtils.moduleDEnabled) {
                 if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleInvites) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(player, inviteTitle,
-                            inviteConsole
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(to))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(to))
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(to))
-                                    .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(to))
+                            TextUtils.replaceAllPlayerDiscord(inviteConsole, to)
                             , DiscordBotConfUtils.textChannelParties));
                 }
             }
@@ -303,10 +287,8 @@ public class PartyUtils {
                     return;
                 }
 
-                MessagingUtils.sendBPUserMessage(party, p, p, acceptUser
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(accepter))
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(accepter))
-                        .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(accepter))
+                MessagingUtils.sendBPUserMessage(party, p, p, TextUtils.replaceAllPlayerBungee(acceptUser, accepter)
+                        .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                         .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
                         .replace("%from_normal%", PlayerUtils.getOffOnRegBungee(from))
                         .replace("%from_absolute%", PlayerUtils.getAbsoluteBungee(from))
@@ -320,19 +302,15 @@ public class PartyUtils {
                     if (m == null) continue;
 
                     if (m.equals(party.leader.player)){
-                        MessagingUtils.sendBPUserMessage(party, p, m, acceptLeader
-                                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(accepter))
-                                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(accepter))
-                                .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(accepter))
+                        MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(acceptLeader, accepter)
+                                .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                                 .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
                                 .replace("%from_normal%", PlayerUtils.getOffOnRegBungee(from))
                                 .replace("%from_absolute%", PlayerUtils.getAbsoluteBungee(from))
                         );
                     } else {
-                        MessagingUtils.sendBPUserMessage(party, p, m, acceptMembers
-                                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(accepter))
-                                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(accepter))
-                                .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(accepter))
+                        MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(acceptMembers, accepter)
+                                .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                                 .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
                                 .replace("%from_normal%", PlayerUtils.getOffOnRegBungee(from))
                                 .replace("%from_absolute%", PlayerUtils.getAbsoluteBungee(from))
@@ -346,10 +324,8 @@ public class PartyUtils {
                 if (ConfigUtils.moduleDEnabled) {
                     if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleJoins) {
                         MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, joinsTitle,
-                                joinsConsole
-                                        .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(accepter))
-                                        .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(accepter))
-                                        .replace("%player_absolute%", PlayerUtils.getAbsoluteDiscord(accepter))
+                                TextUtils.replaceAllPlayerDiscord(joinsConsole, accepter)
+                                        .replace("%from_formatted%", PlayerUtils.getJustDisplayDiscord(from))
                                         .replace("%from_display%", PlayerUtils.getOffOnDisplayDiscord(from))
                                         .replace("%from_normal%", PlayerUtils.getOffOnRegDiscord(from))
                                         .replace("%from_absolute%", PlayerUtils.getAbsoluteDiscord(from))
@@ -358,10 +334,8 @@ public class PartyUtils {
 
                     if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleAccepts) {
                         MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, acceptTitle,
-                                acceptConsole
-                                        .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(accepter))
-                                        .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(accepter))
-                                        .replace("%player_absolute%", PlayerUtils.getAbsoluteDiscord(accepter))
+                                TextUtils.replaceAllPlayerDiscord(acceptConsole, accepter)
+                                        .replace("%from_formatted%", PlayerUtils.getJustDisplayDiscord(from))
                                         .replace("%from_display%", PlayerUtils.getOffOnDisplayDiscord(from))
                                         .replace("%from_normal%", PlayerUtils.getOffOnRegDiscord(from))
                                         .replace("%from_absolute%", PlayerUtils.getAbsoluteDiscord(from))
@@ -399,10 +373,8 @@ public class PartyUtils {
 
             party.removeInvite(denier);
 
-            MessagingUtils.sendBPUserMessage(party, p, p, denyUser
-                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(denier))
-                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(denier))
-                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(denier))
+            MessagingUtils.sendBPUserMessage(party, p, p, TextUtils.replaceAllPlayerBungee(denyUser, denier)
+                    .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                     .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
                     .replace("%from_normal%", PlayerUtils.getOffOnRegBungee(from))
                     .replace("%from_absolute%", PlayerUtils.getAbsoluteBungee(from))
@@ -416,19 +388,15 @@ public class PartyUtils {
                 if (m == null) continue;
 
                 if (m.equals(party.leader.player)){
-                    MessagingUtils.sendBPUserMessage(party, p, m, denyLeader
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(denier))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(denier))
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(denier))
+                    MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(denyLeader, denier)
+                            .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                             .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
                             .replace("%from_normal%", PlayerUtils.getOffOnRegBungee(from))
                             .replace("%from_absolute%", PlayerUtils.getAbsoluteBungee(from))
                     );
                 } else {
-                    MessagingUtils.sendBPUserMessage(party, p, m, denyMembers
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(denier))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(denier))
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(denier))
+                    MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(denyMembers, denier)
+                            .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                             .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
                             .replace("%from_normal%", PlayerUtils.getOffOnRegBungee(from))
                             .replace("%from_absolute%", PlayerUtils.getAbsoluteBungee(from))
@@ -439,10 +407,8 @@ public class PartyUtils {
             if (ConfigUtils.moduleDEnabled) {
                 if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleDenies) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, denyTitle,
-                            denyConsole
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(denier))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(denier))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteDiscord(denier))
+                            TextUtils.replaceAllPlayerDiscord(denyConsole, denier)
+                                    .replace("%from_formatted%", PlayerUtils.getJustDisplayDiscord(from))
                                     .replace("%from_display%", PlayerUtils.getOffOnDisplayDiscord(from))
                                     .replace("%from_normal%", PlayerUtils.getOffOnRegDiscord(from))
                                     .replace("%from_absolute%", PlayerUtils.getAbsoluteDiscord(from))
@@ -612,22 +578,13 @@ public class PartyUtils {
                 if (m == null) continue;
 
                 if (pl.equals(sender)) {
-                    MessagingUtils.sendBPUserMessage(party, p, m, kickSender
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
+                    MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(kickSender, player)
                     );
                 } else if (pl.equals(player)) {
-                    MessagingUtils.sendBPUserMessage(party, p, m, kickUser
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
+                    MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(kickUser, player)
                     );
                 } else {
-                    MessagingUtils.sendBPUserMessage(party, p, m, kickMembers
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
+                    MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(kickMembers, player)
                     );
                 }
             }
@@ -638,10 +595,7 @@ public class PartyUtils {
         if (ConfigUtils.moduleDEnabled) {
             if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleKicks) {
                 MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(player.player, kickTitle,
-                        kickConsole
-                                .replace("%player_absolute%", PlayerUtils.getAbsoluteDiscord(player))
-                                .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(player))
-                                .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(player))
+                        TextUtils.replaceAllPlayerDiscord(kickConsole, player)
                         , DiscordBotConfUtils.textChannelParties));
             }
         }
@@ -895,8 +849,7 @@ public class PartyUtils {
             }
 
             String moderatorBulk = listModBulkMain
-                    .replace("%moderators%", moderators(party))
-                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(sender));
+                    .replace("%moderators%", moderators(party));
             String memberBulk = listMemberBulkMain
                     .replace("%members%", members(party));
 
@@ -922,18 +875,10 @@ public class PartyUtils {
 
             for (Player m : party.moderators) {
                 if (i < party.moderators.size()) {
-                    mods.append(listModBulkNotLast
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(m))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(m))
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(m))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(m))
+                    mods.append(TextUtils.replaceAllPlayerBungee(listModBulkNotLast, m)
                     );
                 } else {
-                    mods.append(listModBulkLast
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(m))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(m))
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(m))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(m))
+                    mods.append(TextUtils.replaceAllPlayerBungee(listModBulkLast, m)
                     );
                 }
                 i++;
@@ -958,18 +903,10 @@ public class PartyUtils {
 
             for (Player m : party.members) {
                 if (i < party.moderators.size()) {
-                    mems.append(listMemberBulkNotLast
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(m))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(m))
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(m))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(m))
+                    mems.append(TextUtils.replaceAllPlayerBungee(listMemberBulkNotLast, m)
                     );
                 } else {
-                    mems.append(listMemberBulkLast
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(m))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(m))
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(m))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(m))
+                    mems.append(TextUtils.replaceAllPlayerBungee(listMemberBulkLast, m)
                     );
                 }
                 i++;
@@ -1011,14 +948,8 @@ public class PartyUtils {
 
             switch (party.getLevel(player)) {
                 case LEADER:
-                    MessagingUtils.sendBPUserMessage(party, p, p, promoteFailure
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                            .replace("%level%", textLeader
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                    MessagingUtils.sendBPUserMessage(party, p, p, TextUtils.replaceAllPlayerBungee(promoteFailure, player)
+                            .replace("%level%", TextUtils.replaceAllPlayerBungee(textLeader, player))
                     );
                     return;
                 case MODERATOR:
@@ -1032,34 +963,16 @@ public class PartyUtils {
                         if (m == null) continue;
 
                         if (m.equals(party.leader.player)) {
-                            MessagingUtils.sendBPUserMessage(party, p, m, promoteLeader
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                                    .replace("%level%", textLeader
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                            MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(promoteLeader, player)
+                                    .replace("%level%", TextUtils.replaceAllPlayerBungee(textLeader, player))
                             );
                         } else if (m.equals(player)) {
-                            MessagingUtils.sendBPUserMessage(party, p, m, promoteUser
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                                    .replace("%level%", textLeader
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                            MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(promoteUser, player)
+                                    .replace("%level%", TextUtils.replaceAllPlayerBungee(textLeader, player))
                             );
                         } else {
-                            MessagingUtils.sendBPUserMessage(party, p, m, promoteMembers
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                                    .replace("%level%", textLeader
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                            MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(promoteMembers, player)
+                                    .replace("%level%", TextUtils.replaceAllPlayerBungee(textLeader, player))
                             );
                         }
                     }
@@ -1076,34 +989,16 @@ public class PartyUtils {
                         if (m == null) continue;
 
                         if (m.equals(party.leader.player)) {
-                            MessagingUtils.sendBPUserMessage(party, p, m, promoteLeader
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                                    .replace("%level%", textModerator
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                            MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(promoteLeader, player)
+                                    .replace("%level%", TextUtils.replaceAllPlayerBungee(textModerator, player))
                             );
                         } else if (m.equals(player)) {
-                            MessagingUtils.sendBPUserMessage(party, p, m, promoteUser
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                                    .replace("%level%", textModerator
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                            MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(promoteUser, player)
+                                    .replace("%level%", TextUtils.replaceAllPlayerBungee(textModerator, player))
                             );
                         } else {
-                            MessagingUtils.sendBPUserMessage(party, p, m, promoteMembers
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                                    .replace("%level%", textModerator
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                            MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(promoteMembers, player)
+                                    .replace("%level%", TextUtils.replaceAllPlayerBungee(textModerator, player))
                             );
                         }
                     }
@@ -1113,10 +1008,7 @@ public class PartyUtils {
             if (ConfigUtils.moduleDEnabled) {
                 if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsolePromotes) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, promoteTitle,
-                            promoteConsole
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteDiscord(player))
+                            TextUtils.replaceAllPlayerDiscord(promoteConsole, player)
                             , DiscordBotConfUtils.textChannelParties));
                 }
             }
@@ -1154,14 +1046,8 @@ public class PartyUtils {
 
             switch (party.getLevel(player)) {
                 case LEADER:
-                    MessagingUtils.sendBPUserMessage(party, p, p, demoteIsLeader
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                            .replace("%level%", textLeader
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                    MessagingUtils.sendBPUserMessage(party, p, p, TextUtils.replaceAllPlayerBungee(demoteIsLeader, player)
+                            .replace("%level%", TextUtils.replaceAllPlayerBungee(textLeader, player))
                     );
                     return;
                 case MODERATOR:
@@ -1175,48 +1061,24 @@ public class PartyUtils {
                         if (m == null) continue;
 
                         if (m.equals(party.leader.player)) {
-                            MessagingUtils.sendBPUserMessage(party, p, m, demoteLeader
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                                    .replace("%level%", textMember
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                            MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(demoteLeader, player)
+                                    .replace("%level%", TextUtils.replaceAllPlayerBungee(textMember, player))
                             );
                         } else if (m.equals(player)) {
-                            MessagingUtils.sendBPUserMessage(party, p, m, demoteUser
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                                    .replace("%level%", textMember
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                            MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(demoteUser, player)
+                                    .replace("%level%", TextUtils.replaceAllPlayerBungee(textMember, player))
                             );
                         } else {
-                            MessagingUtils.sendBPUserMessage(party, p, m, demoteMembers
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                                    .replace("%level%", textMember
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                            MessagingUtils.sendBPUserMessage(party, p, m, TextUtils.replaceAllPlayerBungee(demoteMembers, player)
+                                    .replace("%level%", TextUtils.replaceAllPlayerBungee(textMember, player))
                             );
                         }
                     }
                     return;
                 case MEMBER:
                 default:
-                    MessagingUtils.sendBPUserMessage(party, p, p, demoteFailure
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player))
-                            .replace("%level%", textMember
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(player)))
+                    MessagingUtils.sendBPUserMessage(party, p, p, TextUtils.replaceAllPlayerBungee(demoteFailure, player)
+                            .replace("%level%", TextUtils.replaceAllPlayerBungee(textMember, player))
                     );
                     break;
             }
@@ -1224,10 +1086,7 @@ public class PartyUtils {
             if (ConfigUtils.moduleDEnabled) {
                 if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleDemotes) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, demoteTitle,
-                            demoteConsole
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(player))
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(player))
-                                    .replace("%player_absolute%", PlayerUtils.getAbsoluteDiscord(player))
+                            TextUtils.replaceAllPlayerDiscord(demoteConsole, player)
                             , DiscordBotConfUtils.textChannelParties));
                 }
             }

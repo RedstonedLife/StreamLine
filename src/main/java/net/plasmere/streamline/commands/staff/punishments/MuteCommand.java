@@ -1,7 +1,6 @@
 package net.plasmere.streamline.commands.staff.punishments;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -62,15 +61,11 @@ public class MuteCommand extends Command implements TabExecutor {
 
                     other.updateMute(true, new Date((long) (System.currentTimeMillis() + timeAmount)));
 
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.muteMTempSender()
-                            .replace("%player_absolute%", other.getName())
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
+                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMTempSender(), other)
                             .replace("%date%", other.mutedTill.toString())
                     );
                     if (other.online) {
-                        MessagingUtils.sendBUserMessage(PlayerUtils.getPPlayerByUUID(other.uuid), TextUtils.replaceAllSender(MessageConfUtils.muteMTempMuted(), sender)
+                        MessagingUtils.sendBUserMessage(PlayerUtils.getPPlayerByUUID(other.uuid), TextUtils.replaceAllSenderBungee(MessageConfUtils.muteMTempMuted(), sender)
                                 .replace("%date%", other.mutedTill.toString())
                         );
                     }
@@ -81,12 +76,8 @@ public class MuteCommand extends Command implements TabExecutor {
                                     new DiscordMessage(
                                             sender,
                                             MessageConfUtils.muteEmbed(),
-                                            MessageConfUtils.muteMTempDiscord()
+                                            TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteMTempDiscord(), other)
                                                     .replace("%punisher%", sender.getName())
-                                                    .replace("%player_absolute%", other.getName())
-                                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                                                    .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
                                                     .replace("%date%", other.mutedTill.toString())
                                             ,
                                             DiscordBotConfUtils.textChannelMutes
@@ -95,12 +86,8 @@ public class MuteCommand extends Command implements TabExecutor {
                         }
                     }
 
-                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.muteMTempStaff()
+                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMTempStaff(), other)
                             .replace("%punisher%", sender.getName())
-                            .replace("%player_absolute%", other.getName())
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
                             .replace("%date%", other.mutedTill.toString())
                     );
 
@@ -117,14 +104,10 @@ public class MuteCommand extends Command implements TabExecutor {
                 other.setMuted(true);
                 other.removeMutedTill();
 
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.muteMPermSender()
-                        .replace("%player_absolute%", other.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMPermSender(), other)
                 );
                 if (other.online) {
-                    MessagingUtils.sendBUserMessage(PlayerUtils.getPPlayerByUUID(other.uuid), TextUtils.replaceAllSender(MessageConfUtils.muteMPermMuted(), sender));
+                    MessagingUtils.sendBUserMessage(PlayerUtils.getPPlayerByUUID(other.uuid), TextUtils.replaceAllSenderBungee(MessageConfUtils.muteMPermMuted(), sender));
                 }
 
                 if (ConfigUtils.moduleDEnabled) {
@@ -133,12 +116,8 @@ public class MuteCommand extends Command implements TabExecutor {
                                 new DiscordMessage(
                                         sender,
                                         MessageConfUtils.muteEmbed(),
-                                        MessageConfUtils.muteMPermDiscord()
+                                        TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteMPermDiscord(), other)
                                                 .replace("%punisher%", sender.getName())
-                                                .replace("%player_absolute%", other.getName())
-                                                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                                                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                                                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
                                         ,
                                         DiscordBotConfUtils.textChannelMutes
                                 )
@@ -146,12 +125,8 @@ public class MuteCommand extends Command implements TabExecutor {
                     }
                 }
 
-                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.muteMPermStaff()
+                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMPermStaff(), other)
                         .replace("%punisher%", sender.getName())
-                        .replace("%player_absolute%", other.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
                 );
             } else if (args[0].equals("temp")) {
                 if (args.length < 3) {
@@ -178,15 +153,11 @@ public class MuteCommand extends Command implements TabExecutor {
 
                 other.updateMute(true, new Date((long) (System.currentTimeMillis() + timeAmount)));
 
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.muteMTempSender()
-                        .replace("%player_absolute%", other.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMTempSender(), other)
                         .replace("%date%", other.mutedTill.toString())
                 );
                 if (other.online) {
-                    MessagingUtils.sendBUserMessage(PlayerUtils.getPPlayerByUUID(other.uuid), TextUtils.replaceAllSender(MessageConfUtils.muteMTempMuted().replace("%date%", other.mutedTill.toString()), sender));
+                    MessagingUtils.sendBUserMessage(PlayerUtils.getPPlayerByUUID(other.uuid), TextUtils.replaceAllSenderBungee(MessageConfUtils.muteMTempMuted().replace("%date%", other.mutedTill.toString()), sender));
                 }
 
                 if (ConfigUtils.punMutesDiscord) {
@@ -194,12 +165,8 @@ public class MuteCommand extends Command implements TabExecutor {
                             new DiscordMessage(
                                     sender,
                                     MessageConfUtils.muteEmbed(),
-                                    MessageConfUtils.muteMTempDiscord()
+                                    TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteMTempDiscord(), other)
                                             .replace("%punisher%", sender.getName())
-                                            .replace("%player_absolute%", other.getName())
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
                                             .replace("%date%", other.mutedTill.toString())
                                     ,
                                     DiscordBotConfUtils.textChannelMutes
@@ -207,12 +174,8 @@ public class MuteCommand extends Command implements TabExecutor {
                     );
                 }
 
-                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.muteMTempStaff()
+                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMTempStaff(), other)
                         .replace("%punisher%", sender.getName())
-                        .replace("%player_absolute%", other.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
                         .replace("%date%", other.mutedTill.toString())
                 );
             } else if (args[0].equals("remove")) {
@@ -224,14 +187,10 @@ public class MuteCommand extends Command implements TabExecutor {
                 other.setMuted(false);
                 other.removeMutedTill();
 
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.muteUnSender()
-                        .replace("%player_absolute%", other.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteUnSender(), other)
                 );
                 if (other.online) {
-                    MessagingUtils.sendBUserMessage(PlayerUtils.getPPlayerByUUID(other.uuid), TextUtils.replaceAllSender(MessageConfUtils.muteUnMuted(), sender));
+                    MessagingUtils.sendBUserMessage(PlayerUtils.getPPlayerByUUID(other.uuid), TextUtils.replaceAllSenderBungee(MessageConfUtils.muteUnMuted(), sender));
                 }
 
                 if (ConfigUtils.punMutesDiscord) {
@@ -239,33 +198,21 @@ public class MuteCommand extends Command implements TabExecutor {
                             new DiscordMessage(
                                     sender,
                                     MessageConfUtils.muteEmbed(),
-                                    MessageConfUtils.muteUnDiscord()
+                                    TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteUnDiscord(), other)
                                             .replace("%punisher%", sender.getName())
-                                            .replace("%player_absolute%", other.getName())
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
                                     ,
                                     DiscordBotConfUtils.textChannelMutes
                             )
                     );
                 }
 
-                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.muteUnStaff()
+                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteUnStaff(), other)
                         .replace("%punisher%", sender.getName())
-                        .replace("%player_absolute%", other.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
                 );
             } else if (args[0].equals("check")) {
                 Date checked = other.mutedTill;
 
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.muteCheckMain()
-                        .replace("%player_absolute%", other.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteCheckMain(), other)
                         .replace("%check%", other.muted ? MessageConfUtils.muteCheckMuted()
                                 .replace("%date%", (! (checked == null) ? checked.toString() : MessageConfUtils.muteCheckNoDate()))
                                 : MessageConfUtils.muteCheckUnMuted())

@@ -53,12 +53,7 @@ public class BanCommand extends Command implements TabExecutor {
                     if (! ConfigUtils.punBansReplaceable) {
                         if (bans.contains(otherUUID)) {
                             if (bans.getBoolean(otherUUID + ".banned")) {
-                                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.banBTempAlready()
-                                        .replace("%player_absolute%", user.latestName)
-                                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
-                                );
+                                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempAlready(), user));
                                 return;
                             }
                         }
@@ -95,11 +90,7 @@ public class BanCommand extends Command implements TabExecutor {
                         }
                     }
 
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.banBTempSender()
-                            .replace("%player_absolute%", user.getName())
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempSender(), user)
                             .replace("%reason%", reason)
                             .replace("%date%", new Date(Long.parseLong(till)).toString())
                     );
@@ -109,13 +100,9 @@ public class BanCommand extends Command implements TabExecutor {
                             MessagingUtils.sendDiscordEBMessage(
                                     new DiscordMessage(
                                             sender,
-                                            MessageConfUtils.banEmbed(),
-                                            MessageConfUtils.banBTempDiscord()
+                                            MessageConfUtils.banEmbed(),TextUtils.replaceAllPlayerDiscord(
+                                            MessageConfUtils.banBTempDiscord(), user)
                                                     .replace("%punisher%", sender.getName())
-                                                    .replace("%player_absolute%", user.getName())
-                                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                                                    .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
                                                     .replace("%reason%", reason)
                                                     .replace("%date%", new Date(Long.parseLong(till)).toString())
                                             ,
@@ -125,12 +112,8 @@ public class BanCommand extends Command implements TabExecutor {
                         }
                     }
 
-                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.banBTempStaff()
+                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempStaff(), user)
                             .replace("%punisher%", sender.getName())
-                            .replace("%player_absolute%", user.getName())
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
                             .replace("%reason%", reason)
                             .replace("%date%", new Date(Long.parseLong(till)).toString())
                     );
@@ -141,11 +124,7 @@ public class BanCommand extends Command implements TabExecutor {
                 if (! ConfigUtils.punBansReplaceable) {
                     if (bans.contains(otherUUID)) {
                         if (bans.getBoolean(otherUUID + ".banned")) {
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.banBPermAlready()
-                                    .replace("%player_absolute%", user.getName())
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                                    .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                            MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBPermAlready(), user)
                             );
                             return;
                         }
@@ -170,11 +149,7 @@ public class BanCommand extends Command implements TabExecutor {
                     }
                 }
 
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.banBPermSender()
-                        .replace("%player_absolute%", user.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBPermSender(), user)
                         .replace("%reason%", reason)
                 );
 
@@ -183,13 +158,9 @@ public class BanCommand extends Command implements TabExecutor {
                         MessagingUtils.sendDiscordEBMessage(
                                 new DiscordMessage(
                                         sender,
-                                        MessageConfUtils.banEmbed(),
-                                        MessageConfUtils.banBPermDiscord()
+                                        MessageConfUtils.banEmbed(), TextUtils.replaceAllPlayerDiscord(
+                                        MessageConfUtils.banBPermDiscord(), user)
                                                 .replace("%punisher%", sender.getName())
-                                                .replace("%player_absolute%", user.getName())
-                                                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                                                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                                                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
                                                 .replace("%reason%", reason)
                                         ,
                                         DiscordBotConfUtils.textChannelBans
@@ -198,12 +169,8 @@ public class BanCommand extends Command implements TabExecutor {
                     }
                 }
 
-                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.banBPermStaff()
+                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBPermStaff(), user)
                         .replace("%punisher%", sender.getName())
-                        .replace("%player_absolute%", user.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
                         .replace("%reason%", reason)
                 );
             } else if (args[0].equals("temp")) {
@@ -220,11 +187,7 @@ public class BanCommand extends Command implements TabExecutor {
                 if (!ConfigUtils.punBansReplaceable) {
                     if (bans.contains(otherUUID)) {
                         if (bans.getBoolean(otherUUID + ".banned")) {
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.muteMTempAlready()
-                                    .replace("%player_absolute%", user.getName())
-                                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                                    .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                            MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMTempAlready(), user)
                             );
                             return;
                         }
@@ -262,11 +225,7 @@ public class BanCommand extends Command implements TabExecutor {
                     }
                 }
 
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.banBTempSender()
-                        .replace("%player_absolute%", user.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempSender(), user)
                         .replace("%reason%", reason)
                         .replace("%date%", new Date(Long.parseLong(till)).toString())
                 );
@@ -276,12 +235,8 @@ public class BanCommand extends Command implements TabExecutor {
                             new DiscordMessage(
                                     sender,
                                     MessageConfUtils.banEmbed(),
-                                    MessageConfUtils.banBTempDiscord()
+                                    TextUtils.replaceAllPlayerDiscord(MessageConfUtils.banBTempDiscord(), user)
                                             .replace("%punisher%", sender.getName())
-                                            .replace("%player_absolute%", user.getName())
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
                                             .replace("%reason%", reason)
                                             .replace("%date%", new Date(Long.parseLong(till)).toString())
                                     ,
@@ -290,22 +245,14 @@ public class BanCommand extends Command implements TabExecutor {
                     );
                 }
 
-                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.banBTempStaff()
+                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempStaff(), user)
                         .replace("%punisher%", sender.getName())
-                        .replace("%player_absolute%", user.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
                         .replace("%reason%", reason)
                         .replace("%date%", new Date(Long.parseLong(till)).toString())
                 );
             } else if (args[0].equals("remove")) {
                 if (! bans.contains(otherUUID)) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.banUnAlready()
-                            .replace("%player_absolute%", user.getName())
-                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banUnAlready(), user)
                     );
                     return;
                 }
@@ -313,11 +260,7 @@ public class BanCommand extends Command implements TabExecutor {
                 bans.set(otherUUID + ".banned", false);
                 StreamLine.bans.saveConfig();
 
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.banUnSender()
-                        .replace("%player_absolute%", user.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banUnSender(), user)
                 );
 
                 if (ConfigUtils.punBansDiscord) {
@@ -325,35 +268,23 @@ public class BanCommand extends Command implements TabExecutor {
                             new DiscordMessage(
                                     sender,
                                     MessageConfUtils.banEmbed(),
-                                    MessageConfUtils.banUnDiscord()
+                                    TextUtils.replaceAllPlayerDiscord(MessageConfUtils.banUnDiscord(), user)
                                             .replace("%punisher%", sender.getName())
-                                            .replace("%player_absolute%", user.getName())
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
                                     ,
                                     DiscordBotConfUtils.textChannelBans
                             )
                     );
                 }
 
-                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.banUnStaff()
+                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banUnStaff(), user)
                         .replace("%punisher%", sender.getName())
-                        .replace("%player_absolute%", user.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
                 );
             } else if (args[0].equals("check")) {
                 String reason = bans.getString(otherUUID + ".reason");
                 String bannedMillis = bans.getString(otherUUID + ".till");
                 if (bannedMillis == null) bannedMillis = "";
 
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.banCheckMain()
-                        .replace("%player_absolute%", user.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banCheckMain(), user)
                         .replace("%check%", bans.getBoolean(otherUUID + ".banned") ? MessageConfUtils.banCheckBanned()
                                 .replace("%date%", (! bannedMillis.equals("") ? new Date(Long.parseLong(bannedMillis)).toString() : MessageConfUtils.banCheckNoDate()))
                                 .replace("%reason%", reason)

@@ -93,11 +93,7 @@ public class ChatListener implements Listener {
                     if (ConfigUtils.moduleStaffChatMToDiscord) {
                         MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
                                 MessageConfUtils.staffChatEmbedTitle(),
-                                MessageConfUtils.discordStaffChatMessage()
-                                        .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
+                                TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordStaffChatMessage(), sender)
                                         .replace("%message%", msg),
                                 DiscordBotConfUtils.textChannelStaffChat));
                     }
@@ -121,11 +117,7 @@ public class ChatListener implements Listener {
                         if (ConfigUtils.moduleStaffChatMToDiscord) {
                             MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
                                     MessageConfUtils.staffChatEmbedTitle(),
-                                    MessageConfUtils.discordStaffChatMessage()
-                                            .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
+                                    TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordStaffChatMessage(), sender)
                                             .replace("%message%", msg.substring(prefix.length())),
                                     DiscordBotConfUtils.textChannelStaffChat));
                         }

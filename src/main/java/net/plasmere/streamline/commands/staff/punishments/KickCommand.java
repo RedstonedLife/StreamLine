@@ -49,12 +49,7 @@ public class KickCommand extends Command implements TabExecutor {
                     .replace("%reason%", reason)
             );
 
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.kickSender()
-                    .replace("%reason%", reason)
-                    .replace("%player_absolute%", other.getName())
-                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                    .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
+            MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.kickSender(), other)
                     .replace("%reason%", reason)
             );
 
@@ -64,12 +59,8 @@ public class KickCommand extends Command implements TabExecutor {
                             new DiscordMessage(
                                     sender,
                                     MessageConfUtils.kickEmbed(),
-                                    MessageConfUtils.kickDiscord()
+                                    TextUtils.replaceAllPlayerDiscord(MessageConfUtils.kickDiscord(), other)
                                             .replace("%punisher%", sender.getName())
-                                            .replace("%player_absolute%", other.getName())
-                                            .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                                            .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                                            .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
                                             .replace("%reason%", reason)
                                     ,
                                     DiscordBotConfUtils.textChannelKicks
@@ -78,12 +69,9 @@ public class KickCommand extends Command implements TabExecutor {
                 }
             }
 
-            MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.kickStaff()
+            MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm,
+                    TextUtils.replaceAllPlayerBungee(MessageConfUtils.kickStaff(), other)
                     .replace("%punisher%", sender.getName())
-                    .replace("%player_absolute%", other.getName())
-                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(other))
-                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(other))
-                    .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(other))
                     .replace("%reason%", reason)
             );
         }

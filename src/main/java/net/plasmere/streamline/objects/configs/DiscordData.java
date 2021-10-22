@@ -19,15 +19,15 @@ import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.lists.SingleSetThree;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.*;
+import org.apache.commons.collections4.list.TreeList;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Random;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 public class DiscordData {
     private Configuration conf;
@@ -246,7 +246,7 @@ public class DiscordData {
                 PartyUtils.sendChatFromDiscord(user.getName(), party, StreamLine.serverConfig.getDefaultFormatParty(MessageServerType.DISCORD), message);
             }
         } else {
-            Player player = PlayerUtils.getOrCreatePlayerStatByUUID(StreamLine.discordData.getVerified(userID));
+            Player player = PlayerUtils.getOrGetPlayerStatByUUID(StreamLine.discordData.getVerified(userID));
 
             if (player == null) {
                 MessagingUtils.logWarning("Could not send bungee message for " + userID);
@@ -440,22 +440,14 @@ public class DiscordData {
 
         if (ConfigUtils.moduleDPCChangeOnVerify) {
             if (ConfigUtils.moduleDPCChangeOnVerifyType.equals("discord")) {
-                StreamLine.getJda().getGuildById(guildID).getMemberById(discordID).modifyNickname(ConfigUtils.moduleDPCChangeOnVerifyTo
-                        .replace("%player_absolute%", player.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(player))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(player))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayDiscord(player))
+                StreamLine.getJda().getGuildById(guildID).getMemberById(discordID).modifyNickname(TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCChangeOnVerifyTo, player)
                         .replace("%player_uuid%", player.uuid)
                         .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
                         .replace("%guild_name%", guild == null ? "" : guild.name)
                 );
             }
             if (ConfigUtils.moduleDPCChangeOnVerifyType.equals("bungee")) {
-                StreamLine.getJda().getGuildById(guildID).getMemberById(discordID).modifyNickname(ConfigUtils.moduleDPCChangeOnVerifyTo
-                        .replace("%player_absolute%", player.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(player))
+                StreamLine.getJda().getGuildById(guildID).getMemberById(discordID).modifyNickname(TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCChangeOnVerifyTo, player)
                         .replace("%player_uuid%", player.uuid)
                         .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
                         .replace("%guild_name%", guild == null ? "" : guild.name)
@@ -482,5 +474,32 @@ public class DiscordData {
         }
 
         reloadConfig();
+    }
+
+    public void addToBoostQueue(SavableUser user) {
+        reloadConfig();
+        List<String> boostQueueUUIDs = conf.getStringList("boosters.queue");
+//        if (boostQueueUUIDs == null) boostQueueUUIDs = new ArrayList<>();
+
+        boostQueueUUIDs.add(user.uuid);
+        conf.set("boosters.queue", boostQueueUUIDs);
+        saveConfig();
+        reloadConfig();
+    }
+
+    public void remFromBoostQueue(SavableUser user) {
+        reloadConfig();
+        List<String> boostQueueUUIDs = conf.getStringList("boosters.queue");
+//        if (boostQueueUUIDs == null) boostQueueUUIDs = new ArrayList<>();
+
+        boostQueueUUIDs.remove(user.uuid);
+        conf.set("boosters.queue", boostQueueUUIDs);
+        saveConfig();
+        reloadConfig();
+    }
+
+    public TreeList<String> getBoostQueue() {
+        reloadConfig();
+        return new TreeList<>(conf.getStringList("boosters.queue"));
     }
 }

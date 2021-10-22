@@ -18,6 +18,7 @@ import net.plasmere.streamline.objects.enums.NetworkState;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.timers.*;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
+import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
 import net.plasmere.streamline.utils.holders.LPHolder;
@@ -65,6 +66,7 @@ public class StreamLine extends Plugin {
 	private final File gDir = new File(getDataFolder() + File.separator + "guilds" + File.separator);
 	private final File confDir = new File(getDataFolder() + File.separator + "configs" + File.separator);
 	private final File chatHistoryDir = new File(getDataFolder() + File.separator + "chat-history" + File.separator);
+	private final File scriptsDir = new File(getDataFolder() + File.separator + "scripts" + File.separator);
 	private File eventsDir;
 
 	public final File versionFile = new File(getDataFolder(), "version.txt");
@@ -94,6 +96,7 @@ public class StreamLine extends Plugin {
 	public File getEDir() { return eventsDir; }
 	public File getConfDir() { return confDir; }
 	public File getChatHistoryDir() { return chatHistoryDir; }
+	public File getScriptsDir() { return scriptsDir; }
 
 	public String getCurrentMOTD() { return currentMOTD; }
 	public int getMotdPage() { return motdPage; }
@@ -375,6 +378,33 @@ public class StreamLine extends Plugin {
 		}
 	}
 
+	public void loadScripts() {
+		if (! ConfigUtils.scriptsEnabled) return;
+
+		if (! scriptsDir.exists()) if (! scriptsDir.mkdirs()) if (ConfigUtils.debug) MessagingUtils.logWarning("Scripts folder could not be made!");
+
+		File file = new File(scriptsDir, "boost.sl");
+
+		if (! file.exists()) {
+			if (ConfigUtils.scriptsCreateDefault) {
+				try (InputStream in = getResourceAsStream("boost.sl")) {
+					Files.copy(in, file.toPath());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		File[] files = scriptsDir.listFiles();
+		if (files != null) {
+			for (File f : files) {
+				if (! f.getName().endsWith(".sl")) continue;
+
+				ScriptsHandler.addScript(f);
+			}
+		}
+	}
+
     public void onLoad(){
     	InstanceHolder.setInst(instance);
 	}
@@ -431,6 +461,9 @@ public class StreamLine extends Plugin {
 
 		// Events.
 		loadEvents();
+
+		// Scripts.
+		loadScripts();
 
 		// Servers by Versions.
 		if (viaHolder.enabled) {

@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.utils.PlayerUtils;
+import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -44,19 +45,11 @@ public class StaffOnlineCommand {
 
         for (ProxiedPlayer player : lstaffs){
             if (i < lstaffs.size())
-                staff.append(MessageConfUtils.sOnlineDiscordBulkNotLast()
-                        .replace("%player_absolute%", PlayerUtils.getOrCreatePlayerStat(player).getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrCreatePlayerStat(player)))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrCreatePlayerStat(player)))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrCreatePlayerStat(player)))
+                staff.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.sOnlineDiscordBulkNotLast(), player)
                         .replace("%server%", player.getServer().getInfo().getName().toLowerCase())
                 );
             else
-                staff.append(MessageConfUtils.sOnlineDiscordBulkLast()
-                        .replace("%player_absolute%", PlayerUtils.getOrCreatePlayerStat(player).getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrCreatePlayerStat(player)))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrCreatePlayerStat(player)))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrCreatePlayerStat(player)))
+                staff.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.sOnlineDiscordBulkLast(), player)
                         .replace("%server%", player.getServer().getInfo().getName().toLowerCase())
                 );
             i++;

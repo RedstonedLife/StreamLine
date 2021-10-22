@@ -163,7 +163,12 @@ modules:
         title: "PROXY CHAT"
         message: "%message%"
         use-avatar: true
-
+    boosts:
+      # Enables boost module.
+      enabled: true
+      # When someone boosts your discord server.
+      upon-boosts:
+        run: boost.sl
 
   # Bungee modules...
   bungee:
@@ -489,3 +494,9 @@ modules:
       # This will enabled loading player chat history on start up.
       # This will be resource intensive, only enable if you want it to be faster.
       load-history-on-startup: false
+    # Scripts for the plugin.
+    scripts:
+      # Enables it.
+      enabled: true
+      # Creates the default script when not found...
+      create-default: true

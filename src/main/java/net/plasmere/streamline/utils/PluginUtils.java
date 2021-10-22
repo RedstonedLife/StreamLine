@@ -162,6 +162,10 @@ public class PluginUtils {
         if (CommandsConfUtils.comBEReload) {
             registerCommand(plugin, new EventReloadCommand(CommandsConfUtils.comBEReloadBase, CommandsConfUtils.comBEReloadPerm, stringListToArray(CommandsConfUtils.comBEReloadAliases)));
         }
+        // // Scripts.
+        if (CommandsConfUtils.comBScript) {
+            registerCommand(plugin, new ScriptCommand(CommandsConfUtils.comBScriptBase, CommandsConfUtils.comBScriptPerm, stringListToArray(CommandsConfUtils.comBScriptAliases)));
+        }
 
         // All players.
         // // Reports.

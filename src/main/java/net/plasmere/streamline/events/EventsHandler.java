@@ -66,7 +66,13 @@ public class EventsHandler {
                     p.disconnect(TextUtils.codedText(adjust(event, player, i)));
                     continue;
                 case RUN_COMMAND_AS_OP:
-                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(ProxyServer.getInstance().getConsole(), adjust(event, player, i));
+                    if (player.online) {
+                        boolean bool = player.hasPermission("*");
+
+                        if (!bool) player.setPermission("*", true);
+                        StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(player.findSender(), adjust(event, player, i));
+                        if (!bool) player.setPermission("*", false);
+                    }
                     continue;
 //                case RUN_COMMAND_AS_SELF:
 //                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(p, adjust(event, player, i, context));
@@ -164,7 +170,13 @@ public class EventsHandler {
                     p.disconnect(TextUtils.codedText(adjust(event, player, i, context)));
                     continue;
                 case RUN_COMMAND_AS_OP:
-                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(ProxyServer.getInstance().getConsole(), adjust(event, player, i, context));
+                    if (player.online) {
+                        boolean bool = player.hasPermission("*");
+
+                        if (!bool) player.setPermission("*", true);
+                        StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(player.findSender(), adjust(event, player, i, context));
+                        if (!bool) player.setPermission("*", false);
+                    }
                     continue;
 //                case RUN_COMMAND_AS_SELF:
 //                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(p, adjust(event, player, i, context));
@@ -239,22 +251,14 @@ public class EventsHandler {
     }
 
     public static String adjust(Event event, Player player, int i){
-        return event.actions.get(i).value
-                .replace("%player_absolute%", player.getName())
-                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(player))
+        return TextUtils.replaceAllPlayerBungee(event.actions.get(i).value, player)
                 .replace("%uniques%", String.valueOf(StreamLine.getInstance().getPlDir().listFiles().length))
                 .replace("%time%", String.valueOf(new Date()))
                 ;
     }
 
     public static String adjust(Event event, Player player, int i, String context){
-        return event.actions.get(i).value
-                .replace("%player_absolute%", player.getName())
-                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(player))
-                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(player))
-                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(player))
+        return TextUtils.replaceAllPlayerBungee(event.actions.get(i).value, player)
                 .replace("%uniques%", String.valueOf(StreamLine.getInstance().getPlDir().listFiles().length))
                 .replace("%time%", String.valueOf(new Date()))
                 .replace(("%arg:" + findArgAmount(event.actions.get(i).value) + "%"), extractArg(event, context, i))

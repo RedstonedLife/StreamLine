@@ -8,6 +8,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.utils.PlayerUtils;
+import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.*;
 
@@ -44,19 +45,11 @@ public class StaffOnlineCommand extends Command {
 
         for (ProxiedPlayer player : lstaffs){
             if (i < lstaffs.size())
-                staff.append(MessageConfUtils.sOnlineBungeeBulkNotLast()
-                        .replace("%player_absolute%", player.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(player)))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(player)))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(player)))
+                staff.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.sOnlineBungeeBulkNotLast(), player)
                         .replace("%server%", player.getServer().getInfo().getName().toLowerCase())
                 );
             else
-                staff.append(MessageConfUtils.sOnlineBungeeBulkLast()
-                        .replace("%player_absolute%", player.getName())
-                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(player)))
-                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(player)))
-                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(player)))
+                staff.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.sOnlineBungeeBulkLast(), player)
                         .replace("%server%", player.getServer().getInfo().getName().toLowerCase())
                 );
             i++;

@@ -2030,3 +2030,8 @@ chat-channels:
     switch: "&eJust switched to the %new_channel% &bChat Channel &efrom %old_channel% &bChat Channel&8!"
   p-officer:
     switch: "&eJust switched to the %new_channel% &bChat Channel &efrom %old_channel% &bChat Channel&8!"
+
+# For the script command...
+script:
+  message: "&eJust ran script &a%script% &eon &d%player_formatted%&e!"
+  no-script: "&cNo valid script by this name!"

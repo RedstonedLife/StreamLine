@@ -39,7 +39,7 @@ public class FriendCommand extends Command implements TabExecutor {
         if (args.length <= 0) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else if (args.length < 2 && args[0].equals("list")) {
-            MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendListMain()
+            MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendListMain()
                     .replace("%friends%", PlayerUtils.getFriended(stat))
                     .replace("%pending-to%", PlayerUtils.getPTFriended(stat))
                     .replace("%pending-from%", PlayerUtils.getPFFriended(stat))
@@ -76,25 +76,25 @@ public class FriendCommand extends Command implements TabExecutor {
                     }
 
                     if (stat.friendList.contains(other.uuid)) {
-                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendReqAlready(), sender));
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendReqAlready(), sender));
                         return;
                     }
 
                     if (other.ignoredList.contains(stat.uuid)) {
-                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendReqIgnored(), sender));
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendReqIgnored(), sender));
                         return;
                     }
 
                     stat.tryAddNewPendingToFriend(other.uuid);
                     other.tryAddNewPendingFromFriend(stat.uuid);
-                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendReqSelf(), other));
+                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendReqSelf(), other));
                     if ((other instanceof Player && ((Player) other).online) || other instanceof ConsolePlayer) {
-                        MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSender(MessageConfUtils.friendReqOther(), sender));
+                        MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendReqOther(), sender));
                     }
                     break;
                 case "accept":
                     if (! stat.pendingFromFriendList.contains(other.uuid)) {
-                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendAcceptNone(), sender));
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendAcceptNone(), sender));
                         return;
                     }
 
@@ -103,24 +103,24 @@ public class FriendCommand extends Command implements TabExecutor {
                     other.tryRemPendingToFriend(stat.uuid);
                     stat.tryRemPendingFromFriend(other.uuid);
 
-                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendAcceptSelf(), other));
+                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendAcceptSelf(), other));
 
                     if ((other instanceof Player && ((Player) other).online) || other instanceof ConsolePlayer) {
-                        MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSender(MessageConfUtils.friendAcceptOther(), sender));
+                        MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendAcceptOther(), sender));
                     }
                     break;
                 case "deny":
                     if (! stat.pendingFromFriendList.contains(other.uuid)) {
-                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendDenyNone(), sender));
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendDenyNone(), sender));
                         return;
                     }
 
                     stat.tryRemPendingFromFriend(other.uuid);
                     other.tryRemPendingToFriend(stat.uuid);
 
-                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendDenySelf(), other));
+                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendDenySelf(), other));
                     if ((other instanceof Player && ((Player) other).online) || other instanceof ConsolePlayer) {
-                        MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSender(MessageConfUtils.friendDenyOther(), sender));
+                        MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendDenyOther(), sender));
                     }
                     break;
                 case "remove":
@@ -130,7 +130,7 @@ public class FriendCommand extends Command implements TabExecutor {
                     }
 
                     if (! stat.friendList.contains(other.uuid)) {
-                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendRemAlready(), sender));
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendRemAlready(), sender));
                         return;
                     }
 
@@ -140,13 +140,13 @@ public class FriendCommand extends Command implements TabExecutor {
                     other.tryRemPendingFromFriend(stat.uuid);
                     stat.tryRemFriend(other.uuid);
                     other.tryRemFriend(stat.uuid);
-                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendRemSelf(), other));
+                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendRemSelf(), other));
                     if ((other instanceof Player && ((Player) other).online) || other instanceof ConsolePlayer) {
-                        MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSender(MessageConfUtils.friendRemOther(), sender));
+                        MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendRemOther(), sender));
                     }
                     break;
                 case "list":
-                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayer(MessageConfUtils.friendListMain()
+                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendListMain()
                             .replace("%friends%", PlayerUtils.getFriended(other))
                             .replace("%pending-to%", PlayerUtils.getPTFriended(other))
                             .replace("%pending-from%", PlayerUtils.getPFFriended(other))

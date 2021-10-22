@@ -40,11 +40,7 @@ public class StaffChatCommand extends Command {
                     if (ConfigUtils.moduleDEnabled) {
                         MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
                                 MessageConfUtils.staffChatEmbedTitle(),
-                                MessageConfUtils.discordStaffChatMessage()
-                                        .replace("%player_absolute%", sender.getName())
-                                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
+                                TextUtils.replaceAllPlayerBungee(MessageConfUtils.discordStaffChatMessage(), sender)
                                         .replace("%message%", TextUtils.normalize(args)),
                                 DiscordBotConfUtils.textChannelStaffChat));
                     }

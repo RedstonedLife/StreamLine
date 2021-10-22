@@ -18,11 +18,14 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.Guild;
 import net.plasmere.streamline.objects.savable.history.HistorySave;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
 import net.plasmere.streamline.objects.savable.users.Player;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.objects.lists.SingleSet;
+import net.plasmere.streamline.scripts.Script;
+import net.plasmere.streamline.scripts.ScriptsHandler;
 import org.apache.commons.collections4.list.TreeList;
 
 import java.io.File;
@@ -986,11 +989,7 @@ public class PlayerUtils {
 
         of.tryRemTag(tag);
 
-        MessagingUtils.sendBUserMessage(sender, tagRem
-                .replace("%player_absolute%", of.getName())
-                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(of))
-                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(of))
-                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(of))
+        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(tagRem, of)
                 .replace("%tag%", tag)
         );
     }
@@ -1003,11 +1002,7 @@ public class PlayerUtils {
 
         of.tryAddNewTag(tag);
 
-        MessagingUtils.sendBUserMessage(sender, tagAdd
-                .replace("%player_absolute%", of.getName())
-                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(of))
-                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(of))
-                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(of))
+        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(tagAdd, of)
                 .replace("%tag%", tag)
         );
     }
@@ -1018,11 +1013,7 @@ public class PlayerUtils {
             return;
         }
 
-        MessagingUtils.sendBUserMessage(sender, tagListMain
-                .replace("%player_absolute%", of.getName())
-                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(of))
-                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(of))
-                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(of))
+        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(tagListMain, of)
                 .replace("%tags%", compileTagList(of))
         );
     }
@@ -1056,9 +1047,9 @@ public class PlayerUtils {
 
         for (String uuid : stat.ignoredList) {
             if (i < stat.ignoredList.size()) {
-                thing.append(TextUtils.replaceAllPlayer(MessageConfUtils.ignoreListNLast(), uuid));
+                thing.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.ignoreListNLast(), uuid));
             } else {
-                thing.append(TextUtils.replaceAllPlayer(MessageConfUtils.ignoreListLast(), uuid));
+                thing.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.ignoreListLast(), uuid));
             }
 
             i ++;
@@ -1074,9 +1065,9 @@ public class PlayerUtils {
 
         for (String uuid : stat.friendList) {
             if (i < stat.friendList.size()) {
-                thing.append(TextUtils.replaceAllPlayer(MessageConfUtils.friendListFNLast(), uuid));
+                thing.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendListFNLast(), uuid));
             } else {
-                thing.append(TextUtils.replaceAllPlayer(MessageConfUtils.friendListFLast(), uuid));
+                thing.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendListFLast(), uuid));
             }
 
             i ++;
@@ -1092,9 +1083,9 @@ public class PlayerUtils {
 
         for (String uuid : stat.pendingToFriendList) {
             if (i < stat.pendingToFriendList.size()) {
-                thing.append(TextUtils.replaceAllPlayer(MessageConfUtils.friendListPTNLast(), uuid));
+                thing.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendListPTNLast(), uuid));
             } else {
-                thing.append(TextUtils.replaceAllPlayer(MessageConfUtils.friendListPTLast(), uuid));
+                thing.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendListPTLast(), uuid));
             }
 
             i ++;
@@ -1110,9 +1101,9 @@ public class PlayerUtils {
 
         for (String uuid : stat.pendingFromFriendList) {
             if (i < stat.pendingFromFriendList.size()) {
-                thing.append(TextUtils.replaceAllPlayer(MessageConfUtils.friendListPFNLast(), uuid));
+                thing.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendListPFNLast(), uuid));
             } else {
-                thing.append(TextUtils.replaceAllPlayer(MessageConfUtils.friendListPFLast(), uuid));
+                thing.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendListPFLast(), uuid));
             }
 
             i ++;
@@ -1454,6 +1445,139 @@ public class PlayerUtils {
         return MessageConfUtils.nullB();
     }
 
+    public static String getLuckPermsPrefix(String username){
+        if (! StreamLine.lpHolder.enabled) return "";
+
+        User user = StreamLine.lpHolder.api.getUserManager().getUser(username);
+        if (user == null) return "";
+
+        Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(user.getPrimaryGroup());
+        if (group == null) return "";
+
+        String prefix = "";
+
+        TreeMap<Integer, String> preWeight = new TreeMap<>();
+
+        for (PrefixNode node : group.getNodes(NodeType.PREFIX)) {
+            preWeight.put(node.getPriority(), node.getMetaValue());
+        }
+
+        for (PrefixNode node : user.getNodes(NodeType.PREFIX)) {
+            preWeight.put(node.getPriority(), node.getMetaValue());
+        }
+
+        prefix = preWeight.get(PluginUtils.getCeilingInt(preWeight.keySet()));
+
+        if (prefix == null) prefix = "";
+
+        return TextUtils.codedString(prefix);
+    }
+
+    public static String getLuckPermsSuffix(String username){
+        if (! StreamLine.lpHolder.enabled) return "";
+
+        User user = StreamLine.lpHolder.api.getUserManager().getUser(username);
+        if (user == null) return "";
+
+        Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(user.getPrimaryGroup());
+        if (group == null) return "";
+
+        String suffix = "";
+
+        TreeMap<Integer, String> sufWeight = new TreeMap<>();
+
+        for (SuffixNode node : group.getNodes(NodeType.SUFFIX)) {
+            sufWeight.put(node.getPriority(), node.getMetaValue());
+        }
+
+        for (SuffixNode node : user.getNodes(NodeType.SUFFIX)) {
+            sufWeight.put(node.getPriority(), node.getMetaValue());
+        }
+
+        suffix = sufWeight.get(PluginUtils.getCeilingInt(sufWeight.keySet()));
+
+        if (suffix == null) suffix = "";
+
+        return TextUtils.codedString(suffix);
+    }
+
+    public static String getPlayerGuildName(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return guild.name;
+    }
+
+    public static String getPlayerGuildMembers(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return String.valueOf(guild.totalMembers.size());
+    }
+
+    public static String getPlayerGuildLeaderUUID(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return guild.leaderUUID;
+    }
+
+    public static String getPlayerGuildLeaderAbsoluteBungee(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return getAbsoluteBungee(getOrGetSavableUser(guild.leaderUUID));
+    }
+
+    public static String getPlayerGuildLeaderJustDisplayBungee(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return getJustDisplayBungee(getOrGetSavableUser(guild.leaderUUID));
+    }
+
+    public static String getPlayerGuildLeaderOffOnRegBungee(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return getOffOnRegBungee(getOrGetSavableUser(guild.leaderUUID));
+    }
+
+    public static String getPlayerGuildLeaderOffOnDisplayBungee(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return getOffOnDisplayBungee(getOrGetSavableUser(guild.leaderUUID));
+    }
+
+    public static String getPlayerGuildLeaderAbsoluteDiscord(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return getAbsoluteDiscord(getOrGetSavableUser(guild.leaderUUID));
+    }
+
+    public static String getPlayerGuildLeaderJustDisplayDiscord(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return getJustDisplayDiscord(getOrGetSavableUser(guild.leaderUUID));
+    }
+
+    public static String getPlayerGuildLeaderOffOnRegDiscord(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return getOffOnRegDiscord(getOrGetSavableUser(guild.leaderUUID));
+    }
+
+    public static String getPlayerGuildLeaderOffOnDisplayDiscord(SavableUser user) {
+        Guild guild = GuildUtils.getGuild(user);
+
+        if (guild == null) return "";
+        return getOffOnDisplayDiscord(getOrGetSavableUser(guild.leaderUUID));
+    }
+
     public static String getOffOnDisplayDiscord(SavableUser stat){
         if (stat == null) {
             return MessageConfUtils.nullD();
@@ -1633,6 +1757,22 @@ public class PlayerUtils {
 
     public static void addTeleport(ProxiedPlayer sender, ProxiedPlayer to) {
         teleports.put(sender, new SingleSet<>(ConfigUtils.helperTeleportDelay, to));
+    }
+
+    public static void tickBoosts() {
+        TreeList<String> boostUUIDs = new TreeList<>(StreamLine.discordData.getBoostQueue());
+
+        for (String uuid : boostUUIDs) {
+            SavableUser user = getOrGetSavableUser(uuid);
+
+            if (user == null) continue;
+            if (! user.online) continue;
+
+            Script script = ScriptsHandler.getScript(ConfigUtils.boostsUponBoostRun);
+            if (script == null) continue;
+
+            script.execute(StreamLine.getInstance().getProxy().getConsole(), user);
+        }
     }
 
     /* ----------------------------

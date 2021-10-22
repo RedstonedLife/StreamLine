@@ -7,6 +7,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.utils.PlayerUtils;
+import net.plasmere.streamline.utils.TextUtils;
 
 public class StreamCommand extends Command {
     private String perm = "";
@@ -35,11 +36,7 @@ public class StreamCommand extends Command {
                                 .replace("%usage%", "/stream <link>")
                         );
                     } else {
-                        MessagingUtils.sendBCLHBroadcast(sender, MessageConfUtils.streamMessage()
-                                        .replace("%player_absolute%", player.getName())
-                                        .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                                        .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
-                                        .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(sender)))
+                        MessagingUtils.sendBCLHBroadcast(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.streamMessage(), sender)
                                 .replace("%link%", args[0])
                                 , MessageConfUtils.streamHoverPrefix()
                         );
