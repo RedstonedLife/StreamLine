@@ -447,7 +447,15 @@ public class TextUtils {
         return true;
     }
 
-    public static boolean equalsAny(Object object, Object... toEqual){
+    public static boolean equalsAll(Object object, Collection<Object> toEqual){
+        for (Object equal : toEqual) {
+            if (! object.equals(equal)) return false;
+        }
+
+        return true;
+    }
+
+    public static boolean equalsAny(Object object, Collection<?> toEqual){
         for (Object equal : toEqual) {
             if (object.equals(equal)) return true;
         }

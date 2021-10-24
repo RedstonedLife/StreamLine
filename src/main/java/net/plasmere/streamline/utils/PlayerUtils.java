@@ -19,6 +19,7 @@ import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.savable.history.HistorySave;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
 import net.plasmere.streamline.objects.savable.users.Player;
@@ -1703,6 +1704,16 @@ public class PlayerUtils {
         for (ProxiedPlayer player : getOnlinePPlayers()) {
             if (player.getServer() == null) continue;
             if (player.getServer().getInfo().getName().equals(serverName)) players.add(player);
+        }
+
+        return players;
+    }
+
+    public static List<Player> getRoomedPlayers(Chat room) {
+        List<Player> players = new ArrayList<>();
+
+        for (Player player : getJustPlayers()) {
+            if (player.chatChannel.name.equals(room.chatChannel.name) && player.chatIdentifier.equals(room.identifier)) players.add(player);
         }
 
         return players;

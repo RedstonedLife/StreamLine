@@ -12,6 +12,7 @@ import net.plasmere.streamline.objects.savable.users.Player;
 import net.plasmere.streamline.utils.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.TreeSet;
 
 public class ChatChannelCommand extends Command implements TabExecutor {
@@ -60,7 +61,7 @@ public class ChatChannelCommand extends Command implements TabExecutor {
                 return;
             }
 
-            if (! args[1].contains("-") && TextUtils.equalsAny(args[0], "party", "guild")) {
+            if (! args[1].contains("-") && TextUtils.equalsAny(args[0], Arrays.asList("party", "guild"))) {
                 args[1] = UUIDUtils.getCachedUUID(args[1]);
             }
 

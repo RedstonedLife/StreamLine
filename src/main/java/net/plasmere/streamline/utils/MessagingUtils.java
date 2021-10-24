@@ -16,6 +16,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.dv8tion.jda.api.JDA;
+import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.messaging.BungeeMassMessage;
 import net.plasmere.streamline.objects.messaging.BungeeMessage;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
@@ -137,6 +138,17 @@ public class MessagingUtils {
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
                     .replace("%server%", serverFrom.getInfo().getName())
+            ));
+        }
+    }
+
+    public static void sendRoomMessageFromUser(ProxiedPlayer player, Server serverFrom, Chat room, String format, String message) {
+        for (Player p : PlayerUtils.getRoomedPlayers(room)) {
+            p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
+                    .replace("%sender_servered%", getPlayerDisplayName(player))
+                    .replace("%message%", message)
+                    .replace("%server%", serverFrom.getInfo().getName())
+                    .replace("%room%", room.identifier)
             ));
         }
     }

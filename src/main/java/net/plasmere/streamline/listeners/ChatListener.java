@@ -238,9 +238,9 @@ public class ChatListener implements Listener {
                             MessagingUtils.sendServerMessageFromUser(sender, sender.getServer(), sender.getServer().getInfo().getName(), format, withEmotes);
                         } else {
                             MessagingUtils.sendServerMessageFromUser(sender, sender.getServer(), stat.chatIdentifier, format, withEmotes);
-                        }
-                        if (! stat.chatIdentifier.equals(sender.getServer().toString()) && ! stat.chatIdentifier.equals("network")) {
-                            MessagingUtils.sendServerMessageOtherServerSelf(sender, sender.getServer(), format, withEmotes);
+                            if (! stat.chatIdentifier.equals(sender.getServer().getInfo().getName())) {
+                                MessagingUtils.sendServerMessageOtherServerSelf(sender, sender.getServer(), format, withEmotes);
+                            }
                         }
 
                         for (ProxiedPlayer player : msgWithTagged.value) {
@@ -276,10 +276,7 @@ public class ChatListener implements Listener {
 
                         String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
-                        MessagingUtils.sendServerMessageFromUser(sender, sender.getServer(), stat.chatIdentifier, format, withEmotes);
-                        if (! stat.chatIdentifier.equals(sender.getServer().toString()) && ! stat.chatIdentifier.equals("network")) {
-                            MessagingUtils.sendServerMessageOtherServerSelf(sender, sender.getServer(), format, withEmotes);
-                        }
+                        MessagingUtils.sendRoomMessageFromUser(sender, sender.getServer(), chat, format, withEmotes);
 
                         for (ProxiedPlayer player : msgWithTagged.value) {
                             MessagingUtils.sendTagPingPluginMessageRequest(player);
