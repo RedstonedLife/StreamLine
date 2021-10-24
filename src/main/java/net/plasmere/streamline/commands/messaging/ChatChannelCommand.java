@@ -60,7 +60,7 @@ public class ChatChannelCommand extends Command implements TabExecutor {
                 return;
             }
 
-            if (! args[1].contains("-")) {
+            if (! args[1].contains("-") && TextUtils.equalsAny(args[0], "party", "guild")) {
                 args[1] = UUIDUtils.getCachedUUID(args[1]);
             }
 

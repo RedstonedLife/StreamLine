@@ -1350,13 +1350,8 @@ public class PartyUtils {
 
         if (p == null) return;
         try {
-            if (!isParty(party) || party == null) {
+            if (! isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(p, noPartyFound);
-                return;
-            }
-
-            if (! party.hasMember(sender)) {
-                MessagingUtils.sendBUserMessage(p, notInParty);
                 return;
             }
 

@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.plasmere.streamline.StreamLine;
@@ -448,7 +449,7 @@ public class TextUtils {
 
     public static boolean equalsAny(Object object, Object... toEqual){
         for (Object equal : toEqual) {
-            if (! object.equals(equal)) return true;
+            if (object.equals(equal)) return true;
         }
 
         return false;
@@ -884,5 +885,17 @@ public class TextUtils {
 
     public static String replaceAllSenderDiscord(String of, CommandSender sender) {
         return replaceAllSenderDiscord(of, PlayerUtils.getOrGetSavableUser(sender));
+    }
+
+    public static Collection<ServerInfo> getServers() {
+        return StreamLine.getInstance().getProxy().getServers().values();
+    }
+
+    public static boolean equalsAnyServer(String servername) {
+        for (ServerInfo serverInfo : getServers()) {
+            if (serverInfo.getName().equals(servername)) return true;
+        }
+
+        return false;
     }
 }

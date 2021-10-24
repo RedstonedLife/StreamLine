@@ -1250,11 +1250,6 @@ public class GuildUtils {
                 return;
             }
 
-            if (! guild.hasMember(sender)) {
-                MessagingUtils.sendBUserMessage(sender.findSender(), notInGuild);
-                return;
-            }
-
             if (guild.isMuted && ! guild.hasModPerms(sender)) {
                 MessagingUtils.sendBGUserMessage(guild, sender.findSender(), sender.findSender(),  chatMuted
                         .replace("%message%", msg)
