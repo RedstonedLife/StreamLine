@@ -4,8 +4,6 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -14,10 +12,11 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.DataChannel;
 import net.plasmere.streamline.objects.Guild;
 import net.plasmere.streamline.objects.Party;
-import net.plasmere.streamline.objects.enums.ChatChannel;
+import net.plasmere.streamline.objects.chats.Chat;
+import net.plasmere.streamline.objects.chats.ChatChannel;
+import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.lists.SingleSet;
-import net.plasmere.streamline.objects.lists.SingleSetThree;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.Player;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -105,6 +104,8 @@ public class DiscordData {
             try {
                 long l = Long.parseLong(key);
                 loadedChannels.put(l, getChannel(l));
+
+//                if (ConfigUtils.debug) MessagingUtils.logInfo("ID: " + l + " | Channel: " + loadedChannels.get(l).chat.chatChannel.name + " , " + loadedChannels.get(l).chat.identifier);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -129,10 +130,12 @@ public class DiscordData {
     }
 
     public void sendDiscordChannel(CommandSender sender, ChatChannel type, String identifier, String message) {
+        if (! ConfigUtils.moduleDEnabled) return;
+
         TreeSet<Long> channels = getChannelsByData(type, identifier);
 
         for (Long channel : channels) {
-            if (type.equals(ChatChannel.LOCAL)) {
+            if (type.equals(ChatsHandler.getChannel("local"))) {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 sender,
@@ -144,7 +147,7 @@ public class DiscordData {
                 );
             }
 
-            if (type.equals(ChatChannel.GLOBAL)) {
+            if (type.equals(ChatsHandler.getChannel("global"))) {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 sender,
@@ -156,7 +159,7 @@ public class DiscordData {
                 );
             }
 
-            if (type.equals(ChatChannel.GUILD)) {
+            if (type.equals(ChatsHandler.getChannel("guild"))) {
                 Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(sender));
 
                 if (guild == null) return;
@@ -178,7 +181,7 @@ public class DiscordData {
                 );
             }
 
-            if (type.equals(ChatChannel.PARTY)) {
+            if (type.equals(ChatsHandler.getChannel("party"))) {
                 Party party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(sender).uuid);
 
                 if (party == null) return;
@@ -201,11 +204,13 @@ public class DiscordData {
         }
     }
 
-    public void sendDiscordJoinChannel(CommandSender player, ChatChannel type, String identifier) {
-        TreeSet<Long> channels = getChannelsByData(type, identifier);
+    public void sendDiscordJoinChannel(CommandSender player, ChatChannel chatChannel, String identifier) {
+        if (! ConfigUtils.moduleDEnabled) return;
+
+        TreeSet<Long> channels = getChannelsByData(chatChannel, identifier);
 
         for (Long channel : channels) {
-            if (type.equals(ChatChannel.LOCAL)) {
+            if (chatChannel.equals(ChatsHandler.getChannel("local"))) {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
@@ -216,7 +221,7 @@ public class DiscordData {
                 );
             }
 
-            if (type.equals(ChatChannel.GLOBAL)) {
+            if (chatChannel.equals(ChatsHandler.getChannel("global"))) {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
@@ -227,7 +232,7 @@ public class DiscordData {
                 );
             }
 
-            if (type.equals(ChatChannel.GUILD)) {
+            if (chatChannel.equals(ChatsHandler.getChannel("guild"))) {
                 Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
 
                 if (guild == null) return;
@@ -248,7 +253,7 @@ public class DiscordData {
                 );
             }
 
-            if (type.equals(ChatChannel.PARTY)) {
+            if (chatChannel.equals(ChatsHandler.getChannel("party"))) {
                 Party party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
 
                 if (party == null) return;
@@ -271,10 +276,12 @@ public class DiscordData {
     }
 
     public void sendDiscordLeaveChannel(CommandSender player, ChatChannel type, String identifier) {
+        if (! ConfigUtils.moduleDEnabled) return;
+
         TreeSet<Long> channels = getChannelsByData(type, identifier);
 
         for (Long channel : channels) {
-            if (type.equals(ChatChannel.LOCAL)) {
+            if (type.equals(ChatsHandler.getChannel("local"))) {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
@@ -285,7 +292,7 @@ public class DiscordData {
                 );
             }
 
-            if (type.equals(ChatChannel.GLOBAL)) {
+            if (type.equals(ChatsHandler.getChannel("global"))) {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
@@ -296,7 +303,7 @@ public class DiscordData {
                 );
             }
 
-            if (type.equals(ChatChannel.GUILD)) {
+            if (type.equals(ChatsHandler.getChannel("guild"))) {
                 Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
 
                 if (guild == null) return;
@@ -317,7 +324,7 @@ public class DiscordData {
                 );
             }
 
-            if (type.equals(ChatChannel.PARTY)) {
+            if (type.equals(ChatsHandler.getChannel("party"))) {
                 Party party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
 
                 if (party == null) return;
@@ -348,38 +355,38 @@ public class DiscordData {
         DataChannel channelData = getChannel(channelID);
 
         if (! isVerified(userID)) {
-            if (channelData.type.equals(ChatChannel.GLOBAL)) {
+            if (channelData.chatChannel.equals(ChatsHandler.getChannel("global"))) {
                 if (channelData.identifier.equals("")) {
-                    MessagingUtils.sendGlobalMessageFromDiscord(user.getName(), StreamLine.serverConfig.getDefaultFormatGlobal(MessageServerType.DISCORD), message);
+                    MessagingUtils.sendGlobalMessageFromDiscord(user.getName(), StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
                 } else {
-                    MessagingUtils.sendPermissionedMessage(channelData.identifier, StreamLine.serverConfig.getDefaultFormatGlobal(MessageServerType.DISCORD)
+                    MessagingUtils.sendPermissionedMessage(channelData.identifier, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD)
                             .replace("%sender_display%", user.getName())
                             .replace("%message%", message));
                 }
             }
 
-            if (channelData.type.equals(ChatChannel.LOCAL)) {
+            if (channelData.chatChannel.equals(ChatsHandler.getChannel("local"))) {
                 ServerInfo server = StreamLine.getInstance().getProxy().getServerInfo(channelData.identifier);
 
                 if (server == null) return;
 
-                MessagingUtils.sendServerMessageFromDiscord(user.getName(), server, StreamLine.serverConfig.getDefaultFormatLocal(MessageServerType.DISCORD), message);
+                MessagingUtils.sendServerMessageFromDiscord(user.getName(), server, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             }
 
-            if (channelData.type.equals(ChatChannel.GUILD)) {
+            if (channelData.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
                 Guild guild = GuildUtils.getGuild(channelData.identifier);
 
                 if (guild == null) return;
 
-                GuildUtils.sendChatFromDiscord(user.getName(), guild, StreamLine.serverConfig.getDefaultFormatGuild(MessageServerType.DISCORD), message);
+                GuildUtils.sendChatFromDiscord(user.getName(), guild, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             }
 
-            if (channelData.type.equals(ChatChannel.PARTY)) {
+            if (channelData.chatChannel.equals(ChatsHandler.getChannel("party"))) {
                 Party party = PartyUtils.getParty(channelData.identifier);
 
                 if (party == null) return;
 
-                PartyUtils.sendChatFromDiscord(user.getName(), party, StreamLine.serverConfig.getDefaultFormatParty(MessageServerType.DISCORD), message);
+                PartyUtils.sendChatFromDiscord(user.getName(), party, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             }
         } else {
             Player player = PlayerUtils.getOrGetPlayerStatByUUID(StreamLine.discordData.getVerified(userID));
@@ -389,18 +396,18 @@ public class DiscordData {
                 return;
             }
 
-            if (channelData.type.equals(ChatChannel.GLOBAL)) {
+            if (channelData.chatChannel.equals(ChatsHandler.getChannel("global"))) {
                 if (channelData.identifier.equals("")) {
                     MessagingUtils.sendGlobalMessageFromDiscord(player
-                            , StreamLine.serverConfig.getDefaultFormatGlobal(MessageServerType.DISCORD), message);
+                            , StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
                 } else {
-                    MessagingUtils.sendPermissionedMessage(channelData.identifier, StreamLine.serverConfig.getDefaultFormatGlobal(MessageServerType.DISCORD)
+                    MessagingUtils.sendPermissionedMessage(channelData.identifier, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD)
                             .replace("%sender_display%", PlayerUtils.getJustDisplayBungee(player))
                             .replace("%message%", message));
                 }
             }
 
-            if (channelData.type.equals(ChatChannel.LOCAL)) {
+            if (channelData.chatChannel.equals(ChatsHandler.getChannel("local"))) {
                 ServerInfo server = StreamLine.getInstance().getProxy().getServerInfo(channelData.identifier);
 
                 if (server == null) {
@@ -408,25 +415,25 @@ public class DiscordData {
                     return;
                 }
 
-                MessagingUtils.sendServerMessageFromDiscord(player, server, StreamLine.serverConfig.getDefaultFormatLocal(MessageServerType.DISCORD), message);
+                MessagingUtils.sendServerMessageFromDiscord(player, server, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             }
 
-            if (channelData.type.equals(ChatChannel.GUILD)) {
+            if (channelData.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
                 Guild guild = GuildUtils.getGuild(channelData.identifier);
 
                 if (guild == null) {
                     return;
                 }
 
-                GuildUtils.sendChatFromDiscord(player, guild, StreamLine.serverConfig.getDefaultFormatGuild(MessageServerType.DISCORD), message);
+                GuildUtils.sendChatFromDiscord(player, guild, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             }
 
-            if (channelData.type.equals(ChatChannel.PARTY)) {
+            if (channelData.chatChannel.equals(ChatsHandler.getChannel("party"))) {
                 Party party = PartyUtils.getParty(channelData.identifier);
 
                 if (party == null) return;
 
-                PartyUtils.sendChatFromDiscord(player, party, StreamLine.serverConfig.getDefaultFormatParty(MessageServerType.DISCORD), message);
+                PartyUtils.sendChatFromDiscord(player, party, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             }
         }
     }
@@ -439,12 +446,19 @@ public class DiscordData {
         for (Long id : loadedChannels.keySet()) {
             DataChannel set = loadedChannels.get(id);
 
-            if (type.equals(ChatChannel.GLOBAL)) {
-                if (set.type.equals(type)) toReturn.add(id);
+//            if (ConfigUtils.debug) MessagingUtils.logInfo("ID: " + id);
+
+            if (type.equals(ChatsHandler.getChannel("global"))) {
+                if (set.chatChannel.equals(type)) toReturn.add(id);
                 continue;
             }
 
-            if (set.type.equals(type) && set.identifier.equals(identifier)) toReturn.add(id);
+            try {
+                if (set.chatChannel.equals(type) && set.identifier.equals(identifier)) toReturn.add(id);
+            } catch (Exception e) {
+                if (ConfigUtils.debug) MessagingUtils.logInfo("ID that broke: " + id);
+                e.printStackTrace();
+            }
         }
 
         return toReturn;
@@ -485,7 +499,7 @@ public class DiscordData {
     }
 
     public void addChannel(long channelID, DataChannel dataChannel) {
-        conf.set("channels." + channelID + ".type", dataChannel.type.toString());
+        conf.set("channels." + channelID + ".type", dataChannel.chatChannel.name);
         conf.set("channels." + channelID + ".identifier", dataChannel.identifier);
         conf.set("channels." + channelID + ".bypass", dataChannel.bypass);
         conf.set("channels." + channelID + ".joins", dataChannel.joins);
@@ -628,14 +642,20 @@ public class DiscordData {
         try {
             for (String roleID : ConfigUtils.moduleDPCOnVerifyAdd) {
                 Role role = StreamLine.getJda().getRoleById(roleID);
-                if (role == null) continue;
+                if (role == null) {
+                    MessagingUtils.logInfo("Role (" + roleID + ") was not found!");
+                    continue;
+                }
 
                 StreamLine.getJda().getGuildById(guildID).addRoleToMember(discordID, role);
             }
 
             for (String roleID : ConfigUtils.moduleDPCOnVerifyRemove) {
                 Role role = StreamLine.getJda().getRoleById(roleID);
-                if (role == null) continue;
+                if (role == null) {
+                    MessagingUtils.logInfo("Role (" + roleID + ") was not found!");
+                    continue;
+                }
 
                 StreamLine.getJda().getGuildById(guildID).removeRoleFromMember(discordID, role);
             }

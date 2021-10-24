@@ -7,10 +7,11 @@ import net.luckperms.api.query.QueryOptions;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
-import net.plasmere.streamline.objects.Guild;
 import net.plasmere.streamline.objects.Party;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.plasmere.streamline.objects.enums.ChatChannel;
+import net.plasmere.streamline.objects.chats.ChatChannel;
+import net.plasmere.streamline.objects.chats.ChatsHandler;
+import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.savable.users.Player;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -1307,8 +1308,9 @@ public class PartyUtils {
 
                 if (m == null) continue;
 
-                MessagingUtils.sendBPUserMessage(party, p, m, chat
-                        .replace("%message%", msg)
+                MessagingUtils.sendBPUserMessage(party, p, m,
+                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("party", party.leaderUUID), "party", MessageServerType.BUNGEE)
+                                .replace("%message%", msg)
                 );
             }
 
@@ -1322,7 +1324,91 @@ public class PartyUtils {
             }
 
             if (ConfigUtils.moduleDPC) {
-                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatChannel.PARTY, party.leaderUUID, msg);
+                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.leaderUUID, msg);
+            }
+
+            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+                if (! pp.hasPermission(ConfigUtils.partyView)) continue;
+
+                Player them = PlayerUtils.getPlayerStat(pp);
+
+                if (them == null) continue;
+
+                if (! them.pspy) continue;
+
+                if (! them.pspyvs) if (them.uuid.equals(sender.uuid)) continue;
+
+                MessagingUtils.sendBPUserMessage(party, p, pp, spy.replace("%message%", msg));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendChat(Player sender, Party party, String msg) {
+        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+
+        if (p == null) return;
+        try {
+            if (!isParty(party) || party == null) {
+                MessagingUtils.sendBUserMessage(p, noPartyFound);
+                return;
+            }
+
+            if (! party.hasMember(sender)) {
+                MessagingUtils.sendBUserMessage(p, notInParty);
+                return;
+            }
+
+            if (party.isMuted && ! party.hasModPerms(sender)) {
+                MessagingUtils.sendBPUserMessage(party, p, p, chatMuted
+                        .replace("%message%", msg)
+                );
+                return;
+            }
+
+//            if (ConfigUtils.partyConsoleChats) {
+//                MessagingUtils.sendBPUserMessage(party, p, StreamLine.getInstance().getProxy().getConsole(), chatConsole
+//                        .replace("%sender_display%", PlayerUtils.getOffOnDisplayBungee(sender))
+//                        .replace("%message%", msg)
+//                );
+//            }
+
+            for (Player pl : party.totalMembers) {
+                if (! pl.online) continue;
+
+                ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+
+                if (m == null) continue;
+
+                MessagingUtils.sendBPUserMessage(party, p, m,
+                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("party", party.leaderUUID), "party", MessageServerType.BUNGEE)
+                                .replace("%message%", msg)
+                );
+            }
+
+            Party ownParty = PartyUtils.getParty(sender);
+
+            if (ownParty != null) {
+                if (!sender.chatIdentifier.equals(ownParty.leaderUUID) && !sender.chatIdentifier.equals("network")) {
+                    MessagingUtils.sendBPUserMessage(party, p, sender.findSender(),
+                            StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("party", party.leaderUUID), "party", MessageServerType.BUNGEE)
+                                    .replace("%message%", msg)
+                    );
+                }
+            }
+
+            if (ConfigUtils.moduleDEnabled) {
+                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleChats) {
+                    MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, chatTitle,
+                            chatConsole
+                                    .replace("%message%", msg)
+                            , DiscordBotConfUtils.textChannelParties));
+                }
+            }
+
+            if (ConfigUtils.moduleDPC) {
+                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.leaderUUID, msg);
             }
 
             for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
@@ -1344,6 +1430,8 @@ public class PartyUtils {
     }
 
     public static void sendChatFromDiscord(String nameUsed, Party party, String format, String msg) {
+        if (! ConfigUtils.moduleDEnabled) return;
+
         try {
             for (SavableUser pl : party.totalMembers) {
                 MessagingUtils.sendBPUserMessageFromDiscord(party, nameUsed, pl.findSender(), format
@@ -1375,6 +1463,8 @@ public class PartyUtils {
     }
 
     public static void sendChatFromDiscord(SavableUser user, Party party, String format, String msg) {
+        if (! ConfigUtils.moduleDEnabled) return;
+
         try {
             for (SavableUser pl : party.totalMembers) {
                 MessagingUtils.sendBPUserMessageFromDiscord(party, user, pl.findSender(), format

@@ -539,6 +539,31 @@ public class PlayerUtils {
         return users;
     }
 
+    public static List<Player> getPermissionedOnline(String permission){
+        List<Player> users = new ArrayList<>();
+
+        for (Player user : getJustPlayersOnline()) {
+            if (! user.online) continue;
+            if (user.hasPermission(permission)) {
+                users.add(user);
+            }
+        }
+
+        return users;
+    }
+
+    public static List<ProxiedPlayer> getPermissionedOnlineProxied(String permission){
+        List<ProxiedPlayer> users = new ArrayList<>();
+
+        for (ProxiedPlayer user : getOnlinePPlayers()) {
+            if (user.hasPermission(permission)) {
+                users.add(user);
+            }
+        }
+
+        return users;
+    }
+
     public static List<Player> getJustPlayersOnline(){
         List<Player> players = new ArrayList<>(getJustPlayers());
         List<Player> online = new ArrayList<>();
@@ -1449,10 +1474,18 @@ public class PlayerUtils {
         if (! StreamLine.lpHolder.enabled) return "";
 
         User user = StreamLine.lpHolder.api.getUserManager().getUser(username);
-        if (user == null) return "";
+        if (user == null) {
+//            MessagingUtils.logWarning("getLuckPermsPrefix -> user == null");
+            return "";
+        }
 
         Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(user.getPrimaryGroup());
-        if (group == null) return "";
+        if (group == null) {
+//            MessagingUtils.logWarning("getLuckPermsPrefix -> group == null");
+            return "";
+        } else {
+//            MessagingUtils.logInfo("getLuckPermsPrefix -> group == " + group.getDisplayName() + " | " + group.getName() + " | " + group.getWeight());
+        }
 
         String prefix = "";
 
@@ -1460,6 +1493,7 @@ public class PlayerUtils {
 
         for (PrefixNode node : group.getNodes(NodeType.PREFIX)) {
             preWeight.put(node.getPriority(), node.getMetaValue());
+//            MessagingUtils.logInfo("getLuckPermsPrefix -> node added: " + node.getPriority() + " , " + node.getMetaValue());
         }
 
         for (PrefixNode node : user.getNodes(NodeType.PREFIX)) {
@@ -1468,7 +1502,10 @@ public class PlayerUtils {
 
         prefix = preWeight.get(PluginUtils.getCeilingInt(preWeight.keySet()));
 
-        if (prefix == null) prefix = "";
+        if (prefix == null) {
+//            MessagingUtils.logWarning("getLuckPermsPrefix -> prefix == null");
+            prefix = "";
+        }
 
         return TextUtils.codedString(prefix);
     }

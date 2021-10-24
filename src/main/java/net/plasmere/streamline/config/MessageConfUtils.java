@@ -1542,64 +1542,9 @@ public class MessageConfUtils {
         return StreamLine.config.mess.getString("language.invalid-locale");
     }
 
-    public static String chatChannelsLocalLabel() {
+    public static String chatChannelsSwitch() {
         StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.local.label");
-    }
-
-    public static String chatChannelsLocalSwitch() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.local.switch");
-    }
-
-    public static String chatChannelsGlobalLabel() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.global.label");
-    }
-
-    public static String chatChannelsGlobalSwitch() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.global.switch");
-    }
-
-    public static String chatChannelsGuildLabel() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.guild.label");
-    }
-
-    public static String chatChannelsGuildSwitch() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.guild.switch");
-    }
-
-    public static String chatChannelsPartyLabel() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.party.label");
-    }
-
-    public static String chatChannelsPartySwitch() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.party.switch");
-    }
-
-    public static String chatChannelsGOfficerLabel() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.g-officer.label");
-    }
-
-    public static String chatChannelsGOfficerSwitch() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.g-officer.switch");
-    }
-
-    public static String chatChannelsPOfficerLabel() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.p-officer.label");
-    }
-
-    public static String chatChannelsPOfficerSwitch() {
-        StreamLine.config.reloadLocales();
-        return StreamLine.config.mess.getString("chat-channels.p-officer.switch");
+        return StreamLine.config.mess.getString("chat-channels.switch");
     }
 
     public static String scriptMessage() {

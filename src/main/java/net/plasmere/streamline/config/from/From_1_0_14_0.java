@@ -114,4 +114,9 @@ public class From_1_0_14_0 extends From {
         addUpdatedCommandsEntry("commands.bungee.messaging.bverify.aliases", List.of("bv", "bver"));
         addUpdatedCommandsEntry("commands.bungee.messaging.bverify.permission", "streamline.command.verify");
     }
+
+    @Override
+    public void setupChatsFix() {
+
+    }
 }

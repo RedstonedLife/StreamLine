@@ -20,6 +20,8 @@ public class ReadyListener implements EventListener {
 
     @Override
     public void onEvent(@Nonnull GenericEvent event) {
+        if (! ConfigUtils.moduleDEnabled) return;
+
         if (ConfigUtils.moduleStartups) {
             if (event instanceof ReadyEvent) {
                 try {

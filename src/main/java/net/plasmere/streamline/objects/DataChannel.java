@@ -1,27 +1,25 @@
 package net.plasmere.streamline.objects;
 
-import net.plasmere.streamline.objects.enums.ChatChannel;
+import net.plasmere.streamline.objects.chats.Chat;
+import net.plasmere.streamline.objects.chats.ChatChannel;
+import net.plasmere.streamline.objects.chats.ChatsHandler;
 
 public class DataChannel {
-    public ChatChannel type;
+    public ChatChannel chatChannel;
     public String identifier;
     public boolean bypass;
     public boolean joins;
     public boolean leaves;
 
-    public DataChannel(ChatChannel type, String identifier, boolean bypass, boolean joins, boolean leaves) {
-        this.type = type;
+    public DataChannel(ChatChannel chatChannel, String identifier, boolean bypass, boolean joins, boolean leaves) {
+        this.chatChannel = chatChannel;
         this.identifier = identifier;
         this.bypass = bypass;
         this.joins = joins;
         this.leaves = leaves;
     }
 
-    public DataChannel(String  type, String identifier, boolean bypass, boolean joins, boolean leaves) {
-        this.type = ChatChannel.valueOf(type);
-        this.identifier = identifier;
-        this.bypass = bypass;
-        this.joins = joins;
-        this.leaves = leaves;
+    public DataChannel(String chatChannel, String identifier, boolean bypass, boolean joins, boolean leaves) {
+        this(ChatsHandler.getChannel(chatChannel), identifier, bypass, joins, leaves);
     }
 }

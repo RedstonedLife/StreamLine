@@ -3,12 +3,11 @@ package net.plasmere.streamline.discordbot.commands;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
-import net.plasmere.streamline.objects.enums.ChatChannel;
+import net.plasmere.streamline.objects.chats.ChatChannel;
+import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
-import net.plasmere.streamline.utils.PermissionHelper;
 
 public class ChannelCommand {
     public static String usage = "Usage: channel <set | remove> <global | local | guild | party> <identifier> <bypass: true or false> <joins: true or false> <leaves: true or false>";
@@ -65,16 +64,16 @@ public class ChannelCommand {
 
                 switch (args[2]) {
                     case "global":
-                        StreamLine.discordData.addChannel(channelID, ChatChannel.GLOBAL.toString(), args[3], bypass, joins, leaves);
+                        StreamLine.discordData.addChannel(channelID, ChatsHandler.getChannel("global").toString(), args[3], bypass, joins, leaves);
                         return "Successfully added channel ``" + channelID + "`` to your set channels as: < GLOBAL , " + args[3] + "," + bypass + " >!";
                     case "local":
-                        StreamLine.discordData.addChannel(channelID, ChatChannel.LOCAL.toString(), args[3], bypass, joins, leaves);
+                        StreamLine.discordData.addChannel(channelID, ChatsHandler.getChannel("local").toString(), args[3], bypass, joins, leaves);
                         return "Successfully added channel ``" + channelID + "`` to your set channels as: < LOCAL , " + args[3] + "," + bypass + " >!";
                     case "guild":
-                        StreamLine.discordData.addChannel(channelID, ChatChannel.GUILD.toString(), args[3], bypass, joins, leaves);
+                        StreamLine.discordData.addChannel(channelID, ChatsHandler.getChannel("guild").toString(), args[3], bypass, joins, leaves);
                         return "Successfully added channel ``" + channelID + "`` to your set channels as: < GUILD , " + args[3] + "," + bypass + " >!";
                     case "party":
-                        StreamLine.discordData.addChannel(channelID, ChatChannel.PARTY.toString(), args[3], bypass, joins, leaves);
+                        StreamLine.discordData.addChannel(channelID, ChatsHandler.getChannel("party").toString(), args[3], bypass, joins, leaves);
                         return "Successfully added channel ``" + channelID + "`` to your set channels as: < PARTY , " + args[3] + "," + bypass + " >!";
                     default:
                         return "Improper syntax!\n" + usage;

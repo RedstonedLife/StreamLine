@@ -57,6 +57,7 @@ public class StreamLine extends Plugin {
 	public static ServerConfig serverConfig;
 	public static DiscordData discordData;
 	public static OfflineStats offlineStats;
+	public static ChatConfig chatConfig;
 
 	public final static String customChannel = "streamline:channel";
 
@@ -363,6 +364,10 @@ public class StreamLine extends Plugin {
 		// Server ConfigHandler.
 		if (ConfigUtils.sc) {
 			serverConfig = new ServerConfig();
+		}
+
+		if (ConfigUtils.customChats) {
+			chatConfig = new ChatConfig();
 		}
 
 		// Discord Data.

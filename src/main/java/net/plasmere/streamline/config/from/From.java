@@ -26,6 +26,7 @@ public abstract class From {
         SERVERCONFIG,
         DISCORDBOT,
         COMMANDS,
+        CHATS,
     }
 
     // TreeMap < locale name , TreeMap < order , SingleSet < path , stringed value > > >
@@ -35,12 +36,14 @@ public abstract class From {
     public TreeMap<Integer, SingleSet<String, Object>> serverConfig = new TreeMap<>();
     public TreeMap<Integer, SingleSet<String, Object>> discordBot = new TreeMap<>();
     public TreeMap<Integer, SingleSet<String, Object>> commands = new TreeMap<>();
+    public TreeMap<Integer, SingleSet<String, Object>> chats = new TreeMap<>();
 
     public Configuration c;
     public Configuration m;
     public Configuration sc;
     public Configuration dis;
     public Configuration comm;
+    public Configuration ch;
 
     //    public static final StreamLine inst = StreamLine.getInstance();
     public final String cstring = "config.yml";
@@ -56,6 +59,8 @@ public abstract class From {
     public final File disbotFile = new File(StreamLine.getInstance().getDataFolder(), disbotString);
     public final String commandString = "commands.yml";
     public final File commandFile = new File(StreamLine.getInstance().getDataFolder(), commandString);
+    public final String chatsString = "chats.yml";
+    public final File chatsFile = new File(StreamLine.getInstance().getConfDir(), chatsString);
 
     public TreeMap<String, String> catchAll_values = new TreeMap<>();
 
@@ -79,12 +84,14 @@ public abstract class From {
         setupServerConfigFix();
         setupDiscordBotFix();
         setupCommandsFix();
+        setupChatsFix();
 
         applyConfig();
         applyLocales();
         applyServerConfig();
         applyDiscordBot();
         applyCommands();
+        applyChats();
 
         applyCatchAlls();
 
@@ -117,6 +124,7 @@ public abstract class From {
         sc = getFirstServerConfig();
         dis = getFirstDiscordBot();
         comm = getFirstCommands();
+        ch = getFirstChats();
     }
 
     public Configuration getFirstConfig() {
@@ -228,11 +236,32 @@ public abstract class From {
         return thing;
     }
 
+    public Configuration getFirstChats() {
+        if (! chatsFile.exists()){
+            try	(InputStream in = StreamLine.getInstance().getResourceAsStream(chatsString)){
+                Files.copy(in, chatsFile.toPath());
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+
+        Configuration thing = new Configuration();
+
+        try {
+            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(chatsFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return thing;
+    }
+
     public abstract void setupConfigFix();
     public abstract void setupLocalesFix();
     public abstract void setupServerConfigFix();
     public abstract void setupDiscordBotFix();
     public abstract void setupCommandsFix();
+    public abstract void setupChatsFix();
 
     public void addUpdatedConfigEntry(String path, Object object) {
         int putInt = 0;
@@ -281,6 +310,14 @@ public abstract class From {
         if (commands.size() > 0) putInt = commands.lastKey() + 1;
 
         commands.put(putInt, new SingleSet<>(path, object));
+    }
+
+    public void addUpdatedChatsEntry(String path, Object object) {
+        int putInt = 0;
+
+        if (chats.size() > 0) putInt = chats.lastKey() + 1;
+
+        chats.put(putInt, new SingleSet<>(path, object));
     }
 
     public int applyConfig() {
@@ -380,12 +417,32 @@ public abstract class From {
         return applied;
     }
 
+    public int applyChats() {
+        int applied = 0;
+
+        for (int itgr : chats.keySet()) {
+            ch.set(chats.get(itgr).key, chats.get(itgr).value);
+            applied ++;
+        }
+
+        if (applied > 0) {
+            try {
+                ConfigurationProvider.getProvider(YamlConfiguration.class).save(ch, chatsFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return applied;
+    }
+
     public void saveAllConfigurations() {
         saveConfig();
         saveLocales();
         saveSettingsConfig();
         saveDiscordBot();
         saveCommands();
+        saveChats();
     }
 
     public void saveConfig() {
@@ -428,6 +485,14 @@ public abstract class From {
         }
     }
 
+    public void saveChats() {
+        try {
+            ConfigurationProvider.getProvider(YamlConfiguration.class).save(ch, chatsFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean hasKeys(Configuration configuration) {
         if (configuration.getKeys().size() > 0) return true;
         else return false;
@@ -464,6 +529,9 @@ public abstract class From {
                     case COMMANDS:
                         addUpdatedCommandsEntry(currSearch, base.get(currSearch));
                         break;
+                    case CHATS:
+                        addUpdatedChatsEntry(currSearch, base.get(currSearch));
+                        break;
                 }
             }
         }
@@ -486,6 +554,9 @@ public abstract class From {
             case COMMANDS:
                 addUpdatedCommandsEntry(path, setNull(comm, oldPath));
                 break;
+            case CHATS:
+                addUpdatedChatsEntry(path, setNull(ch, oldPath));
+                break;
         }
     }
 
@@ -505,6 +576,9 @@ public abstract class From {
                 break;
             case COMMANDS:
                 addUpdatedCommandsEntry(path, toSet);
+                break;
+            case CHATS:
+                addUpdatedChatsEntry(path, toSet);
                 break;
         }
     }
@@ -562,6 +636,11 @@ public abstract class From {
                     iterateDeepPaths(comm, fromPath, toPath, fromPath, of, language);
                 }
                 break;
+            case CHATS:
+                if (hasKeys(ch)) {
+                    iterateDeepPaths(ch, fromPath, toPath, fromPath, of, language);
+                }
+                break;
         }
     }
 
@@ -581,6 +660,9 @@ public abstract class From {
                 break;
             case COMMANDS:
                 addUpdatedCommandsEntry(toPath, setNull(comm, fromPath));
+                break;
+            case CHATS:
+                addUpdatedChatsEntry(toPath, setNull(ch, fromPath));
                 break;
         }
     }
@@ -661,6 +743,9 @@ public abstract class From {
                     case COMMANDS:
                         addUpdatedCommandsEntry(currSearch, thing);
                         break;
+                    case CHATS:
+                        addUpdatedChatsEntry(currSearch, thing);
+                        break;
                 }
             }
         }
@@ -688,6 +773,9 @@ public abstract class From {
                 break;
             case COMMANDS:
                 replaceLoop(comm, of, from, to);
+                break;
+            case CHATS:
+                replaceLoop(ch, of, from, to);
                 break;
         }
     }
@@ -719,6 +807,9 @@ public abstract class From {
                 break;
             case COMMANDS:
                 replaceAllOccurrencesInFile(from, to, commandFile);
+                break;
+            case CHATS:
+                replaceAllOccurrencesInFile(from, to, chatsFile);
                 break;
         }
     }

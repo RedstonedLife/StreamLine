@@ -21,6 +21,8 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+        if (! ConfigUtils.moduleDEnabled) return;
+
         String em = event.getMessage().getContentRaw();
         String prefix = DiscordBotConfUtils.botPrefix;
 
@@ -30,14 +32,14 @@ public class MessageListener extends ListenerAdapter {
             if (ConfigUtils.moduleSCOnlyStaffRole){
                 try {
                     if (Objects.requireNonNull(event.getMessage().getMember()).getRoles().contains(event.getJDA().getRoleById(DiscordBotConfUtils.roleStaff))) {
-                        MessagingUtils.sendStaffMessageFromDiscord(event.getAuthor().getName(), MessageConfUtils.discordStaffChatFrom(), em);
+                        MessagingUtils.sendStaffMessageFromDiscord(event.getAuthor().getId(), MessageConfUtils.discordStaffChatFrom(), em);
                     } else
                         return;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
-                MessagingUtils.sendStaffMessageFromDiscord(event.getAuthor().getName(), MessageConfUtils.discordStaffChatFrom(), em);
+                MessagingUtils.sendStaffMessageFromDiscord(event.getAuthor().getId(), MessageConfUtils.discordStaffChatFrom(), em);
             }
 
             if (ConfigUtils.debug) MessagingUtils.logInfo("Someone talked in staffchat (discord)... sending to bungee...");
@@ -53,7 +55,7 @@ public class MessageListener extends ListenerAdapter {
                     return;
                 }
 
-                MessagingUtils.logWarning("Member id : " + member.getIdLong() + " | Message : " + em);
+//                MessagingUtils.logWarning("Member id : " + member.getIdLong() + " | Message : " + em);
 
                 StreamLine.discordData.sendBungeeChannel(member.getIdLong(), event.getChannel().getIdLong(), em);
             }

@@ -174,7 +174,7 @@ staffchat:
     # Message on Discord.
     discord: "%message%"
     # Message on bungee.
-    bungee: "&2&lSTAFF &7&l>> &a%player_formatted% &7[%from_formatted%&7] &e(&4%server%&e) &8: &e%message%"
+    bungee: "&2&lSTAFF &7&l>> &a%sender_formatted% &7[%from_type%&7] &e(&4%from_server%&e) &8: &e%message%"
     # Text to use when using "%from_formatted%" in your messages.
     from:
       # If message originated from Discord.
@@ -442,8 +442,6 @@ party:
   # %sender_formatted% = Messager.
   # %message% = Message user said being sent.
   chat:
-    # Message format.
-    message: "&3GROUPE &9&l>> &b%sender_formatted% &8: &f%message%"
     # If the party is muted.
     muted: "&cDésolé, mais le groupe est muet!"
     # Message in discord console when people chat in parties.
@@ -959,8 +957,6 @@ guild:
   # %sender_formatted% = Messager.
   # %message% = Message user said being sent.
   chat:
-    # Main message.
-    message: "&2GUILDE &9&l>> &b%sender_formatted% &8: &f%message%"
     # If the guild is muted.
     muted: "&cDésolé, mais la guilde est muette!"
     # Message in discord console.
@@ -2013,18 +2009,7 @@ language:
 
 # When switching chat channels...
 chat-channels:
-  local:
-    switch: "&eChangement du &bCanal Textuel &ede %old_channel% à &e%new_channel%l&8!"
-  global:
-    switch: "&eChangement du &bCanal Textuel &ede %old_channel% à &e%new_channel%l&8!"
-  guild:
-    switch: "&eChangement du &bCanal Textuel &ede %old_channel% à &e%new_channel%l&8!"
-  party:
-    switch: "&eChangement du &bCanal Textuel &ede %old_channel% à &e%new_channel%l&8!"
-  g-officer:
-    switch: "&eChangement du &bCanal Textuel &ede %old_channel% à &e%new_channel%l&8!"
-  p-officer:
-    switch: "&eChangement du &bCanal Textuel &ede %old_channel% à &e%new_channel%l&8!"
+  switch: "&eJust switched to the &c%new_channel% &a-> &c%new_identifier% &bChat &efrom &c%old_channel% &a-> &c%old_identifier% &bChat Channel&8!"
 
 # For the script command...
 script:

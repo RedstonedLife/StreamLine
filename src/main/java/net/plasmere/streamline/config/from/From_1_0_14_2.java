@@ -73,4 +73,9 @@ public class From_1_0_14_2 extends From{
         addUpdatedCommandsEntry("commands.bungee.staff.script-reload.permission", "streamline.command.script-reload");
         addUpdatedCommandsEntry("commands.bungee.staff.script-reload.aliases", Arrays.asList("reloadslsc", "rslsc"));
     }
+
+    @Override
+    public void setupChatsFix() {
+
+    }
 }

@@ -123,4 +123,9 @@ public class From_1_0_13_3 extends From {
         addUpdatedCommandsEntry("commands.bungee.configs.language.permission", "streamline.command.language");
         addUpdatedCommandsEntry("commands.bungee.configs.language.aliases", Arrays.asList("lang", "locale", "loc"));
     }
+
+    @Override
+    public void setupChatsFix() {
+
+    }
 }

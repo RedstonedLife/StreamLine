@@ -6,7 +6,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.enums.ChatChannel;
+import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
@@ -151,51 +151,51 @@ public class SettingsEditCommand extends Command implements TabExecutor {
                         sendSetMessage(sender, MessageConfUtils.settingsSetChatToConsole(), toConsoleBool);
                         break;
                     case "proxy-chat-chats-local-bungee":
-                        if (args.length < 4) {
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
-                            return;
-                        }
-
-                        int atChat = 0;
-                        try {
-                            atChat = Integer.parseInt(args[2]);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
-                            return;
-                        }
-
-                        String setLocals = TextUtils.argsToStringMinus(args, 0, 1, 2);
-                        StreamLine.serverConfig.setProxyChatChatsAt(atChat, ChatChannel.LOCAL, MessageServerType.BUNGEE, setLocals);
-
-                        sendSetMessageNumberedPC(sender, setLocals, atChat, ChatChannel.LOCAL, MessageServerType.BUNGEE);
+//                        if (args.length < 4) {
+//                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
+//                            return;
+//                        }
+//
+//                        int atChat = 0;
+//                        try {
+//                            atChat = Integer.parseInt(args[2]);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+//                            return;
+//                        }
+//
+//                        String setLocals = TextUtils.argsToStringMinus(args, 0, 1, 2);
+//                        StreamLine.serverConfig.setProxyChatChatsAt(atChat, ChatsHandler.getChannel("local"), MessageServerType.BUNGEE, setLocals);
+//
+//                        sendSetMessageNumberedPC(sender, setLocals, atChat, ChatsHandler.getChannel("local"), MessageServerType.BUNGEE);
                         break;
                     case "proxy-chat-chats-global-bungee":
-                        if (args.length < 4) {
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
-                            return;
-                        }
-
-                        int atCh = 0;
-                        try {
-                            atCh = Integer.parseInt(args[2]);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
-                            return;
-                        }
-
-                        String setGlobals = TextUtils.argsToStringMinus(args, 0, 1, 2);
-                        StreamLine.serverConfig.setProxyChatChatsAt(atCh, ChatChannel.GLOBAL, MessageServerType.BUNGEE, setGlobals);
-
-                        sendSetMessageNumberedPC(sender, setGlobals, atCh, ChatChannel.GLOBAL, MessageServerType.BUNGEE);
+//                        if (args.length < 4) {
+//                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
+//                            return;
+//                        }
+//
+//                        int atCh = 0;
+//                        try {
+//                            atCh = Integer.parseInt(args[2]);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+//                            return;
+//                        }
+//
+//                        String setGlobals = TextUtils.argsToStringMinus(args, 0, 1, 2);
+//                        StreamLine.serverConfig.setProxyChatChatsAt(atCh, ChatsHandler.getChannel("global"), MessageServerType.BUNGEE, setGlobals);
+//
+//                        sendSetMessageNumberedPC(sender, setGlobals, atCh, ChatsHandler.getChannel("global"), MessageServerType.BUNGEE);
                         break;
                     case "proxy-chat-base-perm":
-                        String baseP = TextUtils.argsToStringMinus(args, 0, 1);
-
-                        StreamLine.serverConfig.setChatBasePerm(baseP);
-
-                        sendSetMessage(sender, MessageConfUtils.settingsSetPCBPerm(), baseP);
+//                        String baseP = TextUtils.argsToStringMinus(args, 0, 1);
+//
+//                        StreamLine.serverConfig.setChatBasePerm(baseP);
+//
+//                        sendSetMessage(sender, MessageConfUtils.settingsSetPCBPerm(), baseP);
                         break;
                     case "tags-enable-ping":
                         String enablePing = TextUtils.argsToStringMinus(args, 0, 1);
@@ -295,22 +295,22 @@ public class SettingsEditCommand extends Command implements TabExecutor {
                         sendGetMessage(sender, MessageConfUtils.settingsGetChatToConsole(), StreamLine.serverConfig.getProxyChatConsoleEnabled());
                         break;
                     case "proxy-chat-chats-local-bungee":
-                        sendGetMessageNumberedPC(sender, args, ChatChannel.LOCAL, MessageServerType.BUNGEE);
+//                        sendGetMessageNumberedPC(sender, args, ChatsHandler.getChannel("local"), MessageServerType.BUNGEE);
                         break;
                     case "proxy-chat-chats-global-bungee":
-                        sendGetMessageNumberedPC(sender, args, ChatChannel.GLOBAL, MessageServerType.BUNGEE);
+//                        sendGetMessageNumberedPC(sender, args, ChatsHandler.getChannel("global"), MessageServerType.BUNGEE);
                         break;
                     case "proxy-chat-chats-local-discord":
-                        sendGetMessageNumberedPC(sender, args, ChatChannel.LOCAL, MessageServerType.DISCORD);
+//                        sendGetMessageNumberedPC(sender, args, ChatsHandler.getChannel("local"), MessageServerType.DISCORD);
                         break;
                     case "proxy-chat-chats-global-discord":
-                        sendGetMessageNumberedPC(sender, args, ChatChannel.GLOBAL, MessageServerType.DISCORD);
+//                        sendGetMessageNumberedPC(sender, args, ChatsHandler.getChannel("global"), MessageServerType.DISCORD);
                         break;
                     case "proxy-chat-chats-guild-discord":
-                        sendGetMessageNumberedPC(sender, args, ChatChannel.GUILD, MessageServerType.DISCORD);
+//                        sendGetMessageNumberedPC(sender, args, ChatsHandler.getChannel("guild"), MessageServerType.DISCORD);
                         break;
                     case "proxy-chat-base-perm":
-                        sendGetMessage(sender, MessageConfUtils.settingsGetPCBPerm(), StreamLine.serverConfig.getChatBasePerm());
+//                        sendGetMessage(sender, MessageConfUtils.settingsGetPCBPerm(), StreamLine.serverConfig.getChatBasePerm());
                         break;
                     case "tags-enable-ping":
                         sendGetMessage(sender, MessageConfUtils.settingsGetTagsEnablePing(), StreamLine.serverConfig.getTagsPingEnabled());

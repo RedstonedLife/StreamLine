@@ -5,14 +5,11 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.savable.users.ChatLevel;
+import net.plasmere.streamline.objects.chats.Chat;
+import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.savable.users.Player;
-import net.plasmere.streamline.utils.MessagingUtils;
-import net.plasmere.streamline.utils.PlayerUtils;
-import net.plasmere.streamline.utils.PluginUtils;
-import net.plasmere.streamline.utils.TextUtils;
+import net.plasmere.streamline.utils.*;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
@@ -34,31 +31,55 @@ public class ChatChannelCommand extends Command implements TabExecutor {
                 boolean allowLocal = StreamLine.serverConfig.getAllowLocal();
 
                 if (allowGlobal || allowLocal) {
-                    if (! allowGlobal && player.chatLevel.equals(ChatLevel.GLOBAL)) {
-                        player.setChatLevel(ChatLevel.LOCAL);
+                    if (! allowGlobal && player.chatIdentifier.equals(ChatsHandler.getChannel("global"))) {
+                        player.setChat("local", "network");
                         return;
                     }
-                    if (! allowLocal && player.chatLevel.equals(ChatLevel.LOCAL)) {
-                        player.setChatLevel(ChatLevel.GLOBAL);
+                    if (! allowLocal && player.chatIdentifier.equals(ChatsHandler.getChannel("local"))) {
+                        player.setChat("global", "network");
                         return;
                     }
 
-                    if (player.chatLevel.equals(ChatLevel.GLOBAL)) player.setChatLevel(ChatLevel.LOCAL);
-                    if (player.chatLevel.equals(ChatLevel.LOCAL)) player.setChatLevel(ChatLevel.GLOBAL);
+                    if (player.chatIdentifier.equals(ChatsHandler.getChannel("global"))) player.setChat("local", "network");
+                    if (player.chatIdentifier.equals(ChatsHandler.getChannel("local"))) player.setChat("global", "network");
                     return;
                 } else {
-                    player.setChatLevel(ChatLevel.LOCAL);
+                    player.setChat("local", "network");
                 }
 
                 return;
             }
 
-            if (args.length > 1) {
+            if (args.length < 2) {
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
+                return;
+            }
+
+            if (args.length > 2) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsLess());
                 return;
             }
 
-            player.setChatLevel(args[0]);
+            if (! args[1].contains("-")) {
+                args[1] = UUIDUtils.getCachedUUID(args[1]);
+            }
+
+            Chat chat = ChatsHandler.getChat(args[0], args[1]);
+
+            if (chat == null) {
+                if (player.hasPermission(StreamLine.chatConfig.getDefaultPerm(ChatsHandler.getChannel(args[0])))) {
+                    player.setChat(args[0], args[1]);
+                } else {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                }
+                return;
+            }
+
+            if (player.hasPermission(chat.bypassPermission)) {
+                player.setChat(args[0], args[1]);
+            } else {
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+            }
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());
         }
@@ -66,19 +87,15 @@ public class ChatChannelCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        TreeSet<String> options = new TreeSet<>();
-
-        options.add("local");
-        options.add("global");
-        options.add("guild");
-        options.add("party");
-        options.add("g-officer");
-        options.add("p-officer");
-
         if (args.length <= 1) {
-            return TextUtils.getCompletion(options, args[0]);
-        } else {
-            return new ArrayList<>();
+            return TextUtils.getCompletion(ChatsHandler.getChannelsAsStrings(), args[0]);
         }
+        if (args.length == 2) {
+            if (TextUtils.equalsAny(args[0], ChatsHandler.getChannelsAsStrings())) {
+                return TextUtils.getCompletion(ChatsHandler.getPossibleIdentifiersAsStringsByChannelPermissionedByChatChannel(sender, args[0]), args[1]);
+            }
+        }
+
+        return new ArrayList<>();
     }
 }

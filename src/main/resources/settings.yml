@@ -41,37 +41,10 @@ proxy-chat:
   enabled: true
   # If it should log chat to console.
   to-console: true
-  # Defines the default string prior to the chats.<number> number for permissions with chats!
-  base-perm: "streamline.chat."
   # Defines specific chats (MUST BE INTEGERS!) for different teams.
   # Higher number = more priority.
   # Example permission to give to players: "streamline.chat.1"
   # Lowest = Default.
-  chats:
-    local:
-      bungee:
-        1: "&d%sender_display%&r &7&l>> &f%message%"
-        2: "&d%sender_display%&r &7&l>> &e%message%"
-        3: "&d%sender_display%&r &7&l>> &6%message%"
-      discord:
-        1: "&e[&9Discord&e] &d%sender_display%&r &7&l>> &f%message%"
-        2: "&e[&9Discord&e] &d%sender_display%&r &7&l>> &e%message%"
-        3: "&e[&9Discord&e] &d%sender_display%&r &7&l>> &6%message%"
-    global:
-      bungee:
-        1: "&e(&dGLOBAL&e) &e[&4%server%&e] &d%sender_formatted%&r &7&l>> &f%message%"
-        2: "&e(&dGLOBAL&e) &e[&4%server%&e] &d%sender_formatted%&r &7&l>> &e%message%"
-        3: "&e(&dGLOBAL&e) &e[&4%server%&e] &d%sender_formatted%&r &7&l>> &6%message%"
-      discord:
-        1: "&e(&dGLOBAL&e) &e[&9Discord&e] &d%sender_formatted%&r &7&l>> &f%message%"
-        2: "&e(&dGLOBAL&e) &e[&9Discord&e] &d%sender_formatted%&r &7&l>> &e%message%"
-        3: "&e(&dGLOBAL&e) &e[&9Discord&e] &d%sender_formatted%&r &7&l>> &6%message%"
-    guild:
-      discord:
-        1: "&e[&9Discord&e] &2GUILD &9&l>> &b%sender_formatted% &8: &f%message%"
-    party:
-      discord:
-        1: "&e[&9Discord&e] &3PARTY &9&l>> &b%sender_formatted% &8: &f%message%"
   # When someone says someone's name in chat (on the same server).
   tags:
     # Enable getting pinged.

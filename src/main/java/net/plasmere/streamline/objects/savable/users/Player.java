@@ -12,6 +12,9 @@ import net.md_5.bungee.api.score.Scoreboard;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.chats.Chat;
+import net.plasmere.streamline.objects.chats.ChatChannel;
+import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 
@@ -32,7 +35,8 @@ public class Player extends SavableUser {
     public boolean muted;
     public Date mutedTill;
     public ProxiedPlayer player;
-    public ChatLevel chatLevel;
+    public ChatChannel chatChannel;
+    public String chatIdentifier;
     public long discordID;
 
     public int defaultLevel = 1;
@@ -124,6 +128,7 @@ public class Player extends SavableUser {
         defaults.add("muted=false");
         defaults.add("muted-till=");
         defaults.add("chat-level=LOCAL");
+        defaults.add("chat-identifier=network");
         defaults.add("discord-id=");
         //defaults.add("");
         return defaults;
@@ -156,7 +161,8 @@ public class Player extends SavableUser {
         this.totalXP = Integer.parseInt(getFromKey("total-xp"));
         this.currentXP = Integer.parseInt(getFromKey("current-xp"));
 
-        this.chatLevel = parseChatLevel(getFromKey("chat-level"));
+        this.chatChannel = parseChatLevel(getFromKey("chat-channel"));
+        this.chatIdentifier = getFromKey("chat-identifier");
 
         try {
             this.discordID = Long.parseLong(getFromKey("discord-id"));
@@ -165,23 +171,8 @@ public class Player extends SavableUser {
         }
     }
 
-    public static ChatLevel parseChatLevel(String string) {
-        string = string.toUpperCase(Locale.ROOT);
-        switch (string) {
-            case "GLOBAL":
-                return ChatLevel.GLOBAL;
-            case "GUILD":
-                return ChatLevel.GUILD;
-            case "PARTY":
-                return ChatLevel.PARTY;
-            case "GOFFICER":
-                return ChatLevel.GOFFICER;
-            case "POFFICER":
-                return ChatLevel.POFFICER;
-            case "LOCAL":
-            default:
-                return ChatLevel.LOCAL;
-        }
+    public static ChatChannel parseChatLevel(String string) {
+        return ChatsHandler.getChannel(string);
     }
 
     @Override
@@ -195,52 +186,44 @@ public class Player extends SavableUser {
         thing.put("xp", "total-xp");
         thing.put("totalXP", "total-xp");
         thing.put("currentXP", "current-xp");
+        thing.put("chat-level", "chat-channel");
 
         return thing;
     }
 
-    public static void sendMessageFormatted(CommandSender sender, String formatFrom, ChatLevel newLevel, ChatLevel oldLevel) {
+    public static void sendMessageFormatted(CommandSender sender, String formatFrom, ChatChannel newLevel, ChatChannel oldLevel) {
         MessagingUtils.sendBUserMessage(sender, formatFrom
-                .replace("%new_channel%", newLevel.toString())
-                .replace("%old_channel%", oldLevel.toString())
+                .replace("%new_channel%", newLevel.name)
+                .replace("%old_channel%", oldLevel.name)
         );
     }
 
-    public ChatLevel setChatLevel(String string) {
-        ChatLevel newLevel = parseChatLevel(string);
+    public void setChat(String channel, String identifier) {
+        MessagingUtils.sendBUserMessage(findSender(), MessageConfUtils.chatChannelsSwitch()
+                .replace("%old_channel%", chatChannel.name)
+                .replace("%new_channel%", channel)
+                .replace("%old_identifier%", chatIdentifier)
+                .replace("%new_identifier%", identifier)
+        );
 
-        switch (newLevel) {
-            case LOCAL:
-                sendMessageFormatted(player, MessageConfUtils.chatChannelsLocalSwitch(), newLevel, chatLevel);
-                break;
-            case GLOBAL:
-                sendMessageFormatted(player, MessageConfUtils.chatChannelsGlobalSwitch(), newLevel, chatLevel);
-                break;
-            case GUILD:
-                sendMessageFormatted(player, MessageConfUtils.chatChannelsGuildSwitch(), newLevel, chatLevel);
-                break;
-            case PARTY:
-                sendMessageFormatted(player, MessageConfUtils.chatChannelsPartySwitch(), newLevel, chatLevel);
-                break;
-            case GOFFICER:
-                sendMessageFormatted(player, MessageConfUtils.chatChannelsGOfficerSwitch(), newLevel, chatLevel);
-                break;
-            case POFFICER:
-                sendMessageFormatted(player, MessageConfUtils.chatChannelsPOfficerSwitch(), newLevel, chatLevel);
-                break;
-        }
-
-        this.chatLevel = newLevel;
-        updateKey("chat-level", newLevel.toString());
-
-        return newLevel;
+        setChatChannel(channel);
+        setChatIdentifier(identifier);
     }
 
-    public ChatLevel setChatLevel(ChatLevel chatLevel) {
-        this.chatLevel = chatLevel;
-        updateKey("chat-level", chatLevel.toString());
+    public String setChatIdentifier(String newIdentifier) {
+        this.chatIdentifier = newIdentifier;
+        updateKey("chat-identifier", this.chatIdentifier);
 
-        return chatLevel;
+        return newIdentifier;
+    }
+
+    public ChatChannel setChatChannel(String channel) {
+        ChatChannel newLevel = parseChatLevel(channel);
+
+        this.chatChannel = newLevel;
+        updateKey("chat-channel", newLevel.name);
+
+        return newLevel;
     }
 
     public void tryAddNewName(String name){

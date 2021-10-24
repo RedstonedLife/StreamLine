@@ -10,6 +10,8 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\messaging\ChatChannelCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\from\From_1_0_13_3.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\DeleteStatCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\from\From_1_0_14_3.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\ChatConfig.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\OneSecondTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\TeleportCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\scripts\ScriptReloadCommand.java
@@ -48,14 +50,15 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\PCQuickCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\events\EventsReader.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\EndCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\chats\ChatsHandler.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\ReadyListener.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\PermissionHelper.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\DataChannel.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\GlobalOnlineCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\spy\SCViewCommand.java
-C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\enums\ChatChannel.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\commands\ReportCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\BoostListener.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\chats\ChatChannel.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\ReportCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\DiscordData.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\FaceFetcher.java
@@ -65,7 +68,6 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\holders\GeyserHolder.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\commands\StaffChatCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\Lobbies.java
-C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\savable\users\ChatLevel.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\commands\ChannelCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\scripts\Script.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\lists\SingleSetThree.java
@@ -117,6 +119,7 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\messaging\MessageCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\InfoCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\DiscordBotConfUtils.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\chats\Chat.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\ServerPermissions.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\messaging\FriendCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\events\EventReloadCommand.java

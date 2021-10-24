@@ -171,7 +171,7 @@ staffchat:
     # Message on Discord.
     discord: "%message%"
     # Message on bungee.
-    bungee: "&2&lSTAFF &7&l>> &a%player_formatted% &7[%from_formatted%&7] &e(&4%server%&e) &8: &e%message%"
+    bungee: "&2&lSTAFF &7&l>> &a%sender_formatted% &7[%from_type%&7] &e(&4%from_server%&e) &8: &e%message%"
     # Text to use when using "%from_formatted%" in your messages.
     from:
       # If message originated from Discord.
@@ -439,8 +439,6 @@ party:
   # %sender_formatted% = Messager.
   # %message% = Message user said being sent.
   chat:
-    # Message format.
-    message: "&3PARTY &9&l>> &b%sender_formatted% &8: &f%message%"
     # If the party is muted.
     muted: "&cSorry, but the party is muted!"
     # Message in discord console when people chat in parties.
@@ -956,8 +954,6 @@ guild:
   # %sender_formatted% = Messager.
   # %message% = Message user said being sent.
   chat:
-    # Main message.
-    message: "&2GUILD &9&l>> &b%sender_formatted% &8: &f%message%"
     # If the guild is muted.
     muted: "&cSorry, but the guild is muted!"
     # Message in discord console.
@@ -2018,18 +2014,7 @@ language:
 
 # When switching chat channels...
 chat-channels:
-  local:
-    switch: "&eJust switched to the %new_channel% &bChat Channel &efrom %old_channel% &bChat Channel&8!"
-  global:
-    switch: "&eJust switched to the %new_channel% &bChat Channel &efrom %old_channel% &bChat Channel&8!"
-  guild:
-    switch: "&eJust switched to the %new_channel% &bChat Channel &efrom %old_channel% &bChat Channel&8!"
-  party:
-    switch: "&eJust switched to the %new_channel% &bChat Channel &efrom %old_channel% &bChat Channel&8!"
-  g-officer:
-    switch: "&eJust switched to the %new_channel% &bChat Channel &efrom %old_channel% &bChat Channel&8!"
-  p-officer:
-    switch: "&eJust switched to the %new_channel% &bChat Channel &efrom %old_channel% &bChat Channel&8!"
+  switch: "&eJust switched to the &c%new_channel% &a-> &c%new_identifier% &bChat &efrom &c%old_channel% &a-> &c%old_identifier% &bChat&8!"
 
 # For the script command...
 script:

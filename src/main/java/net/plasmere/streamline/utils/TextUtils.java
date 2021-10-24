@@ -1,5 +1,6 @@
 package net.plasmere.streamline.utils;
 
+import net.dv8tion.jda.api.entities.User;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.ChatColor;
@@ -9,6 +10,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.lists.SingleSet;
+import net.plasmere.streamline.objects.savable.users.Player;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import org.apache.commons.collections4.list.TreeList;
 
@@ -457,13 +459,17 @@ public class TextUtils {
 
         return of
                 .replace("%player_uuid%", user.uuid)
+
                 .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
                 .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
                 .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+
                 .replace("%player_points%", String.valueOf(user.points))
+
                 .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
                 .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+
                 .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
                 .replace("%player_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
@@ -471,10 +477,20 @@ public class TextUtils {
                 .replace("%player_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
                 .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                 .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
+
+                .replace("%player_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
+                .replace("%player_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
+                .replace("%player_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
+                .replace("%player_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
+                .replace("%player_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
+                .replace("%player_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
+                .replace("%player_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
                 ;
     }
 
     public static String replaceAllPlayerBungee(String of, String uuid) {
+        if (! uuid.contains("-")) return replaceAllPlayerBungeeFromDiscord(of, uuid);
+
         return replaceAllPlayerBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
@@ -482,18 +498,80 @@ public class TextUtils {
         return replaceAllPlayerBungee(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
+    public static String replaceAllPlayerBungeeFromDiscord(String of, String discordID) {
+        long dID = 0L;
+
+        try {
+            dID = Long.parseLong(discordID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return of;
+        }
+
+        if (StreamLine.discordData.isVerified(dID)) {
+            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(dID));
+
+            if (user == null) return of;
+
+            return of
+                    .replace("%player_uuid%", user.uuid)
+
+                    .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(user))
+                    .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
+                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
+                    .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
+
+                    .replace("%player_points%", String.valueOf(user.points))
+
+                    .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
+                    .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+
+                    .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
+                    .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
+                    .replace("%player_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
+                    .replace("%player_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteBungee(user))
+                    .replace("%player_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
+                    .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
+                    .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
+
+                    .replace("%player_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
+                    .replace("%player_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
+                    .replace("%player_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
+                    .replace("%player_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
+                    .replace("%player_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
+                    .replace("%player_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
+                    .replace("%player_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                    ;
+        } else {
+            User user = StreamLine.getJda().getUserById(dID);
+
+            if (user == null) return of;
+
+            return of
+                    .replace("%player_absolute%", user.getName())
+                    .replace("%player_normal%", user.getName())
+                    .replace("%player_display%", user.getName())
+                    .replace("%player_formatted%", user.getName())
+                    ;
+        }
+    }
+
     public static String replaceAllUserBungee(String of, SavableUser user) {
         if (user == null) return of;
 
         return of
                 .replace("%user_uuid%", user.uuid)
+
                 .replace("%user_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%user_normal%", PlayerUtils.getOffOnRegBungee(user))
                 .replace("%user_display%", PlayerUtils.getOffOnDisplayBungee(user))
                 .replace("%user_formatted%", PlayerUtils.getJustDisplayBungee(user))
+
                 .replace("%user_points%", String.valueOf(user.points))
+
                 .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
                 .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+
                 .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
                 .replace("%user_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
@@ -501,10 +579,20 @@ public class TextUtils {
                 .replace("%user_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
                 .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                 .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
+
+                .replace("%user_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
+                .replace("%user_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
+                .replace("%user_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
+                .replace("%user_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
+                .replace("%user_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
+                .replace("%user_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
+                .replace("%user_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
                 ;
     }
 
     public static String replaceAllUserBungee(String of, String uuid) {
+        if (! uuid.contains("-")) return replaceAllUserBungeeFromDiscord(of, uuid);
+
         return replaceAllUserBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
@@ -512,18 +600,80 @@ public class TextUtils {
         return replaceAllUserBungee(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
+    public static String replaceAllUserBungeeFromDiscord(String of, String discordID) {
+        long dID = 0L;
+
+        try {
+            dID = Long.parseLong(discordID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return of;
+        }
+
+        if (StreamLine.discordData.isVerified(dID)) {
+            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(dID));
+
+            if (user == null) return of;
+
+            return of
+                    .replace("%user_uuid%", user.uuid)
+
+                    .replace("%user_absolute%", PlayerUtils.getAbsoluteBungee(user))
+                    .replace("%user_normal%", PlayerUtils.getOffOnRegBungee(user))
+                    .replace("%user_display%", PlayerUtils.getOffOnDisplayBungee(user))
+                    .replace("%user_formatted%", PlayerUtils.getJustDisplayBungee(user))
+
+                    .replace("%user_points%", String.valueOf(user.points))
+
+                    .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
+                    .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+
+                    .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
+                    .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
+                    .replace("%user_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
+                    .replace("%user_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteBungee(user))
+                    .replace("%user_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
+                    .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
+                    .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
+
+                    .replace("%user_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
+                    .replace("%user_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
+                    .replace("%user_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
+                    .replace("%user_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
+                    .replace("%user_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
+                    .replace("%user_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
+                    .replace("%user_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                    ;
+        } else {
+            User user = StreamLine.getJda().getUserById(dID);
+
+            if (user == null) return of;
+
+            return of
+                    .replace("%user_absolute%", user.getName())
+                    .replace("%user_normal%", user.getName())
+                    .replace("%user_display%", user.getName())
+                    .replace("%user_formatted%", user.getName())
+                    ;
+        }
+    }
+
     public static String replaceAllSenderBungee(String of, SavableUser user) {
         if (user == null) return of;
 
         return of
                 .replace("%sender_uuid%", user.uuid)
+
                 .replace("%sender_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%sender_normal%", PlayerUtils.getOffOnRegBungee(user))
                 .replace("%sender_display%", PlayerUtils.getOffOnDisplayBungee(user))
                 .replace("%sender_formatted%", PlayerUtils.getJustDisplayBungee(user))
+
                 .replace("%sender_points%", String.valueOf(user.points))
+
                 .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
                 .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+
                 .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
                 .replace("%sender_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
@@ -531,10 +681,20 @@ public class TextUtils {
                 .replace("%sender_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
                 .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                 .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
+
+                .replace("%sender_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
+                .replace("%sender_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
+                .replace("%sender_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
+                .replace("%sender_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
+                .replace("%sender_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
+                .replace("%sender_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
+                .replace("%sender_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
                 ;
     }
 
     public static String replaceAllSenderBungee(String of, String uuid) {
+        if (! uuid.contains("-")) return replaceAllSenderBungeeFromDiscord(of, uuid);
+
         return replaceAllSenderBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
@@ -542,18 +702,80 @@ public class TextUtils {
         return replaceAllSenderBungee(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
+    public static String replaceAllSenderBungeeFromDiscord(String of, String discordID) {
+        long dID = 0L;
+
+        try {
+            dID = Long.parseLong(discordID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return of;
+        }
+
+        if (StreamLine.discordData.isVerified(dID)) {
+            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(dID));
+
+            if (user == null) return of;
+
+            return of
+                    .replace("%sender_uuid%", user.uuid)
+
+                    .replace("%sender_absolute%", PlayerUtils.getAbsoluteBungee(user))
+                    .replace("%sender_normal%", PlayerUtils.getOffOnRegBungee(user))
+                    .replace("%sender_display%", PlayerUtils.getOffOnDisplayBungee(user))
+                    .replace("%sender_formatted%", PlayerUtils.getJustDisplayBungee(user))
+
+                    .replace("%sender_points%", String.valueOf(user.points))
+
+                    .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
+                    .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+
+                    .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
+                    .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
+                    .replace("%sender_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
+                    .replace("%sender_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteBungee(user))
+                    .replace("%sender_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
+                    .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
+                    .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
+
+                    .replace("%sender_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
+                    .replace("%sender_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
+                    .replace("%sender_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
+                    .replace("%sender_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
+                    .replace("%sender_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
+                    .replace("%sender_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
+                    .replace("%sender_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                    ;
+        } else {
+            User user = StreamLine.getJda().getUserById(dID);
+
+            if (user == null) return of;
+
+            return of
+                    .replace("%sender_absolute%", user.getName())
+                    .replace("%sender_normal%", user.getName())
+                    .replace("%sender_display%", user.getName())
+                    .replace("%sender_formatted%", user.getName())
+                    ;
+        }
+    }
+
     public static String replaceAllPlayerDiscord(String of, SavableUser user) {
         if (user == null) return of;
 
         return of
                 .replace("%player_uuid%", user.uuid)
+
                 .replace("%player_absolute%", PlayerUtils.getAbsoluteDiscord(user))
                 .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(user))
                 .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(user))
                 .replace("%player_formatted%", PlayerUtils.getJustDisplayDiscord(user))
+
                 .replace("%player_points%", String.valueOf(user.points))
+
                 .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
                 .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+
                 .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
                 .replace("%player_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
@@ -561,6 +783,14 @@ public class TextUtils {
                 .replace("%player_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayDiscord(user))
                 .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
                 .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
+
+                .replace("%player_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
+                .replace("%player_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
+                .replace("%player_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
+                .replace("%player_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
+                .replace("%player_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
+                .replace("%player_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
+                .replace("%player_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
                 ;
     }
 
@@ -577,13 +807,17 @@ public class TextUtils {
 
         return of
                 .replace("%user_uuid%", user.uuid)
+
                 .replace("%user_absolute%", PlayerUtils.getAbsoluteDiscord(user))
                 .replace("%user_normal%", PlayerUtils.getOffOnRegDiscord(user))
                 .replace("%user_display%", PlayerUtils.getOffOnDisplayDiscord(user))
                 .replace("%user_formatted%", PlayerUtils.getJustDisplayDiscord(user))
+
                 .replace("%user_points%", String.valueOf(user.points))
+
                 .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
                 .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+
                 .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
                 .replace("%user_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
@@ -591,6 +825,14 @@ public class TextUtils {
                 .replace("%user_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayDiscord(user))
                 .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
                 .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
+
+                .replace("%user_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
+                .replace("%user_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
+                .replace("%user_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
+                .replace("%user_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
+                .replace("%user_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
+                .replace("%user_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
+                .replace("%user_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
                 ;
     }
 
@@ -607,13 +849,17 @@ public class TextUtils {
 
         return of
                 .replace("%sender_uuid%", user.uuid)
+
                 .replace("%sender_absolute%", PlayerUtils.getAbsoluteDiscord(user))
                 .replace("%sender_normal%", PlayerUtils.getOffOnRegDiscord(user))
                 .replace("%sender_display%", PlayerUtils.getOffOnDisplayDiscord(user))
                 .replace("%sender_formatted%", PlayerUtils.getJustDisplayDiscord(user))
+
                 .replace("%sender_points%", String.valueOf(user.points))
+
                 .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
                 .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+
                 .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
                 .replace("%sender_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
@@ -621,6 +867,14 @@ public class TextUtils {
                 .replace("%sender_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayDiscord(user))
                 .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
                 .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
+
+                .replace("%sender_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
+                .replace("%sender_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
+                .replace("%sender_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
+                .replace("%sender_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
+                .replace("%sender_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
+                .replace("%sender_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
+                .replace("%sender_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
                 ;
     }
 

@@ -8,6 +8,8 @@ link-prefix: "&b&o&n"
 
 ### MODULE SETTINGS ###
 modules:
+  # Toggles custom chats.
+  custom-chats: true
   # Toggles offline / online UUID things...
   offline-mode: false
   # Permission that you will give to all of your staff.
