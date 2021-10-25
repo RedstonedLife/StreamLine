@@ -6,7 +6,7 @@ import net.luckperms.api.node.types.PermissionNode;
 import net.luckperms.api.query.QueryOptions;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PartyUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -15,19 +15,19 @@ import java.util.*;
 
 public class Party {
     public int maxSize;
-    public Player leader;
+    public SavablePlayer leader;
     public String leaderUUID;
-    public List<Player> totalMembers = new ArrayList<>();
+    public List<SavablePlayer> totalMembers = new ArrayList<>();
     public List<String> totalMembersByUUID = new ArrayList<>();
-    public List<Player> members = new ArrayList<>();
+    public List<SavablePlayer> members = new ArrayList<>();
     public List<String> membersByUUID = new ArrayList<>();
-    public List<Player> moderators = new ArrayList<>();
+    public List<SavablePlayer> moderators = new ArrayList<>();
     public List<String> modsByUUID = new ArrayList<>();
     public String name;
     public boolean isPublic = false;
     public boolean isMuted = false;
     // to , from
-    public List<Player> invites = new ArrayList<>();
+    public List<SavablePlayer> invites = new ArrayList<>();
     public List<String> invitesByUUID = new ArrayList<>();
 
     public enum Level {
@@ -36,7 +36,7 @@ public class Party {
         LEADER
     }
 
-    public Party(Player leader){
+    public Party(SavablePlayer leader){
         this.leader = leader;
         this.leaderUUID = leader.uuid;
         this.totalMembers.add(leader);
@@ -45,7 +45,7 @@ public class Party {
         this.isPublic = false;
     }
 
-    public Party(Player leader, int size){
+    public Party(SavablePlayer leader, int size){
         this.leader = leader;
         this.leaderUUID = leader.uuid;
         this.totalMembers.add(leader);
@@ -67,7 +67,7 @@ public class Party {
         }
     }
 
-    public Level getLevel(Player member){
+    public Level getLevel(SavablePlayer member){
         if (this.members.contains(member))
             return Level.MEMBER;
         else if (this.moderators.contains(member))
@@ -78,12 +78,12 @@ public class Party {
             return Level.MEMBER;
     }
 
-    public void addInvite(Player invite){
+    public void addInvite(SavablePlayer invite){
         this.invites.add(invite);
         this.invitesByUUID.add(invite.uuid);
     }
 
-    public void removeInvite(Player invite){
+    public void removeInvite(SavablePlayer invite){
         this.invites.remove(invite);
         this.invitesByUUID.remove(invite.uuid);
     }
@@ -103,7 +103,7 @@ public class Party {
 
     public int getMaxSize() { return maxSize; }
 
-    public void replaceLeader(Player newLeader){
+    public void replaceLeader(SavablePlayer newLeader){
         setModerator(leader);
 
         removeMember(newLeader);
@@ -113,15 +113,15 @@ public class Party {
         this.leaderUUID = newLeader.uuid;
     }
 
-    public void removeMod(Player mod){
+    public void removeMod(SavablePlayer mod){
         removeFromModerators(mod);
     }
 
-    public void removeMember(Player member){
+    public void removeMember(SavablePlayer member){
         remFromMembers(member);
     }
 
-    public void setModerator(Player mod){
+    public void setModerator(SavablePlayer mod){
         removeFromModerators(mod);
         this.moderators.add(mod);
         this.modsByUUID.add(mod.uuid);
@@ -129,7 +129,7 @@ public class Party {
         this.membersByUUID.remove(mod.uuid);
     }
 
-    public void setMember(Player member){
+    public void setMember(SavablePlayer member){
         remFromMembers(member);
         this.members.add(member);
         this.membersByUUID.add(member.uuid);
@@ -137,7 +137,7 @@ public class Party {
         this.modsByUUID.remove(member.uuid);
     }
 
-    public void addMember(Player member){
+    public void addMember(SavablePlayer member){
         removeMemberFromParty(member);
         this.members.add(member);
         this.membersByUUID.add(member.uuid);
@@ -145,13 +145,13 @@ public class Party {
         this.totalMembersByUUID.add(member.uuid);
     }
 
-    public void removeMemberFromParty(Player member){
+    public void removeMemberFromParty(SavablePlayer member){
         remFromMembers(member);
         removeFromModerators(member);
         remFromTMembers(member);
     }
 
-    public String remFromMembers(Player player){
+    public String remFromMembers(SavablePlayer player){
         membersByUUID.remove(player.uuid);
         members.remove(player);
 
@@ -170,7 +170,7 @@ public class Party {
         return builder.toString();
     }
 
-    public String removeFromModerators(Player player){
+    public String removeFromModerators(SavablePlayer player){
         modsByUUID.remove(player.uuid);
         moderators.remove(player);
 
@@ -189,7 +189,7 @@ public class Party {
         return builder.toString();
     }
 
-    public String remFromTMembers(Player player){
+    public String remFromTMembers(SavablePlayer player){
         totalMembersByUUID.remove(player.uuid);
         totalMembers.remove(player);
 
@@ -208,7 +208,7 @@ public class Party {
         return builder.toString();
     }
 
-    public String remFromInvites(Player from, Player player){
+    public String remFromInvites(SavablePlayer from, SavablePlayer player){
         invitesByUUID.remove(player.uuid);
         invites.remove(player);
 
@@ -229,7 +229,7 @@ public class Party {
         return builder.toString();
     }
 
-    public boolean hasMember(Player member){
+    public boolean hasMember(SavablePlayer member){
         if (this.totalMembers.contains(member)) return true;
 
         loadLists();
@@ -240,7 +240,7 @@ public class Party {
     public void loadLists(){
         totalMembers.clear();
         for (String u : totalMembersByUUID) {
-            Player p = PlayerUtils.getOrGetPlayerStatByUUID(u);
+            SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(u);
 
             if (p == null) continue;
 
@@ -249,7 +249,7 @@ public class Party {
 
         members.clear();
         for (String u : membersByUUID) {
-            Player p = PlayerUtils.getOrGetPlayerStatByUUID(u);
+            SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(u);
 
             if (p == null) continue;
 
@@ -258,7 +258,7 @@ public class Party {
 
         moderators.clear();
         for (String u : modsByUUID) {
-            Player p = PlayerUtils.getOrGetPlayerStatByUUID(u);
+            SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(u);
 
             if (p == null) continue;
 
@@ -267,7 +267,7 @@ public class Party {
 
         invites.clear();
         for (String u : invitesByUUID) {
-            Player p = PlayerUtils.getOrGetPlayerStatByUUID(u);
+            SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(u);
 
             if (p == null) continue;
 
@@ -283,7 +283,7 @@ public class Party {
          */
 
         if (this.leader == null) {
-            for (Player player : totalMembers) {
+            for (SavablePlayer player : totalMembers) {
                 MessagingUtils.sendBPUserMessage(this, PlayerUtils.getConsoleStat().findSender(), player.findSender(), PartyUtils.disbandMembers);
             }
 
@@ -292,15 +292,15 @@ public class Party {
         }
     }
 
-    public boolean isModerator(Player member) {
+    public boolean isModerator(SavablePlayer member) {
         return this.moderators.contains(member) || this.modsByUUID.contains(member.uuid);
     }
 
-    public boolean isLeader(Player member) {
+    public boolean isLeader(SavablePlayer member) {
         return this.leader.equals(member) || this.leaderUUID.equals(member.uuid);
     }
 
-    public boolean hasModPerms(Player member){
+    public boolean hasModPerms(SavablePlayer member){
         return isModerator(member) || isLeader(member);
     }
 
@@ -312,7 +312,7 @@ public class Party {
         }
     }
 
-    public int getMaxSize(Player leader){
+    public int getMaxSize(SavablePlayer leader){
         if (! StreamLine.lpHolder.enabled) return ConfigUtils.partyMax;
 
         try {

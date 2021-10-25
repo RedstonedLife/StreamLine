@@ -2,7 +2,7 @@ package net.plasmere.streamline.objects.savable.users;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
@@ -112,7 +112,7 @@ public abstract class SavableUser {
         if (this.uuid.equals("%")) {
             return ConfigUtils.consoleServer;
         } else {
-            ProxiedPlayer player = PlayerUtils.getPPlayerByUUID(this.uuid);
+            Player player = PlayerUtils.getPPlayerByUUID(this.uuid);
 
             if (player == null) return MessageConfUtils.nullB();
 
@@ -918,6 +918,6 @@ public abstract class SavableUser {
         }
         writer.close();
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Just saved Player info for player: " + this.uuid + " (Player: " + this.latestName + ")");
+        if (ConfigUtils.debug) MessagingUtils.logInfo("Just saved SavablePlayer info for player: " + this.uuid + " (SavablePlayer: " + this.latestName + ")");
     }
 }

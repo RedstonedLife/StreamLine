@@ -8,11 +8,10 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.objects.Party;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.plasmere.streamline.objects.chats.ChatChannel;
+import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 
@@ -25,9 +24,9 @@ public class PartyUtils {
         return parties;
     }
     // Party , Invites
-    public static Map<Party, List<Player>> invites = new HashMap<>();
+    public static Map<Party, List<SavablePlayer>> invites = new HashMap<>();
 
-    public static Party getParty(Player player) {
+    public static Party getParty(SavablePlayer player) {
         try {
             for (Party party : parties) {
                 if (party.hasMember(player))
@@ -53,7 +52,7 @@ public class PartyUtils {
         }
     }
 
-    public static boolean hasParty(Player player) {
+    public static boolean hasParty(SavablePlayer player) {
         for (Party party : parties) {
             if (party.hasMember(player)) return true;
         }
@@ -64,11 +63,11 @@ public class PartyUtils {
         return parties.contains(party);
     }
 
-    public static void removeInvite(Party party, Player player) {
+    public static void removeInvite(Party party, SavablePlayer player) {
         invites.get(party).remove(player);
     }
 
-    public static boolean checkPlayer(Party party, Player player, Player sender){
+    public static boolean checkPlayer(Party party, SavablePlayer player, SavablePlayer sender){
         if (! isParty(party) || party == null) {
             MessagingUtils.sendBUserMessage(sender, noPartyFound);
             return false;
@@ -87,8 +86,8 @@ public class PartyUtils {
         return true;
     }
 
-    public static void createParty(Player player) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(player.uuid);
+    public static void createParty(SavablePlayer player) {
+        Player p = PlayerUtils.getPPlayerByUUID(player.uuid);
 
         if (p == null) return;
 
@@ -118,8 +117,8 @@ public class PartyUtils {
         }
     }
 
-    public static void createPartySized(Player player, int size) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(player.uuid);
+    public static void createPartySized(SavablePlayer player, int size) {
+        Player p = PlayerUtils.getPPlayerByUUID(player.uuid);
 
         if (p == null) return;
 
@@ -174,8 +173,8 @@ public class PartyUtils {
 
     public static void removeParty(Party party){ parties.remove(party); }
 
-    public static void sendInvite(Player to, Player from) {
-        ProxiedPlayer player = PlayerUtils.getPPlayerByUUID(from.uuid);
+    public static void sendInvite(SavablePlayer to, SavablePlayer from) {
+        Player player = PlayerUtils.getPPlayerByUUID(from.uuid);
 
         if (player == null) return;
 
@@ -224,10 +223,10 @@ public class PartyUtils {
                 if (ConfigUtils.debug) MessagingUtils.logInfo("#4 NO PARTY MEMBERS!");
             }
 
-            for (Player pl : party.totalMembers) {
+            for (SavablePlayer pl : party.totalMembers) {
                 if (! pl.online) continue;
 
-                ProxiedPlayer member = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                Player member = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                 if (member == null) {
                     if (ConfigUtils.debug) MessagingUtils.logInfo("member == null");
@@ -259,8 +258,8 @@ public class PartyUtils {
         }
     }
 
-    public static void acceptInvite(Player accepter, Player from) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(accepter.uuid);
+    public static void acceptInvite(SavablePlayer accepter, SavablePlayer from) {
+        Player p = PlayerUtils.getPPlayerByUUID(accepter.uuid);
 
         if (p == null) return;
 
@@ -295,10 +294,10 @@ public class PartyUtils {
                         .replace("%from_absolute%", PlayerUtils.getAbsoluteBungee(from))
                 );
 
-                for (Player pl : party.totalMembers){
+                for (SavablePlayer pl : party.totalMembers){
                     if (! pl.online) continue;
 
-                    ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                    Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                     if (m == null) continue;
 
@@ -349,8 +348,8 @@ public class PartyUtils {
         }
     }
 
-    public static void denyInvite(Player denier, Player from) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(denier.uuid);
+    public static void denyInvite(SavablePlayer denier, SavablePlayer from) {
+        Player p = PlayerUtils.getPPlayerByUUID(denier.uuid);
 
         if (p == null) return;
 
@@ -381,10 +380,10 @@ public class PartyUtils {
                     .replace("%from_absolute%", PlayerUtils.getAbsoluteBungee(from))
             );
 
-            for (Player pl : party.totalMembers){
+            for (SavablePlayer pl : party.totalMembers){
                 if (! pl.online) continue;
 
-                ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                 if (m == null) continue;
 
@@ -421,8 +420,8 @@ public class PartyUtils {
         }
     }
 
-    public static void warpParty(Player sender) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void warpParty(SavablePlayer sender) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
 
@@ -443,10 +442,10 @@ public class PartyUtils {
             return;
         }
 
-        for (Player player : party.totalMembers){
+        for (SavablePlayer player : party.totalMembers){
             if (! player.online) continue;
 
-            ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(player.uuid);
+            Player m = PlayerUtils.getPPlayerByUUID(player.uuid);
 
             if (m == null) continue;
 
@@ -468,8 +467,8 @@ public class PartyUtils {
         }
     }
 
-    public static void muteParty(Player sender) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void muteParty(SavablePlayer sender) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
 
@@ -491,10 +490,10 @@ public class PartyUtils {
         }
 
         if (party.isMuted) {
-            for (Player player : party.totalMembers) {
+            for (SavablePlayer player : party.totalMembers) {
                 if (! player.online) continue;
 
-                ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(player.uuid);
+                Player m = PlayerUtils.getPPlayerByUUID(player.uuid);
 
                 if (m == null) continue;
 
@@ -506,10 +505,10 @@ public class PartyUtils {
             }
 
         } else {
-            for (Player player : party.totalMembers) {
+            for (SavablePlayer player : party.totalMembers) {
                 if (! player.online) continue;
 
-                ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(player.uuid);
+                Player m = PlayerUtils.getPPlayerByUUID(player.uuid);
 
                 if (m == null) continue;
 
@@ -532,8 +531,8 @@ public class PartyUtils {
         }
     }
 
-    public static void kickMember(Player sender, Player player) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void kickMember(SavablePlayer sender, SavablePlayer player) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
 
@@ -571,10 +570,10 @@ public class PartyUtils {
         } else if (party.hasModPerms(player)) {
             MessagingUtils.sendBPUserMessage(party, p, p, kickMod);
         } else {
-            for (Player pl : party.totalMembers) {
+            for (SavablePlayer pl : party.totalMembers) {
                 if (! pl.online) continue;
 
-                ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                 if (m == null) continue;
 
@@ -602,8 +601,8 @@ public class PartyUtils {
         }
     }
 
-    public static void disband(Player sender) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void disband(SavablePlayer sender) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
 
@@ -625,10 +624,10 @@ public class PartyUtils {
                 return;
             }
 
-            for (Player pl : party.totalMembers) {
+            for (SavablePlayer pl : party.totalMembers) {
                 if (! pl.online) continue;
 
-                ProxiedPlayer member = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                Player member = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                 if (member == null) continue;
 
@@ -658,8 +657,8 @@ public class PartyUtils {
         }
     }
 
-    public static void openParty(Player sender) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void openParty(SavablePlayer sender) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
 
@@ -687,10 +686,10 @@ public class PartyUtils {
             } else {
                 party.setPublic(true);
 
-                for (Player pl : party.totalMembers) {
+                for (SavablePlayer pl : party.totalMembers) {
                     if (! pl.online) continue;
 
-                    ProxiedPlayer member = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                    Player member = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                     if (member == null) continue;
 
@@ -716,8 +715,8 @@ public class PartyUtils {
         }
     }
 
-    public static void openPartySized(Player sender, int size) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void openPartySized(SavablePlayer sender, int size) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
 
@@ -746,10 +745,10 @@ public class PartyUtils {
                 party.setPublic(true);
                 party.setMaxSize(size);
 
-                for (Player pl : party.totalMembers) {
+                for (SavablePlayer pl : party.totalMembers) {
                     if (! pl.online) continue;
 
-                    ProxiedPlayer member = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                    Player member = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                     if (member == null) continue;
 
@@ -775,8 +774,8 @@ public class PartyUtils {
         }
     }
 
-    public static void closeParty(Player sender) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void closeParty(SavablePlayer sender) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
         try {
@@ -803,10 +802,10 @@ public class PartyUtils {
             } else {
                 party.setPublic(false);
 
-                for (Player pl : party.totalMembers) {
+                for (SavablePlayer pl : party.totalMembers) {
                     if (! pl.online) continue;
 
-                    ProxiedPlayer member = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                    Player member = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                     if (member == null) continue;
 
@@ -832,8 +831,8 @@ public class PartyUtils {
         }
     }
 
-    public static void listParty(Player sender) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void listParty(SavablePlayer sender) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
         try {
@@ -874,7 +873,7 @@ public class PartyUtils {
 
             int i = 1;
 
-            for (Player m : party.moderators) {
+            for (SavablePlayer m : party.moderators) {
                 if (i < party.moderators.size()) {
                     mods.append(TextUtils.replaceAllPlayerBungee(listModBulkNotLast, m)
                     );
@@ -902,7 +901,7 @@ public class PartyUtils {
 
             int i = 1;
 
-            for (Player m : party.members) {
+            for (SavablePlayer m : party.members) {
                 if (i < party.moderators.size()) {
                     mems.append(TextUtils.replaceAllPlayerBungee(listMemberBulkNotLast, m)
                     );
@@ -920,8 +919,8 @@ public class PartyUtils {
         }
     }
 
-    public static void promotePlayer(Player sender, Player player) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void promotePlayer(SavablePlayer sender, SavablePlayer player) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
         try {
@@ -956,10 +955,10 @@ public class PartyUtils {
                 case MODERATOR:
                     party.replaceLeader(player);
 
-                    for (Player pl : party.totalMembers) {
+                    for (SavablePlayer pl : party.totalMembers) {
                         if (! pl.online) continue;
 
-                        ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                        Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                         if (m == null) continue;
 
@@ -982,10 +981,10 @@ public class PartyUtils {
                 default:
                     party.setModerator(player);
 
-                    for (Player pl : party.totalMembers) {
+                    for (SavablePlayer pl : party.totalMembers) {
                         if (! pl.online) continue;
 
-                        ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                        Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                         if (m == null) continue;
 
@@ -1018,8 +1017,8 @@ public class PartyUtils {
         }
     }
 
-    public static void demotePlayer(Player sender, Player player) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void demotePlayer(SavablePlayer sender, SavablePlayer player) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
         try {
@@ -1054,10 +1053,10 @@ public class PartyUtils {
                 case MODERATOR:
                     party.setMember(player);
 
-                    for (Player pl : party.totalMembers) {
+                    for (SavablePlayer pl : party.totalMembers) {
                         if (! pl.online) continue;
 
-                        ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                        Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                         if (m == null) continue;
 
@@ -1096,8 +1095,8 @@ public class PartyUtils {
         }
     }
 
-    public static void joinParty(Player sender, Player from) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void joinParty(SavablePlayer sender, SavablePlayer from) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
         try {
@@ -1121,10 +1120,10 @@ public class PartyUtils {
             if (party.isPublic) {
                 party.addMember(sender);
 
-                for (Player pl : party.totalMembers) {
+                for (SavablePlayer pl : party.totalMembers) {
                     if (! pl.online) continue;
 
-                    ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                    Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                     if (m == null) continue;
 
@@ -1152,7 +1151,7 @@ public class PartyUtils {
         }
     }
 
-    private static int getMaxSize(Player leader){
+    private static int getMaxSize(SavablePlayer leader){
         if (! StreamLine.lpHolder.enabled) return ConfigUtils.partyMax;
 
         try {
@@ -1197,8 +1196,8 @@ public class PartyUtils {
         }
     }
 
-    public static void leaveParty(Player sender) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void leaveParty(SavablePlayer sender) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
         try {
@@ -1215,10 +1214,10 @@ public class PartyUtils {
             }
 
             if (party.leader.player.equals(sender)) {
-                for (Player pl : party.totalMembers) {
+                for (SavablePlayer pl : party.totalMembers) {
                     if (! pl.online) continue;
 
-                    ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                    Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                     if (m == null) continue;
 
@@ -1237,10 +1236,10 @@ public class PartyUtils {
             }
 
             if (party.hasMember(sender)) {
-                for (Player pl : party.totalMembers) {
+                for (SavablePlayer pl : party.totalMembers) {
                     if (! pl.online) continue;
 
-                    ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                    Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                     if (m == null) continue;
 
@@ -1270,8 +1269,8 @@ public class PartyUtils {
         }
     }
 
-    public static void sendChat(Player sender, String msg) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void sendChat(SavablePlayer sender, String msg) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
         try {
@@ -1301,10 +1300,10 @@ public class PartyUtils {
 //                );
 //            }
 
-            for (Player pl : party.totalMembers) {
+            for (SavablePlayer pl : party.totalMembers) {
                 if (! pl.online) continue;
 
-                ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                 if (m == null) continue;
 
@@ -1327,10 +1326,10 @@ public class PartyUtils {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.leaderUUID, msg);
             }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.partyView)) continue;
 
-                Player them = PlayerUtils.getPlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getPlayerStat(pp);
 
                 if (them == null) continue;
 
@@ -1345,8 +1344,8 @@ public class PartyUtils {
         }
     }
 
-    public static void sendChat(Player sender, Party party, String msg) {
-        ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(sender.uuid);
+    public static void sendChat(SavablePlayer sender, Party party, String msg) {
+        Player p = PlayerUtils.getPPlayerByUUID(sender.uuid);
 
         if (p == null) return;
         try {
@@ -1369,10 +1368,10 @@ public class PartyUtils {
 //                );
 //            }
 
-            for (Player pl : party.totalMembers) {
+            for (SavablePlayer pl : party.totalMembers) {
                 if (! pl.online) continue;
 
-                ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(pl.uuid);
+                Player m = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                 if (m == null) continue;
 
@@ -1406,10 +1405,10 @@ public class PartyUtils {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.leaderUUID, msg);
             }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.partyView)) continue;
 
-                Player them = PlayerUtils.getPlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getPlayerStat(pp);
 
                 if (them == null) continue;
 
@@ -1443,10 +1442,10 @@ public class PartyUtils {
 //                }
 //            }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
-                Player them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
                 if (! them.gspy) continue;
 
@@ -1476,10 +1475,10 @@ public class PartyUtils {
 //                }
 //            }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
-                Player them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
                 if (! them.gspy) continue;
 

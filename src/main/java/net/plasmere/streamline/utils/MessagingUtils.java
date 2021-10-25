@@ -14,20 +14,20 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.dv8tion.jda.api.JDA;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.messaging.BungeeMassMessage;
 import net.plasmere.streamline.objects.messaging.BungeeMessage;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 
 import java.util.*;
 
 public class MessagingUtils {
-    public static HashMap<ProxiedPlayer, String> serveredUsernames = new HashMap<>();
+    public static HashMap<Player, String> serveredUsernames = new HashMap<>();
 
     public static void sendStaffMessage(CommandSender sender, String from, String msg){
         List<SavableUser> toExclude = new ArrayList<>();
@@ -78,36 +78,36 @@ public class MessagingUtils {
     }
 
     public static void sendPermissionedMessage(String toPermission, String message){
-        Set<ProxiedPlayer> toPlayers = new HashSet<>();
+        Set<Player> toPlayers = new HashSet<>();
 
-        for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()) {
+        for (Player player : PlayerUtils.getOnlinePPlayers()) {
             if (player.hasPermission(toPermission)) toPlayers.add(player);
         }
 
-        for (ProxiedPlayer player : toPlayers) {
+        for (Player player : toPlayers) {
             player.sendMessage(TextUtils.codedText(message));
         }
     }
 
     public static void sendPermissionedMessageNonSelf(CommandSender sender, String toPermission, String message){
-        Set<ProxiedPlayer> toPlayers = new HashSet<>();
+        Set<Player> toPlayers = new HashSet<>();
 
-        for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()) {
+        for (Player player : PlayerUtils.getOnlinePPlayers()) {
             if (player.getName().equals(sender.getName())) continue;
             if (player.hasPermission(toPermission)) toPlayers.add(player);
         }
 
-        for (ProxiedPlayer player : toPlayers) {
+        for (Player player : toPlayers) {
             player.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(message, sender)));
         }
     }
 
     public static void sendBungeeMessage(BungeeMassMessage message){
-        Collection<ProxiedPlayer> staff = StreamLine.getInstance().getProxy().getPlayers();
-        Set<ProxiedPlayer> people = new HashSet<>(staff);
-        List<ProxiedPlayer> ps = new ArrayList<>(people);
+        Collection<Player> staff = StreamLine.getInstance().getProxy().getPlayers();
+        Set<Player> people = new HashSet<>(staff);
+        List<Player> ps = new ArrayList<>(people);
 
-        for (ProxiedPlayer player : people){
+        for (Player player : people){
             try {
                 if (! player.hasPermission(message.permission)) {
                     ps.remove(player);
@@ -117,7 +117,7 @@ public class MessagingUtils {
             }
         }
 
-        for (ProxiedPlayer player : ps) {
+        for (Player player : ps) {
             sendBungeeMessage(new BungeeMessage(message.sender, player, message.title, message.transition, message.message));
         }
     }
@@ -132,8 +132,8 @@ public class MessagingUtils {
         );
     }
 
-    public static void sendServerMessageFromUser(ProxiedPlayer player, Server serverFrom, String serverTo, String format, String message) {
-        for (ProxiedPlayer p : PlayerUtils.getServeredPPlayers(serverTo)) {
+    public static void sendServerMessageFromUser(Player player, Server serverFrom, String serverTo, String format, String message) {
+        for (Player p : PlayerUtils.getServeredPPlayers(serverTo)) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
@@ -142,8 +142,8 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendRoomMessageFromUser(ProxiedPlayer player, Server serverFrom, Chat room, String format, String message) {
-        for (Player p : PlayerUtils.getRoomedPlayers(room)) {
+    public static void sendRoomMessageFromUser(Player player, Server serverFrom, Chat room, String format, String message) {
+        for (SavablePlayer p : PlayerUtils.getRoomedPlayers(room)) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
@@ -153,7 +153,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendServerMessageOtherServerSelf(ProxiedPlayer player, Server serverFrom, String format, String message) {
+    public static void sendServerMessageOtherServerSelf(Player player, Server serverFrom, String format, String message) {
         player.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                 .replace("%sender_servered%", getPlayerDisplayName(player))
                 .replace("%message%", message)
@@ -161,8 +161,8 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendGlobalMessageFromUser(ProxiedPlayer player, Server server, String format, String message) {
-        for (ProxiedPlayer p : PlayerUtils.getOnlinePPlayers()) {
+    public static void sendGlobalMessageFromUser(Player player, Server server, String format, String message) {
+        for (Player p : PlayerUtils.getOnlinePPlayers()) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
@@ -171,8 +171,8 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendPermissionedGlobalMessageFromUser(String permission, ProxiedPlayer player, Server server, String format, String message) {
-        for (ProxiedPlayer p : PlayerUtils.getPermissionedOnlineProxied(permission)) {
+    public static void sendPermissionedGlobalMessageFromUser(String permission, Player player, Server server, String format, String message) {
+        for (Player p : PlayerUtils.getPermissionedOnlineProxied(permission)) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
@@ -182,7 +182,7 @@ public class MessagingUtils {
     }
 
     public static void sendServerMessageFromDiscord(String nameUsed, ServerInfo server, String format, String message) {
-        for (ProxiedPlayer p : PlayerUtils.getServeredPPlayers(server.getName())) {
+        for (Player p : PlayerUtils.getServeredPPlayers(server.getName())) {
             p.sendMessage(TextUtils.codedText(format
                     .replace("%sender_servered%", nameUsed)
                     .replace("%sender_display%", nameUsed)
@@ -196,7 +196,7 @@ public class MessagingUtils {
     }
 
     public static void sendGlobalMessageFromDiscord(String nameUsed, String format, String message) {
-        for (ProxiedPlayer p : PlayerUtils.getOnlinePPlayers()) {
+        for (Player p : PlayerUtils.getOnlinePPlayers()) {
             p.sendMessage(TextUtils.codedText(format
                     .replace("%sender_servered%", nameUsed)
                     .replace("%sender_display%", nameUsed)
@@ -209,7 +209,7 @@ public class MessagingUtils {
     }
 
     public static void sendServerMessageFromDiscord(SavableUser user, ServerInfo server, String format, String message) {
-        for (ProxiedPlayer p : PlayerUtils.getServeredPPlayers(server.getName())) {
+        for (Player p : PlayerUtils.getServeredPPlayers(server.getName())) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, user)
                     .replace("%message%", message)
                     .replace("%server%", server.getName())
@@ -218,14 +218,14 @@ public class MessagingUtils {
     }
 
     public static void sendGlobalMessageFromDiscord(SavableUser user, String format, String message) {
-        for (ProxiedPlayer p : PlayerUtils.getOnlinePPlayers()) {
+        for (Player p : PlayerUtils.getOnlinePPlayers()) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, user)
                     .replace("%message%", message)
             ));
         }
     }
 
-    public static void sendMessageFromUserToConsole(ProxiedPlayer player, Server server, String format, String message) {
+    public static void sendMessageFromUserToConsole(Player player, Server server, String format, String message) {
         PlayerUtils.getConsoleStat().sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                 .replace("%sender_servered%", getPlayerDisplayName(player))
                 .replace("%message%", message)
@@ -233,14 +233,14 @@ public class MessagingUtils {
         ));
     }
 
-    public static String getPlayerDisplayName(ProxiedPlayer player) {
+    public static String getPlayerDisplayName(Player player) {
         sendDisplayPluginMessageRequest(player);
         String string = serveredUsernames.get(player);
 
         return (string == null) ? PlayerUtils.getOrCreatePlayerStat(player).displayName : string;
     }
 
-    public static void sendDisplayPluginMessageRequest(ProxiedPlayer player) {
+    public static void sendDisplayPluginMessageRequest(Player player) {
         if (PlayerUtils.getServeredPPlayers(player.getServer().getInfo().getName()).size() <= 0) return;
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -252,7 +252,7 @@ public class MessagingUtils {
         player.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
     }
 
-    public static void sendTeleportPluginMessageRequest(ProxiedPlayer sender, ProxiedPlayer to) {
+    public static void sendTeleportPluginMessageRequest(Player sender, Player to) {
         if (PlayerUtils.getServeredPPlayers(sender.getServer().getInfo().getName()).size() <= 0) return;
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -266,7 +266,7 @@ public class MessagingUtils {
         sender.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
     }
 
-    public static void sendTagPingPluginMessageRequest(ProxiedPlayer toPing) {
+    public static void sendTagPingPluginMessageRequest(Player toPing) {
         if (PlayerUtils.getServeredPPlayers(toPing.getServer().getInfo().getName()).size() <= 0) return;
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -279,7 +279,7 @@ public class MessagingUtils {
         toPing.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
     }
 
-    public static void sendGuildConfigPluginMessage(ProxiedPlayer to, Guild guild) {
+    public static void sendGuildConfigPluginMessage(Player to, Guild guild) {
         if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -306,10 +306,10 @@ public class MessagingUtils {
     }
 
     public static void sendStaffMessageFromDiscord(String sender, String from, String msg){
-        Collection<ProxiedPlayer> staff = StreamLine.getInstance().getProxy().getPlayers();
-        Set<ProxiedPlayer> staffs = new HashSet<>(staff);
+        Collection<Player> staff = StreamLine.getInstance().getProxy().getPlayers();
+        Set<Player> staffs = new HashSet<>(staff);
 
-        for (ProxiedPlayer player : staff){
+        for (Player player : staff){
             try {
                 if (! player.hasPermission(ConfigUtils.staffPerm)) {
                     staffs.remove(player);
@@ -319,7 +319,7 @@ public class MessagingUtils {
             }
         }
 
-        for (ProxiedPlayer player : staffs) {
+        for (Player player : staffs) {
             player.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(
                                     TextUtils.replaceAllSenderBungee(MessageConfUtils.bungeeStaffChatMessage(), sender), sender)
                             .replace("%from_type%", from)
@@ -334,10 +334,10 @@ public class MessagingUtils {
     }
 
     public static void sendStaffMessageReport(String sender, boolean fromBungee, String report){
-        Collection<ProxiedPlayer> staff = StreamLine.getInstance().getProxy().getPlayers();
-        Set<ProxiedPlayer> staffs = new HashSet<>(staff);
+        Collection<Player> staff = StreamLine.getInstance().getProxy().getPlayers();
+        Set<Player> staffs = new HashSet<>(staff);
 
-        for (ProxiedPlayer player : staff){
+        for (Player player : staff){
             try {
                 if (! player.hasPermission("streamline.staff.reports")) {
                     staffs.remove(player);
@@ -347,7 +347,7 @@ public class MessagingUtils {
             }
         }
 
-        for (ProxiedPlayer player : staffs) {
+        for (Player player : staffs) {
             if (fromBungee)
                 player.sendMessage(TextUtils.codedText(MessageConfUtils.bToBReportMessage()
                                 .replace("%reporter%", sender)
@@ -364,7 +364,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendDiscordJoinLeaveMessagePlain(boolean isJoin, Player player){
+    public static void sendDiscordJoinLeaveMessagePlain(boolean isJoin, SavablePlayer player){
         if (! ConfigUtils.moduleDEnabled) {
             return;
         }
@@ -395,7 +395,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendDiscordJoinLeaveMessageIcon(boolean isJoin, Player player){
+    public static void sendDiscordJoinLeaveMessageIcon(boolean isJoin, SavablePlayer player){
         if (! ConfigUtils.moduleDEnabled) {
             return;
         }
@@ -445,7 +445,7 @@ public class MessagingUtils {
 
         try {
             if (ConfigUtils.moduleAvatarUse) {
-                if (message.sender instanceof ProxiedPlayer) {
+                if (message.sender instanceof Player) {
                     Objects.requireNonNull(jda.getTextChannelById(message.channel))
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
@@ -485,7 +485,7 @@ public class MessagingUtils {
 
         try {
             if (useAvatar) {
-                if (message.sender instanceof ProxiedPlayer) {
+                if (message.sender instanceof Player) {
                     Objects.requireNonNull(jda.getTextChannelById(message.channel))
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
@@ -522,7 +522,7 @@ public class MessagingUtils {
 
         try {
             if (ConfigUtils.moduleAvatarUse) {
-                if (message.sender instanceof ProxiedPlayer) {
+                if (message.sender instanceof Player) {
                     Objects.requireNonNull(jda.getTextChannelById(message.channel))
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
@@ -719,7 +719,7 @@ public class MessagingUtils {
                 .replace("%ispublic%", getIsPublic(party))
                 .replace("%ismuted%", getIsMuted(party))
                 .replace("%version%", PlayerUtils.getOrCreateSavableUser(message.sender).latestVersion)
-                .replace("%version%", PlayerUtils.getOrCreatePlayerStat((ProxiedPlayer) message.sender).latestVersion)
+                .replace("%version%", PlayerUtils.getOrCreatePlayerStat((Player) message.sender).latestVersion)
                 .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                 .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                 .replace("%leader_absolute%", PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
@@ -728,7 +728,7 @@ public class MessagingUtils {
 
         try {
             if (ConfigUtils.moduleAvatarUse) {
-                if (message.sender instanceof ProxiedPlayer) {
+                if (message.sender instanceof Player) {
                     Objects.requireNonNull(jda.getTextChannelById(message.channel))
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
@@ -896,7 +896,7 @@ public class MessagingUtils {
 
         try {
             if (ConfigUtils.moduleAvatarUse) {
-                if (message.sender instanceof ProxiedPlayer) {
+                if (message.sender instanceof Player) {
                     Objects.requireNonNull(jda.getTextChannelById(message.channel))
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
@@ -957,8 +957,8 @@ public class MessagingUtils {
             return;
         }
 
-        if (user instanceof Player) {
-            Player player = PlayerUtils.getOrGetPlayerStatByUUID(user.uuid);
+        if (user instanceof SavablePlayer) {
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStatByUUID(user.uuid);
 
             if (player == null) {
                 sendBUserMessage(sender, MessageConfUtils.noPlayer());
@@ -1011,7 +1011,7 @@ public class MessagingUtils {
         return stringBuilder.toString();
     }
 
-    public static String statIPs(Player player){
+    public static String statIPs(SavablePlayer player){
         StringBuilder stringBuilder = new StringBuilder();
 
         int i = 1;
@@ -1026,7 +1026,7 @@ public class MessagingUtils {
         return stringBuilder.toString();
     }
 
-    public static String statNames(Player player){
+    public static String statNames(SavablePlayer player){
         StringBuilder stringBuilder = new StringBuilder();
 
         int i = 1;
@@ -1055,17 +1055,17 @@ public class MessagingUtils {
     }
 
     public static void sendBUserMessage(CommandSender sender, String msg){
-        if (sender instanceof ProxiedPlayer) {
+        if (sender instanceof Player) {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
-                    .replace("%version%", PlayerUtils.getOrCreatePlayerStat((ProxiedPlayer) sender).latestVersion)
+                    .replace("%version%", PlayerUtils.getOrCreatePlayerStat((Player) sender).latestVersion)
             ));
         } else {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)));
         }
     }
 
-    public static void sendBUserMessage(Player sender, String msg){
-        if (sender instanceof ProxiedPlayer) {
+    public static void sendBUserMessage(SavablePlayer sender, String msg){
+        if (sender instanceof Player) {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
                     .replace("%version%", Objects.requireNonNull(sender).latestVersion)
             ));
@@ -1091,29 +1091,29 @@ public class MessagingUtils {
     public static void sendBUserAsMessage(CommandSender as, String msg){
         ServerInfo serverInfo = StreamLine.getInstance().getProxy().getPlayer(as.getName()).getServer().getInfo();
 
-        Collection<ProxiedPlayer> players = serverInfo.getPlayers();
+        Collection<Player> players = serverInfo.getPlayers();
 
-        if (as instanceof ProxiedPlayer) {
-            for (ProxiedPlayer player : players) {
+        if (as instanceof Player) {
+            for (Player player : players) {
                 player.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, as)
-                        .replace("%version%", PlayerUtils.getOrCreatePlayerStat((ProxiedPlayer) as).latestVersion)
+                        .replace("%version%", PlayerUtils.getOrCreatePlayerStat((Player) as).latestVersion)
                 ));
             }
         } else {
-            for (ProxiedPlayer player : players) {
+            for (Player player : players) {
                 player.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, as)));
             }
         }
     }
 
     public static void sendBBroadcast(CommandSender sender, String msg){
-        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+        for (Player player : ProxyServer.getInstance().getPlayers()) {
             player.sendMessage(TextUtils.codedText(msg));
         }
     }
 
     public static void sendBCLHBroadcast(CommandSender sender, String msg, String hoverPrefix){
-        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+        for (Player player : ProxyServer.getInstance().getPlayers()) {
             player.sendMessage(TextUtils.clhText(msg, hoverPrefix));
         }
     }
@@ -1149,7 +1149,7 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (Player m : party.moderators){
+        for (SavablePlayer m : party.moderators){
             if (i < party.moderators.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesModsNLast(), m)
                         .replace("%version%", Objects.requireNonNull(m).latestVersion)
@@ -1170,7 +1170,7 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (Player m : party.members){
+        for (SavablePlayer m : party.members){
             if (i < party.members.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesMemsNLast(), m)
                         .replace("%version%", Objects.requireNonNull(m).latestVersion)
@@ -1191,7 +1191,7 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (Player m : party.totalMembers){
+        for (SavablePlayer m : party.totalMembers){
             if (i != party.totalMembers.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesTMemsNLast(), m)
                         .replace("%version%", Objects.requireNonNull(m).latestVersion)
@@ -1212,7 +1212,7 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (Player m : party.invites){
+        for (SavablePlayer m : party.invites){
 
             if (i < party.invites.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesInvsNLast(), m)

@@ -12,7 +12,7 @@ no-permission: "&cDésolé, mais vous n'avez pas la permission..."
 reload-message: "&aConfiguration rechargé!"
 # For things that only players can do.
 only-players: "&cDésolé, mais seulement les joueurs connectés peuvent utiliser cette commande...!"
-# Player not found...
+# SavablePlayer not found...
 no-player: "&cDésolé, mais sois ce joueur n'existe pas , ou il n'est pas en-ligne..."
 # Discord error title.
 discord-err-title: "ERREUR"
@@ -219,7 +219,7 @@ online:
       # %server% = specific server.
       # %count% = amount of players on said server.
       servers: "&9%server%&8: &6%count% &donline&8..."
-      # Player format.
+      # SavablePlayer format.
       players:
         # Main bulk of player format.
         # Fillers:
@@ -1339,7 +1339,7 @@ stats:
   create: "&aCréation d'un profil de statistiques pour vous! Vous pouvez le visionner en faisant &b/stats"
   # Points name.
   points-name: "&6Or de Réseau"
-  # Player bulk message.
+  # SavablePlayer bulk message.
   player: "&9----- &d%player_formatted% &7Informations du réseau &9-----%newline%&eUUID&8: &b%uuid%%newline%&eVersion de Minecraft&8: &c%version%%newline%&eEXP&8: &6%total_xp%%newline%&eNiveau&8: &6%level%%newline%&eEXP Requise&8: &6%xplevel% &0(&6%xpneeded% &etotal needed&0)%newline%&eTemps de jeu&8: &6%playtime% &ehours%newline%&e%points_name%&8: &6%points%%newline%&eTags&8: &c%tags%%newline%&eNom Affiché&8: &d%player_formatted%%newline%&eTout les noms&8: &c%names%%newline%&2Guilde&8: &r%guild%%newline%&2Membres de guilde&8: &6%guild_members%%newline%&2EXP de guilde&7/&2Niveau&8: &6%guild_xp_total%&7/&6%guild_lvl%%newline%&2Chef de guilde&8: &d%guild_leader% &0(&b%guild_uuid%&0)%newline%&eEspionnage sociale &0(%sspy%&0) &eEspionnage de guilde &0(%gspy%&0) &eEspionnage de groupe &0(%pspy%&0) &eConnectés &0(%online%&0)"
   # ConsolePlayer bulk message.
   console-player: "&9----- &7Informations réseau de &d%player_formatted% &9-----%newline%&eUUID&8: &b%uuid%%newline%&eVersion de Minecraft&8: &c%version%%newline%&e%points_name%&8: &6%points%%newline%&eTags&8: &c%tags%%newline%&eNom Affiché&8: &d%player_formatted%%newline%&2Guilde&8: &r%guild%%newline%&2Membres de guilde&8: &6%guild_members%%newline%&2EXP de guilde&7/&2Niveau&8: &6%guild_xp_total%&7/&6%guild_lvl%%newline%&2Guild Chef&8: &d%guild_leader% &0(&b%guild_uuid%&0)"

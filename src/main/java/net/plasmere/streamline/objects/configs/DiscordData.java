@@ -12,13 +12,12 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.DataChannel;
 import net.plasmere.streamline.objects.Guild;
 import net.plasmere.streamline.objects.Party;
-import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.*;
 import org.apache.commons.collections4.list.TreeList;
@@ -389,7 +388,7 @@ public class DiscordData {
                 PartyUtils.sendChatFromDiscord(user.getName(), party, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             }
         } else {
-            Player player = PlayerUtils.getOrGetPlayerStatByUUID(StreamLine.discordData.getVerified(userID));
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStatByUUID(StreamLine.discordData.getVerified(userID));
 
             if (player == null) {
                 MessagingUtils.logWarning("Could not send bungee message for " + userID);
@@ -612,7 +611,7 @@ public class DiscordData {
     }
 
     public void doVerify(String uuid, long discordID, long guildID) {
-        Player player = PlayerUtils.getOrGetPlayerStatByUUID(uuid);
+        SavablePlayer player = PlayerUtils.getOrGetPlayerStatByUUID(uuid);
         if (player == null) return;
 
         toVerify.remove(uuid);

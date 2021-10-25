@@ -4,10 +4,10 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.*;
@@ -19,8 +19,8 @@ public class PartyCommand extends Command implements TabExecutor {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (sender instanceof ProxiedPlayer) {
-            Player player = PlayerUtils.getOrGetPlayerStat(sender.getName());
+        if (sender instanceof Player) {
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
 
             if (player == null) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
@@ -229,7 +229,7 @@ public class PartyCommand extends Command implements TabExecutor {
                 }
             } else {
                 try {
-                    Player p = PlayerUtils.getOrGetPlayerStat(args[0]);
+                    SavablePlayer p = PlayerUtils.getOrGetPlayerStat(args[0]);
 
                     if (p == null) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
@@ -251,10 +251,10 @@ public class PartyCommand extends Command implements TabExecutor {
     @Override
     public Iterable<String> onTabComplete(final CommandSender sender, final String[] args)
     {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();
 
-        for (ProxiedPlayer player : players){
+        for (Player player : players){
             strPlayers.add(player.getName());
         }
 

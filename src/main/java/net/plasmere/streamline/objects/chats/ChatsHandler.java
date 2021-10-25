@@ -2,7 +2,7 @@ package net.plasmere.streamline.objects.chats;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.connection.Server;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
@@ -90,7 +90,7 @@ public class ChatsHandler {
         return user.hasPermission(chat.identifier);
     }
 
-    public static boolean hasPermissionForGlobalChat(ProxiedPlayer user, Chat chat) {
+    public static boolean hasPermissionForGlobalChat(Player user, Chat chat) {
         return user.hasPermission(chat.identifier);
     }
 

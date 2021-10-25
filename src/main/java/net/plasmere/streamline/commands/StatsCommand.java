@@ -1,7 +1,7 @@
 package net.plasmere.streamline.commands;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
@@ -22,7 +22,7 @@ public class StatsCommand extends Command implements TabExecutor {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (sender instanceof ProxiedPlayer) {
+        if (sender instanceof Player) {
             if (args.length <= 0 || ! CommandsConfUtils.comBStatsOthers) {
                 PlayerUtils.info(sender, PlayerUtils.getOrGetPlayerStat(sender.getName()));
             } else {
@@ -53,10 +53,10 @@ public class StatsCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();
 
-        for (ProxiedPlayer player : players){
+        for (Player player : players){
             strPlayers.add(player.getName());
         }
 
@@ -80,7 +80,7 @@ public class StatsCommand extends Command implements TabExecutor {
 //
 //                    PlayerUtils.info(sender, person);
 //                } else {
-//                    Player person = PlayerUtils.getOrGetPlayerStat(args[0]);
+//                    SavablePlayer person = PlayerUtils.getOrGetPlayerStat(args[0]);
 //
 //                    if (person == null) {
 //                        MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);

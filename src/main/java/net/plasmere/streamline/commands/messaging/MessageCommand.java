@@ -1,12 +1,12 @@
 package net.plasmere.streamline.commands.messaging;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -63,21 +63,21 @@ public class MessageCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> ignored = new ArrayList<>();
 
 
-        if (sender instanceof ProxiedPlayer) {
-            ProxiedPlayer p = (ProxiedPlayer) sender;
-            Player player = PlayerUtils.getOrCreatePlayerStatByUUID(p.getUniqueId().toString());
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
+            SavablePlayer player = PlayerUtils.getOrCreatePlayerStatByUUID(p.getUniqueId().toString());
             for (String uuid : player.ignoredList) {
                 ignored.add(UUIDUtils.getCachedName(uuid));
             }
         }
 
-        for (ProxiedPlayer pl : players) {
-            if (sender instanceof ProxiedPlayer) {
+        for (Player pl : players) {
+            if (sender instanceof Player) {
                 if (pl.equals(sender)) continue;
                 if (ignored.contains(pl.getName())) continue;
             }

@@ -1,13 +1,13 @@
 package net.plasmere.streamline.commands.messaging;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -79,7 +79,7 @@ public class IgnoreCommand extends Command implements TabExecutor {
                     stat.tryAddNewIgnored(other.uuid);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.ignoreAddSelf(), sender)
                     );
-                    if ((other instanceof Player && ((Player) other).online) || other instanceof ConsolePlayer) {
+                    if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof ConsolePlayer) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.ignoreAddIgnored(), sender)
                         );
                     }
@@ -99,7 +99,7 @@ public class IgnoreCommand extends Command implements TabExecutor {
                     stat.tryRemIgnored(other.uuid);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.ignoreRemSelf(), sender)
                     );
-                    if ((other instanceof Player && ((Player) other).online) || other instanceof ConsolePlayer) {
+                    if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof ConsolePlayer) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.ignoreRemIgnored(), sender)
                         );
                     }
@@ -115,7 +115,7 @@ public class IgnoreCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> ignored = new ArrayList<>();
 
@@ -127,7 +127,7 @@ public class IgnoreCommand extends Command implements TabExecutor {
             ignored.add(UUIDUtils.getCachedName(uuid));
         }
 
-        for (ProxiedPlayer pl : players) {
+        for (Player pl : players) {
             if (pl.equals(sender)) continue;
             strPlayers.add(pl.getName());
         }

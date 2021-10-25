@@ -8,7 +8,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -20,8 +20,8 @@ public class GoToServerVanillaCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args){
-        if (sender instanceof ProxiedPlayer){
-            ProxiedPlayer player = (ProxiedPlayer) sender;
+        if (sender instanceof Player){
+            Player player = (Player) sender;
 
             if (player.hasPermission("streamline.server.fabric") || player.hasPermission("streamline.*")) {
                 ProxyServer proxy = StreamLine.getInstance().getProxy();

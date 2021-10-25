@@ -7,7 +7,7 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.utils.PlayerUtils;
 
 public class OnlineCommand {
@@ -37,7 +37,7 @@ public class OnlineCommand {
         StringBuilder text = new StringBuilder();
 
         int i = 1;
-        for (ProxiedPlayer player : StreamLine.getInstance().getProxy().getPlayers()){
+        for (Player player : StreamLine.getInstance().getProxy().getPlayers()){
             if (!player.hasPermission("streamline.staff.vanish")){
                 if (i < StreamLine.getInstance().getProxy().getPlayers().size())
                     text.append(PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrCreatePlayerStat(player))).append(", ");

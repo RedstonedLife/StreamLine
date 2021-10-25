@@ -2,10 +2,10 @@ package net.plasmere.streamline.utils;
 
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.Guild;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 
 public class FaceFetcher {
-    public static String getFaceAvatarURL(Player player){
+    public static String getFaceAvatarURL(SavablePlayer player){
         return getPlaceholdersApplied(player, ConfigUtils.moduleAvatarLink);
     }
 
@@ -13,7 +13,7 @@ public class FaceFetcher {
         return getFaceAvatarURL(PlayerUtils.getPlayerStat(username));
     }
 
-    public static String getPlaceholdersApplied(Player player, String string) {
+    public static String getPlaceholdersApplied(SavablePlayer player, String string) {
         Guild guild = GuildUtils.getGuild(player);
 
         return TextUtils.replaceAllPlayerBungee(string, player)

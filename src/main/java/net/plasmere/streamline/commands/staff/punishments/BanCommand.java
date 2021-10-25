@@ -1,7 +1,7 @@
 package net.plasmere.streamline.commands.staff.punishments;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.md_5.bungee.config.Configuration;
@@ -10,7 +10,6 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
-import net.plasmere.streamline.objects.savable.users.Player;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.*;
 
@@ -80,7 +79,7 @@ public class BanCommand extends Command implements TabExecutor {
                     StreamLine.bans.saveConfig();
 
                     if (PlayerUtils.isOnline(otherName)) {
-                        ProxiedPlayer pp = PlayerUtils.getPPlayerByUUID(otherUUID);
+                        Player pp = PlayerUtils.getPPlayerByUUID(otherUUID);
 
                         if (pp != null) {
                             pp.disconnect(TextUtils.codedText(MessageConfUtils.punBannedTemp()
@@ -140,7 +139,7 @@ public class BanCommand extends Command implements TabExecutor {
                 StreamLine.bans.saveConfig();
 
                 if (PlayerUtils.isOnline(otherName)) {
-                    ProxiedPlayer pp = PlayerUtils.getPPlayerByUUID(otherUUID);
+                    Player pp = PlayerUtils.getPPlayerByUUID(otherUUID);
 
                     if (pp != null) {
                         pp.disconnect(TextUtils.codedText(MessageConfUtils.punBannedPerm()
@@ -215,7 +214,7 @@ public class BanCommand extends Command implements TabExecutor {
                 StreamLine.bans.saveConfig();
 
                 if (PlayerUtils.isOnline(otherName)) {
-                    ProxiedPlayer pp = PlayerUtils.getPPlayerByUUID(otherUUID);
+                    Player pp = PlayerUtils.getPPlayerByUUID(otherUUID);
 
                     if (pp != null) {
                         pp.disconnect(TextUtils.codedText(MessageConfUtils.punBannedTemp()
@@ -296,12 +295,12 @@ public class BanCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> banned = new ArrayList<>();
 
-        for (ProxiedPlayer player : players){
-            if (sender instanceof ProxiedPlayer) if (player.equals(sender)) continue;
+        for (Player player : players){
+            if (sender instanceof Player) if (player.equals(sender)) continue;
             strPlayers.add(player.getName());
         }
 

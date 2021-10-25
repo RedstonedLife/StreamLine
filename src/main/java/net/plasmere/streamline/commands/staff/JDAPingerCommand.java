@@ -8,7 +8,7 @@ import net.plasmere.streamline.utils.JDAPingerUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 
 import net.dv8tion.jda.api.JDA;
@@ -29,7 +29,7 @@ public class JDAPingerCommand extends Command {
 
         JDA jda = StreamLine.getJda();
 
-        ProxiedPlayer player = (ProxiedPlayer) sender;
+        Player player = (Player) sender;
         player.sendMessage(TextUtils.codedText("&aAttempting to ping..."));
 
         JDAPingerUtils.sendMessage(Objects.requireNonNull(jda.getTextChannelById(DiscordBotConfUtils.textChannelBConsole)));

@@ -1,16 +1,15 @@
 package net.plasmere.streamline.utils;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.Guild;
-import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 
@@ -136,7 +135,7 @@ public class GuildUtils {
             return false;
         } catch (NullPointerException e) {
             if (ConfigUtils.debug) {
-                MessagingUtils.logWarning("Player's guild could not be found... Adding now!");
+                MessagingUtils.logWarning("SavablePlayer's guild could not be found... Adding now!");
             }
 
             player.updateKey("guild", player.uuid);
@@ -203,7 +202,7 @@ public class GuildUtils {
         }
 
         try {
-            //MessagingUtils.logInfo("createGuild Player.uuid > " + sender.uuid);
+            //MessagingUtils.logInfo("createGuild SavablePlayer.uuid > " + sender.uuid);
             Guild guild = new Guild(sender.uuid, name);
 
             addGuild(guild);
@@ -323,7 +322,7 @@ public class GuildUtils {
                 return;
             }
 
-            if (to instanceof Player && ((Player) to).online) {
+            if (to instanceof SavablePlayer && ((SavablePlayer) to).online) {
                 MessagingUtils.sendBGUserMessage(guild, from.findSender(), to.findSender(), TextUtils.replaceAllPlayerBungee(inviteUser, to)
                 );
             }
@@ -530,7 +529,7 @@ public class GuildUtils {
             return;
         }
 
-        if (sender instanceof Player && sender.online) {
+        if (sender instanceof SavablePlayer && sender.online) {
             for (SavableUser pl : guild.totalMembers) {
                 if (! pl.online) continue;
 
@@ -540,10 +539,10 @@ public class GuildUtils {
                     MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), warpMembers);
                 }
 
-                if (pl instanceof Player) {
-                    Player p = (Player) pl;
+                if (pl instanceof SavablePlayer) {
+                    SavablePlayer p = (SavablePlayer) pl;
                     if (! p.online) continue;
-                    p.player.connect(((Player) sender).getServer().getInfo());
+                    p.player.connect(((SavablePlayer) sender).getServer().getInfo());
                 }
             }
         }
@@ -1227,10 +1226,10 @@ public class GuildUtils {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.leaderUUID, msg);
             }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
-                Player them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
                 if (! them.gspy) continue;
 
@@ -1243,7 +1242,7 @@ public class GuildUtils {
         }
     }
 
-    public static void sendChat(Player sender, Guild guild, String msg) {
+    public static void sendChat(SavablePlayer sender, Guild guild, String msg) {
         try {
             if (! isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1284,10 +1283,10 @@ public class GuildUtils {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.leaderUUID, msg);
             }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
-                Player them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
                 if (! them.gspy) continue;
 
@@ -1319,10 +1318,10 @@ public class GuildUtils {
 //                }
 //            }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
-                Player them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
                 if (! them.gspy) continue;
 
@@ -1352,10 +1351,10 @@ public class GuildUtils {
 //                }
 //            }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
-                Player them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
                 if (! them.gspy) continue;
 

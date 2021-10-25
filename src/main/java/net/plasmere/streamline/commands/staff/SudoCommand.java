@@ -1,7 +1,7 @@
 package net.plasmere.streamline.commands.staff;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
@@ -23,7 +23,7 @@ public class SudoCommand extends Command implements TabExecutor {
         if (args.length <= 1) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else {
-            ProxiedPlayer sudoOn = StreamLine.getInstance().getProxy().getPlayer(args[0]);
+            Player sudoOn = StreamLine.getInstance().getProxy().getPlayer(args[0]);
 
             if (sudoOn.hasPermission(ConfigUtils.noSudoPerm)){
                 MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.sudoNoSudo(), sudoOn)
@@ -43,10 +43,10 @@ public class SudoCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();
 
-        for (ProxiedPlayer player : players){
+        for (Player player : players){
             strPlayers.add(player.getName());
         }
 

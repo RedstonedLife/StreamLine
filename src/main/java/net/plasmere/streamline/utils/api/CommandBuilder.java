@@ -4,16 +4,12 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
-import net.plasmere.streamline.events.enums.Condition;
-import net.plasmere.streamline.objects.lists.SingleSet;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.PluginUtils;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class CommandBuilder extends Command {
@@ -102,7 +98,7 @@ public class CommandBuilder extends Command {
             executeEvents(PlayerUtils.getPlayerStat(sender));
     }
 
-    private void executeEvents(Player player) {
+    private void executeEvents(SavablePlayer player) {
         // Run all events from the command.
         for(Event event : getEvents())
             EventsHandler.runEvent(event,player);

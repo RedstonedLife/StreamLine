@@ -1,40 +1,40 @@
 package net.plasmere.streamline.objects.lists;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 
 import java.util.Collection;
 import java.util.TreeMap;
 
-public class ProxiedPlayerSet {
-    TreeMap<String, ProxiedPlayer> sorted = new TreeMap<>();
+public class PlayerSet {
+    TreeMap<String, Player> sorted = new TreeMap<>();
 
-    public ProxiedPlayerSet(){
+    public PlayerSet(){
 
     }
 
-    public ProxiedPlayerSet(Collection<? extends ProxiedPlayer> oldProxiedPlayers){
-        addForProxiedPlayers(oldProxiedPlayers);
+    public PlayerSet(Collection<? extends Player> oldPlayers){
+        addForPlayers(oldPlayers);
     }
 
-    public void addForProxiedPlayers(Collection<? extends ProxiedPlayer> oldProxiedPlayers){
-        for (ProxiedPlayer player : oldProxiedPlayers) {
-            addProxiedPlayer(player);
+    public void addForPlayers(Collection<? extends Player> oldPlayers){
+        for (Player player : oldPlayers) {
+            addPlayer(player);
         }
     }
 
-    public void addProxiedPlayer(ProxiedPlayer player) {
+    public void addPlayer(Player player) {
         sorted.put(player.getName(), player);
     }
 
-    public void remProxiedPlayer(ProxiedPlayer player){
+    public void remPlayer(Player player){
         sorted.remove(player.getName());
     }
 
-    public ProxiedPlayer[] getAll() {
-        ProxiedPlayer[] players = new ProxiedPlayer[sorted.size()];
+    public Player[] getAll() {
+        Player[] players = new Player[sorted.size()];
 
         int i = 0;
-        for (ProxiedPlayer player : sorted.values()){
+        for (Player player : sorted.values()){
             players[i] = player;
             i ++;
         }

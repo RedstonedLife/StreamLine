@@ -13,7 +13,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -32,8 +32,8 @@ public class GoToServerLobbyCommand extends Command implements TabExecutor {
     public void execute(CommandSender sender, String[] args){
         Map<String, ServerInfo> servers = ProxyServer.getInstance().getServers();
         if ( args.length == 0 ) {
-            if (sender instanceof ProxiedPlayer) {
-                ProxiedPlayer player = (ProxiedPlayer) sender;
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
 
                 if (player.hasPermission("streamline.server.lobby") || player.hasPermission("streamline.*")) {
                     ProxyServer proxy = StreamLine.getInstance().getProxy();
@@ -53,10 +53,10 @@ public class GoToServerLobbyCommand extends Command implements TabExecutor {
                 sender.sendMessage(new TextComponent(ChatColor.RED + "Sorry, but only a player can do this..."));
             }
         } else {
-            if (!(sender instanceof ProxiedPlayer))
+            if (!(sender instanceof Player))
                 return;
 
-            ProxiedPlayer player = (ProxiedPlayer) sender;
+            Player player = (Player) sender;
 
             ServerInfo server = servers.get(args[0]);
             if (server == null)

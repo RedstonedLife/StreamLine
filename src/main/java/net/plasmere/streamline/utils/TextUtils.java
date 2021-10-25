@@ -7,11 +7,11 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.config.Configuration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.lists.SingleSet;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import org.apache.commons.collections4.list.TreeList;
 
@@ -321,11 +321,11 @@ public class TextUtils {
         return textComponent;
     }
 
-    public static TreeMap<Integer, ProxiedPlayer> getTaggedPlayersIndexed(String[] args, String serverName) {
-        TreeMap<Integer, ProxiedPlayer> toIndex = new TreeMap<>();
-        List<ProxiedPlayer> players = PlayerUtils.getServeredPPlayers(serverName);
+    public static TreeMap<Integer, Player> getTaggedPlayersIndexed(String[] args, String serverName) {
+        TreeMap<Integer, Player> toIndex = new TreeMap<>();
+        List<Player> players = PlayerUtils.getServeredPPlayers(serverName);
 
-        for (ProxiedPlayer player : players) {
+        for (Player player : players) {
             for (int i = 0; i < args.length; i ++) {
                 if (player.getName().equals(args[i])) {
                     toIndex.put(i, player);
@@ -336,12 +336,12 @@ public class TextUtils {
         return toIndex;
     }
 
-    public static SingleSet<String, List<ProxiedPlayer>> getMessageWithTags(ProxiedPlayer sender, String message, String format) {
+    public static SingleSet<String, List<Player>> getMessageWithTags(Player sender, String message, String format) {
         String[] args = message.split(" ");
 
         String chatColor = isolateChatColor(format);
 
-        TreeMap<Integer, ProxiedPlayer> indexed = getTaggedPlayersIndexed(args, sender.getServer().getInfo().getName());
+        TreeMap<Integer, Player> indexed = getTaggedPlayersIndexed(args, sender.getServer().getInfo().getName());
 
         for (Integer index : indexed.keySet()) {
             args[index] = StreamLine.serverConfig.getTagsPrefix() + args[index];
@@ -430,7 +430,7 @@ public class TextUtils {
         return text.toString();
     }
 
-    public static String getMessageWithEmotes(ProxiedPlayer player, String input) {
+    public static String getMessageWithEmotes(Player player, String input) {
         for (String emote : StreamLine.serverConfig.getEmotes()) {
             if (! player.hasPermission(StreamLine.serverConfig.getEmotePermission(emote))) continue;
             input = input.replace(emote, StreamLine.serverConfig.getEmote(emote));
@@ -487,13 +487,13 @@ public class TextUtils {
                 .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                 .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                .replace("%player_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
-                .replace("%player_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
-                .replace("%player_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
-                .replace("%player_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
-                .replace("%player_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
-                .replace("%player_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
-                .replace("%player_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
+                .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
+                .replace("%player_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
+                .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
+                .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
+                .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
                 ;
     }
 
@@ -543,13 +543,13 @@ public class TextUtils {
                     .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                     .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                    .replace("%player_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
-                    .replace("%player_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
-                    .replace("%player_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
-                    .replace("%player_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
-                    .replace("%player_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
-                    .replace("%player_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
-                    .replace("%player_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                    .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                    .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
+                    .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
+                    .replace("%player_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
+                    .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
+                    .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
+                    .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
                     ;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
@@ -589,13 +589,13 @@ public class TextUtils {
                 .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                 .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                .replace("%user_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
-                .replace("%user_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
-                .replace("%user_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
-                .replace("%user_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
-                .replace("%user_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
-                .replace("%user_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
-                .replace("%user_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
+                .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
+                .replace("%user_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
+                .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
+                .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
+                .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
                 ;
     }
 
@@ -645,13 +645,13 @@ public class TextUtils {
                     .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                     .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                    .replace("%user_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
-                    .replace("%user_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
-                    .replace("%user_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
-                    .replace("%user_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
-                    .replace("%user_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
-                    .replace("%user_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
-                    .replace("%user_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                    .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                    .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
+                    .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
+                    .replace("%user_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
+                    .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
+                    .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
+                    .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
                     ;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
@@ -691,13 +691,13 @@ public class TextUtils {
                 .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                 .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                .replace("%sender_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
-                .replace("%sender_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
-                .replace("%sender_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
-                .replace("%sender_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
-                .replace("%sender_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
-                .replace("%sender_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
-                .replace("%sender_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
+                .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
+                .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
+                .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
+                .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
+                .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
                 ;
     }
 
@@ -747,13 +747,13 @@ public class TextUtils {
                     .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                     .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                    .replace("%sender_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
-                    .replace("%sender_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
-                    .replace("%sender_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
-                    .replace("%sender_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
-                    .replace("%sender_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
-                    .replace("%sender_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
-                    .replace("%sender_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                    .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                    .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
+                    .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
+                    .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
+                    .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
+                    .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
+                    .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
                     ;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
@@ -793,13 +793,13 @@ public class TextUtils {
                 .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
                 .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
 
-                .replace("%player_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
-                .replace("%player_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
-                .replace("%player_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
-                .replace("%player_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
-                .replace("%player_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
-                .replace("%player_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
-                .replace("%player_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
+                .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
+                .replace("%player_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
+                .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
+                .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
+                .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
                 ;
     }
 
@@ -835,13 +835,13 @@ public class TextUtils {
                 .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
                 .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
 
-                .replace("%user_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
-                .replace("%user_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
-                .replace("%user_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
-                .replace("%user_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
-                .replace("%user_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
-                .replace("%user_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
-                .replace("%user_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
+                .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
+                .replace("%user_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
+                .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
+                .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
+                .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
                 ;
     }
 
@@ -877,13 +877,13 @@ public class TextUtils {
                 .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
                 .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
 
-                .replace("%sender_level%", (user instanceof Player ? String.valueOf(((Player) user).lvl) : ""))
-                .replace("%sender_xp_current%", (user instanceof Player ? String.valueOf(((Player) user).currentXP) : ""))
-                .replace("%sender_xp_total%", (user instanceof Player ? String.valueOf(((Player) user).totalXP) : ""))
-                .replace("%sender_play_seconds%", (user instanceof Player ? String.valueOf(((Player) user).playSeconds) : ""))
-                .replace("%sender_play_minutes%", (user instanceof Player ? String.valueOf(((Player) user).getPlayMinutes()) : ""))
-                .replace("%sender_play_hours%", (user instanceof Player ? String.valueOf(((Player) user).getPlayHours()) : ""))
-                .replace("%sender_play_days%", (user instanceof Player ? String.valueOf(((Player) user).getPlayDays()) : ""))
+                .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
+                .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
+                .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
+                .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
+                .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
+                .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
                 ;
     }
 

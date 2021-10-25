@@ -4,7 +4,7 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
@@ -20,8 +20,8 @@ public class StreamCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args){
-        if (sender instanceof ProxiedPlayer){
-            ProxiedPlayer player = (ProxiedPlayer) sender;
+        if (sender instanceof Player){
+            Player player = (Player) sender;
 
             if (player.hasPermission(perm)){
                 if (args.length != 1){

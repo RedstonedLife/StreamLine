@@ -1,5 +1,9 @@
 package net.plasmere.streamline.listeners;
 
+import com.velocitypowered.api.event.PostOrder;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.player.PlayerChatEvent;
+import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -14,39 +18,33 @@ import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.Guild;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.ChatEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.event.EventPriority;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.TreeMap;
 
-public class ChatListener implements Listener {
+public class ChatListener {
     private final String prefix = ConfigUtils.moduleStaffChatPrefix;
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerChat(ChatEvent e){
-        if (e.isCancelled()) return;
-        if (! (e.getSender() instanceof ProxiedPlayer)) return;
+    @Subscribe(order = PostOrder.FIRST)
+    public static void onPlayerChat(PlayerChatEvent e){
+        if (! e.getResult().isAllowed()) return;
         boolean isStaffMessage = false;
 
-        ProxiedPlayer sender = (ProxiedPlayer) e.getSender();
+        Player sender = e.getPlayer();
 
         String msg = e.getMessage();
 
-        Player stat = PlayerUtils.addPlayerStat(sender);
+        SavablePlayer stat = PlayerUtils.addPlayerStat(sender);
 
         stat.updateLastMessage(msg);
 
         try {
-            for (ProxiedPlayer pl : StreamLine.getInstance().getProxy().getPlayers()){
-                Player p = PlayerUtils.getOrCreatePlayerStat(pl);
+            for (Player pl : StreamLine.getInstance().getProxy().getAllPlayers()){
+                SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(pl);
 
                 if (GuildUtils.getGuild(p) == null && ! p.equals(stat)) continue;
                 if (GuildUtils.getGuild(p) != null) {
@@ -64,7 +62,7 @@ public class ChatListener implements Listener {
 
         if (ConfigUtils.punMutes && ConfigUtils.punMutesHard && stat.muted) {
             if (PlayerUtils.checkIfMuted(sender, stat)) {
-                e.setCancelled(true);
+                e.setResult(PlayerChatEvent.ChatResult.denied());
                 return;
             }
         }
@@ -161,13 +159,13 @@ public class ChatListener implements Listener {
                         if (chat != null) {
                             if (chat.identifier.equals("network")) {
                                 String format = StreamLine.chatConfig.getPermissionedChatMessage(stat, chat, chat.chatChannel.name, MessageServerType.BUNGEE);
-                                SingleSet<String, List<ProxiedPlayer>> msgWithTagged = TextUtils.getMessageWithTags(sender, msg, format);
+                                SingleSet<String, List<Player>> msgWithTagged = TextUtils.getMessageWithTags(sender, msg, format);
 
                                 String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
                                 MessagingUtils.sendGlobalMessageFromUser(sender, sender.getServer(), format, withEmotes);
 
-                                for (ProxiedPlayer player : msgWithTagged.value) {
+                                for (Player player : msgWithTagged.value) {
                                     MessagingUtils.sendTagPingPluginMessageRequest(player);
                                 }
 
@@ -181,13 +179,13 @@ public class ChatListener implements Listener {
                             } else {
                                 if (ChatsHandler.hasPermissionForGlobalChat(stat, chat)) {
                                     String format = StreamLine.chatConfig.getPermissionedChatMessage(stat, chat, chat.chatChannel.name, MessageServerType.BUNGEE);
-                                    SingleSet<String, List<ProxiedPlayer>> msgWithTagged = TextUtils.getMessageWithTags(sender, msg, format);
+                                    SingleSet<String, List<Player>> msgWithTagged = TextUtils.getMessageWithTags(sender, msg, format);
 
                                     String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
                                     MessagingUtils.sendPermissionedGlobalMessageFromUser(chat.identifier, sender, sender.getServer(), format, withEmotes);
 
-                                    for (ProxiedPlayer player : msgWithTagged.value) {
+                                    for (Player player : msgWithTagged.value) {
                                         MessagingUtils.sendTagPingPluginMessageRequest(player);
                                     }
 
@@ -205,13 +203,13 @@ public class ChatListener implements Listener {
                             Chat ch = StreamLine.chatConfig.getDefaultChat(chatChannel);
                             if (ChatsHandler.hasPermissionForGlobalChat(stat, ch)) {
                                 String format = StreamLine.chatConfig.getPermissionedChatMessage(stat, ch, chatChannel.name, MessageServerType.BUNGEE);
-                                SingleSet<String, List<ProxiedPlayer>> msgWithTagged = TextUtils.getMessageWithTags(sender, msg, format);
+                                SingleSet<String, List<Player>> msgWithTagged = TextUtils.getMessageWithTags(sender, msg, format);
 
                                 String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
                                 MessagingUtils.sendPermissionedGlobalMessageFromUser(ch.identifier, sender, sender.getServer(), format, withEmotes);
 
-                                for (ProxiedPlayer player : msgWithTagged.value) {
+                                for (Player player : msgWithTagged.value) {
                                     MessagingUtils.sendTagPingPluginMessageRequest(player);
                                 }
 
@@ -230,7 +228,7 @@ public class ChatListener implements Listener {
                         Chat chat = ChatsHandler.getChat(ChatsHandler.getChannel("local"), stat.chatIdentifier);
 
                         String format = StreamLine.chatConfig.getPermissionedChatMessage(stat, chat, ChatsHandler.getChannel("local").name, MessageServerType.BUNGEE);
-                        SingleSet<String, List<ProxiedPlayer>> msgWithTagged = TextUtils.getMessageWithTags(sender, msg, format);
+                        SingleSet<String, List<Player>> msgWithTagged = TextUtils.getMessageWithTags(sender, msg, format);
 
                         String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
@@ -243,7 +241,7 @@ public class ChatListener implements Listener {
                             }
                         }
 
-                        for (ProxiedPlayer player : msgWithTagged.value) {
+                        for (Player player : msgWithTagged.value) {
                             MessagingUtils.sendTagPingPluginMessageRequest(player);
                         }
 
@@ -272,13 +270,13 @@ public class ChatListener implements Listener {
 
                     if (chat != null) {
                         String format = StreamLine.chatConfig.getPermissionedChatMessage(stat, chat, chat.chatChannel.name, MessageServerType.BUNGEE);
-                        SingleSet<String, List<ProxiedPlayer>> msgWithTagged = TextUtils.getMessageWithTags(sender, msg, format);
+                        SingleSet<String, List<Player>> msgWithTagged = TextUtils.getMessageWithTags(sender, msg, format);
 
                         String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
                         MessagingUtils.sendRoomMessageFromUser(sender, sender.getServer(), chat, format, withEmotes);
 
-                        for (ProxiedPlayer player : msgWithTagged.value) {
+                        for (Player player : msgWithTagged.value) {
                             MessagingUtils.sendTagPingPluginMessageRequest(player);
                         }
 

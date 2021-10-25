@@ -2,7 +2,7 @@ package net.plasmere.streamline.commands.staff;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.config.MessageConfUtils;
@@ -20,8 +20,8 @@ public class TeleportCommand extends Command implements TabExecutor {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (sender instanceof ProxiedPlayer) {
-            ProxiedPlayer player = PlayerUtils.getPPlayer(args[0]);
+        if (sender instanceof Player) {
+            Player player = PlayerUtils.getPPlayer(args[0]);
             if (player == null) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPlayer());
                 return;
@@ -29,7 +29,7 @@ public class TeleportCommand extends Command implements TabExecutor {
 
             ServerInfo serverInfo = player.getServer().getInfo();
 
-            ProxiedPlayer s = (ProxiedPlayer) sender;
+            Player s = (Player) sender;
 
             s.connect(serverInfo);
 

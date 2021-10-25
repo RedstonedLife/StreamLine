@@ -1,6 +1,6 @@
 package net.plasmere.streamline.objects.configs;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -172,7 +172,7 @@ public class ChatConfig {
         return false;
     }
 
-    public boolean hasChatPermission(ProxiedPlayer user, Chat chat, MessageServerType messageServerType) {
+    public boolean hasChatPermission(Player user, Chat chat, MessageServerType messageServerType) {
         for (Integer integer : getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).keySet()) {
             if (user.hasPermission(getChatBasePerm() + integer)) return true;
         }
@@ -204,7 +204,7 @@ public class ChatConfig {
         return findFromChatsMap(user, chat, highest, 0, messageServerType); // Allow for one extra run?
     }
 
-    public String getDefaultPermissionedChatMessage(ProxiedPlayer user, String chatChannel, MessageServerType messageServerType){
+    public String getDefaultPermissionedChatMessage(Player user, String chatChannel, MessageServerType messageServerType){
         Chat chat = getDefaultChat(ChatsHandler.getChannel(chatChannel));
 
         if (getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).size() <= 0) return "&r<&d%sender_display%&r> %message%";
@@ -231,7 +231,7 @@ public class ChatConfig {
         return findFromChatsMap(user, chat, highest, 0, messageServerType); // Allow for one extra run?
     }
 
-    public String getPermissionedChatMessage(ProxiedPlayer user, Chat chat, String chatChannel, MessageServerType messageServerType){
+    public String getPermissionedChatMessage(Player user, Chat chat, String chatChannel, MessageServerType messageServerType){
         if (chat == null) {
             return getDefaultPermissionedChatMessage(user, chatChannel, messageServerType);
         }
@@ -255,7 +255,7 @@ public class ChatConfig {
         return findFromChatsMap(user, chat, iterateChatsMapFromHigher(trial, chat, messageServerType), running, messageServerType);
     }
 
-    public String findFromChatsMap(ProxiedPlayer user, Chat chat, int trial, int running, MessageServerType messageServerType) {
+    public String findFromChatsMap(Player user, Chat chat, int trial, int running, MessageServerType messageServerType) {
         if (running > getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).size()) return "&r<&d%sender_display%&r> %message%";
 
         running ++;

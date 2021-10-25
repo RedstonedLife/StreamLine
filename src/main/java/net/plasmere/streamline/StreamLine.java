@@ -1,7 +1,11 @@
 package net.plasmere.streamline;
 
-import net.md_5.bungee.api.plugin.PluginManager;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.scheduler.Scheduler;
 import net.plasmere.streamline.config.ConfigHandler;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -31,6 +35,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -44,7 +49,15 @@ import java.util.Scanner;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-public class StreamLine extends Plugin {
+@Plugin(id = "streamline", name = "StreamLine", version = "1.0.14.4",
+		url = "https://github.com/xnitrate/streamline/tree/velocity", description = "An Essentials plugin for Velocity!",
+		authors = { "Nitrate" }
+)
+public class StreamLine {
+	private static ProxyServer server;
+	private static Logger logger;
+	private static Path dataDirectory;
+
 	private static StreamLine instance = null;
 
 	public static ConfigHandler config;
@@ -74,7 +87,7 @@ public class StreamLine extends Plugin {
 	public final File versionFile = new File(getDataFolder(), "version.txt");
 	public final File languageFile = new File(getDataFolder(), "language.txt");
 
-	public ScheduledTask guilds;
+	public Scheduler.TaskBuilder guilds;
 	public ScheduledTask players;
 	public ScheduledTask clearCachedPlayers;
 	public ScheduledTask saveCachedPlayers;
@@ -85,7 +98,10 @@ public class StreamLine extends Plugin {
 	private String currentMOTD;
 	private int motdPage;
 
-	public StreamLine(){
+	public StreamLine(ProxyServer serverThing, Logger loggerThing, @DataDirectory Path dataDirectoryThing){
+		server = serverThing;
+		logger = loggerThing;
+		dataDirectory = dataDirectoryThing;
 		instance = this;
 	}
 
@@ -415,8 +431,8 @@ public class StreamLine extends Plugin {
     	InstanceHolder.setInst(instance);
 	}
 
-	@Override
-	public void onEnable(){
+	@Subscribe
+	public void onEnable(ProxyInitializeEvent e){
 		PluginUtils.state = NetworkState.STARTING;
 
 		instance = this;
@@ -494,7 +510,7 @@ public class StreamLine extends Plugin {
 			}
 		}
 
-		// Setting up Player's HistorySave files.
+		// Setting up SavablePlayer's HistorySave files.
 		if (ConfigUtils.chatHistoryEnabled) {
 			loadChatHistory();
 		}
@@ -590,4 +606,15 @@ public class StreamLine extends Plugin {
 
 	public static void setReady(boolean ready) { isReady = ready; }
 
+	public static ProxyServer getProxy() {
+		return server;
+	}
+
+	public static Logger getLogger() {
+		return logger;
+	}
+
+	public static File getDataFolder() {
+		return dataDirectory.toFile();
+	}
 }

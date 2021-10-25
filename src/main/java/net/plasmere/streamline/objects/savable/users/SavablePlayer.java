@@ -5,7 +5,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.PendingConnection;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.score.Scoreboard;
@@ -22,7 +22,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.*;
 
-public class Player extends SavableUser {
+public class SavablePlayer extends SavableUser {
     public int totalXP;
     public int currentXP;
     public int lvl;
@@ -34,37 +34,37 @@ public class Player extends SavableUser {
     public List<String> nameList;
     public boolean muted;
     public Date mutedTill;
-    public ProxiedPlayer player;
+    public Player player;
     public ChatChannel chatChannel;
     public String chatIdentifier;
     public long discordID;
 
     public int defaultLevel = 1;
 
-    public Player(ProxiedPlayer player) {
+    public SavablePlayer(Player player) {
         super(player.getUniqueId().toString());
         this.player = player;
     }
 
-    public Player(ProxiedPlayer player, boolean create){
+    public SavablePlayer(Player player, boolean create){
         super(player.getUniqueId().toString(), create);
         this.player = player;
     }
 
-    public Player(String thing){
+    public SavablePlayer(String thing){
         super(PlayerUtils.createCheck(thing), false);
     }
 
-    public Player(String thing, boolean createNew){
+    public SavablePlayer(String thing, boolean createNew){
         super(PlayerUtils.createCheck(thing), createNew);
     }
 
-    public Player(UUID uuid) {
+    public SavablePlayer(UUID uuid) {
         super(uuid.toString(), false);
     }
 
     public boolean onlineCheck(){
-        for (ProxiedPlayer p : StreamLine.getInstance().getProxy().getPlayers()){
+        for (Player p : StreamLine.getInstance().getProxy().getPlayers()){
             if (p.getName().equals(this.latestName)) return true;
         }
 
@@ -262,7 +262,7 @@ public class Player extends SavableUser {
         updateKey("ips", this.ips);
     }
 
-    public void tryAddNewIP(ProxiedPlayer player){
+    public void tryAddNewIP(Player player){
         String ipSt = player.getSocketAddress().toString().replace("/", "");
         String[] ipSplit = ipSt.split(":");
         ipSt = ipSplit[0];
@@ -282,7 +282,7 @@ public class Player extends SavableUser {
         updateKey("ips", this.ips);
     }
 
-    public void tryRemIP(ProxiedPlayer player){
+    public void tryRemIP(Player player){
         String ipSt = player.getSocketAddress().toString().replace("/", "");
         String[] ipSplit = ipSt.split(":");
         ipSt = ipSplit[0];
@@ -596,7 +596,7 @@ public class Player extends SavableUser {
     }
 
     
-    public ProxiedPlayer.ChatMode getChatMode() {
+    public Player.ChatMode getChatMode() {
         if (online) {
             return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getChatMode();
         }
@@ -620,7 +620,7 @@ public class Player extends SavableUser {
     }
 
     
-    public ProxiedPlayer.MainHand getMainHand() {
+    public Player.MainHand getMainHand() {
         if (online) {
             return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getMainHand();
         }

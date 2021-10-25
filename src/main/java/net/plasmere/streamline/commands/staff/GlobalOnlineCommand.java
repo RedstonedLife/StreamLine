@@ -8,7 +8,7 @@ import net.plasmere.streamline.utils.TextUtils;
 import net.luckperms.api.model.group.Group;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -81,16 +81,16 @@ public class GlobalOnlineCommand extends Command {
     }
 
     private String getOnline(Set<Group> groups){
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
 
-        HashMap<ProxiedPlayer, Server> playerServers = new HashMap<>();
-        HashMap<ProxiedPlayer, String> playerGroup = new HashMap<>();
+        HashMap<Player, Server> playerServers = new HashMap<>();
+        HashMap<Player, String> playerGroup = new HashMap<>();
 
-        for (ProxiedPlayer player : players){
+        for (Player player : players){
             playerServers.put(player, player.getServer());
         }
 
-        for (ProxiedPlayer player : players){
+        for (Player player : players){
             try {
                 playerGroup.put(player, Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(player.getName())).getPrimaryGroup().toLowerCase());
             } catch (Exception e){
@@ -113,10 +113,10 @@ public class GlobalOnlineCommand extends Command {
         return msg.toString();
     }
 
-    private String getGroupedPlayers(String group, HashMap<ProxiedPlayer, String> playerGroup, HashMap<ProxiedPlayer, Server> playerServers){
-        List<ProxiedPlayer> players = new ArrayList<>();
+    private String getGroupedPlayers(String group, HashMap<Player, String> playerGroup, HashMap<Player, Server> playerServers){
+        List<Player> players = new ArrayList<>();
 
-        for (ProxiedPlayer player : playerGroup.keySet()){
+        for (Player player : playerGroup.keySet()){
             if (group.toLowerCase().equals(playerGroup.get(player).toLowerCase()))
                 players.add(player);
         }
@@ -128,12 +128,12 @@ public class GlobalOnlineCommand extends Command {
                 .replace("%playerbulk%", getPlayerBulk(players, playerServers));
     }
 
-    private String getPlayerBulk(List<ProxiedPlayer> players, HashMap<ProxiedPlayer, Server> playerServers){
+    private String getPlayerBulk(List<Player> players, HashMap<Player, Server> playerServers){
         StringBuilder text = new StringBuilder();
 
         int i = 0;
 
-        for (ProxiedPlayer player : players){
+        for (Player player : players){
             Server server = playerServers.get(player);
             if (! (i == players.size() - 1))
                 text.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.onlineMessageBPlayersBulkNotLast(), player)

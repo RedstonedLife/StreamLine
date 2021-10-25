@@ -1,7 +1,7 @@
 package net.plasmere.streamline.utils.holders;
 
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.GeyserFile;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -52,7 +52,7 @@ public class GeyserHolder {
         if (connector == null) this.connector = GeyserConnector.getInstance();
     }
 
-    public boolean isGeyserPlayer(ProxiedPlayer player) {
+    public boolean isGeyserPlayer(Player player) {
         checkConnector();
 
         for (GeyserSession session : connector.getPlayers()) {
@@ -84,7 +84,7 @@ public class GeyserHolder {
         return null;
     }
 
-    public ProxiedPlayer getPPlayerByUUID(String uuid){
+    public Player getPPlayerByUUID(String uuid){
         checkConnector();
 
         for (GeyserSession session : connector.getPlayers()) {

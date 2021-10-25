@@ -1,7 +1,7 @@
 package net.plasmere.streamline.objects.timers;
 
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.PlayerUtils;
 
 public class PlayerXPTimer implements Runnable {
@@ -25,7 +25,7 @@ public class PlayerXPTimer implements Runnable {
     public void done(){
         countdown = reset;
         try {
-            for (Player player : PlayerUtils.getJustPlayersOnline()) {
+            for (SavablePlayer player : PlayerUtils.getJustPlayersOnline()) {
                 player.addTotalXP(ConfigUtils.xpPerGiveP);
             }
 

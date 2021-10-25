@@ -5,7 +5,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
@@ -19,10 +19,10 @@ public class StaffOnlineCommand extends Command {
     }
 
     public void execute(CommandSender sender, String[] args){
-        Collection<ProxiedPlayer> staffs = StreamLine.getInstance().getProxy().getPlayers();
-        Set<ProxiedPlayer> lstaffs = new HashSet<>(staffs);
+        Collection<Player> staffs = StreamLine.getInstance().getProxy().getPlayers();
+        Set<Player> lstaffs = new HashSet<>(staffs);
 
-        for (ProxiedPlayer player : staffs){
+        for (Player player : staffs){
             try {
                 if (! player.hasPermission(ConfigUtils.staffPerm)) {
                     lstaffs.remove(player);
@@ -39,11 +39,11 @@ public class StaffOnlineCommand extends Command {
         );
     }
 
-    private static String getStaffList(Set<ProxiedPlayer> lstaffs){
+    private static String getStaffList(Set<Player> lstaffs){
         StringBuilder staff = new StringBuilder();
         int i = 1;
 
-        for (ProxiedPlayer player : lstaffs){
+        for (Player player : lstaffs){
             if (i < lstaffs.size())
                 staff.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.sOnlineBungeeBulkNotLast(), player)
                         .replace("%server%", player.getServer().getInfo().getName().toLowerCase())

@@ -2,7 +2,7 @@ package net.plasmere.streamline.objects.timers;
 
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.PlayerUtils;
 
@@ -39,14 +39,14 @@ public class OneSecondTimer implements Runnable {
             PlayerUtils.tickConn();
 
             if (StreamLine.lpHolder.enabled) {
-                for (Player player : PlayerUtils.getJustPlayersOnline()) {
+                for (SavablePlayer player : PlayerUtils.getJustPlayersOnline()) {
                     if (player.latestName == null) continue;
                     if (player.latestName.equals("")) continue;
                     PlayerUtils.updateDisplayName(player);
                 }
             }
 
-            for (Player player : PlayerUtils.getJustPlayers()) {
+            for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
                 PlayerUtils.checkAndUpdateIfMuted(player);
             }
 
