@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.messaging;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -20,7 +20,7 @@ public class BVerifyCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         if (sender instanceof Player) {
             long verificationNum = StreamLine.discordData.getVerification(((Player) sender).getUniqueId().toString());
             MessagingUtils.sendBUserMessage(sender, "&aYour verification number: &6" + verificationNum +
@@ -31,7 +31,7 @@ public class BVerifyCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
         TreeSet<String> options = new TreeSet<>();
 
         options.add("local");

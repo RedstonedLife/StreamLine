@@ -3,7 +3,7 @@ package net.plasmere.streamline.commands.staff;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.*;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 
 public class ReloadCommand extends Command {
@@ -16,7 +16,7 @@ public class ReloadCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] strings) {
+    public void execute(CommandSource sender, String[] strings) {
         if (sender.hasPermission(perm)) {
             try {
                 StreamLine.config.reloadConfig();

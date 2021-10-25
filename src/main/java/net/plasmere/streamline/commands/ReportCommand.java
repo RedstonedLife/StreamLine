@@ -5,7 +5,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 
 public class ReportCommand extends Command {
@@ -15,7 +15,7 @@ public class ReportCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         String msg = TextUtils.normalize(args);
 
         if (msg.length() <= 0){

@@ -7,7 +7,7 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.JDAPingerUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -21,7 +21,7 @@ public class JDAPingerCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] strings) {
+    public void execute(CommandSource sender, String[] strings) {
         if (! ConfigUtils.moduleDEnabled) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
             return;

@@ -2,11 +2,11 @@ package net.plasmere.streamline.objects.configs;
 
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import net.plasmere.streamline.config.backend.Configuration;
+import net.plasmere.streamline.config.backend.ConfigurationProvider;
+import net.plasmere.streamline.config.backend.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.DataChannel;
@@ -128,7 +128,7 @@ public class DiscordData {
         return new SingleSet<>(ifHasChannels(type, identifier), type);
     }
 
-    public void sendDiscordChannel(CommandSender sender, ChatChannel type, String identifier, String message) {
+    public void sendDiscordChannel(CommandSource sender, ChatChannel type, String identifier, String message) {
         if (! ConfigUtils.moduleDEnabled) return;
 
         TreeSet<Long> channels = getChannelsByData(type, identifier);
@@ -203,7 +203,7 @@ public class DiscordData {
         }
     }
 
-    public void sendDiscordJoinChannel(CommandSender player, ChatChannel chatChannel, String identifier) {
+    public void sendDiscordJoinChannel(CommandSource player, ChatChannel chatChannel, String identifier) {
         if (! ConfigUtils.moduleDEnabled) return;
 
         TreeSet<Long> channels = getChannelsByData(chatChannel, identifier);
@@ -274,7 +274,7 @@ public class DiscordData {
         }
     }
 
-    public void sendDiscordLeaveChannel(CommandSender player, ChatChannel type, String identifier) {
+    public void sendDiscordLeaveChannel(CommandSource player, ChatChannel type, String identifier) {
         if (! ConfigUtils.moduleDEnabled) return;
 
         TreeSet<Long> channels = getChannelsByData(type, identifier);

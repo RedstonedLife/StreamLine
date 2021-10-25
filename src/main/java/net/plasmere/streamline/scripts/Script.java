@@ -1,6 +1,6 @@
 package net.plasmere.streamline.scripts;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.Guild;
@@ -61,7 +61,7 @@ public class Script {
         }
     }
 
-    public void execute(CommandSender sender, SavableUser player) {
+    public void execute(CommandSource sender, SavableUser player) {
         for (Integer i : toExecute.keySet()) {
             switch (toExecute.get(i).key) {
                 case CONSOLE:
@@ -88,7 +88,7 @@ public class Script {
         }
     }
 
-    public String getVariablized(String string, CommandSender sender, SavableUser player) {
+    public String getVariablized(String string, CommandSource sender, SavableUser player) {
         return TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(string, player), sender);
     }
 

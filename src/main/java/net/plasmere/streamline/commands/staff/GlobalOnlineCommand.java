@@ -6,7 +6,7 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.luckperms.api.model.group.Group;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.config.ServerInfo;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.connection.Server;
@@ -21,7 +21,7 @@ public class GlobalOnlineCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         try {
             compileList(sender);
         } catch (Exception e) {
@@ -30,7 +30,7 @@ public class GlobalOnlineCommand extends Command {
     }
 
     // Use in a try statement:
-    private void compileList(CommandSender sendTo){
+    private void compileList(CommandSource sendTo){
         if (StreamLine.getInstance().getProxy().getOnlineCount() <= 0){
             sendTo.sendMessage(TextUtils.codedText(MessageConfUtils.onlineMessageNoPlayers()));
             return;

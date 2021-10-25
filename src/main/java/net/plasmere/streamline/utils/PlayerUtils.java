@@ -270,7 +270,7 @@ public class PlayerUtils {
         }
 
         for (Player p : StreamLine.getInstance().getProxy().getAllPlayers()) {
-            if (p.getName().equals(username)) return true;
+            if (p.getUsername().equals(username)) return true;
         }
 
         return false;
@@ -648,7 +648,7 @@ public class PlayerUtils {
         return stat;
     }
 
-    public static SavablePlayer createPlayerStat(CommandSender sender) {
+    public static SavablePlayer createPlayerStat(CommandSource sender) {
         return createPlayerStat(sender.getName());
     }
 
@@ -721,7 +721,7 @@ public class PlayerUtils {
         return getConsoleStat(StreamLine.getInstance().getProxy().getConsole());
     }
 
-    public static ConsolePlayer getConsoleStat(CommandSender sender) {
+    public static ConsolePlayer getConsoleStat(CommandSource sender) {
         try {
             for (ConsolePlayer stat : getJustProxies()) {
                 if (stat.uuid.equals("%")) return stat;
@@ -735,7 +735,7 @@ public class PlayerUtils {
 
     // SavablePlayer Stats.
 
-    public static SavablePlayer getPlayerStat(CommandSender sender) {
+    public static SavablePlayer getPlayerStat(CommandSource sender) {
         try {
             for (SavablePlayer stat : getJustPlayers()) {
                 if (sender.equals(stat.findSender())) {
@@ -823,7 +823,7 @@ public class PlayerUtils {
         return user;
     }
 
-    public static SavableUser getOrCreateSavableUser(CommandSender sender){
+    public static SavableUser getOrCreateSavableUser(CommandSource sender){
         if (sender.equals(StreamLine.getInstance().getProxy().getConsole())) {
             return getConsoleStat();
         }
@@ -868,7 +868,7 @@ public class PlayerUtils {
         return player;
     }
 
-    public static SavablePlayer getOrCreatePlayerStat(CommandSender sender){
+    public static SavablePlayer getOrCreatePlayerStat(CommandSource sender){
         SavablePlayer player = getOrGetPlayerStat(sender.getName());
 
         if (player == null) {
@@ -936,7 +936,7 @@ public class PlayerUtils {
         return null;
     }
 
-    public static SavableUser getOrGetSavableUser(CommandSender sender) {
+    public static SavableUser getOrGetSavableUser(CommandSource sender) {
         if (sender.getName().equals(StreamLine.getInstance().getProxy().getConsole().getName())) return getConsoleStat();
 
         try {
@@ -992,7 +992,7 @@ public class PlayerUtils {
 
     ---------------------------- */
 
-    public static void info(CommandSender sender, SavableUser of){
+    public static void info(CommandSource sender, SavableUser of){
         if (! sender.hasPermission(CommandsConfUtils.comBStatsPerm)) {
             MessagingUtils.sendBUserMessage(sender, noPermission);
         }
@@ -1004,7 +1004,7 @@ public class PlayerUtils {
         }
     }
 
-    public static void remTag(CommandSender sender, SavableUser of, String tag){
+    public static void remTag(CommandSource sender, SavableUser of, String tag){
         if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) {
             MessagingUtils.sendBUserMessage(sender, noPermission);
             return;
@@ -1017,7 +1017,7 @@ public class PlayerUtils {
         );
     }
 
-    public static void addTag(CommandSender sender, SavableUser of, String tag){
+    public static void addTag(CommandSource sender, SavableUser of, String tag){
         if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) {
             MessagingUtils.sendBUserMessage(sender, noPermission);
             return;
@@ -1030,7 +1030,7 @@ public class PlayerUtils {
         );
     }
 
-    public static void listTags(CommandSender sender, SavableUser of){
+    public static void listTags(CommandSource sender, SavableUser of){
         if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) {
             MessagingUtils.sendBUserMessage(sender, noPermission);
             return;
@@ -1892,7 +1892,7 @@ public class PlayerUtils {
         return false;
     }
 
-    public static String getServer(CommandSender sender) {
+    public static String getServer(CommandSource sender) {
         for (String server : StreamLine.getInstance().getProxy().getServers().keySet()) {
             for (Player player : getServeredPPlayers(server)) {
                 if (sender.getName().equals(player.getName())) return server;

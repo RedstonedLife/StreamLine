@@ -1,6 +1,6 @@
 package net.plasmere.streamline.utils.api;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
@@ -93,7 +93,7 @@ public class CommandBuilder extends Command {
      * @param args -> The arguments of the command.
      */
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         if(sender.hasPermission(getPermissionNeeded()))
             executeEvents(PlayerUtils.getPlayerStat(sender));
     }

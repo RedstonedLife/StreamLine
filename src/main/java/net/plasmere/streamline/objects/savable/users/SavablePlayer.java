@@ -1,14 +1,6 @@
 package net.plasmere.streamline.objects.savable.users;
 
-import net.md_5.bungee.api.*;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.Connection;
-import net.md_5.bungee.api.connection.PendingConnection;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.connection.Server;
-import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.api.score.Scoreboard;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
@@ -64,7 +56,7 @@ public class SavablePlayer extends SavableUser {
     }
 
     public boolean onlineCheck(){
-        for (Player p : StreamLine.getInstance().getProxy().getPlayers()){
+        for (Player p : StreamLine.getInstance().getProxy().getAllPlayers()){
             if (p.getName().equals(this.latestName)) return true;
         }
 
@@ -81,16 +73,16 @@ public class SavablePlayer extends SavableUser {
             return;
         }
 
-        String ipSt = player.getSocketAddress().toString().replace("/", "");
+        String ipSt = player.getRemoteAddress().toString().replace("/", "");
         String[] ipSplit = ipSt.split(":");
         ipSt = ipSplit[0];
 
         this.uuid = player.getUniqueId().toString();
         this.latestIP = ipSt;
-        this.latestName = player.getName();
+        this.latestName = player.getUsername();
 
         this.ips = ipSt;
-        this.names = player.getName();
+        this.names = player.getUsername();
         this.online = onlineCheck();
 
         String toLatestVersion = "";
@@ -191,7 +183,7 @@ public class SavablePlayer extends SavableUser {
         return thing;
     }
 
-    public static void sendMessageFormatted(CommandSender sender, String formatFrom, ChatChannel newLevel, ChatChannel oldLevel) {
+    public static void sendMessageFormatted(CommandSource sender, String formatFrom, ChatChannel newLevel, ChatChannel oldLevel) {
         MessagingUtils.sendBUserMessage(sender, formatFrom
                 .replace("%new_channel%", newLevel.name)
                 .replace("%old_channel%", oldLevel.name)

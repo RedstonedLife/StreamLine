@@ -1,6 +1,7 @@
 package net.plasmere.streamline.objects.savable.users;
 
-import net.md_5.bungee.api.CommandSender;
+import com.velocitypowered.api.command.CommandSource;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.chat.BaseComponent;
 import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
@@ -100,9 +101,9 @@ public abstract class SavableUser {
 //        this.latestServer = findServer();
 //    }
 
-    public CommandSender findSender() {
+    public CommandSource findSender() {
         if (this.uuid.equals("%")) {
-            return StreamLine.getInstance().getProxy().getConsole();
+            return StreamLine.getInstance().getProxy().getConsoleCommandSource();
         } else {
             return PlayerUtils.getPPlayerByUUID(this.uuid);
         }
@@ -116,9 +117,9 @@ public abstract class SavableUser {
 
             if (player == null) return MessageConfUtils.nullB();
 
-            if (player.getServer() == null) return ConfigUtils.consoleServer;
+            if (player.getCurrentServer().isPresent()) return ConfigUtils.consoleServer;
 
-            return player.getServer().getInfo().getName();
+            return player.getCurrentServer().get().getServerInfo().getName();
         }
     }
 
@@ -860,46 +861,16 @@ public abstract class SavableUser {
         return latestName;
     }
 
-    @Deprecated
-    public void sendMessage(String message) {
-        findSender().sendMessage(message);
-    }
-
-    @Deprecated
-    public void sendMessages(String... messages) {
-        findSender().sendMessages(messages);
-    }
-
-    public void sendMessage(BaseComponent... message) {
-        findSender().sendMessage(message);
-    }
-
-    public void sendMessage(BaseComponent message) {
-        findSender().sendMessage(message);
-    }
-
-    public Collection<String> getGroups() {
-        return findSender().getGroups();
-    }
-
-    public void addGroups(String... groups) {
-        findSender().addGroups(groups);
-    }
-
-    public void removeGroups(String... groups) {
-        findSender().removeGroups(groups);
-    }
-
     public boolean hasPermission(String permission) {
         return findSender().hasPermission(permission);
     }
 
     public void setPermission(String permission, boolean value) {
-        findSender().setPermission(permission, value);
+        findSender().getPermissionChecker().value(permission);
     }
 
     public Collection<String> getPermissions() {
-        return findSender().getPermissions();
+        return findSender().gep();
     }
 
     public void saveInfo() throws IOException {

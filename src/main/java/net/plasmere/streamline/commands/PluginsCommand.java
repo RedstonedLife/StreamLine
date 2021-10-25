@@ -2,7 +2,7 @@ package net.plasmere.streamline.commands;
 
 import net.plasmere.streamline.StreamLine;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -15,7 +15,7 @@ public class PluginsCommand extends Command {
         super(base, perm, aliases);
     }
 
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         if (args.length > 0) {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Sorry, but you entered too many arguments..."));
             sender.sendMessage(new TextComponent(ChatColor.RED + "Usage: /plugins"));

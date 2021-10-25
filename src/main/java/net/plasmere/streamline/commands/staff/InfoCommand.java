@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.utils.MessagingUtils;
 
@@ -11,7 +11,7 @@ public class InfoCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         MessagingUtils.sendInfo(sender);
     }
 }

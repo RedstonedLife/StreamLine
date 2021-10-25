@@ -2,6 +2,7 @@ package net.plasmere.streamline.utils;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.velocitypowered.api.command.CommandSource;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.Server;
 import net.plasmere.streamline.StreamLine;
@@ -12,7 +13,7 @@ import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.objects.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.ProxyServer;
 import com.velocitypowered.api.proxy.Player;
 import net.dv8tion.jda.api.JDA;
@@ -29,7 +30,7 @@ import java.util.*;
 public class MessagingUtils {
     public static HashMap<Player, String> serveredUsernames = new HashMap<>();
 
-    public static void sendStaffMessage(CommandSender sender, String from, String msg){
+    public static void sendStaffMessage(CommandSource sender, String from, String msg){
         List<SavableUser> toExclude = new ArrayList<>();
 
         for (SavableUser user : PlayerUtils.getJustStaffOnline()) {
@@ -47,7 +48,7 @@ public class MessagingUtils {
         );
     }
 
-    public static void sendStaffMessageExcludeSelf(CommandSender sender, String from, String msg){
+    public static void sendStaffMessageExcludeSelf(CommandSource sender, String from, String msg){
         sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(
                 TextUtils.replaceAllSenderBungee(MessageConfUtils.bungeeStaffChatMessage(), sender), sender)
                 .replace("%from_type%", from)
@@ -89,7 +90,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendPermissionedMessageNonSelf(CommandSender sender, String toPermission, String message){
+    public static void sendPermissionedMessageNonSelf(CommandSource sender, String toPermission, String message){
         Set<Player> toPlayers = new HashSet<>();
 
         for (Player player : PlayerUtils.getOnlinePPlayers()) {
@@ -621,7 +622,7 @@ public class MessagingUtils {
         ).queue();
     }
 
-    public static void sendBPUserMessage(Party party, CommandSender sender, CommandSender to, String msg){
+    public static void sendBPUserMessage(Party party, CommandSource sender, CommandSource to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.leaderUUID)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
@@ -645,7 +646,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendBPUserMessageFromDiscord(Party party, String nameUsed, CommandSender to, String msg){
+    public static void sendBPUserMessageFromDiscord(Party party, String nameUsed, CommandSource to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, party.leaderUUID)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
@@ -672,7 +673,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendBPUserMessageFromDiscord(Party party, SavableUser sender, CommandSender to, String msg){
+    public static void sendBPUserMessageFromDiscord(Party party, SavableUser sender, CommandSource to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.leaderUUID)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
@@ -758,7 +759,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendBGUserMessage(Guild guild, CommandSender sender, CommandSender to, String msg){
+    public static void sendBGUserMessage(Guild guild, CommandSource sender, CommandSource to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.leaderUUID)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
@@ -790,7 +791,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendBGUserMessageFromDiscord(Guild guild, String nameUsed, CommandSender to, String msg){
+    public static void sendBGUserMessageFromDiscord(Guild guild, String nameUsed, CommandSource to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, guild.leaderUUID)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
@@ -825,7 +826,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendBGUserMessageFromDiscord(Guild guild, SavableUser sender, CommandSender to, String msg){
+    public static void sendBGUserMessageFromDiscord(Guild guild, SavableUser sender, CommandSource to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.leaderUUID)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
@@ -926,7 +927,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendStatUserMessage(SavableUser user, CommandSender sender, String msg){
+    public static void sendStatUserMessage(SavableUser user, CommandSource sender, String msg){
         Guild guild = GuildUtils.getGuild(user);
 
         if (user instanceof ConsolePlayer) {
@@ -1054,7 +1055,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendBUserMessage(CommandSender sender, String msg){
+    public static void sendBUserMessage(CommandSource sender, String msg){
         if (sender instanceof Player) {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
                     .replace("%version%", PlayerUtils.getOrCreatePlayerStat((Player) sender).latestVersion)
@@ -1072,7 +1073,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendBMessagenging(CommandSender sendTo, SavableUser from, SavableUser to, String playerMessage, String msg) {
+    public static void sendBMessagenging(CommandSource sendTo, SavableUser from, SavableUser to, String playerMessage, String msg) {
         sendTo.sendMessage(TextUtils.codedText(msg
                 .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                 .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
@@ -1088,7 +1089,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendBUserAsMessage(CommandSender as, String msg){
+    public static void sendBUserAsMessage(CommandSource as, String msg){
         ServerInfo serverInfo = StreamLine.getInstance().getProxy().getPlayer(as.getName()).getServer().getInfo();
 
         Collection<Player> players = serverInfo.getPlayers();
@@ -1106,13 +1107,13 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendBBroadcast(CommandSender sender, String msg){
+    public static void sendBBroadcast(CommandSource sender, String msg){
         for (Player player : ProxyServer.getInstance().getPlayers()) {
             player.sendMessage(TextUtils.codedText(msg));
         }
     }
 
-    public static void sendBCLHBroadcast(CommandSender sender, String msg, String hoverPrefix){
+    public static void sendBCLHBroadcast(CommandSource sender, String msg, String hoverPrefix){
         for (Player player : ProxyServer.getInstance().getPlayers()) {
             player.sendMessage(TextUtils.clhText(msg, hoverPrefix));
         }
@@ -1366,7 +1367,7 @@ public class MessagingUtils {
         return guild.isMuted ? MessageConfUtils.guildsIsMutedTrue() : MessageConfUtils.guildsIsMutedFalse();
     }
 
-    public static void sendInfo(CommandSender sender) {
+    public static void sendInfo(CommandSource sender) {
         sender.sendMessage(TextUtils.codedText(MessageConfUtils.info()
                 .replace("%name%", StreamLine.getInstance().getDescription().getName())
                 .replace("%version%", StreamLine.getInstance().getDescription().getVersion())

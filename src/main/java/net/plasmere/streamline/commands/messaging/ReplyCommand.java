@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.messaging;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -14,7 +14,7 @@ public class ReplyCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         String thing = "";
 
         if (PlayerUtils.isInOnlineList(sender.getName())) thing = sender.getName();

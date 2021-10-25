@@ -1,23 +1,18 @@
 package net.plasmere.streamline.utils;
 
 import net.dv8tion.jda.api.entities.User;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.*;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
-import net.md_5.bungee.api.config.ServerInfo;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.config.Configuration;
+import net.kyori.adventure.text.Component;
+import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import org.apache.commons.collections4.list.TreeList;
 
-import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -229,8 +224,10 @@ public class TextUtils {
         return normalize(argsSet);
     }
 
-    public static TextComponent codedText(String text) {
-        text = ChatColor.translateAlternateColorCodes('&', newLined(text));
+    public static Component codedText(String text) {
+        text = newLined(text);
+
+        Component.empty().content(newLined(text));
 
         try {
             //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
@@ -503,7 +500,7 @@ public class TextUtils {
         return replaceAllPlayerBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static String replaceAllPlayerBungee(String of, CommandSender sender) {
+    public static String replaceAllPlayerBungee(String of, CommandSource sender) {
         return replaceAllPlayerBungee(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
@@ -605,7 +602,7 @@ public class TextUtils {
         return replaceAllUserBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static String replaceAllUserBungee(String of, CommandSender sender) {
+    public static String replaceAllUserBungee(String of, CommandSource sender) {
         return replaceAllUserBungee(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
@@ -707,7 +704,7 @@ public class TextUtils {
         return replaceAllSenderBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static String replaceAllSenderBungee(String of, CommandSender sender) {
+    public static String replaceAllSenderBungee(String of, CommandSource sender) {
         return replaceAllSenderBungee(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
@@ -807,7 +804,7 @@ public class TextUtils {
         return replaceAllPlayerDiscord(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static String replaceAllPlayerDiscord(String of, CommandSender sender) {
+    public static String replaceAllPlayerDiscord(String of, CommandSource sender) {
         return replaceAllPlayerDiscord(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
@@ -849,7 +846,7 @@ public class TextUtils {
         return replaceAllUserDiscord(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static String replaceAllUserDiscord(String of, CommandSender sender) {
+    public static String replaceAllUserDiscord(String of, CommandSource sender) {
         return replaceAllUserDiscord(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
@@ -891,7 +888,7 @@ public class TextUtils {
         return replaceAllSenderDiscord(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static String replaceAllSenderDiscord(String of, CommandSender sender) {
+    public static String replaceAllSenderDiscord(String of, CommandSource sender) {
         return replaceAllSenderDiscord(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 

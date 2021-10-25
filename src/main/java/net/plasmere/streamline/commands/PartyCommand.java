@@ -6,7 +6,7 @@ import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -18,7 +18,7 @@ public class PartyCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         if (sender instanceof Player) {
             SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
 
@@ -249,7 +249,7 @@ public class PartyCommand extends Command implements TabExecutor {
 
     // Usage: /party <join|leave|create|promote|demote|chat|list|open|close|disband|accept|deny|invite|kick|mute|warp>
     @Override
-    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args)
+    public Iterable<String> onTabComplete(final CommandSource sender, final String[] args)
     {
         Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();

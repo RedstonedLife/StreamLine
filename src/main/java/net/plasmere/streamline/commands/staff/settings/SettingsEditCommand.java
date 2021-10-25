@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff.settings;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
@@ -25,7 +25,7 @@ public class SettingsEditCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         if (args == null) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
             return;
@@ -332,7 +332,7 @@ public class SettingsEditCommand extends Command implements TabExecutor {
         }
     }
 
-    public int getInt(CommandSender sender, String[] args) {
+    public int getInt(CommandSource sender, String[] args) {
         if (args.length < 3) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
             return -10000000;
@@ -350,19 +350,19 @@ public class SettingsEditCommand extends Command implements TabExecutor {
         return atChat;
     }
 
-    public void sendGetMessage(CommandSender sender, String message, Object get) {
+    public void sendGetMessage(CommandSource sender, String message, Object get) {
         MessagingUtils.sendBUserMessage(sender, message
                 .replace("%set%", get.toString())
         );
     }
 
-    public void sendSetMessage(CommandSender sender, String message, Object set) {
+    public void sendSetMessage(CommandSource sender, String message, Object set) {
         MessagingUtils.sendBUserMessage(sender, message
                 .replace("%set%", set.toString())
         );
     }
 
-    public void sendGetMessageEmote(CommandSender sender, String message, String get, String[] args) {
+    public void sendGetMessageEmote(CommandSource sender, String message, String get, String[] args) {
         if (args.length < 3) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
             return;
@@ -374,14 +374,14 @@ public class SettingsEditCommand extends Command implements TabExecutor {
         );
     }
 
-    public void sendSetMessageEmote(CommandSender sender, String message, String set, String from) {
+    public void sendSetMessageEmote(CommandSource sender, String message, String set, String from) {
         MessagingUtils.sendBUserMessage(sender, message
                 .replace("%emote%", from)
                 .replace("%set%", set)
         );
     }
 
-    public void sendGetMessageNumbered(CommandSender sender, String message, String get, String[] args) {
+    public void sendGetMessageNumbered(CommandSource sender, String message, String get, String[] args) {
         if (get.equals("")) return;
 
         if (args.length < 3) {
@@ -395,21 +395,21 @@ public class SettingsEditCommand extends Command implements TabExecutor {
         );
     }
 
-    public void sendGetMessageNumberedPC(CommandSender sender, String[] args, ChatChannel chatChannel, MessageServerType messageServerType) {
+    public void sendGetMessageNumberedPC(CommandSource sender, String[] args, ChatChannel chatChannel, MessageServerType messageServerType) {
         sendGetMessageNumbered(sender, MessageConfUtils.settingsGetPCChats()
                         .replace("%channel%", chatChannel.toString())
                         .replace("%server_type%", messageServerType.toString())
                 , StreamLine.serverConfig.getProxyChatChatsAt(getInt(sender, args), chatChannel, messageServerType), args);
     }
 
-    public void sendSetMessageNumbered(CommandSender sender, String message, String set, Object from) {
+    public void sendSetMessageNumbered(CommandSource sender, String message, String set, Object from) {
         MessagingUtils.sendBUserMessage(sender, message
                 .replace("%number%", from.toString())
                 .replace("%set%", set)
         );
     }
 
-    public void sendSetMessageNumberedPC(CommandSender sender, String set, Object from, ChatChannel chatChannel, MessageServerType messageServerType) {
+    public void sendSetMessageNumberedPC(CommandSource sender, String set, Object from, ChatChannel chatChannel, MessageServerType messageServerType) {
         sendSetMessageNumbered(sender, MessageConfUtils.settingsSetPCChats()
                     .replace("%channel%", chatChannel.toString())
                     .replace("%server_type%", messageServerType.toString())
@@ -417,7 +417,7 @@ public class SettingsEditCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
+    public Iterable<String> onTabComplete(final CommandSource sender, final String[] args) {
         List<String> options = new ArrayList<>();
 
         options.add("set");

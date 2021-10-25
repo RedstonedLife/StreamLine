@@ -9,7 +9,7 @@ import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 
 public class StaffChatCommand extends Command {
@@ -18,7 +18,7 @@ public class StaffChatCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         if (sender instanceof Player) {
             if (ConfigUtils.moduleStaffChat) {
                 if (sender.hasPermission(ConfigUtils.staffPerm)) {

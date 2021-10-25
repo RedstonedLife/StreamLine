@@ -9,7 +9,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -29,7 +29,7 @@ public class GoToServerLobbyCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args){
+    public void execute(CommandSource sender, String[] args){
         Map<String, ServerInfo> servers = ProxyServer.getInstance().getServers();
         if ( args.length == 0 ) {
             if (sender instanceof Player) {
@@ -72,7 +72,7 @@ public class GoToServerLobbyCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args)
+    public Iterable<String> onTabComplete(final CommandSource sender, final String[] args)
     {
         TreeSet<String> servers = new TreeSet<>();
 

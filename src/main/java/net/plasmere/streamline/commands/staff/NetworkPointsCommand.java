@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -23,7 +23,7 @@ public class NetworkPointsCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         if (args.length <= 0) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else {
@@ -152,7 +152,7 @@ public class NetworkPointsCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
         if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) return new ArrayList<>();
 
         Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();

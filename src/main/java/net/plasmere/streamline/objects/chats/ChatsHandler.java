@@ -1,6 +1,6 @@
 package net.plasmere.streamline.objects.chats;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.config.ServerInfo;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.connection.Server;
@@ -183,11 +183,11 @@ public class ChatsHandler {
         return false;
     }
 
-    public static TreeSet<String> getPossibleIdentifiersAsStringsByChannelPermissionedByChatChannel(CommandSender user, String chatChannel) {
+    public static TreeSet<String> getPossibleIdentifiersAsStringsByChannelPermissionedByChatChannel(CommandSource user, String chatChannel) {
         return getPossibleIdentifiersAsStringsByChannelPermissionedByChatChannel(user, getChannel(chatChannel));
     }
 
-    public static TreeSet<String> getPossibleIdentifiersAsStringsByChannelPermissionedByChatChannel(CommandSender user, ChatChannel chatChannel) {
+    public static TreeSet<String> getPossibleIdentifiersAsStringsByChannelPermissionedByChatChannel(CommandSource user, ChatChannel chatChannel) {
         TreeSet<String> thing = new TreeSet<>();
         switch (chatChannel.name) {
             case "local":
@@ -228,7 +228,7 @@ public class ChatsHandler {
         return thing;
     }
 
-    public static TreeSet<String> getPossibleIdentifiersAsStringsByChannelPermissioned(CommandSender user) {
+    public static TreeSet<String> getPossibleIdentifiersAsStringsByChannelPermissioned(CommandSource user) {
         TreeSet<String> thing = new TreeSet<>();
 
         for (ChatChannel chatChannel : createdChannels) {

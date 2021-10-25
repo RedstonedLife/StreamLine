@@ -4,7 +4,7 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -18,7 +18,7 @@ public class StaffOnlineCommand extends Command {
         super(base, perm, aliases);
     }
 
-    public void execute(CommandSender sender, String[] args){
+    public void execute(CommandSource sender, String[] args){
         Collection<Player> staffs = StreamLine.getInstance().getProxy().getPlayers();
         Set<Player> lstaffs = new HashSet<>(staffs);
 

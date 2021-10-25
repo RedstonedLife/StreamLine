@@ -1,15 +1,15 @@
 package net.plasmere.streamline.objects.messaging;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 
 public class BungeeMessage {
-    public CommandSender sender;
-    public CommandSender to;
+    public CommandSource sender;
+    public CommandSource to;
     public String title;
     public String transition;
     public String message;
 
-    public BungeeMessage(CommandSender sender, CommandSender to, String title, String transition, String message){
+    public BungeeMessage(CommandSource sender, CommandSource to, String title, String transition, String message){
         this.sender = sender;
         this.to = to;
         this.title = title + " ";
@@ -17,7 +17,7 @@ public class BungeeMessage {
         this.message = message;
     }
 
-    public BungeeMessage(CommandSender sender, CommandSender to, String message){
+    public BungeeMessage(CommandSource sender, CommandSource to, String message){
         this.sender = sender;
         this.to = to;
         this.title = "";

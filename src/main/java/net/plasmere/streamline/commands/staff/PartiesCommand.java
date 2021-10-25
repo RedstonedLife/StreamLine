@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.Party;
@@ -13,7 +13,7 @@ public class PartiesCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         if (PartyUtils.getParties().size() <= 0) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.partiesNone());
             return;

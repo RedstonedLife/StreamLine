@@ -1,8 +1,8 @@
 package net.plasmere.streamline.events;
 
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import net.plasmere.streamline.config.backend.Configuration;
+import net.plasmere.streamline.config.backend.ConfigurationProvider;
+import net.plasmere.streamline.config.backend.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;

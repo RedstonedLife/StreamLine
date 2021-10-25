@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff.scripts;
 
-import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
@@ -15,7 +15,7 @@ public class ScriptReloadCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void execute(CommandSource sender, String[] args) {
         if (sender.hasPermission(CommandsConfUtils.comBEReloadPerm)) {
             ScriptsHandler.unloadScripts();
             StreamLine.getInstance().loadScripts();
