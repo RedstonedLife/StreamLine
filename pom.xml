@@ -135,9 +135,8 @@
         <dependency>
             <groupId>net.luckperms</groupId>
             <artifactId>api</artifactId>
-            <version>5.3.74</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/LuckPerms-Bungee-5.2.16.jar</systemPath>
+            <version>5.3</version>
+            <scope>provided</scope>
         </dependency>
         <!--???-->
         <dependency>
