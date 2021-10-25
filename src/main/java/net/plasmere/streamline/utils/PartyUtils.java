@@ -443,7 +443,7 @@ public class PartyUtils {
             return;
         }
 
-        for (Player player : party.totalMembers){
+        for (Player player : new ArrayList<>(party.totalMembers)){
             if (! player.online) continue;
 
             ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(player.uuid);

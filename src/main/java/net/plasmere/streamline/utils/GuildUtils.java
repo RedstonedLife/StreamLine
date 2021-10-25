@@ -531,20 +531,24 @@ public class GuildUtils {
         }
 
         if (sender instanceof Player && sender.online) {
-            for (SavableUser pl : guild.totalMembers) {
-                if (! pl.online) continue;
+            try {
+                for (SavableUser player : new ArrayList<>(guild.totalMembers)) {
+                    if (!player.online) continue;
 
-                if (pl.equals(sender)) {
-                    MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), warpSender);
-                } else {
-                    MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), warpMembers);
-                }
+                    ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(player.uuid);
 
-                if (pl instanceof Player) {
-                    Player p = (Player) pl;
-                    if (! p.online) continue;
-                    p.player.connect(((Player) sender).getServer().getInfo());
+                    if (m == null) continue;
+
+                    if (player.equals(sender)) {
+                        MessagingUtils.sendBGUserMessage(guild, player.findSender(), m, warpSender);
+                    } else {
+                        MessagingUtils.sendBGUserMessage(guild, player.findSender(), m, warpMembers);
+                    }
+
+                    m.connect(((Player) sender).getServer().getInfo());
                 }
+            } catch (ConcurrentModificationException e) {
+                e.printStackTrace();
             }
         }
 
