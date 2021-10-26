@@ -26,7 +26,7 @@ public class PluginMessagingListener {
             // the receiver is a Player when a server talks to the proxy
             if (event.getTarget() instanceof Player)
             {
-                Player receiver = (Player) event.getSource();
+                Player receiver = (Player) event.getTarget();
 
                 String data = in.readUTF();
                 if (data.equals("")) data = PlayerUtils.getOrCreatePlayerStat(receiver).displayName;
