@@ -305,7 +305,7 @@ public class MessagingUtils {
         to.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
     }
 
-    public static void sendStaffMessageFromDiscord(String sender, String from, String msg){
+    public static void sendStaffMessageFromDiscord(String discordSenderID, String from, String msg){
         Collection<ProxiedPlayer> staff = StreamLine.getInstance().getProxy().getPlayers();
         Set<ProxiedPlayer> staffs = new HashSet<>(staff);
 
@@ -320,8 +320,8 @@ public class MessagingUtils {
         }
 
         for (ProxiedPlayer player : staffs) {
-            player.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(
-                                    TextUtils.replaceAllSenderBungee(MessageConfUtils.bungeeStaffChatMessage(), sender), sender)
+            player.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungeeFromDiscord(
+                                    TextUtils.replaceAllSenderBungeeFromDiscord(MessageConfUtils.bungeeStaffChatMessage(), discordSenderID), discordSenderID)
                             .replace("%from_type%", from)
                             .replace("%from%", from)
                             .replace("%message%", msg)
