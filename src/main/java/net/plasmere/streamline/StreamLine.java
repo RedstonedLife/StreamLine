@@ -30,6 +30,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import org.bstats.bungeecord.Metrics;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -422,6 +423,14 @@ public class StreamLine extends Plugin {
 		instance = this;
 
 		getProxy().registerChannel(customChannel);
+
+		// All you have to do is adding the following two lines in your onEnable method.
+		// You can find the plugin ids of your plugins on the page https://bstats.org/what-is-my-plugin-id
+		int pluginId = 13153; // <-- Replace with the id of your plugin!
+		Metrics metrics = new Metrics(this, pluginId);
+
+		// Optional: Add custom charts
+//		metrics.addCustomChart(new Metrics.SimplePie("chart_id", () -> "My value"));
 
 		// Teller.
 		getLogger().info("Loading version [v" + getProxy().getPluginManager().getPlugin("StreamLine").getDescription().getVersion() + "]...");
