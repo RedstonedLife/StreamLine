@@ -1,16 +1,12 @@
 package net.plasmere.streamline.objects.savable.users;
 
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.CommandSource;
-import net.md_5.bungee.api.chat.BaseComponent;
 import com.velocitypowered.api.proxy.Player;
+import net.kyori.adventure.text.Component;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.utils.MessagingUtils;
-import net.plasmere.streamline.utils.PlayerUtils;
-import net.plasmere.streamline.utils.PluginUtils;
-import net.plasmere.streamline.utils.UUIDUtils;
+import net.plasmere.streamline.utils.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -869,10 +865,6 @@ public abstract class SavableUser {
         findSender().getPermissionChecker().value(permission);
     }
 
-    public Collection<String> getPermissions() {
-        return findSender().gep();
-    }
-
     public void saveInfo() throws IOException {
         file.delete();
 
@@ -890,5 +882,17 @@ public abstract class SavableUser {
         writer.close();
 
         if (ConfigUtils.debug) MessagingUtils.logInfo("Just saved SavablePlayer info for player: " + this.uuid + " (SavablePlayer: " + this.latestName + ")");
+    }
+
+    public void sendMessage(Component message) {
+        if (this.findSender() != null) {
+            findSender().sendMessage(message);
+        }
+    }
+
+    public void sendMessage(String message) {
+        if (this.findSender() != null) {
+            findSender().sendMessage(TextUtils.codedText(message));
+        }
     }
 }

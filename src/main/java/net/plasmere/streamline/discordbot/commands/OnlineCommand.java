@@ -37,14 +37,14 @@ public class OnlineCommand {
         StringBuilder text = new StringBuilder();
 
         int i = 1;
-        for (Player player : StreamLine.getInstance().getProxy().getPlayers()){
+        for (Player player : StreamLine.getInstance().getProxy().getAllPlayers()){
             if (!player.hasPermission("streamline.staff.vanish")){
-                if (i < StreamLine.getInstance().getProxy().getPlayers().size())
+                if (i < StreamLine.getInstance().getProxy().getAllPlayers().size())
                     text.append(PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrCreatePlayerStat(player))).append(", ");
                 else
                     text.append(PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrCreatePlayerStat(player))).append(".");
             } else {
-                if (i < StreamLine.getInstance().getProxy().getPlayers().size())
+                if (i < StreamLine.getInstance().getProxy().getAllPlayers().size())
                     text.append("HIDDEN").append(", ");
                 else
                     text.append("HIDDEN").append(".");

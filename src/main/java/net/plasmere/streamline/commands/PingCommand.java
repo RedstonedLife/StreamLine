@@ -2,7 +2,7 @@ package net.plasmere.streamline.commands;
 
 import net.plasmere.streamline.StreamLine;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import net.md_5.bungee.api.chat.TextComponent;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;

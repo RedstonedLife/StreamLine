@@ -23,7 +23,7 @@ public class StaffChatCommand {
 
         String msg = om.substring((prefix + command + " ").length());
 
-        Collection<Player> staff = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> staff = StreamLine.getInstance().getProxy().getAllPlayers();
         Set<Player> staffs = new HashSet<>(staff);
 
         for (Player player : staff){

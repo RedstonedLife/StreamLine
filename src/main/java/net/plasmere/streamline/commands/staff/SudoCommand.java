@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -31,7 +31,7 @@ public class SudoCommand extends Command implements TabExecutor {
                 return;
             }
 
-            if (StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(sudoOn, TextUtils.argsToStringMinus(args, 0))){
+            if (StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(sudoOn, TextUtils.argsToStringMinus(args, 0))){
                 MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.sudoWorked(), sender)
                 );
             } else {
@@ -43,11 +43,11 @@ public class SudoCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(final CommandSource sender, final String[] args) {
-        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (Player player : players){
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         Collection<Map.Entry<String, Command>> commands = StreamLine.getInstance().getProxy().getPluginManager().getCommands();

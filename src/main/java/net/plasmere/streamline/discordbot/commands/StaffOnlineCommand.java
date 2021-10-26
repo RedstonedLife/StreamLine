@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class StaffOnlineCommand {
     public static void sendMessage(String command, MessageReceivedEvent event){
-        Collection<Player> staffs = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> staffs = StreamLine.getInstance().getProxy().getAllPlayers();
         Set<Player> lstaffs = new HashSet<>(staffs);
 
         for (Player player : staffs){
@@ -46,11 +46,11 @@ public class StaffOnlineCommand {
         for (Player player : lstaffs){
             if (i < lstaffs.size())
                 staff.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.sOnlineDiscordBulkNotLast(), player)
-                        .replace("%server%", player.getServer().getInfo().getName().toLowerCase())
+                        .replace("%server%", player.getCurrentServer().get().getServerInfo().getName().toLowerCase())
                 );
             else
                 staff.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.sOnlineDiscordBulkLast(), player)
-                        .replace("%server%", player.getServer().getInfo().getName().toLowerCase())
+                        .replace("%server%", player.getCurrentServer().get().getServerInfo().getName().toLowerCase())
                 );
             i++;
         }

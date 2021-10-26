@@ -1,13 +1,9 @@
 package net.plasmere.streamline.scripts;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.Guild;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
-import net.plasmere.streamline.utils.GuildUtils;
-import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.io.File;
@@ -65,23 +61,23 @@ public class Script {
         for (Integer i : toExecute.keySet()) {
             switch (toExecute.get(i).key) {
                 case CONSOLE:
-                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(StreamLine.getInstance().getProxy().getConsole(), getVariablized(toExecute.get(i).value, sender, player));
+                    StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(StreamLine.getInstance().getProxy().getConsoleCommandSource(), getVariablized(toExecute.get(i).value, sender, player));
                     break;
                 case OPERATOR:
                     if (player.online) {
                         boolean bool = player.hasPermission("*");
 
                         if (! bool) player.setPermission("*", true);
-                        StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(player.findSender(), getVariablized(toExecute.get(i).value, sender, player));
+                        StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(player.findSender(), getVariablized(toExecute.get(i).value, sender, player));
                         if (! bool) player.setPermission("*", false);
                     }
                     break;
                 case SENDER:
-                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(sender, getVariablized(toExecute.get(i).value, sender, player));
+                    StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(sender, getVariablized(toExecute.get(i).value, sender, player));
                     break;
                 case PLAYER:
                     if (player.online) {
-                        StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(player.findSender(), getVariablized(toExecute.get(i).value, sender, player));
+                        StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(player.findSender(), getVariablized(toExecute.get(i).value, sender, player));
                     }
                     break;
             }

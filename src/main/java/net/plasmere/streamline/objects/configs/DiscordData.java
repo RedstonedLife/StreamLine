@@ -2,7 +2,7 @@ package net.plasmere.streamline.objects.configs;
 
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.config.backend.ConfigurationProvider;

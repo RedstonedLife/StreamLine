@@ -2,9 +2,15 @@ package net.plasmere.streamline;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.PluginContainer;
+import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
+import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.scheduler.Scheduler;
 import net.plasmere.streamline.config.ConfigHandler;
 import net.plasmere.streamline.config.ConfigUtils;
@@ -30,7 +36,6 @@ import net.plasmere.streamline.utils.holders.ViaHolder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.md_5.bungee.api.plugin.Plugin;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -53,7 +58,11 @@ import java.util.stream.Collectors;
 
 @Plugin(id = "streamline", name = "StreamLine", version = "1.0.14.4",
 		url = "https://github.com/xnitrate/streamline/tree/velocity", description = "An Essentials plugin for Velocity!",
-		authors = { "Nitrate" }
+		authors = { "Nitrate" }, dependencies = {
+		@Dependency(id = "LuckPerms", optional = true),
+		@Dependency(id = "Geyser-Velocity", optional = true),
+		@Dependency(id = "ViaVersion", optional = true)
+	}
 )
 public class StreamLine {
 	private static ProxyServer server;
@@ -75,6 +84,8 @@ public class StreamLine {
 	public static ChatConfig chatConfig;
 
 	public final static String customChannel = "streamline:channel";
+	public final static String[] identifer = customChannel.split(":", 2);
+	public final static ChannelIdentifier customIdentifier = MinecraftChannelIdentifier.create(identifer[0], identifer[1]);
 
 	private static JDA jda = null;
 	private static boolean isReady = false;
@@ -90,12 +101,12 @@ public class StreamLine {
 	public final File languageFile = new File(getDataFolder(), "language.txt");
 
 	public Scheduler.TaskBuilder guilds;
-	public ScheduledTask players;
-	public ScheduledTask clearCachedPlayers;
-	public ScheduledTask saveCachedPlayers;
-	public ScheduledTask playtime;
-	public ScheduledTask oneSecTimer;
-	public ScheduledTask motdUpdater;
+	public Scheduler.TaskBuilder players;
+	public Scheduler.TaskBuilder clearCachedPlayers;
+	public Scheduler.TaskBuilder saveCachedPlayers;
+	public Scheduler.TaskBuilder playtime;
+	public Scheduler.TaskBuilder oneSecTimer;
+	public Scheduler.TaskBuilder motdUpdater;
 
 	private String currentMOTD;
 	private int motdPage;
@@ -135,7 +146,7 @@ public class StreamLine {
 			);
 			jda = jdaBuilder.build().awaitReady();
 		} catch (Exception e) {
-			getLogger().warning("An unknown error occurred building JDA...");
+			getLogger().warn("An unknown error occurred building JDA...");
 			return;
 		}
 
@@ -208,13 +219,13 @@ public class StreamLine {
 
 	public void loadTimers(){
 		try {
-			guilds = getProxy().getScheduler().schedule(this, new GuildXPTimer(ConfigUtils.timePerGiveG), 0, 1, TimeUnit.SECONDS);
-			players = getProxy().getScheduler().schedule(this, new PlayerXPTimer(ConfigUtils.timePerGiveP), 0, 1, TimeUnit.SECONDS);
-			clearCachedPlayers = getProxy().getScheduler().schedule(this, new PlayerClearTimer(ConfigUtils.cachedPClear), 0, 1, TimeUnit.SECONDS);
-			saveCachedPlayers = getProxy().getScheduler().schedule(this, new PlayerSaveTimer(ConfigUtils.cachedPSave), 0, 1, TimeUnit.SECONDS);
-			playtime = getProxy().getScheduler().schedule(this, new PlaytimeTimer(1), 0, 1, TimeUnit.SECONDS);
-			oneSecTimer = getProxy().getScheduler().schedule(this, new OneSecondTimer(), 0, 1, TimeUnit.SECONDS);
-			motdUpdater = getProxy().getScheduler().schedule(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime()), 0, 1, TimeUnit.SECONDS);
+			guilds = server.getScheduler().buildTask(this, new GuildXPTimer(ConfigUtils.timePerGiveG)).repeat(1, TimeUnit.SECONDS);
+			players = server.getScheduler().buildTask(this, new PlayerXPTimer(ConfigUtils.timePerGiveP)).repeat(1, TimeUnit.SECONDS);
+			clearCachedPlayers = server.getScheduler().buildTask(this, new PlayerClearTimer(ConfigUtils.cachedPClear)).repeat(1, TimeUnit.SECONDS);
+			saveCachedPlayers = server.getScheduler().buildTask(this, new PlayerSaveTimer(ConfigUtils.cachedPSave)).repeat(1, TimeUnit.SECONDS);
+			playtime = server.getScheduler().buildTask(this, new PlaytimeTimer(1)).repeat(1, TimeUnit.SECONDS);
+			oneSecTimer = server.getScheduler().buildTask(this, new OneSecondTimer()).repeat(1, TimeUnit.SECONDS);
+			motdUpdater = server.getScheduler().buildTask(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime())).repeat(1, TimeUnit.SECONDS);
 
 			// DO NOT FORGET TO UPDATE AMOUNT BELOW! :/
 			getLogger().info("Loaded 7 runnable(s) into memory...!");
@@ -321,7 +332,7 @@ public class StreamLine {
 				}
 
 				FileWriter writer = new FileWriter(versionFile);
-				writer.write(getDescription().getVersion());
+				writer.write(getDescription().getVersion().get());
 				writer.close();
 
 				if (versionFile.exists()) {
@@ -434,15 +445,15 @@ public class StreamLine {
 	}
 
 	@Subscribe
-	public void onEnable(ProxyInitializeEvent e){
+	public void onEnable(ProxyInitializeEvent event){
 		PluginUtils.state = NetworkState.STARTING;
 
 		instance = this;
 
-		getProxy().registerChannel(customChannel);
+		getProxy().getChannelRegistrar().register(customIdentifier);
 
 		// Teller.
-		getLogger().info("Loading version [v" + getProxy().getPluginManager().getPlugin("StreamLine").getDescription().getVersion() + "]...");
+		getLogger().info("Loading version [v" + getDescription().getVersion() + "]...");
 
 		// Configs...
 		loadConfigs();
@@ -472,7 +483,7 @@ public class StreamLine {
 			Thread initThread = new Thread(this::initJDA, "Streamline - Initialization");
 			initThread.setUncaughtExceptionHandler((t, e) -> {
 				e.printStackTrace();
-				getLogger().severe("Streamline failed to load properly: " + e.getMessage() + ".");
+				getLogger().error("Streamline failed to load properly: " + e.getMessage() + ".");
 			});
 			initThread.start();
 		}
@@ -496,7 +507,7 @@ public class StreamLine {
 		if (viaHolder.enabled) {
 			loadServers();
 		} else {
-			getLogger().severe("Streamline server custom configs have been disabled due to no ViaVersion being detected.");
+			getLogger().error("Streamline server custom configs have been disabled due to no ViaVersion being detected.");
 		}
 
 		// Timers.
@@ -520,11 +531,13 @@ public class StreamLine {
 		PluginUtils.state = NetworkState.RUNNING;
 	}
 
-	@Override
-	public void onDisable() {
+	@Subscribe
+	public void onDisable(ProxyShutdownEvent event) {
 		PluginUtils.state = NetworkState.STOPPING;
 
-		getProxy().unregisterChannel(customChannel);
+		String[] identifer = customChannel.split(":", 2);
+
+		getProxy().getChannelRegistrar().unregister(MinecraftChannelIdentifier.create(identifer[0], identifer[1]));
 
 		if (ConfigUtils.onCloseSafeKick && ConfigUtils.onCloseKickMessage) {
 			PlayerUtils.kickAll(MessageConfUtils.kicksStopping());
@@ -541,13 +554,13 @@ public class StreamLine {
 			serverConfig.saveConfig();
 		}
 
-		guilds.cancel();
-		players.cancel();
-		playtime.cancel();
-		clearCachedPlayers.cancel();
-		saveCachedPlayers.cancel();
-		oneSecTimer.cancel();
-		motdUpdater.cancel();
+		guilds.clearRepeat();
+		players.clearRepeat();
+		playtime.clearRepeat();
+		clearCachedPlayers.clearRepeat();
+		saveCachedPlayers.clearRepeat();
+		oneSecTimer.clearRepeat();
+		motdUpdater.clearRepeat();
 
 		try {
 			if (ConfigUtils.moduleDEnabled) {
@@ -555,9 +568,9 @@ public class StreamLine {
 					if (ConfigUtils.moduleShutdowns) {
 						try {
 //						Objects.requireNonNull(jda.getTextChannelById(ConfigUtils.textChannelOfflineOnline)).sendMessageEmbeds(eb.setDescription("Bot shutting down...!").build()).queue();
-							MessagingUtils.sendDiscordEBMessage(new DiscordMessage(getProxy().getConsole(), MessageConfUtils.shutdownTitle(), MessageConfUtils.shutdownMessage(), DiscordBotConfUtils.textChannelOfflineOnline));
+							MessagingUtils.sendDiscordEBMessage(new DiscordMessage(getProxy().getConsoleCommandSource(), MessageConfUtils.shutdownTitle(), MessageConfUtils.shutdownMessage(), DiscordBotConfUtils.textChannelOfflineOnline));
 						} catch (Exception e) {
-							getLogger().warning("An unknown error occurred with sending online message: " + e.getMessage());
+							getLogger().warn("An unknown error occurred with sending online message: " + e.getMessage());
 						}
 					}
 
@@ -577,7 +590,7 @@ public class StreamLine {
 					try {
 						shutdownTask.get(5, TimeUnit.SECONDS);
 					} catch (Exception e) {
-						getLogger().warning("JDA took too long to shutdown, skipping!");
+						getLogger().warn("JDA took too long to shutdown, skipping!");
 					}
 				}
 			}
@@ -638,5 +651,9 @@ public class StreamLine {
 		} catch (IOException ex) {
 			return null;
 		}
+	}
+
+	public PluginDescription getDescription() {
+		return getProxy().getPluginManager().getPlugin("StreamLine").get().getDescription();
 	}
 }

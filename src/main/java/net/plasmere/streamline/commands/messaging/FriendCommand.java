@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.messaging;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -30,7 +30,7 @@ public class FriendCommand extends Command implements TabExecutor {
         if (stat == null) {
             stat = PlayerUtils.getOrCreateSavableUser(sender);
             if (stat == null) {
-                MessagingUtils.logSevere("CANNOT INSTANTIATE THE PLAYER: " + sender.getName());
+                MessagingUtils.logSevere("CANNOT INSTANTIATE THE PLAYER: " + PlayerUtils.getSourceName(sender));
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                 return;
             }
@@ -159,7 +159,7 @@ public class FriendCommand extends Command implements TabExecutor {
     @Override
     public Iterable<String> onTabComplete(final CommandSource sender, final String[] args) {
         if (sender instanceof Player) {
-            Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+            Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
             List<String> strPlayers = new ArrayList<>();
             List<String> friends = new ArrayList<>();
             List<String> pending = new ArrayList<>();

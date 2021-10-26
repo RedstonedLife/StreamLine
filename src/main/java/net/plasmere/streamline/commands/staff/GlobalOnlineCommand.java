@@ -6,7 +6,7 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.luckperms.api.model.group.Group;
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import net.md_5.bungee.api.config.ServerInfo;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.connection.Server;
@@ -81,18 +81,18 @@ public class GlobalOnlineCommand extends Command {
     }
 
     private String getOnline(Set<Group> groups){
-        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
 
         HashMap<Player, Server> playerServers = new HashMap<>();
         HashMap<Player, String> playerGroup = new HashMap<>();
 
         for (Player player : players){
-            playerServers.put(player, player.getServer());
+            playerServers.put(player, player.getCurrentServer().get());
         }
 
         for (Player player : players){
             try {
-                playerGroup.put(player, Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(player.getName())).getPrimaryGroup().toLowerCase());
+                playerGroup.put(player, Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(PlayerUtils.getSourceName(player))).getPrimaryGroup().toLowerCase());
             } catch (Exception e){
                 e.printStackTrace();
                 playerGroup.put(player, "null");
@@ -134,14 +134,14 @@ public class GlobalOnlineCommand extends Command {
         int i = 0;
 
         for (Player player : players){
-            Server server = playerServers.get(player);
+            ServerConnectionserver = playerServers.get(player);
             if (! (i == players.size() - 1))
                 text.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.onlineMessageBPlayersBulkNotLast(), player)
-                        .replace("%server%", server.getInfo().getName())
+                        .replace("%server%", server.getServerInfo().getName())
                 );
             else
                 text.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.onlineMessageBPlayersBulkLast(), player)
-                        .replace("%server%", server.getInfo().getName())
+                        .replace("%server%", server.getServerInfo().getName())
                 );
             i++;
         }

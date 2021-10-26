@@ -6,7 +6,7 @@ import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -20,7 +20,7 @@ public class PartyCommand extends Command implements TabExecutor {
     @Override
     public void execute(CommandSource sender, String[] args) {
         if (sender instanceof Player) {
-            SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
 
             if (player == null) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
@@ -251,11 +251,11 @@ public class PartyCommand extends Command implements TabExecutor {
     @Override
     public Iterable<String> onTabComplete(final CommandSource sender, final String[] args)
     {
-        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (Player player : players){
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         if (args.length > 2) return new ArrayList<>();

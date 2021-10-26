@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import net.md_5.bungee.api.config.ServerInfo;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
@@ -27,7 +27,7 @@ public class TeleportCommand extends Command implements TabExecutor {
                 return;
             }
 
-            ServerInfo serverInfo = player.getServer().getInfo();
+            ServerInfo serverInfo = player.getCurrentServer().get().getServerInfo();
 
             Player s = (Player) sender;
 

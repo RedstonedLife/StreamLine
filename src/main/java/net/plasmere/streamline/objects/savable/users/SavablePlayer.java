@@ -1,6 +1,15 @@
 package net.plasmere.streamline.objects.savable.users;
 
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.player.PlayerSettings;
+import com.velocitypowered.api.proxy.player.SkinParts;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.proxy.server.ServerInfo;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.title.Title;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
@@ -9,6 +18,8 @@ import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
+import net.plasmere.streamline.utils.PluginUtils;
+import net.plasmere.streamline.utils.TextUtils;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -57,7 +68,7 @@ public class SavablePlayer extends SavableUser {
 
     public boolean onlineCheck(){
         for (Player p : StreamLine.getInstance().getProxy().getAllPlayers()){
-            if (p.getName().equals(this.latestName)) return true;
+            if (p.getUsername().equals(this.latestName)) return true;
         }
 
         return false;
@@ -255,7 +266,7 @@ public class SavablePlayer extends SavableUser {
     }
 
     public void tryAddNewIP(Player player){
-        String ipSt = player.getSocketAddress().toString().replace("/", "");
+        String ipSt = player.getRemoteAddress().toString().replace("/", "");
         String[] ipSplit = ipSt.split(":");
         ipSt = ipSplit[0];
 
@@ -275,7 +286,7 @@ public class SavablePlayer extends SavableUser {
     }
 
     public void tryRemIP(Player player){
-        String ipSt = player.getSocketAddress().toString().replace("/", "");
+        String ipSt = player.getRemoteAddress().toString().replace("/", "");
         String[] ipSplit = ipSt.split(":");
         ipSt = ipSplit[0];
 
@@ -449,118 +460,39 @@ public class SavablePlayer extends SavableUser {
         updateKey("display-name", name);
     }
 
-    public void sendMessage(ChatMessageType position, BaseComponent... message) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendMessage(position, message);
-        }
-    }
-    
-    public void sendMessage(ChatMessageType position, BaseComponent message) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendMessage(position, message);
-        }
-    }
-    
-    public void sendMessage(UUID sender, BaseComponent... message) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendMessage(sender, message);
-        }
-    }
-    
-    public void sendMessage(UUID sender, BaseComponent message) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendMessage(sender, message);
-        }
-    }
-
-    
     public void connect(ServerInfo target) {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).connect(target);
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).createConnectionRequest(StreamLine.getProxy().getServer(target.getName()).get());
+        }
+    }
+
+    public void connect(RegisteredServer target) {
+        if (online) {
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).createConnectionRequest(target);
         }
     }
 
     
-    public void connect(ServerInfo target, ServerConnectEvent.Reason reason) {
+    public ServerConnection getServer() {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).connect(target, reason);
-        }
-    }
-
-    
-    public void connect(ServerInfo target, Callback<Boolean> callback) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).connect(target, callback);
-        }
-    }
-
-    
-    public void connect(ServerInfo target, Callback<Boolean> callback, ServerConnectEvent.Reason reason) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).connect(target, callback, reason);
-        }
-    }
-
-    
-    public void connect(ServerConnectRequest request) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).connect(request);
-        }
-    }
-
-    
-    public Server getServer() {
-        if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getServer();
+            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getCurrentServer().get().get();
         }
         return null;
     }
 
     
-    public int getPing() {
+    public long getPing() {
         if (online) {
             return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getPing();
         }
         return -1;
     }
-
-    
-    public void sendData(String channel, byte[] data) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendData(channel, data);
-        }
-    }
-
-    
-    public PendingConnection getPendingConnection() {
-        if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getPendingConnection();
-        }
-        return null;
-    }
-
     
     public void chat(String message) {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).chat(message);
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).spoofChatInput(message);
         }
     }
-
-    
-    public ServerInfo getReconnectServer() {
-        if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getReconnectServer();
-        }
-        return null;
-    }
-
-    
-    public void setReconnectServer(ServerInfo server) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).setReconnectServer(server);
-        }
-    }
-
     
     public String getUUID() {
         return uuid;
@@ -574,7 +506,7 @@ public class SavablePlayer extends SavableUser {
     
     public Locale getLocale() {
         if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getLocale();
+            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getEffectiveLocale();
         }
         return null;
     }
@@ -582,15 +514,15 @@ public class SavablePlayer extends SavableUser {
     
     public byte getViewDistance() {
         if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getViewDistance();
+            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getPlayerSettings().getViewDistance();
         }
         return -1;
     }
 
     
-    public Player.ChatMode getChatMode() {
+    public PlayerSettings.ChatMode getChatMode() {
         if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getChatMode();
+            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getPlayerSettings().getChatMode();
         }
         return null;
     }
@@ -598,136 +530,60 @@ public class SavablePlayer extends SavableUser {
     
     public boolean hasChatColors() {
         if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).hasChatColors();
+            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getPlayerSettings().hasChatColors();
         }
         return false;
     }
 
     
-    public SkinConfiguration getSkinParts() {
+    public SkinParts getSkinParts() {
         if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getSkinParts();
+            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getPlayerSettings().getSkinParts();
         }
         return null;
     }
 
     
-    public Player.MainHand getMainHand() {
+    public PlayerSettings.MainHand getMainHand() {
         if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getMainHand();
+            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getPlayerSettings().getMainHand();
         }
         return null;
     }
 
     
-    public void setTabHeader(BaseComponent header, BaseComponent footer) {
+    public void setTabHeader(TextComponent header, TextComponent footer) {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).setTabHeader(header, footer);
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getTabList().setHeaderAndFooter(header, footer);
         }
     }
 
-    
-    public void setTabHeader(BaseComponent[] header, BaseComponent[] footer) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).setTabHeader(header, footer);
-        }
-    }
-
-    
     public void resetTabHeader() {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).resetTabHeader();
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getTabList().clearHeaderAndFooter();
         }
     }
 
-    
     public void sendTitle(Title title) {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendTitle(title);
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).showTitle(title);
         }
     }
-
-    
-    public boolean isForgeUser() {
-        if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).isForgeUser();
-        }
-        return false;
-    }
-
-    
-    public Map<String, String> getModList() {
-        if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getModList();
-        }
-        return null;
-    }
-
-    
-    public Scoreboard getScoreboard() {
-        if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getScoreboard();
-        }
-        return null;
-    }
-
     
     public String getName() {
         return latestName;
     }
 
-    @Deprecated
-    
+    public void sendMessage(Component message) {
+        if (online) {
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendMessage(message);
+        }
+    }
     public void sendMessage(String message) {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendMessage(message);
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendMessage(TextUtils.codedText(message));
         }
     }
-
-    @Deprecated
-    
-    public void sendMessages(String... messages) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendMessages(messages);
-        }
-    }
-
-    
-    public void sendMessage(BaseComponent... message) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendMessage(message);
-        }
-    }
-
-    
-    public void sendMessage(BaseComponent message) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).sendMessage(message);
-        }
-    }
-
-    
-    public Collection<String> getGroups() {
-        if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getGroups();
-        }
-        return null;
-    }
-
-    
-    public void addGroups(String... groups) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).addGroups(groups);
-        }
-    }
-
-    
-    public void removeGroups(String... groups) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).removeGroups(groups);
-        }
-    }
-
     
     public boolean hasPermission(String permission) {
         if (online) {
@@ -736,25 +592,10 @@ public class SavablePlayer extends SavableUser {
         return false;
     }
 
-    
-    public void setPermission(String permission, boolean value) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).setPermission(permission, value);
-        }
-    }
-
-    
-    public Collection<String> getPermissions() {
-        if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getPermissions();
-        }
-        return null;
-    }
-
     @Deprecated
     public InetSocketAddress getAddress() {
         if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getAddress();
+            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getRemoteAddress();
         }
         return InetSocketAddress.createUnresolved(latestIP, new Random().nextInt(26666));
     }
@@ -762,7 +603,7 @@ public class SavablePlayer extends SavableUser {
     
     public SocketAddress getSocketAddress() {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getSocketAddress();
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getRemoteAddress();
         }
         return InetSocketAddress.createUnresolved(latestIP, new Random().nextInt(26666));
     }
@@ -770,34 +611,11 @@ public class SavablePlayer extends SavableUser {
     @Deprecated
     public void disconnect(String reason) {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).disconnect(reason);
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).disconnect(TextUtils.codedText(reason));
         }
     }
-
-    
-    public void disconnect(BaseComponent... reason) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).disconnect(reason);
-        }
-    }
-
-    
-    public void disconnect(BaseComponent reason) {
-        if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).disconnect(reason);
-        }
-    }
-
     
     public boolean isConnected() {
         return online;
-    }
-
-    
-    public Connection.Unsafe unsafe() {
-        if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).unsafe();
-        }
-        return null;
     }
 }

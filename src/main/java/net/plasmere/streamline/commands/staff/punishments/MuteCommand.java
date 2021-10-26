@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff.punishments;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -77,7 +77,7 @@ public class MuteCommand extends Command implements TabExecutor {
                                             sender,
                                             MessageConfUtils.muteEmbed(),
                                             TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteMTempDiscord(), other)
-                                                    .replace("%punisher%", sender.getName())
+                                                    .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                     .replace("%date%", other.mutedTill.toString())
                                             ,
                                             DiscordBotConfUtils.textChannelMutes
@@ -87,7 +87,7 @@ public class MuteCommand extends Command implements TabExecutor {
                     }
 
                     MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMTempStaff(), other)
-                            .replace("%punisher%", sender.getName())
+                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                             .replace("%date%", other.mutedTill.toString())
                     );
 
@@ -117,7 +117,7 @@ public class MuteCommand extends Command implements TabExecutor {
                                         sender,
                                         MessageConfUtils.muteEmbed(),
                                         TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteMPermDiscord(), other)
-                                                .replace("%punisher%", sender.getName())
+                                                .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                         ,
                                         DiscordBotConfUtils.textChannelMutes
                                 )
@@ -126,7 +126,7 @@ public class MuteCommand extends Command implements TabExecutor {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMPermStaff(), other)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                 );
             } else if (args[0].equals("temp")) {
                 if (args.length < 3) {
@@ -166,7 +166,7 @@ public class MuteCommand extends Command implements TabExecutor {
                                     sender,
                                     MessageConfUtils.muteEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteMTempDiscord(), other)
-                                            .replace("%punisher%", sender.getName())
+                                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                             .replace("%date%", other.mutedTill.toString())
                                     ,
                                     DiscordBotConfUtils.textChannelMutes
@@ -175,7 +175,7 @@ public class MuteCommand extends Command implements TabExecutor {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMTempStaff(), other)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                         .replace("%date%", other.mutedTill.toString())
                 );
             } else if (args[0].equals("remove")) {
@@ -199,7 +199,7 @@ public class MuteCommand extends Command implements TabExecutor {
                                     sender,
                                     MessageConfUtils.muteEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteUnDiscord(), other)
-                                            .replace("%punisher%", sender.getName())
+                                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                     ,
                                     DiscordBotConfUtils.textChannelMutes
                             )
@@ -207,7 +207,7 @@ public class MuteCommand extends Command implements TabExecutor {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteUnStaff(), other)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                 );
             } else if (args[0].equals("check")) {
                 Date checked = other.mutedTill;
@@ -223,12 +223,12 @@ public class MuteCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(final CommandSource sender, final String[] args) {
-        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (Player player : players){
             if (sender instanceof Player) if (player.equals(sender)) continue;
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         List<String> options = new ArrayList<>();

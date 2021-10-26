@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -316,11 +316,11 @@ public class GuildCommand extends Command implements TabExecutor {
     @Override
     public Iterable<String> onTabComplete(final CommandSource sender, final String[] args)
     {
-        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (Player player : players){
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         strPlayers.add("%");

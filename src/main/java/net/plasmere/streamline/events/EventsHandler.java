@@ -1,8 +1,7 @@
 package net.plasmere.streamline.events;
 
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.config.ServerInfo;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.events.enums.Condition;
@@ -55,12 +54,14 @@ public class EventsHandler {
                     MessagingUtils.sendBUserMessage(p, adjust(event, player, i));
                     continue;
                 case RUN_COMMAND_AS_SELF:
+                    StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(p, adjust(event, player, i));
+                    continue;
                 case SEND_MESSAGE_AS:
 //                    MessagingUtils.sendBUserAsMessage(p, adjust(event, player, i, context));
-                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(p, adjust(event, player, i));
+                    player.chat(adjust(event, player, i));
                     continue;
                 case SEND_SERVER:
-                    p.connect(StreamLine.getInstance().getProxy().getServerInfo(adjust(event, player, i)));
+                    player.connect(StreamLine.getInstance().getProxy().getServer(adjust(event, player, i)).get());
                     continue;
                 case KICK:
                     p.disconnect(TextUtils.codedText(adjust(event, player, i)));
@@ -70,12 +71,12 @@ public class EventsHandler {
                         boolean bool = player.hasPermission("*");
 
                         if (!bool) player.setPermission("*", true);
-                        StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(player.findSender(), adjust(event, player, i));
+                        StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(player.findSender(), adjust(event, player, i));
                         if (!bool) player.setPermission("*", false);
                     }
                     continue;
 //                case RUN_COMMAND_AS_SELF:
-//                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(p, adjust(event, player, i, context));
+//                    StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(p, adjust(event, player, i, context));
 //                    continue;
                 case GIVE_POINTS:
                     player.addPoints(Integer.parseInt(event.actions.get(i).value));
@@ -159,12 +160,14 @@ public class EventsHandler {
                     MessagingUtils.sendBUserMessage(p, adjust(event, player, i, context));
                     continue;
                 case RUN_COMMAND_AS_SELF:
+                    StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(p, adjust(event, player, i, context));
+                    continue;
                 case SEND_MESSAGE_AS:
 //                    MessagingUtils.sendBUserAsMessage(p, adjust(event, player, i, context));
-                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(p, adjust(event, player, i, context));
+                    player.chat(adjust(event, player, i, context));
                     continue;
                 case SEND_SERVER:
-                    p.connect(StreamLine.getInstance().getProxy().getServerInfo(adjust(event, player, i, context)));
+                    player.connect(StreamLine.getInstance().getProxy().getServer(adjust(event, player, i, context)).get());
                     continue;
                 case KICK:
                     p.disconnect(TextUtils.codedText(adjust(event, player, i, context)));
@@ -174,12 +177,12 @@ public class EventsHandler {
                         boolean bool = player.hasPermission("*");
 
                         if (!bool) player.setPermission("*", true);
-                        StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(player.findSender(), adjust(event, player, i, context));
+                        StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(player.findSender(), adjust(event, player, i, context));
                         if (!bool) player.setPermission("*", false);
                     }
                     continue;
 //                case RUN_COMMAND_AS_SELF:
-//                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(p, adjust(event, player, i, context));
+//                    StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(p, adjust(event, player, i, context));
 //                    continue;
                 case GIVE_POINTS:
                     player.addPoints(Integer.parseInt(event.actions.get(i).value));
@@ -355,7 +358,7 @@ public class EventsHandler {
                             if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$1 : case IN_SERVER : player == null");
                             return false;
                         }
-                        ServerInfo server = player.getServer().getInfo();
+                        ServerInfo server = player.getCurrentServer().get().getServerInfo();
                         if (server == null) {
                             if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$1 : case IN_SERVER : server == null");
                             return false;
@@ -412,7 +415,7 @@ public class EventsHandler {
                             if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$2 : case IN_SERVER : player == null");
                             return false;
                         }
-                        ServerInfo server = player.getServer().getInfo();
+                        ServerInfo server = player.getCurrentServer().get().getServerInfo();
                         if (server == null) {
                             if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$2 : case IN_SERVER : server == null");
                             return false;
@@ -474,7 +477,7 @@ public class EventsHandler {
                             if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$3 : case IN_SERVER : player == null");
                             return false;
                         }
-                        ServerInfo server = player.getServer().getInfo();
+                        ServerInfo server = player.getCurrentServer().get().getServerInfo();
                         if (server == null) {
                             if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$3 : case IN_SERVER : server == null");
                             return false;

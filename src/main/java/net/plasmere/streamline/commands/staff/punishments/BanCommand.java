@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff.punishments;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -101,7 +101,7 @@ public class BanCommand extends Command implements TabExecutor {
                                             sender,
                                             MessageConfUtils.banEmbed(),TextUtils.replaceAllPlayerDiscord(
                                             MessageConfUtils.banBTempDiscord(), user)
-                                                    .replace("%punisher%", sender.getName())
+                                                    .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                     .replace("%reason%", reason)
                                                     .replace("%date%", new Date(Long.parseLong(till)).toString())
                                             ,
@@ -112,7 +112,7 @@ public class BanCommand extends Command implements TabExecutor {
                     }
 
                     MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempStaff(), user)
-                            .replace("%punisher%", sender.getName())
+                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                             .replace("%reason%", reason)
                             .replace("%date%", new Date(Long.parseLong(till)).toString())
                     );
@@ -159,7 +159,7 @@ public class BanCommand extends Command implements TabExecutor {
                                         sender,
                                         MessageConfUtils.banEmbed(), TextUtils.replaceAllPlayerDiscord(
                                         MessageConfUtils.banBPermDiscord(), user)
-                                                .replace("%punisher%", sender.getName())
+                                                .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                 .replace("%reason%", reason)
                                         ,
                                         DiscordBotConfUtils.textChannelBans
@@ -169,7 +169,7 @@ public class BanCommand extends Command implements TabExecutor {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBPermStaff(), user)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                         .replace("%reason%", reason)
                 );
             } else if (args[0].equals("temp")) {
@@ -235,7 +235,7 @@ public class BanCommand extends Command implements TabExecutor {
                                     sender,
                                     MessageConfUtils.banEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.banBTempDiscord(), user)
-                                            .replace("%punisher%", sender.getName())
+                                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                             .replace("%reason%", reason)
                                             .replace("%date%", new Date(Long.parseLong(till)).toString())
                                     ,
@@ -245,7 +245,7 @@ public class BanCommand extends Command implements TabExecutor {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempStaff(), user)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                         .replace("%reason%", reason)
                         .replace("%date%", new Date(Long.parseLong(till)).toString())
                 );
@@ -268,7 +268,7 @@ public class BanCommand extends Command implements TabExecutor {
                                     sender,
                                     MessageConfUtils.banEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.banUnDiscord(), user)
-                                            .replace("%punisher%", sender.getName())
+                                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                     ,
                                     DiscordBotConfUtils.textChannelBans
                             )
@@ -276,7 +276,7 @@ public class BanCommand extends Command implements TabExecutor {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banUnStaff(), user)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                 );
             } else if (args[0].equals("check")) {
                 String reason = bans.getString(otherUUID + ".reason");
@@ -295,13 +295,13 @@ public class BanCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(final CommandSource sender, final String[] args) {
-        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> banned = new ArrayList<>();
 
         for (Player player : players){
             if (sender instanceof Player) if (player.equals(sender)) continue;
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         for (String uuid : bans.getKeys()) {

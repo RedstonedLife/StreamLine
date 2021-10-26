@@ -23,11 +23,11 @@ public class PlayerSet {
     }
 
     public void addPlayer(Player player) {
-        sorted.put(player.getName(), player);
+        sorted.put(PlayerUtils.getSourceName(player), player);
     }
 
     public void remPlayer(Player player){
-        sorted.remove(player.getName());
+        sorted.remove(PlayerUtils.getSourceName(player));
     }
 
     public Player[] getAll() {

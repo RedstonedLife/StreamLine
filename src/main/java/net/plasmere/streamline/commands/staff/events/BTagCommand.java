@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff.events;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -38,7 +38,7 @@ public class BTagCommand extends Command implements TabExecutor {
                 return;
             }
 
-            if (! stat.latestName.equals(sender.getName())) {
+            if (! stat.latestName.equals(PlayerUtils.getSourceName(sender))) {
                 if (! sender.hasPermission(CommandsConfUtils.comBBTagOPerm)) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                     return;
@@ -89,7 +89,7 @@ public class BTagCommand extends Command implements TabExecutor {
     public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
         if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) return new ArrayList<>();
 
-        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> secondTab = new ArrayList<>();
 
@@ -99,7 +99,7 @@ public class BTagCommand extends Command implements TabExecutor {
 
         if (args.length == 1) {
             for (Player player : players) {
-                strPlayers.add(player.getName());
+                strPlayers.add(PlayerUtils.getSourceName(player));
             }
 
             return TextUtils.getCompletion(strPlayers, args[0]);

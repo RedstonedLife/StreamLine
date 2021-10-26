@@ -1,5 +1,9 @@
 package net.plasmere.streamline.utils;
 
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
@@ -648,8 +652,13 @@ public class PlayerUtils {
         return stat;
     }
 
+    public static String getSourceName(CommandSource source){
+        if (source instanceof Player) return ((Player) source).getUsername();
+        else return ConfigUtils.consoleName;
+    }
+
     public static SavablePlayer createPlayerStat(CommandSource sender) {
-        return createPlayerStat(sender.getName());
+        return createPlayerStat(getSourceName(sender));
     }
 
     public static SavablePlayer createPlayerStat(String name) {
@@ -709,7 +718,7 @@ public class PlayerUtils {
     }
 
     public static SavableUser getSUFromNameOrUUID(String string) {
-        if (string.equals("%")) return getConsoleStat(StreamLine.getInstance().getProxy().getConsole());
+        if (string.equals("%")) return getConsoleStat(StreamLine.getInstance().getProxy().getConsoleCommandSource());
 
         if (string.contains("-")) return getSavableUserByUUID(string);
         else return getSavableUser(string);
@@ -718,7 +727,7 @@ public class PlayerUtils {
     // ConsolePlayers.
 
     public static ConsolePlayer getConsoleStat() {
-        return getConsoleStat(StreamLine.getInstance().getProxy().getConsole());
+        return getConsoleStat(StreamLine.getInstance().getProxy().getConsoleCommandSource());
     }
 
     public static ConsolePlayer getConsoleStat(CommandSource sender) {
@@ -824,15 +833,15 @@ public class PlayerUtils {
     }
 
     public static SavableUser getOrCreateSavableUser(CommandSource sender){
-        if (sender.equals(StreamLine.getInstance().getProxy().getConsole())) {
+        if (sender.equals(StreamLine.getInstance().getProxy().getConsoleCommandSource())) {
             return getConsoleStat();
         }
 
-        return getOrCreateSavableUser(sender.getName());
+        return getOrCreateSavableUser(getSourceName(sender));
     }
 
     public static SavableUser getOrCreateSavableUser(Player sender){
-        return getOrCreateSavableUser(sender.getName());
+        return getOrCreateSavableUser(PlayerUtils.getSourceName(sender));
     }
 
     public static SavableUser getOrCreateSUByUUID(String uuid){
@@ -848,7 +857,7 @@ public class PlayerUtils {
     }
 
     public static SavableUser getOrCreateSUFromNameOrUUID(String string) {
-        if (string.equals("%")) return getConsoleStat(StreamLine.getInstance().getProxy().getConsole());
+        if (string.equals("%")) return getConsoleStat(StreamLine.getInstance().getProxy().getConsoleCommandSource());
 
         if (string.contains("-")) return getOrCreateSUByUUID(string);
         else return getOrCreateSavableUser(string);
@@ -857,7 +866,7 @@ public class PlayerUtils {
     // Players.
 
     public static SavablePlayer getOrCreatePlayerStat(Player pp){
-        SavablePlayer player = getOrGetPlayerStat(pp.getName());
+        SavablePlayer player = getOrGetPlayerStat(pp.getUsername());
 
         if (player == null) {
             player = createPlayerStat(pp);
@@ -869,7 +878,7 @@ public class PlayerUtils {
     }
 
     public static SavablePlayer getOrCreatePlayerStat(CommandSource sender){
-        SavablePlayer player = getOrGetPlayerStat(sender.getName());
+        SavablePlayer player = getOrGetPlayerStat(getSourceName(sender));
 
         if (player == null) {
             player = createPlayerStat(sender);
@@ -937,14 +946,14 @@ public class PlayerUtils {
     }
 
     public static SavableUser getOrGetSavableUser(CommandSource sender) {
-        if (sender.getName().equals(StreamLine.getInstance().getProxy().getConsole().getName())) return getConsoleStat();
+        if (getSourceName(sender).equals(getSourceName(StreamLine.getInstance().getProxy().getConsoleCommandSource()))) return getConsoleStat();
 
         try {
-            if (exists(sender.getName())){
-                if (isInStatsList(sender.getName())) {
-                    return getPlayerStat(sender.getName());
+            if (exists(getSourceName(sender))){
+                if (isInStatsList(getSourceName(sender))) {
+                    return getPlayerStat(getSourceName(sender));
                 } else {
-                    return new SavablePlayer(UUIDUtils.getCachedUUID(sender.getName()), false);
+                    return new SavablePlayer(UUIDUtils.getCachedUUID(getSourceName(sender)), false);
                 }
             } else return null;
         } catch (Exception e) {
@@ -1168,7 +1177,7 @@ public class PlayerUtils {
 
             MessagingUtils.sendBMessagenging(to.findSender(), from, to, message, MessageConfUtils.replyTo());
 
-            for (Player player : StreamLine.getInstance().getProxy().getPlayers()) {
+            for (Player player : StreamLine.getInstance().getProxy().getAllPlayers()) {
                 SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(player);
 
                 if (! player.hasPermission(ConfigUtils.messViewPerm) || ! p.sspy) continue;
@@ -1181,7 +1190,7 @@ public class PlayerUtils {
 
             MessagingUtils.sendBMessagenging(to.findSender(), from, to, message, MessageConfUtils.messageTo());
 
-            for (Player player : StreamLine.getInstance().getProxy().getPlayers()) {
+            for (Player player : StreamLine.getInstance().getProxy().getAllPlayers()) {
                 SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(player);
 
                 if (! player.hasPermission(ConfigUtils.messViewPerm) || ! p.sspy) continue;
@@ -1230,7 +1239,7 @@ public class PlayerUtils {
 
             MessagingUtils.sendBMessagenging(to.findSender(), from, to, message, MessageConfUtils.replyTo());
 
-            for (Player player : StreamLine.getInstance().getProxy().getPlayers()) {
+            for (Player player : StreamLine.getInstance().getProxy().getAllPlayers()) {
                 SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(player);
 
                 if (! player.hasPermission(ConfigUtils.messViewPerm) || ! p.sspy) continue;
@@ -1243,7 +1252,7 @@ public class PlayerUtils {
 
             MessagingUtils.sendBMessagenging(to.findSender(), from, to, message, MessageConfUtils.messageTo());
 
-            for (Player player : StreamLine.getInstance().getProxy().getPlayers()) {
+            for (Player player : StreamLine.getInstance().getProxy().getAllPlayers()) {
                 SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(player);
 
                 if (! player.hasPermission(ConfigUtils.messViewPerm) || ! p.sspy) continue;
@@ -1619,14 +1628,14 @@ public class PlayerUtils {
         }
 
         if (stat instanceof ConsolePlayer) {
-            return ChatColor.stripColor(ConfigUtils.consoleDisplayName);
+            return TextUtils.stripColor(ConfigUtils.consoleDisplayName);
         }
 
         if (stat instanceof SavablePlayer) {
             if (stat.online) {
-                return ChatColor.stripColor(MessageConfUtils.onlineD().replace("%player_formatted%", stat.displayName));
+                return TextUtils.stripColor(MessageConfUtils.onlineD().replace("%player_formatted%", stat.displayName));
             } else {
-                return ChatColor.stripColor(MessageConfUtils.offlineD().replace("%player_formatted%", stat.displayName));
+                return TextUtils.stripColor(MessageConfUtils.offlineD().replace("%player_formatted%", stat.displayName));
             }
         }
 
@@ -1644,9 +1653,9 @@ public class PlayerUtils {
 
         if (stat instanceof SavablePlayer) {
             if (stat.online) {
-                return ChatColor.stripColor(MessageConfUtils.onlineD().replace("%player_display%", stat.latestName));
+                return TextUtils.stripColor(MessageConfUtils.onlineD().replace("%player_display%", stat.latestName));
             } else {
-                return ChatColor.stripColor(MessageConfUtils.offlineD().replace("%player_display%", stat.latestName));
+                return TextUtils.stripColor(MessageConfUtils.offlineD().replace("%player_display%", stat.latestName));
             }
         }
 
@@ -1659,11 +1668,11 @@ public class PlayerUtils {
         }
 
         if (stat instanceof ConsolePlayer) {
-            return ChatColor.stripColor(ConfigUtils.consoleDisplayName);
+            return TextUtils.stripColor(ConfigUtils.consoleDisplayName);
         }
 
         if (stat instanceof SavablePlayer) {
-            return ChatColor.stripColor(stat.displayName);
+            return TextUtils.stripColor(stat.displayName);
         }
 
         return MessageConfUtils.nullD();
@@ -1675,11 +1684,11 @@ public class PlayerUtils {
         }
 
         if (stat instanceof ConsolePlayer) {
-            return ChatColor.stripColor(ConfigUtils.consoleName);
+            return TextUtils.stripColor(ConfigUtils.consoleName);
         }
 
         if (stat instanceof SavablePlayer) {
-            return ChatColor.stripColor(stat.latestName);
+            return TextUtils.stripColor(stat.latestName);
         }
 
         return MessageConfUtils.nullD();
@@ -1692,15 +1701,15 @@ public class PlayerUtils {
     ---------------------------- */
 
     public static Collection<Player> getOnlinePPlayers(){
-        return StreamLine.getInstance().getProxy().getPlayers();
+        return StreamLine.getInstance().getProxy().getAllPlayers();
     }
 
     public static List<Player> getServeredPPlayers(String serverName) {
         List<Player> players = new ArrayList<>();
 
         for (Player player : getOnlinePPlayers()) {
-            if (player.getServer() == null) continue;
-            if (player.getServer().getInfo().getName().equals(serverName)) players.add(player);
+            if (player.getCurrentServer().isEmpty()) continue;
+            if (player.getCurrentServer().get().getServerInfo().getName().equals(serverName)) players.add(player);
         }
 
         return players;
@@ -1720,15 +1729,15 @@ public class PlayerUtils {
         return getPlayerNamesFrom(getOnlinePPlayers());
     }
 
-    public static List<String> getPlayerNamesByServer(Server server) {
-        return getPlayerNamesFrom(getServeredPPlayers(server.getInfo().getName()));
+    public static List<String> getPlayerNamesByServer(ServerConnection server) {
+        return getPlayerNamesFrom(getServeredPPlayers(server.getServerInfo().getName()));
     }
 
     public static List<String> getPlayerNamesFrom(Iterable<Player> players) {
         List<String> names = new ArrayList<>();
 
         for (Player player : players) {
-            names.add(player.getName());
+            names.add(player.getUsername());
         }
 
         return names;
@@ -1740,10 +1749,10 @@ public class PlayerUtils {
 
     public static Player getPPlayer(String string){
         if (string.contains("-")) {
-            return StreamLine.getInstance().getProxy().getPlayer(UUID.fromString(string));
+            return StreamLine.getInstance().getProxy().getPlayer(UUID.fromString(string)).get();
         }
 
-        return StreamLine.getInstance().getProxy().getPlayer(string);
+        return StreamLine.getInstance().getProxy().getPlayer(string).get();
     }
 
     public static Player getPPlayerByUUID(String uuid){
@@ -1769,7 +1778,7 @@ public class PlayerUtils {
 
     public static boolean isInOnlineList(String name){
         for (Player player : getOnlinePPlayers()) {
-            if (player.getName().equals(name)) return true;
+            if (player.getUsername().equals(name)) return true;
         }
 
         return false;
@@ -1814,7 +1823,7 @@ public class PlayerUtils {
             Script script = ScriptsHandler.getScript(ConfigUtils.boostsUponBoostRun);
             if (script == null) continue;
 
-            script.execute(StreamLine.getInstance().getProxy().getConsole(), user);
+            script.execute(StreamLine.getInstance().getProxy().getConsoleCommandSource(), user);
         }
     }
 
@@ -1845,7 +1854,7 @@ public class PlayerUtils {
     }
 
     public static void kick(Player player) {
-        if (player != null) player.disconnect();
+        if (player != null) player.disconnect(Component.empty());
     }
 
     public static void kick(Player player, String message) {
@@ -1886,16 +1895,16 @@ public class PlayerUtils {
 
     public static boolean isInNetworkByName(String name) {
         for (Player player : getOnlinePPlayers()) {
-            if (player.getName().equals(name)) return true;
+            if (player.getUsername().equals(name)) return true;
         }
 
         return false;
     }
 
     public static String getServer(CommandSource sender) {
-        for (String server : StreamLine.getInstance().getProxy().getServers().keySet()) {
-            for (Player player : getServeredPPlayers(server)) {
-                if (sender.getName().equals(player.getName())) return server;
+        for (RegisteredServer server : StreamLine.getInstance().getProxy().getAllServers()) {
+            for (Player player : getServeredPPlayers(server.getServerInfo().getName())) {
+                if (getSourceName(sender).equals(player.getUsername())) return server.getServerInfo().getName();
             }
         }
 

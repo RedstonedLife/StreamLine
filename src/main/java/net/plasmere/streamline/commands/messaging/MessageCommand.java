@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.messaging;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -26,7 +26,7 @@ public class MessageCommand extends Command implements TabExecutor {
     public void execute(CommandSource sender, String[] args) {
         String thing = "";
 
-        if (PlayerUtils.isInOnlineList(sender.getName())) thing = sender.getName();
+        if (PlayerUtils.isInOnlineList(PlayerUtils.getSourceName(sender))) thing = PlayerUtils.getSourceName(sender);
         else thing = "%";
 
         SavableUser stat = PlayerUtils.getOrGetSavableUser(thing);
@@ -63,7 +63,7 @@ public class MessageCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
-        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> ignored = new ArrayList<>();
 

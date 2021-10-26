@@ -3,8 +3,8 @@ package net.plasmere.streamline.utils;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.Server;
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -13,8 +13,6 @@ import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.objects.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.md_5.bungee.api.CommandSource;
-import net.md_5.bungee.api.ProxyServer;
 import com.velocitypowered.api.proxy.Player;
 import net.dv8tion.jda.api.JDA;
 import net.plasmere.streamline.objects.chats.Chat;
@@ -94,7 +92,7 @@ public class MessagingUtils {
         Set<Player> toPlayers = new HashSet<>();
 
         for (Player player : PlayerUtils.getOnlinePPlayers()) {
-            if (player.getName().equals(sender.getName())) continue;
+            if (PlayerUtils.getSourceName(player).equals(PlayerUtils.getSourceName(sender))) continue;
             if (player.hasPermission(toPermission)) toPlayers.add(player);
         }
 
@@ -104,7 +102,7 @@ public class MessagingUtils {
     }
 
     public static void sendBungeeMessage(BungeeMassMessage message){
-        Collection<Player> staff = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> staff = StreamLine.getInstance().getProxy().getAllPlayers();
         Set<Player> people = new HashSet<>(staff);
         List<Player> ps = new ArrayList<>(people);
 
@@ -127,57 +125,57 @@ public class MessagingUtils {
         SavableUser player = PlayerUtils.getOrCreateSavableUser(message.sender);
 
         message.to.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee((message.title + message.transition + message.message)
-                        .replace("%sender_display%", message.sender.getName()), message.sender)
+                        .replace("%sender_display%", PlayerUtils.getSourceName(message.sender)), message.sender)
                         .replace("%version%", player.latestVersion)
                 )
         );
     }
 
-    public static void sendServerMessageFromUser(Player player, Server serverFrom, String serverTo, String format, String message) {
+    public static void sendServerMessageFromUser(Player player, ServerConnection serverFrom, String serverTo, String format, String message) {
         for (Player p : PlayerUtils.getServeredPPlayers(serverTo)) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
-                    .replace("%server%", serverFrom.getInfo().getName())
+                    .replace("%server%", serverFrom.getServerInfo().getName())
             ));
         }
     }
 
-    public static void sendRoomMessageFromUser(Player player, Server serverFrom, Chat room, String format, String message) {
+    public static void sendRoomMessageFromUser(Player player, ServerConnection serverFrom, Chat room, String format, String message) {
         for (SavablePlayer p : PlayerUtils.getRoomedPlayers(room)) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
-                    .replace("%server%", serverFrom.getInfo().getName())
+                    .replace("%server%", serverFrom.getServerInfo().getName())
                     .replace("%room%", room.identifier)
             ));
         }
     }
 
-    public static void sendServerMessageOtherServerSelf(Player player, Server serverFrom, String format, String message) {
+    public static void sendServerMessageOtherServerSelf(Player player, ServerConnection serverFrom, String format, String message) {
         player.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                 .replace("%sender_servered%", getPlayerDisplayName(player))
                 .replace("%message%", message)
-                .replace("%server%", serverFrom.getInfo().getName())
+                .replace("%server%", serverFrom.getServerInfo().getName())
         ));
     }
 
-    public static void sendGlobalMessageFromUser(Player player, Server server, String format, String message) {
+    public static void sendGlobalMessageFromUser(Player player, ServerConnection server, String format, String message) {
         for (Player p : PlayerUtils.getOnlinePPlayers()) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
-                    .replace("%server%", server.getInfo().getName())
+                    .replace("%server%", server.getServerInfo().getName())
             ));
         }
     }
 
-    public static void sendPermissionedGlobalMessageFromUser(String permission, Player player, Server server, String format, String message) {
+    public static void sendPermissionedGlobalMessageFromUser(String permission, Player player, ServerConnection server, String format, String message) {
         for (Player p : PlayerUtils.getPermissionedOnlineProxied(permission)) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
-                    .replace("%server%", server.getInfo().getName())
+                    .replace("%server%", server.getServerInfo().getName())
             ));
         }
     }
@@ -226,11 +224,11 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendMessageFromUserToConsole(Player player, Server server, String format, String message) {
+    public static void sendMessageFromUserToConsole(Player player, ServerConnection server, String format, String message) {
         PlayerUtils.getConsoleStat().sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                 .replace("%sender_servered%", getPlayerDisplayName(player))
                 .replace("%message%", message)
-                .replace("%server%", server.getInfo().getName())
+                .replace("%server%", server.getServerInfo().getName())
         ));
     }
 
@@ -242,7 +240,7 @@ public class MessagingUtils {
     }
 
     public static void sendDisplayPluginMessageRequest(Player player) {
-        if (PlayerUtils.getServeredPPlayers(player.getServer().getInfo().getName()).size() <= 0) return;
+        if (PlayerUtils.getServeredPPlayers(player.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("request.displayname"); // the channel could be whatever you want
@@ -250,11 +248,11 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        player.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        player.getCurrentServer().get().getServerInfo().sendData(StreamLine.customChannel, out.toByteArray());
     }
 
     public static void sendTeleportPluginMessageRequest(Player sender, Player to) {
-        if (PlayerUtils.getServeredPPlayers(sender.getServer().getInfo().getName()).size() <= 0) return;
+        if (PlayerUtils.getServeredPPlayers(sender.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("teleport"); // the channel could be whatever you want
@@ -264,11 +262,11 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        sender.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        sender.getCurrentServer().get().getServerInfo().sendData(StreamLine.customChannel, out.toByteArray());
     }
 
     public static void sendTagPingPluginMessageRequest(Player toPing) {
-        if (PlayerUtils.getServeredPPlayers(toPing.getServer().getInfo().getName()).size() <= 0) return;
+        if (PlayerUtils.getServeredPPlayers(toPing.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("tag-ping"); // the channel could be whatever you want
@@ -277,11 +275,11 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        toPing.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        toPing.getCurrentServer().get().getServerInfo().(StreamLine.customChannel, out.toByteArray());
     }
 
     public static void sendGuildConfigPluginMessage(Player to, Guild guild) {
-        if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("config.guild");
@@ -303,11 +301,11 @@ public class MessagingUtils {
             e.printStackTrace();
         }
 
-        to.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        to.sendPluginMessage(StreamLine., out.toByteArray());
     }
 
-    public static void sendStaffMessageFromDiscord(String sender, String from, String msg){
-        Collection<Player> staff = StreamLine.getInstance().getProxy().getPlayers();
+    public static void sendStaffMessageFromDiscord(String discordSenderId, String from, String msg){
+        Collection<Player> staff = StreamLine.getInstance().getProxy().getAllPlayers();
         Set<Player> staffs = new HashSet<>(staff);
 
         for (Player player : staff){
@@ -321,8 +319,8 @@ public class MessagingUtils {
         }
 
         for (Player player : staffs) {
-            player.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(
-                                    TextUtils.replaceAllSenderBungee(MessageConfUtils.bungeeStaffChatMessage(), sender), sender)
+            player.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungeeFromDiscord(
+                                    TextUtils.replaceAllSenderBungeeFromDiscord(MessageConfUtils.bungeeStaffChatMessage(), discordSenderId), discordSenderId)
                             .replace("%from_type%", from)
                             .replace("%from%", from)
                             .replace("%message%", msg)
@@ -335,7 +333,7 @@ public class MessagingUtils {
     }
 
     public static void sendStaffMessageReport(String sender, boolean fromBungee, String report){
-        Collection<Player> staff = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> staff = StreamLine.getInstance().getProxy().getAllPlayers();
         Set<Player> staffs = new HashSet<>(staff);
 
         for (Player player : staff){
@@ -451,7 +449,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
                                             .build()
                             ).queue();
                 } else {
@@ -491,7 +489,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
                                             .build()
                             ).queue();
                 } else {
@@ -528,7 +526,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
                                             .build()
                             ).queue();
                 } else {
@@ -734,7 +732,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(msg, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
                                             .build()
                             ).queue();
                 } else {
@@ -902,7 +900,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(msg, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
                                             .build()
                             ).queue();
                 } else {
@@ -1090,9 +1088,9 @@ public class MessagingUtils {
     }
 
     public static void sendBUserAsMessage(CommandSource as, String msg){
-        ServerInfo serverInfo = StreamLine.getInstance().getProxy().getPlayer(as.getName()).getServer().getInfo();
+        ServerConnection server = StreamLine.getInstance().getProxy().getPlayer(PlayerUtils.getSourceName(as)).get().getCurrentServer().get();
 
-        Collection<Player> players = serverInfo.getPlayers();
+        Collection<Player> players = server.getServer().getPlayersConnected();
 
         if (as instanceof Player) {
             for (Player player : players) {
@@ -1108,13 +1106,13 @@ public class MessagingUtils {
     }
 
     public static void sendBBroadcast(CommandSource sender, String msg){
-        for (Player player : ProxyServer.getInstance().getPlayers()) {
+        for (Player player : PlayerUtils.getOnlinePPlayers()) {
             player.sendMessage(TextUtils.codedText(msg));
         }
     }
 
     public static void sendBCLHBroadcast(CommandSource sender, String msg, String hoverPrefix){
-        for (Player player : ProxyServer.getInstance().getPlayers()) {
+        for (Player player : PlayerUtils.getOnlinePPlayers()) {
             player.sendMessage(TextUtils.clhText(msg, hoverPrefix));
         }
     }
@@ -1138,12 +1136,12 @@ public class MessagingUtils {
 
     public static void logWarning(String msg){
         if (msg == null) msg = "";
-        StreamLine.getInstance().getLogger().warning(TextUtils.newLined(msg));
+        StreamLine.getInstance().getLogger().warn(TextUtils.newLined(msg));
     }
 
     public static void logSevere(String msg){
         if (msg == null) msg = "";
-        StreamLine.getInstance().getLogger().severe(TextUtils.newLined(msg));
+        StreamLine.getInstance().getLogger().error(TextUtils.newLined(msg));
     }
 
     public static String mods(Party party){
@@ -1369,9 +1367,9 @@ public class MessagingUtils {
 
     public static void sendInfo(CommandSource sender) {
         sender.sendMessage(TextUtils.codedText(MessageConfUtils.info()
-                .replace("%name%", StreamLine.getInstance().getDescription().getName())
-                .replace("%version%", StreamLine.getInstance().getDescription().getVersion())
-                .replace("%author%", StreamLine.getInstance().getDescription().getAuthor())
+                .replace("%name%", StreamLine.getInstance().getDescription().getName().get())
+                .replace("%version%", StreamLine.getInstance().getDescription().getVersion().get())
+                .replace("%author%", StreamLine.getInstance().getDescription().getAuthors().get(0))
                 .replace("%num_commands%", String.valueOf(PluginUtils.commandsAmount))
                 .replace("%num_listeners%", String.valueOf(PluginUtils.listenerAmount))
                 .replace("%num_events%", String.valueOf(EventsHandler.getEvents().size()))

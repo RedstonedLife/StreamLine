@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands.staff.punishments;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -60,7 +60,7 @@ public class KickCommand extends Command implements TabExecutor {
                                     sender,
                                     MessageConfUtils.kickEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.kickDiscord(), other)
-                                            .replace("%punisher%", sender.getName())
+                                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                             .replace("%reason%", reason)
                                     ,
                                     DiscordBotConfUtils.textChannelKicks
@@ -71,7 +71,7 @@ public class KickCommand extends Command implements TabExecutor {
 
             MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm,
                     TextUtils.replaceAllPlayerBungee(MessageConfUtils.kickStaff(), other)
-                    .replace("%punisher%", sender.getName())
+                    .replace("%punisher%", PlayerUtils.getSourceName(sender))
                     .replace("%reason%", reason)
             );
         }
@@ -79,12 +79,12 @@ public class KickCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(final CommandSource sender, final String[] args) {
-        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (Player player : players){
             if (sender instanceof Player) if (player.equals(sender)) continue;
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         if (args.length == 1) {

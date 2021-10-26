@@ -7,7 +7,7 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.JDAPingerUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 

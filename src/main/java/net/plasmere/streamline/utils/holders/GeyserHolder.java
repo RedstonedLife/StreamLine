@@ -56,7 +56,7 @@ public class GeyserHolder {
         checkConnector();
 
         for (GeyserSession session : connector.getPlayers()) {
-            if (session.getName().equals(player.getName())) return true;
+            if (session.getName().equals(PlayerUtils.getSourceName(player))) return true;
         }
 
         return false;

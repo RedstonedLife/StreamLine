@@ -4,7 +4,7 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -19,7 +19,7 @@ public class StaffOnlineCommand extends Command {
     }
 
     public void execute(CommandSource sender, String[] args){
-        Collection<Player> staffs = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> staffs = StreamLine.getInstance().getProxy().getAllPlayers();
         Set<Player> lstaffs = new HashSet<>(staffs);
 
         for (Player player : staffs){
@@ -46,11 +46,11 @@ public class StaffOnlineCommand extends Command {
         for (Player player : lstaffs){
             if (i < lstaffs.size())
                 staff.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.sOnlineBungeeBulkNotLast(), player)
-                        .replace("%server%", player.getServer().getInfo().getName().toLowerCase())
+                        .replace("%server%", player.getCurrentServer().get().getServerInfo().getName().toLowerCase())
                 );
             else
                 staff.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.sOnlineBungeeBulkLast(), player)
-                        .replace("%server%", player.getServer().getInfo().getName().toLowerCase())
+                        .replace("%server%", player.getCurrentServer().get().getServerInfo().getName().toLowerCase())
                 );
             i++;
         }

@@ -5,7 +5,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 
 public class ReportCommand extends Command {
@@ -25,12 +25,12 @@ public class ReportCommand extends Command {
 
         if (ConfigUtils.moduleReportsMToDiscord)
             if (ConfigUtils.moduleDEnabled)
-                MessagingUtils.sendDiscordReportMessage(sender.getName(), true, msg);
+                MessagingUtils.sendDiscordReportMessage(PlayerUtils.getSourceName(sender), true, msg);
         if (ConfigUtils.moduleReportsSendChat)
-            MessagingUtils.sendStaffMessageReport(sender.getName(), true, msg);
+            MessagingUtils.sendStaffMessageReport(PlayerUtils.getSourceName(sender), true, msg);
         if (ConfigUtils.moduleReportsBConfirmation)
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bConfirmReportMessage()
-                    .replace("%reporter%", sender.getName())
+                    .replace("%reporter%", PlayerUtils.getSourceName(sender))
                     .replace("%report%", TextUtils.normalize(args))
             );
     }

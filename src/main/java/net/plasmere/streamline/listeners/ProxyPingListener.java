@@ -42,7 +42,7 @@ public class ProxyPingListener implements Listener {
                     , ConfigUtils.linkPre));
 
 //            if (ConfigUtils.debug) MessagingUtils.logInfo(TextUtils.codedString(StreamLine.getInstance().getCurrentMOTD()
-//                    .replace("%online%", String.valueOf(StreamLine.getInstance().getProxy().getPlayers().size()))
+//                    .replace("%online%", String.valueOf(StreamLine.getInstance().getProxy().getAllPlayers().size()))
 //                    .replace("%max%", String.valueOf(StreamLine.getInstance().getProxy().getConfig().getPlayerLimit()))));
         }
 

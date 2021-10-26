@@ -163,14 +163,14 @@ public class ChatListener {
 
                                 String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
-                                MessagingUtils.sendGlobalMessageFromUser(sender, sender.getServer(), format, withEmotes);
+                                MessagingUtils.sendGlobalMessageFromUser(sender, sender.getCurrentServer().get(), format, withEmotes);
 
                                 for (Player player : msgWithTagged.value) {
                                     MessagingUtils.sendTagPingPluginMessageRequest(player);
                                 }
 
                                 if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
-                                    MessagingUtils.sendMessageFromUserToConsole(sender, sender.getServer(), format, withEmotes);
+                                    MessagingUtils.sendMessageFromUserToConsole(sender, sender.getCurrentServer().get(), format, withEmotes);
                                 }
 
                                 if (ConfigUtils.moduleDPC) {
@@ -183,14 +183,14 @@ public class ChatListener {
 
                                     String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
-                                    MessagingUtils.sendPermissionedGlobalMessageFromUser(chat.identifier, sender, sender.getServer(), format, withEmotes);
+                                    MessagingUtils.sendPermissionedGlobalMessageFromUser(chat.identifier, sender, sender.getCurrentServer().get(), format, withEmotes);
 
                                     for (Player player : msgWithTagged.value) {
                                         MessagingUtils.sendTagPingPluginMessageRequest(player);
                                     }
 
                                     if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
-                                        MessagingUtils.sendMessageFromUserToConsole(sender, sender.getServer(), format, withEmotes);
+                                        MessagingUtils.sendMessageFromUserToConsole(sender, sender.getCurrentServer().get(), format, withEmotes);
                                     }
 
                                     if (ConfigUtils.moduleDPC) {
@@ -207,14 +207,14 @@ public class ChatListener {
 
                                 String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
-                                MessagingUtils.sendPermissionedGlobalMessageFromUser(ch.identifier, sender, sender.getServer(), format, withEmotes);
+                                MessagingUtils.sendPermissionedGlobalMessageFromUser(ch.identifier, sender, sender.getCurrentServer().get(), format, withEmotes);
 
                                 for (Player player : msgWithTagged.value) {
                                     MessagingUtils.sendTagPingPluginMessageRequest(player);
                                 }
 
                                 if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
-                                    MessagingUtils.sendMessageFromUserToConsole(sender, sender.getServer(), format, withEmotes);
+                                    MessagingUtils.sendMessageFromUserToConsole(sender, sender.getCurrentServer().get(), format, withEmotes);
                                 }
 
                                 if (ConfigUtils.moduleDPC) {
@@ -233,11 +233,11 @@ public class ChatListener {
                         String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
                         if (stat.chatIdentifier.equals("network")) {
-                            MessagingUtils.sendServerMessageFromUser(sender, sender.getServer(), sender.getServer().getInfo().getName(), format, withEmotes);
+                            MessagingUtils.sendServerMessageFromUser(sender, sender.getCurrentServer().get(), sender.getCurrentServer().get().getServerInfo().getName(), format, withEmotes);
                         } else {
-                            MessagingUtils.sendServerMessageFromUser(sender, sender.getServer(), stat.chatIdentifier, format, withEmotes);
-                            if (! stat.chatIdentifier.equals(sender.getServer().getInfo().getName())) {
-                                MessagingUtils.sendServerMessageOtherServerSelf(sender, sender.getServer(), format, withEmotes);
+                            MessagingUtils.sendServerMessageFromUser(sender, sender.getCurrentServer().get(), stat.chatIdentifier, format, withEmotes);
+                            if (! stat.chatIdentifier.equals(sender.getCurrentServer().get().getServerInfo().getName())) {
+                                MessagingUtils.sendServerMessageOtherServerSelf(sender, sender.getCurrentServer().get(), format, withEmotes);
                             }
                         }
 
@@ -246,11 +246,11 @@ public class ChatListener {
                         }
 
                         if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
-                            MessagingUtils.sendMessageFromUserToConsole(sender, sender.getServer(), format, withEmotes);
+                            MessagingUtils.sendMessageFromUserToConsole(sender, sender.getCurrentServer().get(), format, withEmotes);
                         }
 
                         if (ConfigUtils.moduleDPC) {
-                            StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("local"), sender.getServer().getInfo().getName(), msg);
+                            StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("local"), sender.getCurrentServer().get().getServerInfo().getName(), msg);
                         }
 
                         e.setCancelled(true);
@@ -274,18 +274,18 @@ public class ChatListener {
 
                         String withEmotes = TextUtils.getMessageWithEmotes(sender, msgWithTagged.key);
 
-                        MessagingUtils.sendRoomMessageFromUser(sender, sender.getServer(), chat, format, withEmotes);
+                        MessagingUtils.sendRoomMessageFromUser(sender, sender.getCurrentServer().get(), chat, format, withEmotes);
 
                         for (Player player : msgWithTagged.value) {
                             MessagingUtils.sendTagPingPluginMessageRequest(player);
                         }
 
                         if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
-                            MessagingUtils.sendMessageFromUserToConsole(sender, sender.getServer(), format, withEmotes);
+                            MessagingUtils.sendMessageFromUserToConsole(sender, sender.getCurrentServer().get(), format, withEmotes);
                         }
 
                         if (ConfigUtils.moduleDPC) {
-                            StreamLine.discordData.sendDiscordChannel(sender, stat.chatChannel, sender.getServer().getInfo().getName(), msg);
+                            StreamLine.discordData.sendDiscordChannel(sender, stat.chatChannel, sender.getCurrentServer().get().getServerInfo().getName(), msg);
                         }
 
                         e.setCancelled(true);
@@ -306,34 +306,34 @@ public class ChatListener {
                     }
 
                     if (stat.chatChannel.equals(ChatsHandler.getChannel("local"))) {
-                        if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("local"), sender.getServer().getInfo().getName())) {
-                            TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("local"), sender.getServer().getInfo().getName());
+                        if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("local"), sender.getCurrentServer().get().getServerInfo().getName())) {
+                            TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("local"), sender.getCurrentServer().get().getServerInfo().getName());
                             for (Long l : ifHas.keySet()) {
                                 if (!ifHas.get(l)) continue;
 
-                                StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("local"), sender.getServer().getInfo().getName(), msg);
+                                StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("local"), sender.getCurrentServer().get().getServerInfo().getName(), msg);
                             }
                         }
                     }
 
 //                    if (stat.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
 //                        if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("guild"), )) {
-//                            TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("guild"), sender.getServer().getInfo().getName());
+//                            TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("guild"), sender.getCurrentServer().get().getServerInfo().getName());
 //                            for (Long l : ifHas.keySet()) {
 //                                if (!ifHas.get(l)) continue;
 //
-//                                StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("guild"), sender.getServer().getInfo().getName(), msg);
+//                                StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("guild"), sender.getCurrentServer().get().getServerInfo().getName(), msg);
 //                            }
 //                        }
 //                    }
 //
 //                    if (stat.chatChannel.equals(ChatsHandler.getChannel("party"))) {
-//                        if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("party"), sender.getServer().getInfo().getName())) {
-//                            TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("party"), sender.getServer().getInfo().getName());
+//                        if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("party"), sender.getCurrentServer().get().getServerInfo().getName())) {
+//                            TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("party"), sender.getCurrentServer().get().getServerInfo().getName());
 //                            for (Long l : ifHas.keySet()) {
 //                                if (!ifHas.get(l)) continue;
 //
-//                                StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("party"), sender.getServer().getInfo().getName(), msg);
+//                                StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("party"), sender.getCurrentServer().get().getServerInfo().getName(), msg);
 //                            }
 //                        }
 //                    }
@@ -342,7 +342,7 @@ public class ChatListener {
         }
 
         if (ConfigUtils.chatHistoryEnabled) {
-            PlayerUtils.addLineToChatHistory(stat.uuid, sender.getServer().getInfo().getName(), msg);
+            PlayerUtils.addLineToChatHistory(stat.uuid, sender.getCurrentServer().get().getServerInfo().getName(), msg);
         }
 
         if (ConfigUtils.events) {

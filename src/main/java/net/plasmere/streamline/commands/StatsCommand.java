@@ -1,6 +1,6 @@
 package net.plasmere.streamline.commands;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -24,7 +24,7 @@ public class StatsCommand extends Command implements TabExecutor {
     public void execute(CommandSource sender, String[] args) {
         if (sender instanceof Player) {
             if (args.length <= 0 || ! CommandsConfUtils.comBStatsOthers) {
-                PlayerUtils.info(sender, PlayerUtils.getOrGetPlayerStat(sender.getName()));
+                PlayerUtils.info(sender, PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender)));
             } else {
                 SavableUser person = PlayerUtils.getOrGetSavableUser(args[0]);
 
@@ -53,11 +53,11 @@ public class StatsCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
-        Collection<Player> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (Player player : players){
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         strPlayers.add("%");

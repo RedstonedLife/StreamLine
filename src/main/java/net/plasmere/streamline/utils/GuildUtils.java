@@ -542,7 +542,7 @@ public class GuildUtils {
                 if (pl instanceof SavablePlayer) {
                     SavablePlayer p = (SavablePlayer) pl;
                     if (! p.online) continue;
-                    p.player.connect(((SavablePlayer) sender).getServer().getInfo());
+                    p.player.connect(((SavablePlayer) sender).getServer().getServerInfo());
                 }
             }
         }
@@ -1226,7 +1226,7 @@ public class GuildUtils {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.leaderUUID, msg);
             }
 
-            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
@@ -1283,7 +1283,7 @@ public class GuildUtils {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.leaderUUID, msg);
             }
 
-            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
@@ -1318,7 +1318,7 @@ public class GuildUtils {
 //                }
 //            }
 
-            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
@@ -1351,7 +1351,7 @@ public class GuildUtils {
 //                }
 //            }
 
-            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);

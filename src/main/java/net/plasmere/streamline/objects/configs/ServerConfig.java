@@ -185,21 +185,21 @@ public class ServerConfig {
         String thing = getMaxPlayers();
 
         if (thing.equals("exact")) {
-            return StreamLine.getInstance().getProxy().getPlayers().size();
+            return StreamLine.getInstance().getProxy().getAllPlayers().size();
         }
 
         if (thing.startsWith("exact")) {
             int i = Integer.parseInt(thing.substring("exact+".length()));
             if (thing.startsWith("exact+")){
                 try {
-                    return StreamLine.getInstance().getProxy().getPlayers().size() + i;
+                    return StreamLine.getInstance().getProxy().getAllPlayers().size() + i;
                 } catch (Exception e) {
                     e.printStackTrace();
                     return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
                 }
             } else if (thing.startsWith("exact-")) {
                 try {
-                    return StreamLine.getInstance().getProxy().getPlayers().size() - i;
+                    return StreamLine.getInstance().getProxy().getAllPlayers().size() - i;
                 } catch (Exception e) {
                     e.printStackTrace();
                     return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
@@ -255,21 +255,21 @@ public class ServerConfig {
         String thing = getOnlinePlayers();
 
         if (thing.equals("exact")) {
-            return StreamLine.getInstance().getProxy().getPlayers().size();
+            return StreamLine.getInstance().getProxy().getAllPlayers().size();
         }
 
         if (thing.startsWith("exact")) {
             int i = Integer.parseInt(thing.substring("exactx".length()));
             if (thing.startsWith("exact+")){
                 try {
-                    return StreamLine.getInstance().getProxy().getPlayers().size() + i;
+                    return StreamLine.getInstance().getProxy().getAllPlayers().size() + i;
                 } catch (Exception e) {
                     e.printStackTrace();
                     return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
                 }
             } else if (thing.startsWith("exact-")) {
                 try {
-                    return StreamLine.getInstance().getProxy().getPlayers().size() - i;
+                    return StreamLine.getInstance().getProxy().getAllPlayers().size() - i;
                 } catch (Exception e) {
                     e.printStackTrace();
                     return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
@@ -280,24 +280,24 @@ public class ServerConfig {
 
         if (thing.startsWith("+")) {
             try {
-                return StreamLine.getInstance().getProxy().getPlayers().size() + Integer.parseInt(thing.substring(1));
+                return StreamLine.getInstance().getProxy().getAllPlayers().size() + Integer.parseInt(thing.substring(1));
             } catch (Exception e) {
                 e.printStackTrace();
-                return StreamLine.getInstance().getProxy().getPlayers().size();
+                return StreamLine.getInstance().getProxy().getAllPlayers().size();
             }
         } else if (thing.startsWith("-")) {
             try {
-                return StreamLine.getInstance().getProxy().getPlayers().size() - Integer.parseInt(thing.substring(1));
+                return StreamLine.getInstance().getProxy().getAllPlayers().size() - Integer.parseInt(thing.substring(1));
             } catch (Exception e) {
                 e.printStackTrace();
-                return StreamLine.getInstance().getProxy().getPlayers().size();
+                return StreamLine.getInstance().getProxy().getAllPlayers().size();
             }
         } else {
             try {
                 return Integer.parseInt(thing);
             } catch (Exception e) {
                 e.printStackTrace();
-                return StreamLine.getInstance().getProxy().getPlayers().size();
+                return StreamLine.getInstance().getProxy().getAllPlayers().size();
             }
         }
     }

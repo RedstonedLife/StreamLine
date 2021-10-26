@@ -1,8 +1,18 @@
 package net.plasmere.streamline.utils;
 
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.dv8tion.jda.api.entities.User;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.lists.SingleSet;
@@ -10,9 +20,7 @@ import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import org.apache.commons.collections4.list.TreeList;
 
-import java.util.List;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -54,69 +62,69 @@ public class TextUtils {
         }
     }
 
-    public static TextComponent hexedText(String text) {
-        text = codedString(text);
-
-        try {
-            //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
-
-            Pattern pattern = Pattern.compile("([<][#][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][>])+", Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(stripColor(text));
-            String found = "";
-
-            String textLeft = text;
-
-            TextComponent tc = new TextComponent();
-
-            int i = 0;
-            boolean find = false;
-            TreeMap<Integer, String> founds = new TreeMap<>();
-
-            while (matcher.find()) {
-                find = true;
-                found = matcher.group(0);
-
-                founds.put(i, found);
-
-                i ++;
-            }
-            if (! find) return new TextComponent(text);
-
-            TreeMap<Integer, String> pieces = new TreeMap<>();
-            int iter = 0;
-            int from = 0;
-            for (Integer key : founds.keySet()) {
-                int at = text.indexOf(founds.get(key), from);
-                pieces.put(iter, text.substring(at));
-                from = at;
-                iter ++;
-            }
-
-            tc = new TextComponent(pieces.get(0));
-
-            for (Integer key : pieces.keySet()) {
-                if (key == 0) continue;
-
-                String p = pieces.get(key);
-                String f = p.substring(0, "<#123456>".length());
-
-                String colorHex = f.substring(1, f.indexOf('>'));
-                String after = p.substring(f.length());
-
-//                tc.addExtra(new LiteralText(after).styled(style -> style.withColor(Integer.decode(colorHex))));
-                BaseComponent[] bc = new ComponentBuilder(after).color(ChatColor.of(Color.decode(colorHex))).create();
-
-                for (BaseComponent b : bc) {
-                    tc.addExtra(b);
-                }
-            }
-
-            return tc;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new TextComponent(text);
-        }
-    }
+//    public static TextComponent hexedText(String text) {
+//        text = codedString(text);
+//
+//        try {
+//            //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
+//
+//            Pattern pattern = Pattern.compile("([<][#][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][>])+", Pattern.CASE_INSENSITIVE);
+//            Matcher matcher = pattern.matcher(stripColor(text));
+//            String found = "";
+//
+//            String textLeft = text;
+//
+//            TextComponent tc = new TextComponent();
+//
+//            int i = 0;
+//            boolean find = false;
+//            TreeMap<Integer, String> founds = new TreeMap<>();
+//
+//            while (matcher.find()) {
+//                find = true;
+//                found = matcher.group(0);
+//
+//                founds.put(i, found);
+//
+//                i ++;
+//            }
+//            if (! find) return new TextComponent(text);
+//
+//            TreeMap<Integer, String> pieces = new TreeMap<>();
+//            int iter = 0;
+//            int from = 0;
+//            for (Integer key : founds.keySet()) {
+//                int at = text.indexOf(founds.get(key), from);
+//                pieces.put(iter, text.substring(at));
+//                from = at;
+//                iter ++;
+//            }
+//
+//            tc = new TextComponent(pieces.get(0));
+//
+//            for (Integer key : pieces.keySet()) {
+//                if (key == 0) continue;
+//
+//                String p = pieces.get(key);
+//                String f = p.substring(0, "<#123456>".length());
+//
+//                String colorHex = f.substring(1, f.indexOf('>'));
+//                String after = p.substring(f.length());
+//
+////                tc.addExtra(new LiteralText(after).styled(style -> style.withColor(Integer.decode(colorHex))));
+//                BaseComponent[] bc = new ComponentBuilder(after).color(ChatColor.of(Color.decode(colorHex))).create();
+//
+//                for (BaseComponent b : bc) {
+//                    tc.addExtra(b);
+//                }
+//            }
+//
+//            return tc;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new TextComponent(text);
+//        }
+//    }
 
     public static TreeMap<Integer, String> comparedConfiguration(Configuration configuration){
         TreeMap<Integer, String> thing = new TreeMap<>();
@@ -154,7 +162,9 @@ public class TextUtils {
     }
 
     public static String stripColor(String string){
-        return ChatColor.stripColor(string).replaceAll("([<][#][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][>])+", "");
+        return PlainComponentSerializer.plain().serialize(LegacyComponentSerializer.legacySection().deserialize(string))
+                .replaceAll("([<][#][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][>])+", "")
+                .replaceAll("[&][1-9a-f]", "");
     }
 
 //    public static TextComponent hexedText(String text){
@@ -224,10 +234,8 @@ public class TextUtils {
         return normalize(argsSet);
     }
 
-    public static Component codedText(String text) {
+    public static TextComponent codedText(String text) {
         text = newLined(text);
-
-        Component.empty().content(newLined(text));
 
         try {
             //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
@@ -242,13 +250,13 @@ public class TextUtils {
                 return makeLinked(text, foundUrl);
             }
         } catch (Exception e) {
-            return hexedText(text);
+            return Component.empty().content(newLined(text));
         }
-        return hexedText(text);
+        return Component.empty().content(newLined(text));
     }
 
     public static TextComponent clhText(String text, String hoverPrefix){
-        text = ChatColor.translateAlternateColorCodes('&', newLined(text));
+        TextComponent t = LegacyComponentSerializer.legacy('&').deserialize(text);
 
         try {
             //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
@@ -264,13 +272,13 @@ public class TextUtils {
                 return makeHoverable(tc, hoverPrefix + foundUrl);
             }
         } catch (Exception e) {
-            return hexedText(text);
+            return t;
         }
-        return hexedText(text);
+        return t;
     }
 
     public static String codedString(String text){
-        return ChatColor.translateAlternateColorCodes('&', formatted(newLined(text)));
+        return LegacyComponentSerializer.legacy('&').deserialize(text).toString();
     }
 
     public static String formatted(String string) {
@@ -299,23 +307,15 @@ public class TextUtils {
     }
 
     public static TextComponent makeLinked(String text, String url){
-        TextComponent tc = hexedText(text);
-        ClickEvent ce = new ClickEvent(ClickEvent.Action.OPEN_URL, url);
-        tc.setClickEvent(ce);
-        return tc;
+        return codedText(text).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, url));
     }
 
     public static TextComponent makeHoverable(String text, String hoverText){
-        TextComponent tc = new TextComponent(text);
-        HoverEvent he = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(codedString(hoverText)));
-        tc.setHoverEvent(he);
-        return tc;
+        return codedText(text).hoverEvent(HoverEvent.showText(codedText(hoverText)));
     }
 
     public static TextComponent makeHoverable(TextComponent textComponent, String hoverText){
-        HoverEvent he = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(codedString(hoverText)));
-        textComponent.setHoverEvent(he);
-        return textComponent;
+        return textComponent.hoverEvent(HoverEvent.showText(codedText(hoverText)));
     }
 
     public static TreeMap<Integer, Player> getTaggedPlayersIndexed(String[] args, String serverName) {
@@ -324,7 +324,7 @@ public class TextUtils {
 
         for (Player player : players) {
             for (int i = 0; i < args.length; i ++) {
-                if (player.getName().equals(args[i])) {
+                if (player.getUsername().equals(args[i])) {
                     toIndex.put(i, player);
                 }
             }
@@ -338,7 +338,10 @@ public class TextUtils {
 
         String chatColor = isolateChatColor(format);
 
-        TreeMap<Integer, Player> indexed = getTaggedPlayersIndexed(args, sender.getServer().getInfo().getName());
+        Optional<ServerConnection> serverConnection = sender.getCurrentServer();
+        if (! serverConnection.isPresent()) return new SingleSet<>("", new ArrayList<>());
+
+        TreeMap<Integer, Player> indexed = getTaggedPlayersIndexed(args, serverConnection.get().getServerInfo().getName());
 
         for (Integer index : indexed.keySet()) {
             args[index] = StreamLine.serverConfig.getTagsPrefix() + args[index];
@@ -892,13 +895,13 @@ public class TextUtils {
         return replaceAllSenderDiscord(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
-    public static Collection<ServerInfo> getServers() {
-        return StreamLine.getInstance().getProxy().getServers().values();
+    public static Collection<RegisteredServer> getServers() {
+        return StreamLine.getInstance().getProxy().getAllServers();
     }
 
     public static boolean equalsAnyServer(String servername) {
-        for (ServerInfo serverInfo : getServers()) {
-            if (serverInfo.getName().equals(servername)) return true;
+        for (RegisteredServer server : getServers()) {
+            if (server.getServerInfo().getName().equals(servername)) return true;
         }
 
         return false;

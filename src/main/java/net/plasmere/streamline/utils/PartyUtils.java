@@ -455,7 +455,7 @@ public class PartyUtils {
                 MessagingUtils.sendBPUserMessage(party, p, m, warpMembers);
             }
 
-            m.connect(sender.getServer().getInfo());
+            m.connect(sender.getCurrentServer().get().getServerInfo());
         }
 
         if (ConfigUtils.moduleDEnabled) {
@@ -1294,7 +1294,7 @@ public class PartyUtils {
             }
 
 //            if (ConfigUtils.partyConsoleChats) {
-//                MessagingUtils.sendBPUserMessage(party, p, StreamLine.getInstance().getProxy().getConsole(), chatConsole
+//                MessagingUtils.sendBPUserMessage(party, p, StreamLine.getInstance().getProxy().getConsoleCommandSource(), chatConsole
 //                        .replace("%sender_display%", PlayerUtils.getOffOnDisplayBungee(sender))
 //                        .replace("%message%", msg)
 //                );
@@ -1326,7 +1326,7 @@ public class PartyUtils {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.leaderUUID, msg);
             }
 
-            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
                 if (! pp.hasPermission(ConfigUtils.partyView)) continue;
 
                 SavablePlayer them = PlayerUtils.getPlayerStat(pp);
@@ -1362,7 +1362,7 @@ public class PartyUtils {
             }
 
 //            if (ConfigUtils.partyConsoleChats) {
-//                MessagingUtils.sendBPUserMessage(party, p, StreamLine.getInstance().getProxy().getConsole(), chatConsole
+//                MessagingUtils.sendBPUserMessage(party, p, StreamLine.getInstance().getProxy().getConsoleCommandSource(), chatConsole
 //                        .replace("%sender_display%", PlayerUtils.getOffOnDisplayBungee(sender))
 //                        .replace("%message%", msg)
 //                );
@@ -1405,7 +1405,7 @@ public class PartyUtils {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.leaderUUID, msg);
             }
 
-            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
                 if (! pp.hasPermission(ConfigUtils.partyView)) continue;
 
                 SavablePlayer them = PlayerUtils.getPlayerStat(pp);
@@ -1442,7 +1442,7 @@ public class PartyUtils {
 //                }
 //            }
 
-            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
@@ -1475,7 +1475,7 @@ public class PartyUtils {
 //                }
 //            }
 
-            for (Player pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);

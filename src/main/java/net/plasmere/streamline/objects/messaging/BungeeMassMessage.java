@@ -1,6 +1,6 @@
 package net.plasmere.streamline.objects.messaging;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 
 public class BungeeMassMessage {
     public CommandSource sender;

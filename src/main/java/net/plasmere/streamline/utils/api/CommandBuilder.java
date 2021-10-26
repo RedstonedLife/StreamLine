@@ -1,6 +1,6 @@
 package net.plasmere.streamline.utils.api;
 
-import net.md_5.bungee.api.CommandSource;
+import com.velocitypowered.api.command.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
