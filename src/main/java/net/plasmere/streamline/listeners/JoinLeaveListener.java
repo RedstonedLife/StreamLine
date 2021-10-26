@@ -1,10 +1,17 @@
 package net.plasmere.streamline.listeners;
 
+import com.velocitypowered.api.event.PostOrder;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.DisconnectEvent;
+import com.velocitypowered.api.event.connection.PostLoginEvent;
+import com.velocitypowered.api.event.connection.PreLoginEvent;
+import com.velocitypowered.api.event.player.KickedFromServerEvent;
+import com.velocitypowered.api.event.player.ServerPostConnectEvent;
+import com.velocitypowered.api.event.player.ServerPreConnectEvent;
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.Node;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.Server;
-import net.md_5.bungee.api.event.*;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -22,43 +29,38 @@ import net.plasmere.streamline.objects.Guild;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.event.EventPriority;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
 
 import java.util.*;
 
-public class JoinLeaveListener implements Listener {
+public class JoinLeaveListener {
     private final GeyserFile file = StreamLine.geyserHolder.file;
     private final GeyserHolder holder = StreamLine.geyserHolder;
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @Subscribe(order = PostOrder.FIRST)
     public void preJoin(PreLoginEvent ev) {
-        if (ev.isCancelled()) return;
+        if (ev.getResult().isAllowed()) return;
 
-        String ip = ev.getConnection().getSocketAddress().toString().replace("/", "").split(":")[0];
+        String ip = ev.getConnection().getRemoteAddress().toString().replace("/", "").split(":")[0];
 
-        String uuid = UUIDUtils.fetch(ev.getConnection().getName());
+        String uuid = UUIDUtils.fetch(ev.getUsername());
 
         if (ConfigUtils.punBans) {
             String reason = PlayerUtils.checkIfBanned(uuid);
             if (reason != null) {
-                ev.setCancelReason(TextUtils.codedText(reason));
-                ev.setCancelled(true);
+                ev.setResult(PreLoginEvent.PreLoginComponentResult.denied(TextUtils.codedText(reason)));
             }
         }
 
         if (ConfigUtils.punIPBans) {
             String reason = PlayerUtils.checkIfIPBanned(ip);
             if (reason != null) {
-                ev.setCancelReason(TextUtils.codedText(reason));
-                ev.setCancelled(true);
+                ev.setResult(PreLoginEvent.PreLoginComponentResult.denied(TextUtils.codedText(reason)));
             }
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @Subscribe(order = PostOrder.FIRST)
     public void onJoin(PostLoginEvent ev) {
         Player player = ev.getPlayer();
 
@@ -215,93 +217,93 @@ public class JoinLeaveListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onServer(ServerConnectEvent ev){
+    @Subscribe(order = PostOrder.FIRST)
+    public void onServer(ServerPreConnectEvent ev){
         Player player = ev.getPlayer();
 
         boolean hasServer = false;
-        ServerInfo server = ev.getTarget();
+        ServerInfo server = ev.getResult().getServer().get().getServerInfo();
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
-        if (ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY) && ConfigUtils.redirectEnabled && StreamLine.lpHolder.enabled) {
-            for (ServerInfo s : StreamLine.getInstance().getProxy().getServers().values()) {
-                String sv = s.getName();
-                if (player.hasPermission(ConfigUtils.redirectPre + sv)) {
-                    Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(PlayerUtils.getSourceName(player))).getPrimaryGroup());
-
-                    if (group == null) {
-                        hasServer = true;
-                        server = s;
-                        break;
-                    }
-
-                    Collection<Node> nodes = group.getNodes();
-
-                    for (Node node : nodes) {
-                        if (node.getKey().equals(ConfigUtils.redirectPre + sv)) {
-                            hasServer = true;
-                            server = s;
-                            break;
-                        }
-                    }
-
-                    Collection<Node> nods = Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(PlayerUtils.getSourceName(player))).getNodes();
-
-                    for (Node node : nods) {
-                        if (node.getKey().equals(ConfigUtils.redirectPre + sv)) {
-                            hasServer = true;
-                            server = s;
-                            break;
-                        }
-                    }
-
-                    if (hasServer){
-                        break;
-                    }
-                }
-            }
-
-            if (! hasServer) {
-                server = StreamLine.getInstance().getProxy().getServerInfo(ConfigUtils.redirectMain);
-            }
-        }
-
-        if (StreamLine.viaHolder.enabled && ConfigUtils.redirectEnabled) {
-            if (! hasServer && ConfigUtils.lobbies && ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY)){
-                for (SingleSet<String, String> set : StreamLine.lobbies.getServerInfo().values()) {
-                    String sName = set.key;
-
-                    int version = StreamLine.viaHolder.via.getPlayerVersion(player.getUniqueId());
-
-                    if (! StreamLine.lobbies.isAllowed(version, sName)) continue;
-
-                    server = StreamLine.getInstance().getProxy().getServerInfo(sName);
-
-                    ev.setTarget(server);
-
-                    return;
-                }
-            }
-
-            if (! ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY)) {
-                if (ConfigUtils.vbEnabled) {
-                    if (!player.hasPermission(ConfigUtils.vbOverridePerm)) {
-                        int version = StreamLine.viaHolder.via.getPlayerVersion(player.getUniqueId());
-
-                        if (!StreamLine.serverPermissions.isAllowed(version, server.getName())) {
-                            MessagingUtils.sendBUserMessage(ev.getPlayer(), MessageConfUtils.vbBlocked());
-                            ev.setCancelled(true);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (server == null) return;
-
-        ev.setTarget(server);
+//        if (ev.().equals(ServerConnectEvent.Reason.JOIN_PROXY) && ConfigUtils.redirectEnabled && StreamLine.lpHolder.enabled) {
+//            for (ServerInfo s : StreamLine.getInstance().getProxy().getAllServers().values()) {
+//                String sv = s.getName();
+//                if (player.hasPermission(ConfigUtils.redirectPre + sv)) {
+//                    Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(PlayerUtils.getSourceName(player))).getPrimaryGroup());
+//
+//                    if (group == null) {
+//                        hasServer = true;
+//                        server = s;
+//                        break;
+//                    }
+//
+//                    Collection<Node> nodes = group.getNodes();
+//
+//                    for (Node node : nodes) {
+//                        if (node.getKey().equals(ConfigUtils.redirectPre + sv)) {
+//                            hasServer = true;
+//                            server = s;
+//                            break;
+//                        }
+//                    }
+//
+//                    Collection<Node> nods = Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(PlayerUtils.getSourceName(player))).getNodes();
+//
+//                    for (Node node : nods) {
+//                        if (node.getKey().equals(ConfigUtils.redirectPre + sv)) {
+//                            hasServer = true;
+//                            server = s;
+//                            break;
+//                        }
+//                    }
+//
+//                    if (hasServer){
+//                        break;
+//                    }
+//                }
+//            }
+//
+//            if (! hasServer) {
+//                server = StreamLine.getInstance().getProxy().getServerInfo(ConfigUtils.redirectMain);
+//            }
+//        }
+//
+//        if (StreamLine.viaHolder.enabled && ConfigUtils.redirectEnabled) {
+//            if (! hasServer && ConfigUtils.lobbies && ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY)){
+//                for (SingleSet<String, String> set : StreamLine.lobbies.getServerInfo().values()) {
+//                    String sName = set.key;
+//
+//                    int version = StreamLine.viaHolder.via.getPlayerVersion(player.getUniqueId());
+//
+//                    if (! StreamLine.lobbies.isAllowed(version, sName)) continue;
+//
+//                    server = StreamLine.getInstance().getProxy().getServerInfo(sName);
+//
+//                    ev.setTarget(server);
+//
+//                    return;
+//                }
+//            }
+//
+//            if (! ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY)) {
+//                if (ConfigUtils.vbEnabled) {
+//                    if (!player.hasPermission(ConfigUtils.vbOverridePerm)) {
+//                        int version = StreamLine.viaHolder.via.getPlayerVersion(player.getUniqueId());
+//
+//                        if (!StreamLine.serverPermissions.isAllowed(version, server.getName())) {
+//                            MessagingUtils.sendBUserMessage(ev.getPlayer(), MessageConfUtils.vbBlocked());
+//                            ev.setResult(PlayerChatEvent.ChatResult.denied());
+//                            return;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (server == null) return;
+//
+//        ev.setTarget(server);
 
         try {
             SingleSet<Boolean, ChatChannel> get1 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("local"), stat.getServer().getServerInfo().getName());
@@ -330,35 +332,35 @@ public class JoinLeaveListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onServerDiscon(ServerDisconnectEvent ev) {
-        Player player = ev.getPlayer();
+//    @Subscribe(order = PostOrder.FIRST)
+//    public void onServerDiscon( ev) {
+//        Player player = ev.getPlayer();
+//
+//        ServerInfo server = ev.getTarget();
+//
+//        if (player.getCurrentServer().get() == null) return;
+//
+//        if (PluginUtils.isLocked()) return;
+//
+//        SavablePlayer stat = PlayerUtils.addPlayerStat(player);
+//
+//        try {
+//            if (ConfigUtils.events) {
+//                for (Event event : EventsHandler.getEvents()) {
+//                    if (!EventsHandler.checkTags(event, stat)) continue;
+//
+//                    if (!(EventsHandler.checkEventConditions(event, stat, Condition.LEAVE, server.getName()))) continue;
+//
+//                    EventsHandler.runEvent(event, stat);
+//                }
+//            }
+//        } catch (Exception e) {
+//            // do nothing
+//        }
+//    }
 
-        ServerInfo server = ev.getTarget();
-
-        if (player.getCurrentServer().get() == null) return;
-
-        if (PluginUtils.isLocked()) return;
-
-        SavablePlayer stat = PlayerUtils.addPlayerStat(player);
-
-        try {
-            if (ConfigUtils.events) {
-                for (Event event : EventsHandler.getEvents()) {
-                    if (!EventsHandler.checkTags(event, stat)) continue;
-
-                    if (!(EventsHandler.checkEventConditions(event, stat, Condition.LEAVE, server.getName()))) continue;
-
-                    EventsHandler.runEvent(event, stat);
-                }
-            }
-        } catch (Exception e) {
-            // do nothing
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onLeave(PlayerDisconnectEvent ev) {
+    @Subscribe(order = PostOrder.FIRST)
+    public void onLeave(DisconnectEvent ev) {
         Player player = ev.getPlayer();
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
@@ -535,9 +537,9 @@ public class JoinLeaveListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onKick(ServerKickEvent ev){
-        if (ev.isCancelled()) return;
+    @Subscribe(order = PostOrder.FIRST)
+    public void onKick(KickedFromServerEvent ev){
+        if (ev.getResult().isAllowed()) return;
 
         try {
             if (StreamLine.getInstance().getProxy().getPlayer(ev.getPlayer().getUniqueId()) == null) return;
@@ -551,14 +553,14 @@ public class JoinLeaveListener implements Listener {
 
         if (StreamLine.viaHolder.enabled) {
             if (ConfigUtils.lobbies) {
-                ServerConnectionserver = PlayerUtils.getPPlayer(stat.uuid).getServer();
+                ServerConnection server = PlayerUtils.getPPlayer(stat.uuid).getCurrentServer().get();
 
                 if (server == null) {
                     MessagingUtils.logSevere("Server for " + PlayerUtils.getSourceName(player) + " returned null during kick!");
                     return;
                 }
 
-                TreeMap<Integer, SingleSet<String, String>> servers = StreamLine.lobbies.getServerInfo();
+                TreeMap<Integer, SingleSet<String, String>> servers = StreamLine.lobbies.getInfo();
 
                 String[] lobbies = new String[servers.size()];
 
@@ -581,8 +583,7 @@ public class JoinLeaveListener implements Listener {
                     if (conn == null) return;
                 }
 
-                ev.setCancelServer(StreamLine.getInstance().getProxy().getServerInfo(lobbies[conn.value]));
-                ev.setCancelled(true);
+                ev.setResult(KickedFromServerEvent.RedirectPlayer.create(StreamLine.getInstance().getProxy().getServer(lobbies[conn.value]).get()));
 
                 PlayerUtils.addOneToConn(stat);
             }

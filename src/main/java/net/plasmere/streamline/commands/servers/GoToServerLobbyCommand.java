@@ -76,7 +76,7 @@ public class GoToServerLobbyCommand extends Command implements TabExecutor {
     {
         TreeSet<String> servers = new TreeSet<>();
 
-        for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getServers().values()) {
+        for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getAllServers().values()) {
             if (! serverInfo.canAccess(sender)) continue;
 
             servers.add(serverInfo.getName().toLowerCase(Locale.ROOT));

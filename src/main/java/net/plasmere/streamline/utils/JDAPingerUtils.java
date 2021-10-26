@@ -47,12 +47,12 @@ public class JDAPingerUtils {
             text.append((data[0] == null) ? "not reachable" : "reachable");
         } catch (Exception e) {
             text.append("not reachable");
-            plugin.getLogger().info("[ " + server.getName().toLowerCase() + " : " + i + " / " + plugin.getProxy().getServers().size() + " ] " + server.getAddress().getAddress() + ":" +
+            plugin.getLogger().info("[ " + server.getName().toLowerCase() + " : " + i + " / " + plugin.getProxy().getAllServers().size() + " ] " + server.getAddress().getAddress() + ":" +
                     server.getAddress().getPort() + " (" + server.getPlayers().size() + ") : " + text + " --> \n" + e.getMessage());
             return text.toString();
         }
 
-        plugin.getLogger().info("[ " + server.getName().toLowerCase() + " : " + i + " / " + plugin.getProxy().getServers().size() + " ] " + server.getAddress().getAddress() + ":" +
+        plugin.getLogger().info("[ " + server.getName().toLowerCase() + " : " + i + " / " + plugin.getProxy().getAllServers().size() + " ] " + server.getAddress().getAddress() + ":" +
                 server.getAddress().getPort() + " (" + server.getPlayers().size() + ") : " + text);
 
         return text.toString();
@@ -61,9 +61,9 @@ public class JDAPingerUtils {
     public static void sendMessage(TextChannel channel){
         StreamLine plugin = StreamLine.getInstance();
 
-        eb.setDescription("Pinging " + plugin.getProxy().getServers().size() + " servers... Give me about " + plugin.getProxy().getServers().size() * 1.2 + " seconds...");
+        eb.setDescription("Pinging " + plugin.getProxy().getAllServers().size() + " servers... Give me about " + plugin.getProxy().getAllServers().size() * 1.2 + " seconds...");
         channel.sendMessage(eb.build()).queue();
-        Map<String, ServerInfo> serversM = plugin.getProxy().getServers();
+        Map<String, ServerInfo> serversM = plugin.getProxy().getAllServers();
         Set<ServerInfo> servers = new HashSet<>(serversM.values());
         try {
             i = 0;
@@ -72,14 +72,14 @@ public class JDAPingerUtils {
             int it = 0;
             for (ServerInfo server : servers){
                 it++;
-                plugin.getLogger().info("DEBUG : [ " + server.getName().toLowerCase() + " : " + it + " / " + plugin.getProxy().getServers().size() + " ] " + server.getAddress().getAddress() + ":" +
+                plugin.getLogger().info("DEBUG : [ " + server.getName().toLowerCase() + " : " + it + " / " + plugin.getProxy().getAllServers().size() + " ] " + server.getAddress().getAddress() + ":" +
                         server.getAddress().getPort() + " (" + server.getPlayers().size() + ")");
             }
 
             for (ServerInfo server : servers) {
                 String msg = "";
                 try {
-                    msg = server.getName().toUpperCase() + " " + i + " / " + plugin.getProxy().getServers().size() + " [ " + server.getAddress().getAddress() + server.getAddress().getPort() + " ] (Online: " +
+                    msg = server.getName().toUpperCase() + " " + i + " / " + plugin.getProxy().getAllServers().size() + " [ " + server.getAddress().getAddress() + server.getAddress().getPort() + " ] (Online: " +
                             server.getPlayers().size() + ") : " + doPing(server, plugin) + "\n";
                     channel.sendMessage(eb.setDescription(msg).build()).queue();
                 } catch (Exception e){

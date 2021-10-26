@@ -201,7 +201,7 @@ public class ServerPermissions {
     public List<String> getServers(){
         List<String> defaults = new ArrayList<>();
 
-        for (ServerInfo si : StreamLine.getInstance().getProxy().getServers().values()){
+        for (ServerInfo si : StreamLine.getInstance().getProxy().getAllServers().values()){
             defaults.add(si.getName() + "=" + defaultAllow);
         }
 

@@ -1,5 +1,8 @@
 package net.plasmere.streamline.commands.staff;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.velocitypowered.api.command.CommandSource;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
@@ -15,7 +18,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeleteStatCommand extends Command implements TabExecutor {
+public class DeleteStatCommand {
     public DeleteStatCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
@@ -72,5 +75,10 @@ public class DeleteStatCommand extends Command implements TabExecutor {
         }
 
         return new ArrayList<>();
+    }
+
+    @Override
+    public int run(CommandContext commandContext) throws CommandSyntaxException {
+        return 0;
     }
 }

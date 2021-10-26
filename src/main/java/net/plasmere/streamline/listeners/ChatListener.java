@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 public class ChatListener {
-    private final String prefix = ConfigUtils.moduleStaffChatPrefix;
+    private static String prefix = ConfigUtils.moduleStaffChatPrefix;
 
     @Subscribe(order = PostOrder.FIRST)
     public static void onPlayerChat(PlayerChatEvent e){
@@ -70,7 +70,7 @@ public class ChatListener {
         if (TextUtils.isCommand(msg)) return;
 
         if (ConfigUtils.punMutes && stat.muted) {
-            e.setCancelled(true);
+            e.setResult(PlayerChatEvent.ChatResult.denied());
             if (stat.mutedTill != null) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedTemp().replace("%date%", stat.mutedTill.toString()));
             } else {
@@ -85,7 +85,7 @@ public class ChatListener {
                     return;
                 }
 
-                e.setCancelled(true);
+                e.setResult(PlayerChatEvent.ChatResult.denied());
                 MessagingUtils.sendStaffMessage(sender, MessageConfUtils.bungeeStaffChatFrom(), msg);
                 if (ConfigUtils.moduleDEnabled) {
                     if (ConfigUtils.moduleStaffChatMToDiscord) {
@@ -105,11 +105,11 @@ public class ChatListener {
 
                     if (msg.equals(prefix)) {
                         sender.sendMessage(TextUtils.codedText(MessageConfUtils.staffChatJustPrefix().replace("%newline%", "\n")));
-                        e.setCancelled(true);
+                        e.setResult(PlayerChatEvent.ChatResult.denied());
                         return;
                     }
 
-                    e.setCancelled(true);
+                    e.setResult(PlayerChatEvent.ChatResult.denied());
                     MessagingUtils.sendStaffMessage(sender, MessageConfUtils.bungeeStaffChatFrom(), msg.substring(prefix.length()));
                     if (ConfigUtils.moduleDEnabled) {
                         if (ConfigUtils.moduleStaffChatMToDiscord) {
@@ -223,7 +223,7 @@ public class ChatListener {
                             }
                         }
 
-                        e.setCancelled(true);
+                        e.setResult(PlayerChatEvent.ChatResult.denied());
                     } else if (stat.chatChannel.equals(ChatsHandler.getChannel("local"))) {
                         Chat chat = ChatsHandler.getChat(ChatsHandler.getChannel("local"), stat.chatIdentifier);
 
@@ -253,18 +253,18 @@ public class ChatListener {
                             StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("local"), sender.getCurrentServer().get().getServerInfo().getName(), msg);
                         }
 
-                        e.setCancelled(true);
+                        e.setResult(PlayerChatEvent.ChatResult.denied());
                     }
                 }
 
                 if (stat.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
                     GuildUtils.sendChat(stat, GuildUtils.getOrGetGuild(stat.chatIdentifier), msg);
 
-                    e.setCancelled(true);
+                    e.setResult(PlayerChatEvent.ChatResult.denied());
                 } else if (stat.chatChannel.equals(ChatsHandler.getChannel("party"))) {
                     PartyUtils.sendChat(stat, PartyUtils.getParty(stat.chatIdentifier), msg);
 
-                    e.setCancelled(true);
+                    e.setResult(PlayerChatEvent.ChatResult.denied());
                 } else if (! stat.chatChannel.equals(ChatsHandler.getChannel("local")) && ! stat.chatChannel.equals(ChatsHandler.getChannel("global"))) {
                     Chat chat = ChatsHandler.getChat(stat.chatChannel, stat.chatIdentifier);
 
@@ -288,7 +288,7 @@ public class ChatListener {
                             StreamLine.discordData.sendDiscordChannel(sender, stat.chatChannel, sender.getCurrentServer().get().getServerInfo().getName(), msg);
                         }
 
-                        e.setCancelled(true);
+                        e.setResult(PlayerChatEvent.ChatResult.denied());
                     }
                 }
 

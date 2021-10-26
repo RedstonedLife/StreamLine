@@ -248,7 +248,7 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        player.getCurrentServer().get().getServerInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        player.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
     }
 
     public static void sendTeleportPluginMessageRequest(Player sender, Player to) {
@@ -262,7 +262,7 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        sender.getCurrentServer().get().getServerInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        sender.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
     }
 
     public static void sendTagPingPluginMessageRequest(Player toPing) {
@@ -275,7 +275,7 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        toPing.getCurrentServer().get().getServerInfo().(StreamLine.customChannel, out.toByteArray());
+        toPing.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
     }
 
     public static void sendGuildConfigPluginMessage(Player to, Guild guild) {
@@ -301,7 +301,7 @@ public class MessagingUtils {
             e.printStackTrace();
         }
 
-        to.sendPluginMessage(StreamLine., out.toByteArray());
+        to.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
     }
 
     public static void sendStaffMessageFromDiscord(String discordSenderId, String from, String msg){

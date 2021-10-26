@@ -1,5 +1,6 @@
 package net.plasmere.streamline.utils;
 
+import com.mojang.brigadier.Command;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.commands.*;
@@ -47,20 +48,20 @@ public class PluginUtils {
         plugin.getProxy().getPluginManager().unregisterCommand(command);
     }
 
-    public static void unregisterListener(StreamLine plugin, Listener listener){
-        listenerAmount --;
-        plugin.getProxy().getPluginManager().unregisterListener(listener);
-    }
+//    public static void unregisterListener(StreamLine plugin, Listener listener){
+//        listenerAmount --;
+//        plugin.getProxy().getPluginManager().unregisterListener(listener);
+//    }
 
     public static void registerCommand(StreamLine plugin, Command command){
         commandsAmount ++;
-        plugin.getProxy().getPluginManager().registerCommand(plugin, command);
+        plugin.getProxy().getCommandManager().register(plugin, command);
     }
 
-    public static void registerListener(StreamLine plugin, Listener listener){
-        listenerAmount ++;
-        plugin.getProxy().getPluginManager().registerListener(plugin, listener);
-    }
+//    public static void registerListener(StreamLine plugin, Listener listener){
+//        listenerAmount ++;
+//        plugin.getProxy().getPluginManager().registerListener(plugin, listener);
+//    }
 
     public static void loadCommands(StreamLine plugin){
         commandsAmount = 0;
@@ -267,16 +268,16 @@ public class PluginUtils {
         return a;
     }
 
-    public static void loadListeners(StreamLine plugin){
-        listenerAmount = 0;
-
-        registerListener(plugin, new ChatListener());
-        registerListener(plugin, new JoinLeaveListener());
-        registerListener(plugin, new ProxyPingListener());
-        registerListener(plugin, new PluginMessagingListener());
-
-        plugin.getLogger().info("Loaded " + listenerAmount + " listener(s) into memory...!");
-    }
+//    public static void loadListeners(StreamLine plugin){
+//        listenerAmount = 0;
+//
+//        registerListener(plugin, new ChatListener());
+//        registerListener(plugin, new JoinLeaveListener());
+//        registerListener(plugin, new ProxyPingListener());
+//        registerListener(plugin, new PluginMessagingListener());
+//
+//        plugin.getLogger().info("Loaded " + listenerAmount + " listener(s) into memory...!");
+//    }
 
     public static int getCeilingInt(Set<Integer> ints){
         int value = 0;

@@ -207,7 +207,7 @@ public class Lobbies {
     public TreeList<String> getServers(){
         TreeList<String> defaults = new TreeList<>();
 
-        for (ServerInfo si : StreamLine.getInstance().getProxy().getServers().values()){
+        for (ServerInfo si : StreamLine.getInstance().getProxy().getAllServers().values()){
             defaults.add(si.getName() + "=" + defaultAllow);
         }
 

@@ -13,7 +13,7 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 
 public class PluginMessagingListener implements Listener {
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @Subscribe(order = PostOrder.FIRST)
     public void onPluginMessage(PluginMessageEvent event) {
         /*
         https://www.spigotmc.org/wiki/sending-a-custom-plugin-message-from-bungeecord/

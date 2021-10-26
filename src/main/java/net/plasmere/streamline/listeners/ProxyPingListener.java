@@ -13,7 +13,7 @@ import net.plasmere.streamline.utils.TextUtils;
 import java.util.UUID;
 
 public class ProxyPingListener implements Listener {
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @Subscribe(order = PostOrder.FIRST)
     public void onProxyPing(ProxyPingEvent event){
         ServerPing response = event.getResponse();
 

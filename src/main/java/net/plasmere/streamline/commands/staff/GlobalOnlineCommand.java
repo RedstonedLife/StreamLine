@@ -56,7 +56,7 @@ public class GlobalOnlineCommand extends Command {
 
         List<ServerInfo> servers = new ArrayList<>();
 
-        for (ServerInfo server : StreamLine.getInstance().getProxy().getServers().values()){
+        for (ServerInfo server : StreamLine.getInstance().getProxy().getAllServers().values()){
             if (server.getPlayers().size() > 0) {
                 servers.add(server);
             }

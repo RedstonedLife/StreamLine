@@ -192,7 +192,7 @@ public class ChatsHandler {
         switch (chatChannel.name) {
             case "local":
                 if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                    for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getServers().values()) {
+                    for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getAllServers().values()) {
                         thing.add(serverInfo.getName());
                     }
                 }
@@ -235,7 +235,7 @@ public class ChatsHandler {
             switch (chatChannel.name) {
                 case "local":
                     if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                        for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getServers().values()) {
+                        for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getAllServers().values()) {
                             thing.add(serverInfo.getName());
                         }
                     }
