@@ -532,6 +532,8 @@ public class StreamLine {
 		}
 
 		PluginUtils.state = NetworkState.RUNNING;
+		// Setup MOTD.
+		StreamLine.getInstance().setCurrentMOTD(StreamLine.serverConfig.getComparedMOTD().firstEntry().getValue());
 	}
 
 	@Subscribe
