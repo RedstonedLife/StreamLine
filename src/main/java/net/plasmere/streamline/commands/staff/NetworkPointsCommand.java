@@ -14,6 +14,7 @@ import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collection;
 import java.util.List;
 
 public class NetworkPointsCommand extends SLCommand {
@@ -151,7 +152,7 @@ public class NetworkPointsCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) return new ArrayList<>();
 
         Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();

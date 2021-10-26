@@ -330,7 +330,7 @@ public class StreamLine {
 			}
 		} else {
 			try {
-				if (!versionFile().createNewFile()) if (ConfigUtils.debug) {
+				if (!versionFile().createNewFile()) {
 					MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
 				}
 
@@ -358,7 +358,7 @@ public class StreamLine {
 			}
 
 			try {
-				if (!languageFile().createNewFile()) if (ConfigUtils.debug) {
+				if (!languageFile().createNewFile()) {
 					MessagingUtils.logSevere("COULD NOT CREATE LANGUAGE FILE!");
 				}
 
@@ -479,7 +479,7 @@ public class StreamLine {
 		PluginUtils.loadCommands(this);
 
 		// Listeners.
-//		PluginUtils.loadListeners(this);
+		PluginUtils.loadListeners(this);
 
 		// JDA init.
 		if (ConfigUtils.moduleDEnabled) {
@@ -637,23 +637,7 @@ public class StreamLine {
 	}
 
 	public InputStream getResourceAsStream(String filename) {
-		if (filename == null) {
-			throw new IllegalArgumentException("Filename cannot be null");
-		}
-
-		try {
-			URL url = this.getClass().getResource(filename);
-
-			if (url == null) {
-				return null;
-			}
-
-			URLConnection connection = url.openConnection();
-			connection.setUseCaches(false);
-			return connection.getInputStream();
-		} catch (IOException ex) {
-			return null;
-		}
+		return getClass().getClassLoader().getResourceAsStream(filename);
 	}
 
 	public PluginDescription getDescription() {

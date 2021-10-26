@@ -14,6 +14,7 @@ import com.velocitypowered.api.proxy.Player;
 import net.dv8tion.jda.api.JDA;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 public class JDAPingerCommand extends SLCommand {
@@ -37,7 +38,7 @@ public class JDAPingerCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }

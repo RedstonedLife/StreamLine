@@ -61,7 +61,7 @@ public class GoToServerLobbyCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSource sender, final String[] args)
+    public Collection<String> onTabComplete(final CommandSource sender, final String[] args)
     {
         TreeSet<String> servers = new TreeSet<>();
 

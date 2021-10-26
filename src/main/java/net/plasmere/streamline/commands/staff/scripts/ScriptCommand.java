@@ -14,6 +14,7 @@ import org.apache.commons.collections4.list.TreeList;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ScriptCommand extends SLCommand {
     public ScriptCommand(String base, String perm, String[] aliases){
@@ -57,7 +58,7 @@ public class ScriptCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         TreeList<String> scripts = new TreeList<>();
 
         File folder = StreamLine.getInstance().getscriptsDir();

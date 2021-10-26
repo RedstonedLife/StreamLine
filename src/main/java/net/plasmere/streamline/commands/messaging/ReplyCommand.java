@@ -9,6 +9,7 @@ import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ReplyCommand extends SLCommand {
     public ReplyCommand(String base, String perm, String[] aliases){
@@ -44,7 +45,7 @@ public class ReplyCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }

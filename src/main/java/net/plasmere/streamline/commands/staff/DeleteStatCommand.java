@@ -15,6 +15,7 @@ import net.plasmere.streamline.utils.TextUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class DeleteStatCommand extends SLCommand {
@@ -53,7 +54,7 @@ public class DeleteStatCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         List<String> uuids = new ArrayList<>();
 
         File folder = StreamLine.getInstance().getplDir();

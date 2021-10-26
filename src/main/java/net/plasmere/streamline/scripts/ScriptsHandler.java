@@ -5,6 +5,7 @@ import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ScriptsHandler {

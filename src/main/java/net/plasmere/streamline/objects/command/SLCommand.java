@@ -7,6 +7,7 @@ import net.plasmere.streamline.StreamLine;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -28,11 +29,18 @@ public abstract class SLCommand implements SimpleCommand {
 
     abstract public void run(CommandSource sender, String[] args);
 
-    abstract public Iterable<String> onTabComplete(CommandSource sender, String[] args);
+    abstract public Collection<String> onTabComplete(CommandSource sender, String[] args);
+
+    public Collection<String> preTabComplete(CommandSource sender, String[] args){
+        if (args == null) return new ArrayList<>();
+        if (args.length <= 0) return new ArrayList<>();
+
+        return onTabComplete(sender, args);
+    }
 
     @Override
     public CompletableFuture<List<String>> suggestAsync(Invocation invocation) {
-        return CompletableFuture.completedFuture(new ArrayList<>((Collection<? extends String>) onTabComplete(invocation.source(), invocation.arguments())));
+        return CompletableFuture.completedFuture(new ArrayList<>(preTabComplete(invocation.source(), invocation.arguments())));
     }
 
     @Override

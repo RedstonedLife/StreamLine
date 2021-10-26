@@ -9,6 +9,8 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collection;
 import java.util.List;
 
 public class PingCommand extends SLCommand {
@@ -60,7 +62,7 @@ public class PingCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         List<String> strings = new ArrayList<>();
 
         if (sender.hasPermission(CommandsConfUtils.comBPingPermOthers) && CommandsConfUtils.comBPingOthers) {

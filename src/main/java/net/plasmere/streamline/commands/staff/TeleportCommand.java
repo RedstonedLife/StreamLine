@@ -10,6 +10,7 @@ import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class TeleportCommand extends SLCommand {
 
@@ -43,7 +44,7 @@ public class TeleportCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         if (args.length <= 1) {
             return TextUtils.getCompletion(PlayerUtils.getPlayerNamesForAllOnline(), args[0]);
         } else {

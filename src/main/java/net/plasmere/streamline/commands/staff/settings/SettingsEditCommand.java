@@ -11,6 +11,7 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Arrays;
 import java.util.List;
 
@@ -416,7 +417,7 @@ public class SettingsEditCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSource sender, final String[] args) {
+    public Collection<String> onTabComplete(final CommandSource sender, final String[] args) {
         List<String> options = new ArrayList<>();
 
         options.add("set");

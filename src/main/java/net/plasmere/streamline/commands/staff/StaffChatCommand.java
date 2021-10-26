@@ -13,6 +13,7 @@ import net.plasmere.streamline.utils.TextUtils;
 import com.velocitypowered.api.command.CommandSource;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class StaffChatCommand extends SLCommand {
     public StaffChatCommand(String base, String perm, String[] aliases){
@@ -56,7 +57,7 @@ public class StaffChatCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }

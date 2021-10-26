@@ -11,6 +11,7 @@ import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Arrays;
 
 public class ChatChannelCommand extends SLCommand {
@@ -85,7 +86,7 @@ public class ChatChannelCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         if (args.length <= 1) {
             return TextUtils.getCompletion(ChatsHandler.getChannelsAsStrings(), args[0]);
         }

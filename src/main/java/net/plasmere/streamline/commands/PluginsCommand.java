@@ -9,6 +9,8 @@ import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collection;
+import java.util.Collection;
 
 public class PluginsCommand extends SLCommand {
 
@@ -25,7 +27,7 @@ public class PluginsCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 
@@ -37,9 +39,9 @@ public class PluginsCommand extends SLCommand {
 
         for (PluginContainer plugin : plugins){
             if (!(i == plugins.size() - 1))
-                pl.append("&a").append(plugin.getDescription().getName()).append("&8").append(", ");
+                pl.append("&a").append(plugin.getDescription().getName().get()).append("&8").append(", ");
             else
-                pl.append("&a").append(plugin.getDescription().getName()).append("&8,").append(".");
+                pl.append("&a").append(plugin.getDescription().getName().get()).append("&8,").append(".");
             i++;
         }
 

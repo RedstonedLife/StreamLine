@@ -59,7 +59,7 @@ public class StaffOnlineCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }

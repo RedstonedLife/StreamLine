@@ -27,7 +27,7 @@ public class GeyserHolder {
     }
 
     public boolean isPresent(){
-        if (StreamLine.getProxy().getPluginManager().getPlugin("Geyser-BungeeCord") == null) {
+        if (! StreamLine.getProxy().getPluginManager().getPlugin("Geyser-Velocity").isPresent()) {
             return false;
         }
 

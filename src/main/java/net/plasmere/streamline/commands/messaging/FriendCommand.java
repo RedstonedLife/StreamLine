@@ -15,6 +15,7 @@ import net.plasmere.streamline.utils.UUIDUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collection;
 import java.util.List;
 
 public class FriendCommand extends SLCommand {
@@ -156,7 +157,7 @@ public class FriendCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSource sender, final String[] args) {
+    public Collection<String> onTabComplete(final CommandSource sender, final String[] args) {
         if (sender instanceof Player) {
             Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
             List<String> strPlayers = new ArrayList<>();

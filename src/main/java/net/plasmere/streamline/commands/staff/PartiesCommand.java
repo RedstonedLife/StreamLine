@@ -8,6 +8,7 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PartyUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class PartiesCommand extends SLCommand {
     public PartiesCommand(String base, String perm, String[] aliases){
@@ -26,7 +27,7 @@ public class PartiesCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }

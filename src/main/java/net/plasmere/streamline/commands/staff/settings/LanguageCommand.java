@@ -39,7 +39,7 @@ public class LanguageCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSource sender, final String[] args) {
+    public Collection<String> onTabComplete(final CommandSource sender, final String[] args) {
         TreeSet<String> locales = new TreeSet<>();
 
         locales.addAll(ConfigHandler.acceptableTranslations());

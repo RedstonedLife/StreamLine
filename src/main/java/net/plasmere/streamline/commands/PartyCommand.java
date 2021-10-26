@@ -248,7 +248,7 @@ public class PartyCommand extends SLCommand {
 
     // Usage: /party <join|leave|create|promote|demote|chat|list|open|close|disband|accept|deny|invite|kick|mute|warp>
     @Override
-    public Iterable<String> onTabComplete(final CommandSource sender, final String[] args)
+    public Collection<String> onTabComplete(final CommandSource sender, final String[] args)
     {
         Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();

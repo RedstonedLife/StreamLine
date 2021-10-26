@@ -5,6 +5,8 @@ import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collection;
 
 public class InfoCommand extends SLCommand {
 
@@ -18,7 +20,7 @@ public class InfoCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }

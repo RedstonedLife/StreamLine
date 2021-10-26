@@ -14,6 +14,7 @@ import net.plasmere.streamline.utils.UUIDUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collection;
 import java.util.List;
 
 public class MessageCommand extends SLCommand {
@@ -61,7 +62,7 @@ public class MessageCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> ignored = new ArrayList<>();

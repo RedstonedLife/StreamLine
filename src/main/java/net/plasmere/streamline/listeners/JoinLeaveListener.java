@@ -8,7 +8,9 @@ import com.velocitypowered.api.event.connection.PreLoginEvent;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
+import com.velocitypowered.api.proxy.ConnectionRequestBuilder;
 import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.Node;
@@ -39,7 +41,7 @@ public class JoinLeaveListener {
 
     @Subscribe(order = PostOrder.FIRST)
     public void preJoin(PreLoginEvent ev) {
-        if (ev.getResult().isAllowed()) return;
+        if (! ev.getResult().isAllowed()) return;
 
         String ip = ev.getConnection().getRemoteAddress().toString().replace("/", "").split(":")[0];
 
@@ -226,8 +228,8 @@ public class JoinLeaveListener {
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
-//        if (ev.().equals(ServerConnectEvent.Reason.JOIN_PROXY) && ConfigUtils.redirectEnabled && StreamLine.lpHolder.enabled) {
-//            for (ServerInfo s : StreamLine.getInstance().getProxy().getAllServers().values()) {
+//        if (ev.get().equals(ConnectionRequestBuilder.JOIN_PROXY) && ConfigUtils.redirectEnabled && StreamLine.lpHolder.enabled) {
+//            for (RegisteredServer s : StreamLine.getInstance().getProxy().getAllServers()) {
 //                String sv = s.getName();
 //                if (player.hasPermission(ConfigUtils.redirectPre + sv)) {
 //                    Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(PlayerUtils.getSourceName(player))).getPrimaryGroup());
@@ -539,7 +541,7 @@ public class JoinLeaveListener {
 
     @Subscribe(order = PostOrder.FIRST)
     public void onKick(KickedFromServerEvent ev){
-        if (ev.getResult().isAllowed()) return;
+        if (! ev.getResult().isAllowed()) return;
 
         try {
             if (StreamLine.getInstance().getProxy().getPlayer(ev.getPlayer().getUniqueId()) == null) return;

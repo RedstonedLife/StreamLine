@@ -10,6 +10,7 @@ import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ScriptReloadCommand extends SLCommand {
     public ScriptReloadCommand(String base, String perm, String[] aliases){
@@ -31,7 +32,7 @@ public class ScriptReloadCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }

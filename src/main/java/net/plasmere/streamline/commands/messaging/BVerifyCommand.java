@@ -11,6 +11,7 @@ import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.TreeSet;
 
 public class BVerifyCommand extends SLCommand {
@@ -31,7 +32,7 @@ public class BVerifyCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         TreeSet<String> options = new TreeSet<>();
 
         options.add("local");

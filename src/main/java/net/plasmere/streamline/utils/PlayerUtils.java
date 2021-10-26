@@ -4,6 +4,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
@@ -377,14 +378,14 @@ public class PlayerUtils {
 
 
             if (bannedMillis.equals("")) {
-                return TextUtils.codedString(MessageConfUtils.punBannedPerm()
+                return MessageConfUtils.punBannedPerm()
                         .replace("%reason%", reason)
-                );
+                ;
             } else {
-                return TextUtils.codedString(MessageConfUtils.punBannedTemp()
+                return MessageConfUtils.punBannedTemp()
                         .replace("%reason%", reason)
                         .replace("%date%", date.toString())
-                );
+                ;
             }
         }
 
@@ -416,14 +417,14 @@ public class PlayerUtils {
 
 
             if (bannedMillis.equals("")) {
-                return TextUtils.codedString(MessageConfUtils.punIPBannedPerm()
+                return MessageConfUtils.punIPBannedPerm()
                         .replace("%reason%", reason)
-                );
+                ;
             } else {
-                return TextUtils.codedString(MessageConfUtils.punIPBannedTemp()
+                return MessageConfUtils.punIPBannedTemp()
                         .replace("%reason%", reason)
                         .replace("%date%", date.toString())
-                );
+                ;
             }
         }
 
@@ -1396,7 +1397,7 @@ public class PlayerUtils {
         if (prefix == null) prefix = "";
         if (suffix == null) suffix = "";
 
-        return TextUtils.codedString(prefix + username + suffix);
+        return prefix + username + suffix;
     }
 
     /* ----------------------------
@@ -1514,7 +1515,7 @@ public class PlayerUtils {
             prefix = "";
         }
 
-        return TextUtils.codedString(prefix);
+        return prefix;
     }
 
     public static String getLuckPermsSuffix(String username){
@@ -1542,7 +1543,7 @@ public class PlayerUtils {
 
         if (suffix == null) suffix = "";
 
-        return TextUtils.codedString(suffix);
+        return suffix;
     }
 
     public static String getPlayerGuildName(SavableUser user) {

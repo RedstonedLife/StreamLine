@@ -7,6 +7,7 @@ import net.plasmere.streamline.utils.*;
 import com.velocitypowered.api.command.CommandSource;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ReloadCommand extends SLCommand {
     private String perm = "";
@@ -33,7 +34,7 @@ public class ReloadCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }

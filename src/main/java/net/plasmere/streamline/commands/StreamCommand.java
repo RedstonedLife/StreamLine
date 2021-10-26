@@ -10,6 +10,7 @@ import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class StreamCommand extends SLCommand {
     private String perm = "";
@@ -53,7 +54,7 @@ public class StreamCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }

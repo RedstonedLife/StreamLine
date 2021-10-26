@@ -7,6 +7,7 @@ import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class GuildXPTimer implements Runnable {

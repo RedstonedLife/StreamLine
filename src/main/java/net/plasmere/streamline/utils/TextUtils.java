@@ -137,7 +137,7 @@ public class TextUtils {
                 continue; // Do nothing.
             }
 
-            thing.put(it, TextUtils.codedString(configuration.getString(key)));
+            thing.put(it, configuration.getString(key));
         }
 
         return thing;
@@ -235,7 +235,7 @@ public class TextUtils {
     }
 
     public static TextComponent codedText(String text) {
-        text = newLined(text);
+        TextComponent tc = LegacyComponentSerializer.legacy('&').deserialize(newLined(text));
 
         try {
             //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
@@ -247,16 +247,16 @@ public class TextUtils {
             while (matcher.find()) {
                 foundUrl = matcher.group(0);
 
-                return makeLinked(text, foundUrl);
+                return makeLinked(tc, foundUrl);
             }
         } catch (Exception e) {
-            return Component.empty().content(newLined(text));
+            return tc;
         }
-        return Component.empty().content(newLined(text));
+        return tc;
     }
 
     public static TextComponent clhText(String text, String hoverPrefix){
-        TextComponent t = LegacyComponentSerializer.legacy('&').deserialize(text);
+        TextComponent tc = LegacyComponentSerializer.legacy('&').deserialize(newLined(text));
 
         try {
             //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
@@ -267,18 +267,12 @@ public class TextUtils {
 
             while (matcher.find()) {
                 foundUrl = matcher.group(0);
-
-                TextComponent tc = makeLinked(text, foundUrl);
-                return makeHoverable(tc, hoverPrefix + foundUrl);
+                return makeHoverable(makeLinked(tc, foundUrl), hoverPrefix + foundUrl);
             }
         } catch (Exception e) {
-            return t;
+            return tc;
         }
-        return t;
-    }
-
-    public static String codedString(String text){
-        return LegacyComponentSerializer.legacy('&').deserialize(text).toString();
+        return tc;
     }
 
     public static String formatted(String string) {
@@ -307,11 +301,15 @@ public class TextUtils {
     }
 
     public static TextComponent makeLinked(String text, String url){
-        return codedText(text).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, url));
+        return Component.text(text).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, url));
+    }
+
+    public static TextComponent makeLinked(TextComponent textComponent, String url){
+        return textComponent.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, url));
     }
 
     public static TextComponent makeHoverable(String text, String hoverText){
-        return codedText(text).hoverEvent(HoverEvent.showText(codedText(hoverText)));
+        return Component.text(text).hoverEvent(HoverEvent.showText(codedText(hoverText)));
     }
 
     public static TextComponent makeHoverable(TextComponent textComponent, String hoverText){

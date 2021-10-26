@@ -10,6 +10,8 @@ import net.plasmere.streamline.utils.TextUtils;
 import com.velocitypowered.api.command.CommandSource;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collection;
 
 public class ReportCommand extends SLCommand {
 
@@ -39,7 +41,7 @@ public class ReportCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }

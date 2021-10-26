@@ -12,6 +12,7 @@ import net.plasmere.streamline.utils.PluginUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class GSPYCommand extends SLCommand {
 
@@ -47,7 +48,7 @@ public class GSPYCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         if (args.length <= 1) {
             return TextUtils.getCompletion(ConfigUtils.viewSelfAliases, args[0]);
         } else {

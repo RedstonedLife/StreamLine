@@ -6,6 +6,8 @@ import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collection;
 
 public class GCQuickCommand extends SLCommand {
     public GCQuickCommand(String base, String perm, String[] aliases){
@@ -18,7 +20,7 @@ public class GCQuickCommand extends SLCommand {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         return new ArrayList<>();
     }
 }
