@@ -220,92 +220,12 @@ public class JoinLeaveListener {
     }
 
     @Subscribe(order = PostOrder.FIRST)
-    public void onServer(ServerPreConnectEvent ev){
+    public void onServer(ServerPostConnectEvent ev) {
         Player player = ev.getPlayer();
 
-        boolean hasServer = false;
-        ServerInfo server = ev.getResult().getServer().get().getServerInfo();
+        ServerInfo server = ev.getPlayer().getCurrentServer().get().getServerInfo();
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
-
-//        if (ev.get().equals(ConnectionRequestBuilder.JOIN_PROXY) && ConfigUtils.redirectEnabled && StreamLine.lpHolder.enabled) {
-//            for (RegisteredServer s : StreamLine.getInstance().getProxy().getAllServers()) {
-//                String sv = s.getName();
-//                if (player.hasPermission(ConfigUtils.redirectPre + sv)) {
-//                    Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(PlayerUtils.getSourceName(player))).getPrimaryGroup());
-//
-//                    if (group == null) {
-//                        hasServer = true;
-//                        server = s;
-//                        break;
-//                    }
-//
-//                    Collection<Node> nodes = group.getNodes();
-//
-//                    for (Node node : nodes) {
-//                        if (node.getKey().equals(ConfigUtils.redirectPre + sv)) {
-//                            hasServer = true;
-//                            server = s;
-//                            break;
-//                        }
-//                    }
-//
-//                    Collection<Node> nods = Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(PlayerUtils.getSourceName(player))).getNodes();
-//
-//                    for (Node node : nods) {
-//                        if (node.getKey().equals(ConfigUtils.redirectPre + sv)) {
-//                            hasServer = true;
-//                            server = s;
-//                            break;
-//                        }
-//                    }
-//
-//                    if (hasServer){
-//                        break;
-//                    }
-//                }
-//            }
-//
-//            if (! hasServer) {
-//                server = StreamLine.getInstance().getProxy().getServerInfo(ConfigUtils.redirectMain);
-//            }
-//        }
-//
-//        if (StreamLine.viaHolder.enabled && ConfigUtils.redirectEnabled) {
-//            if (! hasServer && ConfigUtils.lobbies && ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY)){
-//                for (SingleSet<String, String> set : StreamLine.lobbies.getServerInfo().values()) {
-//                    String sName = set.key;
-//
-//                    int version = StreamLine.viaHolder.via.getPlayerVersion(player.getUniqueId());
-//
-//                    if (! StreamLine.lobbies.isAllowed(version, sName)) continue;
-//
-//                    server = StreamLine.getInstance().getProxy().getServerInfo(sName);
-//
-//                    ev.setTarget(server);
-//
-//                    return;
-//                }
-//            }
-//
-//            if (! ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY)) {
-//                if (ConfigUtils.vbEnabled) {
-//                    if (!player.hasPermission(ConfigUtils.vbOverridePerm)) {
-//                        int version = StreamLine.viaHolder.via.getPlayerVersion(player.getUniqueId());
-//
-//                        if (!StreamLine.serverPermissions.isAllowed(version, server.getName())) {
-//                            MessagingUtils.sendBUserMessage(ev.getPlayer(), MessageConfUtils.vbBlocked());
-//                            ev.setResult(PlayerChatEvent.ChatResult.denied());
-//                            return;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        if (server == null) return;
-//
-//        ev.setTarget(server);
 
         try {
             SingleSet<Boolean, ChatChannel> get1 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("local"), stat.getServer().getServerInfo().getName());
@@ -323,14 +243,30 @@ public class JoinLeaveListener {
             StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("local"), server.getName());
         }
 
-        if (ConfigUtils.events) {
-            for (Event event : EventsHandler.getEvents()) {
-                if (!EventsHandler.checkTags(event, stat)) continue;
+        try {
+            if (ConfigUtils.events) {
+                for (Event event : EventsHandler.getEvents()) {
+                    if (!EventsHandler.checkTags(event, stat)) continue;
 
-                if (!(EventsHandler.checkEventConditions(event, stat, Condition.JOIN, server.getName()))) continue;
+                    if (!(EventsHandler.checkEventConditions(event, stat, Condition.JOIN, server.getName()))) continue;
 
-                EventsHandler.runEvent(event, stat);
+                    EventsHandler.runEvent(event, stat);
+                }
             }
+            RegisteredServer previousServer = ev.getPreviousServer();
+            if (previousServer == null) return;
+
+            if (ConfigUtils.events) {
+                for (Event event : EventsHandler.getEvents()) {
+                    if (! EventsHandler.checkTags(event, stat)) continue;
+
+                    if (! (EventsHandler.checkEventConditions(event, stat, Condition.LEAVE, previousServer.getServerInfo().getName()))) continue;
+
+                    EventsHandler.runEvent(event, stat);
+                }
+            }
+        } catch (Exception e) {
+            // do nothing
         }
     }
 
@@ -366,26 +302,6 @@ public class JoinLeaveListener {
         Player player = ev.getPlayer();
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
-
-//        switch (ConfigUtils.moduleBPlayerLeaves) {
-//            case "yes":
-//                MessagingUtils.sendBungeeMessage(new BungeeMassMessage(StreamLine.getInstance().getProxy().getConsoleCommandSource(),
-//                        MessageConfUtils.bungeeOffline.replace("%player_absolute%", PlayerUtils.getSourceName(player))
-//                                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrCreatePlayerStat(player))),
-//                        ConfigUtils.moduleBPlayerLeavesPerm));
-//                break;
-//            case "staff":
-//                if (player.hasPermission(ConfigUtils.staffPerm)) {
-//                    MessagingUtils.sendBungeeMessage(new BungeeMassMessage(StreamLine.getInstance().getProxy().getConsoleCommandSource(),
-//                            MessageConfUtils.bungeeOffline.replace("%player_absolute%", PlayerUtils.getSourceName(player))
-//                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrCreatePlayerStat(player))),
-//                            ConfigUtils.moduleBPlayerLeavesPerm));
-//                }
-//                break;
-//            case "no":
-//            default:
-//                break;
-//        }
 
         String leavesOrder = ConfigUtils.moduleBPlayerLeaves;
 
