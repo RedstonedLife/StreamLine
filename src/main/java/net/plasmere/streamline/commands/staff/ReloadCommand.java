@@ -2,11 +2,13 @@ package net.plasmere.streamline.commands.staff;
 
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.*;
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.plugin.Command;
 
-public class ReloadCommand extends Command {
+import java.util.ArrayList;
+
+public class ReloadCommand extends SLCommand {
     private String perm = "";
 
     public ReloadCommand(String base, String perm, String[] aliases){
@@ -16,7 +18,7 @@ public class ReloadCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSource sender, String[] strings) {
+    public void run(CommandSource sender, String[] strings) {
         if (sender.hasPermission(perm)) {
             try {
                 StreamLine.config.reloadConfig();
@@ -28,5 +30,10 @@ public class ReloadCommand extends Command {
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.prefix() + MessageConfUtils.noPerm());
         }
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+        return new ArrayList<>();
     }
 }

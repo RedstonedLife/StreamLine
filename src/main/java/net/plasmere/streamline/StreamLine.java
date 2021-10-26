@@ -1,5 +1,7 @@
 package net.plasmere.streamline;
 
+import com.google.inject.Inject;
+import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -90,15 +92,15 @@ public class StreamLine {
 	private static JDA jda = null;
 	private static boolean isReady = false;
 
-	private final File plDir = new File(getDataFolder() + File.separator + "players" + File.separator);
-	private final File gDir = new File(getDataFolder() + File.separator + "guilds" + File.separator);
-	private final File confDir = new File(getDataFolder() + File.separator + "configs" + File.separator);
-	private final File chatHistoryDir = new File(getDataFolder() + File.separator + "chat-history" + File.separator);
-	private final File scriptsDir = new File(getDataFolder() + File.separator + "scripts" + File.separator);
+	private File plDir() { return new File(getDataFolder() + File.separator + "players" + File.separator); }
+	private File gDir() { return new File(getDataFolder() + File.separator + "guilds" + File.separator); }
+	private File confDir() { return new File(getDataFolder() + File.separator + "configs" + File.separator); }
+	private File chatHistoryDir() { return new File(getDataFolder() + File.separator + "chat-history" + File.separator); }
+	private File scriptsDir() { return new File(getDataFolder() + File.separator + "scripts" + File.separator); }
 	private File eventsDir;
 
-	public final File versionFile = new File(getDataFolder(), "version.txt");
-	public final File languageFile = new File(getDataFolder(), "language.txt");
+	public File versionFile() { return new File(getDataFolder(), "version.txt"); }
+	public File languageFile() { return new File(getDataFolder(), "language.txt"); }
 
 	public Scheduler.TaskBuilder guilds;
 	public Scheduler.TaskBuilder players;
@@ -111,6 +113,7 @@ public class StreamLine {
 	private String currentMOTD;
 	private int motdPage;
 
+	@Inject
 	public StreamLine(ProxyServer serverThing, Logger loggerThing, @DataDirectory Path dataDirectoryThing){
 		server = serverThing;
 		logger = loggerThing;
@@ -118,16 +121,16 @@ public class StreamLine {
 		instance = this;
 	}
 
-	public File getPlDir() {
-		return plDir;
+	public File getplDir() {
+		return plDir();
 	}
-	public File getGDir() {
-		return gDir;
+	public File getgDir() {
+		return gDir();
 	}
 	public File getEDir() { return eventsDir; }
-	public File getConfDir() { return confDir; }
-	public File getChatHistoryDir() { return chatHistoryDir; }
-	public File getScriptsDir() { return scriptsDir; }
+	public File getconfDir() { return confDir(); }
+	public File getchatHistoryDir() { return chatHistoryDir(); }
+	public File getscriptsDir() { return scriptsDir(); }
 
 	public String getCurrentMOTD() { return currentMOTD; }
 	public int getMotdPage() { return motdPage; }
@@ -158,9 +161,9 @@ public class StreamLine {
 	}
 
 	public void loadGuilds(){
-		if (! gDir.exists()) {
+		if (! gDir().exists()) {
 			try {
-				gDir.mkdirs();
+				gDir().mkdirs();
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -168,9 +171,9 @@ public class StreamLine {
 	}
 
 	public void loadPlayers(){
-		if (! plDir.exists()) {
+		if (! plDir().exists()) {
 			try {
-				plDir.mkdirs();
+				plDir().mkdirs();
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -235,9 +238,9 @@ public class StreamLine {
 	}
 
 	public void loadServers(){
-		if (! confDir.exists()) {
+		if (! confDir().exists()) {
 			try {
-				confDir.mkdirs();
+				confDir().mkdirs();
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -263,18 +266,18 @@ public class StreamLine {
 
 		if (! PluginUtils.isFreshInstall()) {
 			try {
-				if (!versionFile.exists()) {
-					if (!versionFile.createNewFile()) if (ConfigUtils.debug) {
+				if (!versionFile().exists()) {
+					if (!versionFile().createNewFile()) if (ConfigUtils.debug) {
 						MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
 					}
 
-					FileWriter writer = new FileWriter(versionFile);
+					FileWriter writer = new FileWriter(versionFile());
 					writer.write("13.3");
 					writer.close();
 				}
 
-				if (versionFile.exists()) {
-					Scanner reader = new Scanner(versionFile);
+				if (versionFile().exists()) {
+					Scanner reader = new Scanner(versionFile());
 
 					while (reader.hasNextLine()) {
 						String data = reader.nextLine();
@@ -294,20 +297,20 @@ public class StreamLine {
 			}
 
 			try {
-				if (!languageFile.exists()) {
-					if (!languageFile.createNewFile()) if (ConfigUtils.debug) {
+				if (!languageFile().exists()) {
+					if (!languageFile().createNewFile()) if (ConfigUtils.debug) {
 						MessagingUtils.logSevere("COULD NOT CREATE LANGUAGE FILE!");
 					}
 
-					FileWriter writer = new FileWriter(languageFile);
+					FileWriter writer = new FileWriter(languageFile());
 					writer.write("# To define which language you want to use.\n");
 					writer.write("# Current supported languages: en_US, fr_FR\n");
 					writer.write("en_US");
 					writer.close();
 				}
 
-				if (languageFile.exists()) {
-					Scanner reader = new Scanner(languageFile);
+				if (languageFile().exists()) {
+					Scanner reader = new Scanner(languageFile());
 
 					while (reader.hasNextLine()) {
 						String data = reader.nextLine();
@@ -327,16 +330,16 @@ public class StreamLine {
 			}
 		} else {
 			try {
-				if (!versionFile.createNewFile()) if (ConfigUtils.debug) {
+				if (!versionFile().createNewFile()) if (ConfigUtils.debug) {
 					MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
 				}
 
-				FileWriter writer = new FileWriter(versionFile);
+				FileWriter writer = new FileWriter(versionFile());
 				writer.write(getDescription().getVersion().get());
 				writer.close();
 
-				if (versionFile.exists()) {
-					Scanner reader = new Scanner(versionFile);
+				if (versionFile().exists()) {
+					Scanner reader = new Scanner(versionFile());
 
 					while (reader.hasNextLine()) {
 						String data = reader.nextLine();
@@ -355,18 +358,18 @@ public class StreamLine {
 			}
 
 			try {
-				if (!languageFile.createNewFile()) if (ConfigUtils.debug) {
+				if (!languageFile().createNewFile()) if (ConfigUtils.debug) {
 					MessagingUtils.logSevere("COULD NOT CREATE LANGUAGE FILE!");
 				}
 
-				FileWriter writer = new FileWriter(languageFile);
+				FileWriter writer = new FileWriter(languageFile());
 				writer.write("# To define which language you want to use.\n");
 				writer.write("# Current supported languages: en_US, fr_FR\n");
 				writer.write("en_US");
 				writer.close();
 
-				if (languageFile.exists()) {
-					Scanner reader = new Scanner(languageFile);
+				if (languageFile().exists()) {
+					Scanner reader = new Scanner(languageFile());
 
 					while (reader.hasNextLine()) {
 						String data = reader.nextLine();
@@ -406,7 +409,7 @@ public class StreamLine {
 	}
 
 	public void loadChatHistory() {
-		if (! chatHistoryDir.exists()) if (! chatHistoryDir.mkdirs()) if (ConfigUtils.debug) MessagingUtils.logWarning("Chat history folder could not be made!");
+		if (! chatHistoryDir().exists()) if (! chatHistoryDir().mkdirs()) if (ConfigUtils.debug) MessagingUtils.logWarning("Chat history folder could not be made!");
 
 		if (ConfigUtils.chatHistoryLoadHistoryStartup) {
 			PlayerUtils.loadAllChatHistories(false);
@@ -416,9 +419,9 @@ public class StreamLine {
 	public void loadScripts() {
 		if (! ConfigUtils.scriptsEnabled) return;
 
-		if (! scriptsDir.exists()) if (! scriptsDir.mkdirs()) if (ConfigUtils.debug) MessagingUtils.logWarning("Scripts folder could not be made!");
+		if (! scriptsDir().exists()) if (! scriptsDir().mkdirs()) if (ConfigUtils.debug) MessagingUtils.logWarning("Scripts folder could not be made!");
 
-		File file = new File(scriptsDir, "boost.sl");
+		File file = new File(scriptsDir(), "boost.sl");
 
 		if (! file.exists()) {
 			if (ConfigUtils.scriptsCreateDefault) {
@@ -430,7 +433,7 @@ public class StreamLine {
 			}
 		}
 
-		File[] files = scriptsDir.listFiles();
+		File[] files = scriptsDir().listFiles();
 		if (files != null) {
 			for (File f : files) {
 				if (! f.getName().endsWith(".sl")) continue;
@@ -444,7 +447,7 @@ public class StreamLine {
     	InstanceHolder.setInst(instance);
 	}
 
-	@Subscribe
+	@Subscribe(order = PostOrder.LAST)
 	public void onEnable(ProxyInitializeEvent event){
 		PluginUtils.state = NetworkState.STARTING;
 
@@ -476,7 +479,7 @@ public class StreamLine {
 		PluginUtils.loadCommands(this);
 
 		// Listeners.
-		PluginUtils.loadListeners(this);
+//		PluginUtils.loadListeners(this);
 
 		// JDA init.
 		if (ConfigUtils.moduleDEnabled) {
@@ -654,6 +657,6 @@ public class StreamLine {
 	}
 
 	public PluginDescription getDescription() {
-		return getProxy().getPluginManager().getPlugin("StreamLine").get().getDescription();
+		return getProxy().getPluginManager().getPlugin("streamline").get().getDescription();
 	}
 }

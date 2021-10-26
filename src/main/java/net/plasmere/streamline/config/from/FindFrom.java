@@ -43,16 +43,16 @@ public class FindFrom {
         }
 
         try {
-            if (! StreamLine.getInstance().versionFile.delete()) if (ConfigUtils.debug) {
+            if (! StreamLine.getInstance().versionFile().delete()) if (ConfigUtils.debug) {
                 MessagingUtils.logSevere("COULD NOT DELETE VERSION FILE!");
             }
 
-            if (! StreamLine.getInstance().versionFile.createNewFile()) if (ConfigUtils.debug) {
+            if (! StreamLine.getInstance().versionFile().createNewFile()) if (ConfigUtils.debug) {
                 MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
             }
 
-            FileWriter writer = new FileWriter(StreamLine.getInstance().versionFile);
-            writer.write(StreamLine.getInstance().getDescription().getVersion());
+            FileWriter writer = new FileWriter(StreamLine.getInstance().versionFile());
+            writer.write(StreamLine.getInstance().getDescription().getVersion().get());
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,19 +1,21 @@
 package net.plasmere.streamline.commands.staff;
 
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.Party;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PartyUtils;
 
-public class PartiesCommand extends Command {
+import java.util.ArrayList;
+
+public class PartiesCommand extends SLCommand {
     public PartiesCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args) {
         if (PartyUtils.getParties().size() <= 0) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.partiesNone());
             return;
@@ -21,5 +23,10 @@ public class PartiesCommand extends Command {
         for (Party party : PartyUtils.getParties()){
             MessagingUtils.sendBPUserMessage(party, sender, sender, MessageConfUtils.partiesMessage());
         }
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+        return new ArrayList<>();
     }
 }

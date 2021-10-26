@@ -2,28 +2,27 @@ package net.plasmere.streamline.commands.staff;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.*;
 
-public class SudoCommand extends Command implements TabExecutor {
+public class SudoCommand extends SLCommand {
     public SudoCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args) {
         if (args.length <= 1) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else {
-            Player sudoOn = StreamLine.getInstance().getProxy().getPlayer(args[0]);
+            Player sudoOn = StreamLine.getInstance().getProxy().getPlayer(args[0]).get();
 
             if (sudoOn.hasPermission(ConfigUtils.noSudoPerm)){
                 MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.sudoNoSudo(), sudoOn)
@@ -31,7 +30,7 @@ public class SudoCommand extends Command implements TabExecutor {
                 return;
             }
 
-            if (StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(sudoOn, TextUtils.argsToStringMinus(args, 0))){
+            if (StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(sudoOn, TextUtils.argsToStringMinus(args, 0)).complete(true)){
                 MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.sudoWorked(), sender)
                 );
             } else {
@@ -50,12 +49,9 @@ public class SudoCommand extends Command implements TabExecutor {
             strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
-        Collection<Map.Entry<String, Command>> commands = StreamLine.getInstance().getProxy().getPluginManager().getCommands();
-        List<String> strCommands = new ArrayList<>();
+        Collection<String> commands = StreamLine.getInstance().getProxy().getCommandManager().getAliases();
 
-        for (Map.Entry<String, Command> com : commands){
-            strCommands.add(com.getValue().getName());
-        }
+        List<String> strCommands = new ArrayList<>(commands);
 
         if (args.length == 1) {
             return TextUtils.getCompletion(strPlayers, args[0]);

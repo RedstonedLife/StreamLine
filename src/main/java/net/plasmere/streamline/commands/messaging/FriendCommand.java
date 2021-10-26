@@ -2,10 +2,9 @@ package net.plasmere.streamline.commands.messaging;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -18,13 +17,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class FriendCommand extends Command implements TabExecutor {
+public class FriendCommand extends SLCommand {
     public FriendCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args) {
         SavableUser stat = PlayerUtils.getOrCreateSavableUser(sender);
 
         if (stat == null) {
@@ -178,7 +177,7 @@ public class FriendCommand extends Command implements TabExecutor {
 
             for (Player pl : players) {
                 if (pl.equals(sender)) continue;
-                strPlayers.add(pl.getName());
+                strPlayers.add(PlayerUtils.getSourceName(pl));
             }
 
             strPlayers.add("%");

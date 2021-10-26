@@ -14,12 +14,12 @@ import java.nio.file.Files;
 
 public class Bans {
     private Configuration bans;
-    private final File bfile = new File(StreamLine.getInstance().getConfDir(), "bans.yml");
+    private final File bfile = new File(StreamLine.getInstance().getconfDir(), "bans.yml");
 
     public Bans(){
-        if (! StreamLine.getInstance().getConfDir().exists()) {
-            if (StreamLine.getInstance().getConfDir().mkdirs()) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
+        if (! StreamLine.getInstance().getconfDir().exists()) {
+            if (StreamLine.getInstance().getconfDir().mkdirs()) {
+                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getconfDir().getName());
             }
         }
 

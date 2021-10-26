@@ -109,13 +109,13 @@ public class GuildUtils {
     }
 
     public static boolean existsByUUID(String uuid){
-        File file = new File(StreamLine.getInstance().getGDir(), uuid + ".properties");
+        File file = new File(StreamLine.getInstance().getgDir(), uuid + ".properties");
 
         return file.exists();
     }
 
     public static boolean exists(String username){
-        File file = new File(StreamLine.getInstance().getGDir(), Objects.requireNonNull(PlayerUtils.getOrCreatePlayerStat(username)).guild + ".properties");
+        File file = new File(StreamLine.getInstance().getgDir(), Objects.requireNonNull(PlayerUtils.getOrCreatePlayerStat(username)).guild + ".properties");
 
         return file.exists();
     }
@@ -542,7 +542,7 @@ public class GuildUtils {
                 if (pl instanceof SavablePlayer) {
                     SavablePlayer p = (SavablePlayer) pl;
                     if (! p.online) continue;
-                    p.player.connect(((SavablePlayer) sender).getServer().getServerInfo());
+                    p.player.createConnectionRequest(StreamLine.getProxy().getServer(((SavablePlayer) sender).getServer().getServerInfo().getName()).get());
                 }
             }
         }

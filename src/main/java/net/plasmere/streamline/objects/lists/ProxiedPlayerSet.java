@@ -1,18 +1,19 @@
 package net.plasmere.streamline.objects.lists;
 
 import com.velocitypowered.api.proxy.Player;
+import net.plasmere.streamline.utils.PlayerUtils;
 
 import java.util.Collection;
 import java.util.TreeMap;
 
-public class PlayerSet {
+public class ProxiedPlayerSet {
     TreeMap<String, Player> sorted = new TreeMap<>();
 
-    public PlayerSet(){
+    public ProxiedPlayerSet(){
 
     }
 
-    public PlayerSet(Collection<? extends Player> oldPlayers){
+    public ProxiedPlayerSet(Collection<? extends Player> oldPlayers){
         addForPlayers(oldPlayers);
     }
 

@@ -475,7 +475,7 @@ public class SavablePlayer extends SavableUser {
     
     public ServerConnection getServer() {
         if (online) {
-            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getCurrentServer().get().get();
+            return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getCurrentServer().get();
         }
         return null;
     }

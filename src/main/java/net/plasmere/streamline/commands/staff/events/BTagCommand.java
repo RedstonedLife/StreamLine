@@ -2,11 +2,10 @@ package net.plasmere.streamline.commands.staff.events;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -16,13 +15,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class BTagCommand extends Command implements TabExecutor {
+public class BTagCommand extends SLCommand {
     public BTagCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args) {
         if (args.length <= 0) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else {

@@ -4,24 +4,25 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.JDAPingerUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.plugin.Command;
 
 import net.dv8tion.jda.api.JDA;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
-public class JDAPingerCommand extends Command {
+public class JDAPingerCommand extends SLCommand {
     public JDAPingerCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSource sender, String[] strings) {
+    public void run(CommandSource sender, String[] strings) {
         if (! ConfigUtils.moduleDEnabled) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
             return;
@@ -33,5 +34,10 @@ public class JDAPingerCommand extends Command {
         player.sendMessage(TextUtils.codedText("&aAttempting to ping..."));
 
         JDAPingerUtils.sendMessage(Objects.requireNonNull(jda.getTextChannelById(DiscordBotConfUtils.textChannelBConsole)));
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+        return new ArrayList<>();
     }
 }

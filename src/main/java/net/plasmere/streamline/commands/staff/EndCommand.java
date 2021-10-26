@@ -1,21 +1,23 @@
 package net.plasmere.streamline.commands.staff;
 
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
-public class EndCommand extends Command {
+import java.util.ArrayList;
+
+public class EndCommand extends SLCommand {
     public EndCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args) {
         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.gracefulEndSender());
 
         PlayerUtils.saveAll();
@@ -24,6 +26,11 @@ public class EndCommand extends Command {
 
         GuildUtils.saveAll();
 
-        StreamLine.getInstance().getProxy().stop(TextUtils.codedString(MessageConfUtils.kicksStopping()));
+        StreamLine.getInstance().getProxy().shutdown(TextUtils.codedText(MessageConfUtils.kicksStopping()));
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+        return new ArrayList<>();
     }
 }

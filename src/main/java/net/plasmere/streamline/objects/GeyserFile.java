@@ -10,7 +10,7 @@ import java.util.*;
 
 public class GeyserFile {
     private TreeMap<String, String> info = new TreeMap<>();
-    public File playerPath = new File(StreamLine.getInstance().getPlDir(), "geyser" + File.separator);
+    public File playerPath = new File(StreamLine.getInstance().getplDir(), "geyser" + File.separator);
 
     public File file;
 
@@ -23,7 +23,7 @@ public class GeyserFile {
 
         if (createNew || ! file.exists()) {
             try {
-                if (! StreamLine.getInstance().getPlDir().exists()) if (! StreamLine.getInstance().getPlDir().mkdirs()) MessagingUtils.logSevere("Could not create players folder...");
+                if (! StreamLine.getInstance().getplDir().exists()) if (! StreamLine.getInstance().getplDir().mkdirs()) MessagingUtils.logSevere("Could not create players folder...");
                 if (file.exists()) if (! this.file.delete()) MessagingUtils.logSevere("Could not delete Geyser file!");
                 if (! this.file.createNewFile()) MessagingUtils.logSevere("Could not create Geyser file!");
             } catch (Exception e) {

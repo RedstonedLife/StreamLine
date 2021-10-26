@@ -255,14 +255,14 @@ public class EventsHandler {
 
     public static String adjust(Event event, SavablePlayer player, int i){
         return TextUtils.replaceAllPlayerBungee(event.actions.get(i).value, player)
-                .replace("%uniques%", String.valueOf(StreamLine.getInstance().getPlDir().listFiles().length))
+                .replace("%uniques%", String.valueOf(StreamLine.getInstance().getplDir().listFiles().length))
                 .replace("%time%", String.valueOf(new Date()))
                 ;
     }
 
     public static String adjust(Event event, SavablePlayer player, int i, String context){
         return TextUtils.replaceAllPlayerBungee(event.actions.get(i).value, player)
-                .replace("%uniques%", String.valueOf(StreamLine.getInstance().getPlDir().listFiles().length))
+                .replace("%uniques%", String.valueOf(StreamLine.getInstance().getplDir().listFiles().length))
                 .replace("%time%", String.valueOf(new Date()))
                 .replace(("%arg:" + findArgAmount(event.actions.get(i).value) + "%"), extractArg(event, context, i))
                 ;

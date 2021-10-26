@@ -1,21 +1,23 @@
 package net.plasmere.streamline.commands.staff.events;
 
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.events.EventsHandler;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 
-public class EventReloadCommand extends Command {
+import java.util.ArrayList;
+
+public class EventReloadCommand extends SLCommand {
     public EventReloadCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args) {
         if (sender.hasPermission(CommandsConfUtils.comBEReloadPerm)) {
             EventsHandler.unloadEvents();
             StreamLine.getInstance().loadEvents();
@@ -26,5 +28,10 @@ public class EventReloadCommand extends Command {
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
         }
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+        return new ArrayList<>();
     }
 }

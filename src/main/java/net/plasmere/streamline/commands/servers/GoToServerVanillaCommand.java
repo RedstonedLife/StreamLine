@@ -1,44 +1,45 @@
 package net.plasmere.streamline.commands.servers;
 
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
-import net.plasmere.streamline.config.ConfigUtils;
-import net.md_5.bungee.api.ChatColor;
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.config.ServerInfo;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
+import net.plasmere.streamline.utils.MessagingUtils;
 
-public class GoToServerVanillaCommand extends Command {
+import java.util.ArrayList;
+
+public class GoToServerVanillaCommand extends SLCommand {
 
     public GoToServerVanillaCommand(String perm) {
         super("fabric", perm,"trampoline", "bungee-trampoline", "tramp");
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args){
+    public void run(CommandSource sender, String[] args){
         if (sender instanceof Player){
             Player player = (Player) sender;
 
             if (player.hasPermission("streamline.server.fabric") || player.hasPermission("streamline.*")) {
                 ProxyServer proxy = StreamLine.getInstance().getProxy();
 
-                ServerInfo vanServer = proxy.getServerInfo(CommandsConfUtils.comBFabricEnd);
+                RegisteredServer vanServer = proxy.getServer(CommandsConfUtils.comBFabricEnd).get();
 
-                if (!vanServer.canAccess(player))
-                    player.sendMessage(new TextComponent(ChatColor.RED + "Cannot connect..."));
-                else {
-                    player.sendMessage(new TextComponent(ChatColor.GREEN + "Connecting now..."));
-                    player.connect(vanServer, ServerConnectEvent.Reason.COMMAND);
-                }
+                MessagingUtils.sendBUserMessage(sender, "&aConnecting now...");
+                player.createConnectionRequest(vanServer);
             } else {
-                player.sendMessage(new TextComponent(ChatColor.RED + "Sorry, but you don't have permission to do this..."));
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
             }
         } else {
-            sender.sendMessage(new TextComponent(ChatColor.RED + "Sorry, but only a player can do this..."));
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());
         }
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+        return new ArrayList<>();
     }
 }

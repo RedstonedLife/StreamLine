@@ -1,9 +1,10 @@
 package net.plasmere.streamline.objects.configs;
 
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.config.backend.ConfigurationProvider;
 import net.plasmere.streamline.config.backend.YamlConfiguration;
@@ -31,15 +32,15 @@ import java.util.*;
 public class DiscordData {
     private Configuration conf;
     private final String fileString = "discord-data.yml";
-    private final File file = new File(StreamLine.getInstance().getConfDir(), fileString);
+    private final File file = new File(StreamLine.getInstance().getconfDir(), fileString);
     public TreeMap<Long, DataChannel> loadedChannels = new TreeMap<>();
 
     public TreeMap<String, Integer> toVerify = new TreeMap<>();
 
     public DiscordData(){
-        if (! StreamLine.getInstance().getConfDir().exists()) {
-            if (StreamLine.getInstance().getConfDir().mkdirs()) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
+        if (! StreamLine.getInstance().getconfDir().exists()) {
+            if (StreamLine.getInstance().getconfDir().mkdirs()) {
+                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getconfDir().getName());
             }
         }
 
@@ -365,7 +366,7 @@ public class DiscordData {
             }
 
             if (channelData.chatChannel.equals(ChatsHandler.getChannel("local"))) {
-                ServerInfo server = StreamLine.getInstance().getProxy().getServerInfo(channelData.identifier);
+                ServerInfo server = StreamLine.getInstance().getProxy().getServer(channelData.identifier).get().getServerInfo();
 
                 if (server == null) return;
 
@@ -407,7 +408,7 @@ public class DiscordData {
             }
 
             if (channelData.chatChannel.equals(ChatsHandler.getChannel("local"))) {
-                ServerInfo server = StreamLine.getInstance().getProxy().getServerInfo(channelData.identifier);
+                ServerInfo server = StreamLine.getInstance().getProxy().getServer(channelData.identifier).get().getServerInfo();
 
                 if (server == null) {
                     MessagingUtils.logWarning("Could not send bungee message for " + userID + " | Context : server == null");

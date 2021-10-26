@@ -24,14 +24,14 @@ import java.util.TreeSet;
 public class ServerConfig {
     private Configuration serverConfig;
     private final String setstring = "settings.yml";
-    private final File scfile = new File(StreamLine.getInstance().getConfDir(), setstring);
+    private final File scfile = new File(StreamLine.getInstance().getconfDir(), setstring);
 
     public ServerConfig(){
-        if (! StreamLine.getInstance().getConfDir().exists()) {
+        if (! StreamLine.getInstance().getconfDir().exists()) {
             if (! ConfigUtils.scMakeDefault) return;
 
-            if (StreamLine.getInstance().getConfDir().mkdirs()) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
+            if (StreamLine.getInstance().getconfDir().mkdirs()) {
+                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getconfDir().getName());
             }
         }
 
@@ -195,38 +195,38 @@ public class ServerConfig {
                     return StreamLine.getInstance().getProxy().getAllPlayers().size() + i;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
+                    return StreamLine.getInstance().getProxy().getConfiguration().getShowMaxPlayers();
                 }
             } else if (thing.startsWith("exact-")) {
                 try {
                     return StreamLine.getInstance().getProxy().getAllPlayers().size() - i;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
+                    return StreamLine.getInstance().getProxy().getConfiguration().getShowMaxPlayers();
                 }
             }
         }
 
         if (thing.startsWith("+")){
             try {
-                return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit() + Integer.parseInt(thing.substring(1));
+                return StreamLine.getInstance().getProxy().getConfiguration().getShowMaxPlayers() + Integer.parseInt(thing.substring(1));
             } catch (Exception e) {
                 e.printStackTrace();
-                return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
+                return StreamLine.getInstance().getProxy().getConfiguration().getShowMaxPlayers();
             }
         } else if (thing.startsWith("-")) {
             try {
-                return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit() - Integer.parseInt(thing.substring(1));
+                return StreamLine.getInstance().getProxy().getConfiguration().getShowMaxPlayers() - Integer.parseInt(thing.substring(1));
             } catch (Exception e) {
                 e.printStackTrace();
-                return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
+                return StreamLine.getInstance().getProxy().getConfiguration().getShowMaxPlayers();
             }
         } else {
             try {
                 return Integer.parseInt(thing);
             } catch (Exception e) {
                 e.printStackTrace();
-                return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
+                return StreamLine.getInstance().getProxy().getConfiguration().getShowMaxPlayers();
             }
         }
     }
@@ -265,14 +265,14 @@ public class ServerConfig {
                     return StreamLine.getInstance().getProxy().getAllPlayers().size() + i;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
+                    return StreamLine.getInstance().getProxy().getConfiguration().getShowMaxPlayers();
                 }
             } else if (thing.startsWith("exact-")) {
                 try {
                     return StreamLine.getInstance().getProxy().getAllPlayers().size() - i;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return StreamLine.getInstance().getProxy().getConfig().getPlayerLimit();
+                    return StreamLine.getInstance().getProxy().getConfiguration().getShowMaxPlayers();
                 }
             }
         }

@@ -3,34 +3,32 @@ package net.plasmere.streamline.commands.servers;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
-import net.md_5.bungee.api.ChatColor;
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.config.ServerInfo;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class GoToServerLobbyCommand extends Command implements TabExecutor {
+public class GoToServerLobbyCommand extends SLCommand {
     public GoToServerLobbyCommand(String base, String perm, String[] aliases) {
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args){
-        Map<String, ServerInfo> servers = ProxyServer.getInstance().getServers();
+    public void run(CommandSource sender, String[] args){
+        Collection<RegisteredServer> servers = StreamLine.getProxy().getAllServers();
         if ( args.length == 0 ) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
@@ -38,36 +36,27 @@ public class GoToServerLobbyCommand extends Command implements TabExecutor {
                 if (player.hasPermission("streamline.server.lobby") || player.hasPermission("streamline.*")) {
                     ProxyServer proxy = StreamLine.getInstance().getProxy();
 
-                    ServerInfo vanServer = proxy.getServerInfo(CommandsConfUtils.comBLobbyEnd);
+                    RegisteredServer vanServer = proxy.getServer(CommandsConfUtils.comBLobbyEnd).get();
 
-                    if (!vanServer.canAccess(player))
-                        player.sendMessage(new TextComponent(ChatColor.RED + "Cannot connect..."));
-                    else {
-                        player.sendMessage(new TextComponent(ChatColor.GREEN + "Connecting now..."));
-                        player.connect(vanServer, ServerConnectEvent.Reason.COMMAND);
-                    }
+                    MessagingUtils.sendBUserMessage(sender, "&aConnecting now...");
+                    player.createConnectionRequest(vanServer);
                 } else {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                 }
             } else {
-                sender.sendMessage(new TextComponent(ChatColor.RED + "Sorry, but only a player can do this..."));
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());
             }
         } else {
             if (!(sender instanceof Player))
                 return;
 
             Player player = (Player) sender;
+            ProxyServer proxy = StreamLine.getInstance().getProxy();
 
-            ServerInfo server = servers.get(args[0]);
-            if (server == null)
-                player.sendMessage(new TextComponent(ChatColor.RED + "No server specified..."));
-            else if (! server.canAccess(player))
-                player.sendMessage(new TextComponent(ChatColor.RED + "Cannot connect..."));
-            else
-            {
-                player.sendMessage(new TextComponent(ChatColor.GREEN + "Connecting now..."));
-                player.connect(server, ServerConnectEvent.Reason.COMMAND);
-            }
+            RegisteredServer server = proxy.getServer(args[0]).get();
+
+            MessagingUtils.sendBUserMessage(sender, "&aConnecting now...");
+            player.createConnectionRequest(server);
         }
     }
 
@@ -76,10 +65,8 @@ public class GoToServerLobbyCommand extends Command implements TabExecutor {
     {
         TreeSet<String> servers = new TreeSet<>();
 
-        for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getAllServers().values()) {
-            if (! serverInfo.canAccess(sender)) continue;
-
-            servers.add(serverInfo.getName().toLowerCase(Locale.ROOT));
+        for (RegisteredServer serverInfo : StreamLine.getInstance().getProxy().getAllServers()) {
+            servers.add(serverInfo.getServerInfo().getName().toLowerCase(Locale.ROOT));
         }
 
         return TextUtils.getCompletion(servers, args[0]);

@@ -1,27 +1,27 @@
 package net.plasmere.streamline.commands.staff;
 
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.luckperms.api.model.group.Group;
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.config.ServerInfo;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.connection.Server;
-import net.md_5.bungee.api.plugin.Command;
 
 import java.util.*;
 
-public class GlobalOnlineCommand extends Command {
+public class GlobalOnlineCommand extends SLCommand {
 
     public GlobalOnlineCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args) {
         try {
             compileList(sender);
         } catch (Exception e) {
@@ -31,7 +31,7 @@ public class GlobalOnlineCommand extends Command {
 
     // Use in a try statement:
     private void compileList(CommandSource sendTo){
-        if (StreamLine.getInstance().getProxy().getOnlineCount() <= 0){
+        if (StreamLine.getInstance().getProxy().getPlayerCount() <= 0){
             sendTo.sendMessage(TextUtils.codedText(MessageConfUtils.onlineMessageNoPlayers()));
             return;
         }
@@ -45,7 +45,7 @@ public class GlobalOnlineCommand extends Command {
 
         MessagingUtils.sendBUserMessage(sendTo,
                 MessageConfUtils.onlineMessageBMain()
-                        .replace("%amount%", Integer.toString(StreamLine.getInstance().getProxy().getOnlineCount()))
+                        .replace("%amount%", Integer.toString(StreamLine.getInstance().getProxy().getPlayerCount()))
                         .replace("%servers%", compileServers())
                         .replace("%online%", Objects.requireNonNull(getOnline(groups)))
         );
@@ -54,25 +54,25 @@ public class GlobalOnlineCommand extends Command {
     private String compileServers(){
         StringBuilder msg = new StringBuilder();
 
-        List<ServerInfo> servers = new ArrayList<>();
+        List<RegisteredServer> servers = new ArrayList<>();
 
-        for (ServerInfo server : StreamLine.getInstance().getProxy().getAllServers().values()){
-            if (server.getPlayers().size() > 0) {
+        for (RegisteredServer server : StreamLine.getInstance().getProxy().getAllServers()){
+            if (server.getPlayersConnected().size() > 0) {
                 servers.add(server);
             }
         }
 
         int i = 1;
-        for (ServerInfo server : servers){
+        for (RegisteredServer server : servers){
             if (i != servers.size()) {
                 msg.append(TextUtils.newLined(MessageConfUtils.onlineMessageBServers()
-                        .replace("%server%", server.getName().toUpperCase())
-                        .replace("%count%", Integer.toString(server.getPlayers().size()))
+                        .replace("%server%", server.getServerInfo().getName().toUpperCase())
+                        .replace("%count%", Integer.toString(server.getPlayersConnected().size()))
                 )).append("\n");
             } else {
                 msg.append(TextUtils.newLined(MessageConfUtils.onlineMessageBServers()
-                        .replace("%server%", server.getName().toUpperCase())
-                        .replace("%count%", Integer.toString(server.getPlayers().size()))
+                        .replace("%server%", server.getServerInfo().getName().toUpperCase())
+                        .replace("%count%", Integer.toString(server.getPlayersConnected().size()))
                 ));
             }
             i++;
@@ -83,7 +83,7 @@ public class GlobalOnlineCommand extends Command {
     private String getOnline(Set<Group> groups){
         Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
 
-        HashMap<Player, Server> playerServers = new HashMap<>();
+        HashMap<Player, ServerConnection> playerServers = new HashMap<>();
         HashMap<Player, String> playerGroup = new HashMap<>();
 
         for (Player player : players){
@@ -113,7 +113,7 @@ public class GlobalOnlineCommand extends Command {
         return msg.toString();
     }
 
-    private String getGroupedPlayers(String group, HashMap<Player, String> playerGroup, HashMap<Player, Server> playerServers){
+    private String getGroupedPlayers(String group, HashMap<Player, String> playerGroup, HashMap<Player, ServerConnection> playerServers){
         List<Player> players = new ArrayList<>();
 
         for (Player player : playerGroup.keySet()){
@@ -121,20 +121,19 @@ public class GlobalOnlineCommand extends Command {
                 players.add(player);
         }
 
-
         return MessageConfUtils.onlineMessageBPlayersMain()
                 .replace("%group%", group.toUpperCase())
                 .replace("%count%", Integer.toString(players.size()))
                 .replace("%playerbulk%", getPlayerBulk(players, playerServers));
     }
 
-    private String getPlayerBulk(List<Player> players, HashMap<Player, Server> playerServers){
+    private String getPlayerBulk(List<Player> players, HashMap<Player, ServerConnection> playerServers){
         StringBuilder text = new StringBuilder();
 
         int i = 0;
 
         for (Player player : players){
-            ServerConnectionserver = playerServers.get(player);
+            ServerConnection server = playerServers.get(player);
             if (! (i == players.size() - 1))
                 text.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.onlineMessageBPlayersBulkNotLast(), player)
                         .replace("%server%", server.getServerInfo().getName())
@@ -147,5 +146,10 @@ public class GlobalOnlineCommand extends Command {
         }
 
         return text.toString();
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+        return new ArrayList<>();
     }
 }

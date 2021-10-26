@@ -455,7 +455,7 @@ public class PartyUtils {
                 MessagingUtils.sendBPUserMessage(party, p, m, warpMembers);
             }
 
-            m.connect(sender.getCurrentServer().get().getServerInfo());
+            m.createConnectionRequest(StreamLine.getProxy().getServer(sender.getServer().getServerInfo().getName()).get());
         }
 
         if (ConfigUtils.moduleDEnabled) {

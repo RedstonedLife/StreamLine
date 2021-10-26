@@ -369,7 +369,7 @@ public class TextUtils {
 
     public static String newLined(String text){
         try {
-            return text.replace("%newline%", "\n").replace("%uniques%", String.valueOf(StreamLine.getInstance().getPlDir().listFiles().length));
+            return text.replace("%newline%", "\n").replace("%uniques%", String.valueOf(StreamLine.getInstance().getplDir().listFiles().length));
         } catch (Exception e) {
             return text.replace("%newline%", "\n");
         }

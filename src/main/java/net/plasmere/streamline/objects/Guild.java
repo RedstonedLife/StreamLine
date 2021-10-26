@@ -71,7 +71,7 @@ public class Guild {
     private void construct(String uuid, boolean createNew) throws IOException {
         if (uuid == null) return;
 
-        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getGDir(), uuid);
+        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getgDir(), uuid);
 
         if (createNew) {
             try {

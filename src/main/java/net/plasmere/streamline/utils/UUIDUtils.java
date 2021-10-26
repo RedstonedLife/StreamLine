@@ -202,7 +202,7 @@ public class UUIDUtils {
     }
 
     public static File getPlayerFile(String uuid){
-        return new File(StreamLine.getInstance().getPlDir(), uuid + ".properties");
+        return new File(StreamLine.getInstance().getplDir(), uuid + ".properties");
     }
 
     public static File getCachedGuildFile(String thing) {
@@ -216,7 +216,7 @@ public class UUIDUtils {
     }
 
     public static File getGuildFile(String uuid){
-        return new File(StreamLine.getInstance().getGDir(), uuid + ".properties");
+        return new File(StreamLine.getInstance().getgDir(), uuid + ".properties");
     }
 
     public static File getCachedFile(String pathTo, String thing) {
@@ -230,10 +230,10 @@ public class UUIDUtils {
         if (thing.equals("")) return null;
 
         try {
-            if (path.equals(StreamLine.getInstance().getPlDir())) {
+            if (path.equals(StreamLine.getInstance().getplDir())) {
                 return cachedPlayerFiles.get(swapToUUID(thing), (u) -> getPlayerFile(swapToUUID(thing)));
             }
-            if (path.equals(StreamLine.getInstance().getGDir())) {
+            if (path.equals(StreamLine.getInstance().getgDir())) {
                 return cachedGuildFiles.get(swapToUUID(thing), (u) -> getGuildFile(swapToUUID(thing)));
             } else {
                 return cachedOtherFiles.get(thing, (u) -> new File(path, thing));

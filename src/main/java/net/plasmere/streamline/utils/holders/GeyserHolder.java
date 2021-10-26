@@ -1,10 +1,10 @@
 package net.plasmere.streamline.utils.holders;
 
-import net.md_5.bungee.api.ProxyServer;
 import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.GeyserFile;
 import net.plasmere.streamline.utils.MessagingUtils;
+import net.plasmere.streamline.utils.PlayerUtils;
 import org.geysermc.connector.GeyserConnector;
 import org.geysermc.connector.network.session.GeyserSession;
 
@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.UUID;
 
 public class GeyserHolder {
-    public File playerPath = new File(StreamLine.getInstance().getPlDir(), "geyser" + File.separator);
+    public File playerPath = new File(StreamLine.getInstance().getplDir(), "geyser" + File.separator);
     public GeyserConnector connector;
     public boolean enabled;
     public GeyserFile file;
@@ -27,7 +27,7 @@ public class GeyserHolder {
     }
 
     public boolean isPresent(){
-        if (ProxyServer.getInstance().getPluginManager().getPlugin("Geyser-BungeeCord") == null) {
+        if (StreamLine.getProxy().getPluginManager().getPlugin("Geyser-BungeeCord") == null) {
             return false;
         }
 

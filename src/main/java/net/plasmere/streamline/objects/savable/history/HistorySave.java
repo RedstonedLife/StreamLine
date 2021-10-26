@@ -21,7 +21,7 @@ public class HistorySave {
 
     public HistorySave(String uuid) {
         this.fileString = uuid + ".yml";
-        this.file = new File(StreamLine.getInstance().getChatHistoryDir(), this.fileString);
+        this.file = new File(StreamLine.getInstance().getchatHistoryDir(), this.fileString);
         this.uuid = uuid;
 
         this.conf = loadConfig();

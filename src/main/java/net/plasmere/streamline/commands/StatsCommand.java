@@ -2,10 +2,9 @@ package net.plasmere.streamline.commands;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -15,13 +14,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class StatsCommand extends Command implements TabExecutor {
+public class StatsCommand extends SLCommand {
     public StatsCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args) {
         if (sender instanceof Player) {
             if (args.length <= 0 || ! CommandsConfUtils.comBStatsOthers) {
                 PlayerUtils.info(sender, PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender)));

@@ -1,18 +1,19 @@
 package net.plasmere.streamline.utils.api;
 
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.PluginUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-public class CommandBuilder extends Command {
+public class CommandBuilder extends SLCommand {
 
     /**
      *
@@ -43,7 +44,7 @@ public class CommandBuilder extends Command {
         this.events = events;
         this.permissionNeeded = permissionNeeded;
         this.permissionMessage = permissionMessage;
-        this.setPermissionMessage(permissionMessage);
+//        this.setPermissionMessage(permissionMessage);
     }
 
     /**
@@ -69,7 +70,7 @@ public class CommandBuilder extends Command {
      * @param events -> All the events that are going to be executed when executing the command.
      */
     public CommandBuilder(String commandLabel, List<Event> events) {
-        super(commandLabel);
+        super(commandLabel, "");
         this.commandLabel = commandLabel;
         this.events = events;
     }
@@ -82,7 +83,7 @@ public class CommandBuilder extends Command {
      * @param commandLabel
      */
     public CommandBuilder(String commandLabel) {
-        super(commandLabel);
+        super(commandLabel, "");
         this.commandLabel = commandLabel;
     }
 
@@ -93,9 +94,14 @@ public class CommandBuilder extends Command {
      * @param args -> The arguments of the command.
      */
     @Override
-    public void execute(CommandSource sender, String[] args) {
+    public void run(CommandSource sender, String[] args) {
         if(sender.hasPermission(getPermissionNeeded()))
             executeEvents(PlayerUtils.getPlayerStat(sender));
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+        return new ArrayList<>();
     }
 
     private void executeEvents(SavablePlayer player) {

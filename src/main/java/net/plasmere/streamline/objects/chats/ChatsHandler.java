@@ -1,9 +1,8 @@
 package net.plasmere.streamline.objects.chats;
 
 import com.velocitypowered.api.command.CommandSource;
-import net.md_5.bungee.api.config.ServerInfo;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.connection.Server;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.Guild;
@@ -192,8 +191,8 @@ public class ChatsHandler {
         switch (chatChannel.name) {
             case "local":
                 if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                    for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getAllServers().values()) {
-                        thing.add(serverInfo.getName());
+                    for (RegisteredServer serverInfo : StreamLine.getInstance().getProxy().getAllServers()) {
+                        thing.add(serverInfo.getServerInfo().getName());
                     }
                 }
                 break;
@@ -235,8 +234,8 @@ public class ChatsHandler {
             switch (chatChannel.name) {
                 case "local":
                     if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                        for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getAllServers().values()) {
-                            thing.add(serverInfo.getName());
+                        for (RegisteredServer serverInfo : StreamLine.getInstance().getProxy().getAllServers()) {
+                            thing.add(serverInfo.getServerInfo().getName());
                         }
                     }
                     break;

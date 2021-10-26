@@ -2,14 +2,16 @@ package net.plasmere.streamline.commands;
 
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
-public class StreamCommand extends Command {
+import java.util.ArrayList;
+
+public class StreamCommand extends SLCommand {
     private String perm = "";
 
     public StreamCommand(String base, String perm, String[] aliases) {
@@ -19,7 +21,7 @@ public class StreamCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSource sender, String[] args){
+    public void run(CommandSource sender, String[] args){
         if (sender instanceof Player){
             Player player = (Player) sender;
 
@@ -48,5 +50,10 @@ public class StreamCommand extends Command {
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());
         }
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSource sender, String[] args) {
+        return new ArrayList<>();
     }
 }

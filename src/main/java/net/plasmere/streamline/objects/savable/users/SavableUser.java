@@ -68,7 +68,7 @@ public abstract class SavableUser {
 
         preConstruct(fileName);
 
-        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getPlDir(), fileName);
+        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getplDir(), fileName);
 
         if (createNew) {
             try {

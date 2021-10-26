@@ -1,28 +1,27 @@
 package net.plasmere.streamline.utils;
 
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.plasmere.streamline.StreamLine;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.md_5.bungee.api.config.ServerInfo;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class JDAPingerUtils {
     private static final EmbedBuilder eb = new EmbedBuilder();
 
     private static int i = 0;
 
-    private static String doPing(ServerInfo server, StreamLine plugin){
+    private static String doPing(RegisteredServer server, StreamLine plugin){
         i++;
         StringBuilder text = new StringBuilder();
-
+        
         try {
-            Socket sock = new Socket(server.getAddress().getAddress(), server.getAddress().getPort());
+            Socket sock = new Socket(server.getServerInfo().getAddress().getAddress(), server.getServerInfo().getAddress().getPort());
 
             DataOutputStream out = new DataOutputStream(sock.getOutputStream());
             DataInputStream in = new DataInputStream(sock.getInputStream());
@@ -47,13 +46,13 @@ public class JDAPingerUtils {
             text.append((data[0] == null) ? "not reachable" : "reachable");
         } catch (Exception e) {
             text.append("not reachable");
-            plugin.getLogger().info("[ " + server.getName().toLowerCase() + " : " + i + " / " + plugin.getProxy().getAllServers().size() + " ] " + server.getAddress().getAddress() + ":" +
-                    server.getAddress().getPort() + " (" + server.getPlayers().size() + ") : " + text + " --> \n" + e.getMessage());
+            plugin.getLogger().info("[ " + server.getServerInfo().getName().toLowerCase() + " : " + i + " / " + plugin.getProxy().getAllServers().size() + " ] " + server.getServerInfo().getAddress() + ":" +
+                    server.getServerInfo().getAddress().getPort() + " (" + server.getPlayersConnected().size() + ") : " + text + " --> \n" + e.getMessage());
             return text.toString();
         }
 
-        plugin.getLogger().info("[ " + server.getName().toLowerCase() + " : " + i + " / " + plugin.getProxy().getAllServers().size() + " ] " + server.getAddress().getAddress() + ":" +
-                server.getAddress().getPort() + " (" + server.getPlayers().size() + ") : " + text);
+        plugin.getLogger().info("[ " + server.getServerInfo().getName().toLowerCase() + " : " + i + " / " + plugin.getProxy().getAllServers().size() + " ] " + server.getServerInfo().getAddress() + ":" +
+                server.getServerInfo().getAddress().getPort() + " (" + server.getPlayersConnected().size() + ") : " + text);
 
         return text.toString();
     }
@@ -63,24 +62,23 @@ public class JDAPingerUtils {
 
         eb.setDescription("Pinging " + plugin.getProxy().getAllServers().size() + " servers... Give me about " + plugin.getProxy().getAllServers().size() * 1.2 + " seconds...");
         channel.sendMessage(eb.build()).queue();
-        Map<String, ServerInfo> serversM = plugin.getProxy().getAllServers();
-        Set<ServerInfo> servers = new HashSet<>(serversM.values());
+        Collection<RegisteredServer> servers = plugin.getProxy().getAllServers();
         try {
             i = 0;
 
             // DEBUG
             int it = 0;
-            for (ServerInfo server : servers){
+            for (RegisteredServer server : servers){
                 it++;
-                plugin.getLogger().info("DEBUG : [ " + server.getName().toLowerCase() + " : " + it + " / " + plugin.getProxy().getAllServers().size() + " ] " + server.getAddress().getAddress() + ":" +
-                        server.getAddress().getPort() + " (" + server.getPlayers().size() + ")");
+                plugin.getLogger().info("DEBUG : [ " + server.getServerInfo().getName().toLowerCase() + " : " + it + " / " + plugin.getProxy().getAllServers().size() + " ] " + server.getServerInfo().getAddress().getAddress() + ":" +
+                        server.getServerInfo().getAddress().getPort() + " (" + server.getPlayersConnected().size() + ")");
             }
 
-            for (ServerInfo server : servers) {
+            for (RegisteredServer server : servers) {
                 String msg = "";
                 try {
-                    msg = server.getName().toUpperCase() + " " + i + " / " + plugin.getProxy().getAllServers().size() + " [ " + server.getAddress().getAddress() + server.getAddress().getPort() + " ] (Online: " +
-                            server.getPlayers().size() + ") : " + doPing(server, plugin) + "\n";
+                    msg = server.getServerInfo().getName().toUpperCase() + " " + i + " / " + plugin.getProxy().getAllServers().size() + " [ " + server.getServerInfo().getAddress().getAddress() + server.getServerInfo().getAddress().getPort() + " ] (Online: " +
+                            server.getPlayersConnected().size() + ") : " + doPing(server, plugin) + "\n";
                     channel.sendMessage(eb.setDescription(msg).build()).queue();
                 } catch (Exception e){
                     channel.sendMessage(eb.setDescription("Sorry, but the ports couldn't be checked...").build()).queue();
@@ -89,7 +87,7 @@ public class JDAPingerUtils {
         } catch (NullPointerException n){
             n.printStackTrace();
         } catch (Exception e){
-            plugin.getLogger().warning("An unknown error occurred with sending JDAPinger message...");
+            plugin.getLogger().warn("An unknown error occurred with sending JDAPinger message...");
             e.printStackTrace();
         }
         plugin.getLogger().info("Sent ping message!");

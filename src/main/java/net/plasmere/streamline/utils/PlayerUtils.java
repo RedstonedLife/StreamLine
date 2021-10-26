@@ -107,7 +107,7 @@ public class PlayerUtils {
     public static boolean existsByUUID(String uuid){
         if (uuid.equals("%")) return new File(pathToPlayers, "console" + ".properties").exists();
 
-        return new File(StreamLine.getInstance().getPlDir(), uuid + ".properties").exists();
+        return new File(StreamLine.getInstance().getplDir(), uuid + ".properties").exists();
     }
 
     public static boolean isStats(SavablePlayer stat){
@@ -1941,7 +1941,7 @@ public class PlayerUtils {
     }
 
     public static TreeList<String> getChatHistoryFilesByUUID() {
-        File[] files = StreamLine.getInstance().getChatHistoryDir().listFiles();
+        File[] files = StreamLine.getInstance().getchatHistoryDir().listFiles();
         TreeList<String> thing = new TreeList<>();
 
         if (files == null) return thing;

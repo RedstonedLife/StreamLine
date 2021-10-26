@@ -1,6 +1,6 @@
 package net.plasmere.streamline.objects.configs;
 
-import net.md_5.bungee.api.config.ServerInfo;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 
@@ -201,8 +201,8 @@ public class ServerPermissions {
     public List<String> getServers(){
         List<String> defaults = new ArrayList<>();
 
-        for (ServerInfo si : StreamLine.getInstance().getProxy().getAllServers().values()){
-            defaults.add(si.getName() + "=" + defaultAllow);
+        for (RegisteredServer si : StreamLine.getInstance().getProxy().getAllServers()){
+            defaults.add(si.getServerInfo().getName() + "=" + defaultAllow);
         }
 
         return defaults;

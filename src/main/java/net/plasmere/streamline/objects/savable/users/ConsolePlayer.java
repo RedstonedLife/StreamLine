@@ -1,6 +1,6 @@
 package net.plasmere.streamline.objects.savable.users;
 
-import net.md_5.bungee.api.*;
+import com.velocitypowered.api.proxy.ProxyServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 
