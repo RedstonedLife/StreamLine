@@ -40,7 +40,9 @@ import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -504,7 +506,15 @@ public class StreamLine extends Plugin {
 
 		PluginUtils.state = NetworkState.RUNNING;
 
-		new Metrics(this, 13153);
+		Metrics metrics = new Metrics(this, 13153);
+
+//		metrics.addCustomChart(new Metrics.SimpleBarChart("discoverable-ips", new Callable<Map<String, Integer>>() {
+//			@Override
+//			public Map<String, Integer> call() throws Exception {
+//				Map<String, Integer> map = new HashMap<>();
+//				map.put();
+//			}
+//		}));
 	}
 
 	@Override
