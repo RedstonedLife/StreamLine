@@ -6,7 +6,7 @@
 
     <groupId>net.plasmere</groupId>
     <artifactId>StreamLine</artifactId>
-    <version>1.0.14.4</version>
+    <version>1.0.14.5</version>
     <packaging>jar</packaging>
 
     <name>StreamLine</name>
@@ -69,28 +69,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
-                <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.bstats</pattern>
-                            <!-- Replace this with your package! -->
-                            <shadedPattern>your.package</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -148,12 +126,12 @@
             <scope>provided</scope>
         </dependency>
         <!--BStats-->
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bungeecord</artifactId>
-            <version>2.2.1</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.bstats</groupId>-->
+<!--            <artifactId>bstats-bungeecord</artifactId>-->
+<!--            <version>2.2.1</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
         <!--Discord JDA-->
         <dependency>
             <groupId>net.dv8tion</groupId>

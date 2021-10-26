@@ -1,5 +1,5 @@
 name: StreamLine
-version: 1.0.14.4
+version: 1.0.14.5
 main: net.plasmere.streamline.StreamLine
 author: Nitrate
 depends: []

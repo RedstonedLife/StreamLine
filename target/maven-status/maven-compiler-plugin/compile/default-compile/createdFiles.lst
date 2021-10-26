@@ -1,3 +1,4 @@
+net\plasmere\streamline\libs\Metrics$CustomChart.class
 net\plasmere\streamline\objects\timers\PlayerClearTimer.class
 net\plasmere\streamline\commands\staff\JDAPingerCommand.class
 net\plasmere\streamline\utils\MessagingUtils.class
@@ -8,6 +9,7 @@ net\plasmere\streamline\utils\PermissionHelper.class
 net\plasmere\streamline\commands\staff\StaffChatCommand.class
 net\plasmere\streamline\commands\staff\TeleportCommand.class
 net\plasmere\streamline\StreamLine$1.class
+net\plasmere\streamline\libs\Metrics$MetricsBase.class
 net\plasmere\streamline\listeners\PluginMessagingListener.class
 net\plasmere\streamline\commands\messaging\BVerifyCommand.class
 net\plasmere\streamline\commands\GCQuickCommand.class
@@ -15,6 +17,7 @@ net\plasmere\streamline\discordbot\commands\ReportCommand.class
 net\plasmere\streamline\events\EventsHandler$1.class
 net\plasmere\streamline\discordbot\commands\VerifyCommand.class
 net\plasmere\streamline\objects\timers\PlayerSaveTimer.class
+net\plasmere\streamline\libs\Metrics$AdvancedBarChart.class
 net\plasmere\streamline\utils\holders\LPHolder.class
 net\plasmere\streamline\commands\messaging\ChatChannelCommand.class
 net\plasmere\streamline\utils\FaceFetcher.class
@@ -28,6 +31,7 @@ net\plasmere\streamline\utils\PartyUtils$1.class
 net\plasmere\streamline\utils\GuildUtils$1.class
 net\plasmere\streamline\listeners\ChatListener.class
 net\plasmere\streamline\utils\holders\GeyserHolder.class
+net\plasmere\streamline\libs\Metrics.class
 net\plasmere\streamline\objects\enums\MessageServerType.class
 net\plasmere\streamline\commands\staff\DeleteStatCommand.class
 net\plasmere\streamline\StreamLine.class
@@ -42,6 +46,7 @@ net\plasmere\streamline\config\from\From$FileType.class
 net\plasmere\streamline\objects\savable\users\ConsolePlayer.class
 net\plasmere\streamline\objects\chats\Chat.class
 net\plasmere\streamline\utils\UUIDUtils.class
+net\plasmere\streamline\libs\Metrics$SimplePie.class
 net\plasmere\streamline\objects\chats\ChatsHandler.class
 net\plasmere\streamline\utils\PlayerUtils.class
 net\plasmere\streamline\objects\chats\ChatChannel.class
@@ -53,6 +58,7 @@ net\plasmere\streamline\discordbot\BoostListener.class
 net\plasmere\streamline\objects\exceptions\OfflinePlayerException.class
 net\plasmere\streamline\commands\staff\scripts\ScriptReloadCommand.class
 net\plasmere\streamline\commands\GuildCommand.class
+net\plasmere\streamline\libs\Metrics$SimpleBarChart.class
 net\plasmere\streamline\events\EventsHandler.class
 net\plasmere\streamline\commands\staff\InfoCommand.class
 net\plasmere\streamline\commands\staff\settings\SettingsEditCommand.class
@@ -67,6 +73,7 @@ net\plasmere\streamline\objects\Party$Level.class
 net\plasmere\streamline\objects\Punishment.class
 net\plasmere\streamline\commands\staff\settings\LanguageCommand.class
 net\plasmere\streamline\config\from\From_1_0_14_0.class
+net\plasmere\streamline\libs\Metrics$DrilldownPie.class
 net\plasmere\streamline\objects\timers\MOTDUpdaterTimer.class
 net\plasmere\streamline\commands\servers\GoToServerVanillaCommand.class
 net\plasmere\streamline\objects\configs\ChatConfig.class
@@ -75,6 +82,7 @@ net\plasmere\streamline\commands\PCQuickCommand.class
 net\plasmere\streamline\objects\GeyserFile.class
 net\plasmere\streamline\commands\staff\NetworkPointsCommand.class
 net\plasmere\streamline\commands\staff\GlobalOnlineCommand.class
+net\plasmere\streamline\libs\Metrics$AdvancedPie.class
 net\plasmere\streamline\utils\api\CommandBuilder.class
 net\plasmere\streamline\objects\configs\Bans.class
 net\plasmere\streamline\objects\lists\ProxiedPlayerSet.class
@@ -95,6 +103,7 @@ net\plasmere\streamline\discordbot\commands\StaffChatCommand.class
 net\plasmere\streamline\events\enums\Condition.class
 net\plasmere\streamline\commands\staff\events\BTagCommand.class
 net\plasmere\streamline\commands\PingCommand.class
+net\plasmere\streamline\libs\Metrics$JsonObjectBuilder.class
 net\plasmere\streamline\objects\configs\OfflineStats.class
 net\plasmere\streamline\config\CommandsConfUtils.class
 net\plasmere\streamline\commands\staff\PartiesCommand.class
@@ -113,6 +122,7 @@ net\plasmere\streamline\commands\staff\spy\GSPYCommand.class
 net\plasmere\streamline\listeners\ProxyPingListener.class
 net\plasmere\streamline\commands\messaging\ReplyCommand.class
 net\plasmere\streamline\config\MessageConfUtils.class
+net\plasmere\streamline\libs\Metrics$MultiLineChart.class
 net\plasmere\streamline\objects\Guild.class
 net\plasmere\streamline\listeners\JoinLeaveListener.class
 net\plasmere\streamline\objects\timers\PlayerXPTimer.class
@@ -128,6 +138,8 @@ net\plasmere\streamline\discordbot\ReadyListener.class
 net\plasmere\streamline\objects\Guild$Level.class
 net\plasmere\streamline\utils\PartyUtils.class
 net\plasmere\streamline\commands\messaging\MessageCommand.class
+net\plasmere\streamline\libs\Metrics$JsonObjectBuilder$JsonObject.class
+net\plasmere\streamline\libs\Metrics$SingleLineChart.class
 net\plasmere\streamline\objects\DataChannel.class
 net\plasmere\streamline\scripts\Script.class
 net\plasmere\streamline\utils\PluginUtils.class
