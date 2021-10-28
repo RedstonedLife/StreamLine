@@ -26,19 +26,26 @@ public class FindFrom {
                 new From_1_0_14_0(language);
                 new From_1_0_14_2(language);
                 new From_1_0_14_3(language);
+                new From_1_0_14_5(language);
                 break;
             case "1.0.14.0":
                 new From_1_0_14_0(language);
                 new From_1_0_14_2(language);
                 new From_1_0_14_3(language);
+                new From_1_0_14_5(language);
                 break;
             case "1.0.14.1":
             case "1.0.14.2":
                 new From_1_0_14_2(language);
                 new From_1_0_14_3(language);
+                new From_1_0_14_5(language);
                 break;
             case "1.0.14.3":
                 new From_1_0_14_3(language);
+                new From_1_0_14_5(language);
+                break;
+            case "1.0.14.5":
+                new From_1_0_14_5(language);
                 break;
         }
 
