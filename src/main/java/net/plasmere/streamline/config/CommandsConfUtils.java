@@ -41,6 +41,8 @@ public class CommandsConfUtils {
     public static String comBPingBase = StreamLine.config.getCommandString("commands.bungee.ping.base");
     public static List<String> comBPingAliases = StreamLine.config.getCommandStringList("commands.bungee.ping.aliases");
     public static String comBPingPerm = StreamLine.config.getCommandString("commands.bungee.ping.permission");
+    public static boolean comBPingOthers = StreamLine.config.getCommandBoolean("commands.bungee.ping.view-others.enabled");
+    public static String comBPingPermOthers = StreamLine.config.getCommandString("commands.bungee.ping.view-others.permission");
     // Plugins.
     public static boolean comBPlugins = StreamLine.config.getCommandBoolean("commands.bungee.plugins.enabled");
     public static String comBPluginsBase = StreamLine.config.getCommandString("commands.bungee.plugins.base");

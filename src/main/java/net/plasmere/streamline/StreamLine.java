@@ -40,10 +40,7 @@ import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -508,13 +505,49 @@ public class StreamLine extends Plugin {
 
 		Metrics metrics = new Metrics(this, 13153);
 
-//		metrics.addCustomChart(new Metrics.SimpleBarChart("discoverable-ips", new Callable<Map<String, Integer>>() {
-//			@Override
-//			public Map<String, Integer> call() throws Exception {
-//				Map<String, Integer> map = new HashMap<>();
-//				map.put();
-//			}
-//		}));
+		if (ConfigUtils.bstatsMakeDiscoverable) {
+			metrics.addCustomChart(new Metrics.SimplePie("server_discoverables", new Callable<String>() {
+				@Override
+				public String call() throws Exception {
+					return ConfigUtils.bstatsDisvoverableAddress;
+				}
+			}));
+		}
+
+		metrics.addCustomChart(new Metrics.SimplePie("discord_enabled", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return String.valueOf(ConfigUtils.moduleDEnabled);
+			}
+		}));
+
+		metrics.addCustomChart(new Metrics.SimplePie("total_guilds", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return String.valueOf(GuildUtils.allGuildsCount());
+			}
+		}));
+
+		metrics.addCustomChart(new Metrics.SimplePie("loaded_guilds", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return String.valueOf(GuildUtils.getGuilds().size());
+			}
+		}));
+
+		metrics.addCustomChart(new Metrics.SimplePie("loaded_parties", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return String.valueOf(PartyUtils.getParties().size());
+			}
+		}));
+
+		metrics.addCustomChart(new Metrics.SimplePie("custom_chats_enabled", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return String.valueOf(ConfigUtils.customChats);
+			}
+		}));
 	}
 
 	@Override

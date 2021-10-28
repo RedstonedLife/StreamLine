@@ -37,6 +37,30 @@ public class GuildUtils {
     // Guild , Invites
     public static Map<Guild, List<SavableUser>> invites = new HashMap<>();
 
+    public static int allGuildsCount() {
+        File[] files = StreamLine.getInstance().getGDir().listFiles();
+
+        if (files == null) return 0;
+
+        int amount = 0;
+        for (File file : files) {
+            try {
+                if (! file.getName().endsWith(".properties")) continue;
+
+                Guild guild = getOrGetGuild(file.getName().replace(".properties", ""));
+
+                if (guild == null) continue;
+                if (guild.leaderUUID == null) continue;
+
+                amount ++;
+            } catch (Exception e) {
+                // do nothing
+            }
+        }
+
+        return amount;
+    }
+
     public static void removeInvite(Guild guild, SavableUser player) {
         invites.get(guild).remove(player);
     }

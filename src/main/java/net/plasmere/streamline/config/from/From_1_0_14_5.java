@@ -41,7 +41,8 @@ public class From_1_0_14_5 extends From{
 
     @Override
     public void setupCommandsFix() {
-
+        addUpdatedCommandsEntry("commands.bungee.ping.view-others.enabled", true);
+        addUpdatedCommandsEntry("commands.bungee.ping.view-others.permission", "streamline.command.ping.others");
     }
 
     @Override

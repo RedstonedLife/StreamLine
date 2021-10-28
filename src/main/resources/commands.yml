@@ -96,6 +96,12 @@ commands:
       aliases:
         - "pn"
         - "png"
+      # For viewing others.
+      view-others:
+        # Enables / disables viewing other ping.
+        enabled: true
+        # Custom permission.
+        permission: "streamline.command.ping.others"
     # The plugins command.
     plugins:
       # Enables / disables the use of the "plugins" bungee command.
