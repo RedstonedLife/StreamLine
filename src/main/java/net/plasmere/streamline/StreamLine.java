@@ -1,6 +1,5 @@
 package net.plasmere.streamline;
 
-import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.plasmere.streamline.config.ConfigHandler;
 import net.plasmere.streamline.config.ConfigUtils;
@@ -13,7 +12,7 @@ import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.EventsReader;
 import net.plasmere.streamline.libs.Metrics;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.configs.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
@@ -490,7 +489,7 @@ public class StreamLine extends Plugin {
 		ConsolePlayer console = PlayerUtils.applyConsole();
 		if (GuildUtils.existsByUUID(console.guild)) {
 			try {
-				GuildUtils.addGuild(new Guild(console.guild, false));
+				GuildUtils.addGuild(new SavableGuild(console.guild, false));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -546,6 +545,13 @@ public class StreamLine extends Plugin {
 			@Override
 			public String call() throws Exception {
 				return String.valueOf(ConfigUtils.customChats);
+			}
+		}));
+
+		metrics.addCustomChart(new Metrics.SimplePie("proxy_chat_enabled", new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return String.valueOf(serverConfig.getProxyChatEnabled());
 			}
 		}));
 	}
@@ -621,7 +627,7 @@ public class StreamLine extends Plugin {
 	}
 
 	public void saveGuilds(){
-		for (Guild guild : GuildUtils.getGuilds()){
+		for (SavableGuild guild : GuildUtils.getGuilds()){
 			try {
 				guild.saveInfo();
 			} catch (IOException e) {

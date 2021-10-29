@@ -906,4 +906,10 @@ public class TextUtils {
 
         return false;
     }
+
+    public static List<String> getStringListFromString(String string) {
+        String[] strings = string.split(",");
+
+        return List.of(strings);
+    }
 }

@@ -107,6 +107,10 @@
             <id>viaversion-repo</id>
             <url>https://repo.viaversion.com</url>
         </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -136,7 +140,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.3.0_299</version>
+            <version>4.3.0_339</version>
         </dependency>
         <!--LuckPerms-->
         <dependency>
@@ -184,5 +188,12 @@
             <artifactId>adventure-text-serializer-legacy</artifactId>
             <version>4.9.2</version>
         </dependency>
+        <!--https://github.com/NuVotifier/NuVotifier/wiki/Developer-Documentation#maven-->
+<!--        <dependency>-->
+<!--            <groupId>com.vexsoftware</groupId>-->
+<!--            <artifactId>nuvotifier-universal</artifactId>-->
+<!--            <version>2.7.3</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
     </dependencies>
 </project>

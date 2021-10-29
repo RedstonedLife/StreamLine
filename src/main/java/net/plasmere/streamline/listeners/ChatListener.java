@@ -13,7 +13,7 @@ import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.savable.users.Player;
 import net.plasmere.streamline.utils.*;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -54,7 +54,7 @@ public class ChatListener implements Listener {
                 }
 
                 if (GuildUtils.pHasGuild(stat)) {
-                    GuildUtils.addGuild(new Guild(stat.guild, false));
+                    GuildUtils.addGuild(new SavableGuild(stat.guild, false));
                 }
                 break;
             }

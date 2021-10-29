@@ -241,6 +241,6 @@ public class ConfigUtils {
     public static boolean scriptsEnabled = StreamLine.config.getConfBoolean("modules.bungee.scripts.enabled");
     public static boolean scriptsCreateDefault = StreamLine.config.getConfBoolean("modules.bungee.scripts.create-default");
     // bStats.
-    public static boolean bstatsMakeDiscoverable = StreamLine.config.getConfBoolean("modules.bungee.bstats.make-server-discoverable");
-    public static String bstatsDisvoverableAddress = StreamLine.config.getConfString("modules.bungee.bstats.discoverable-ip");
+    public static boolean bstatsMakeDiscoverable = StreamLine.config.getConfBoolean("modules.bstats.make-server-discoverable");
+    public static String bstatsDisvoverableAddress = StreamLine.config.getConfString("modules.bstats.discoverable-ip");
 }

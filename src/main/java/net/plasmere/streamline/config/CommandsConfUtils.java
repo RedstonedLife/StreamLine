@@ -104,7 +104,7 @@ public class CommandsConfUtils {
     public static List<String> comBParMuteAliases = StreamLine.config.getCommandStringList("commands.bungee.party.aliases.mute");
     // Warp.
     public static List<String> comBParWarpAliases = StreamLine.config.getCommandStringList("commands.bungee.party.aliases.warp");
-    // ... Guild.
+    // ... SavableGuild.
     //
     public static boolean comBGuild = StreamLine.config.getCommandBoolean("commands.bungee.guild.enabled");
     public static String comBGuildBase = StreamLine.config.getCommandString("commands.bungee.guild.base");

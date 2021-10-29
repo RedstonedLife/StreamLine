@@ -131,12 +131,12 @@ modules:
             type: "discord"
           # Give people roles upon verifying?
           add-roles:
-            - "put_id_here"
-            - "put_id_here"
+            - 'put_id_here'
+            - 'put_id_here'
           # Remove roles from people upon verifying?
           remove-roles:
-            - "put_id_here"
-            - "put_id_here"
+            - 'put_id_here'
+            - 'put_id_here'
         # What to use to determine a player's Discord to Minecraft display name.
         # Options:
         # stat = looks up the player's stat from a list.

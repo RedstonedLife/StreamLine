@@ -18,7 +18,7 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.savable.history.HistorySave;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
@@ -1540,77 +1540,77 @@ public class PlayerUtils {
     }
 
     public static String getPlayerGuildName(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return guild.name;
     }
 
     public static String getPlayerGuildMembers(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return String.valueOf(guild.totalMembers.size());
     }
 
     public static String getPlayerGuildLeaderUUID(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return guild.leaderUUID;
     }
 
     public static String getPlayerGuildLeaderAbsoluteBungee(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return getAbsoluteBungee(getOrGetSavableUser(guild.leaderUUID));
     }
 
     public static String getPlayerGuildLeaderJustDisplayBungee(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return getJustDisplayBungee(getOrGetSavableUser(guild.leaderUUID));
     }
 
     public static String getPlayerGuildLeaderOffOnRegBungee(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return getOffOnRegBungee(getOrGetSavableUser(guild.leaderUUID));
     }
 
     public static String getPlayerGuildLeaderOffOnDisplayBungee(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return getOffOnDisplayBungee(getOrGetSavableUser(guild.leaderUUID));
     }
 
     public static String getPlayerGuildLeaderAbsoluteDiscord(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return getAbsoluteDiscord(getOrGetSavableUser(guild.leaderUUID));
     }
 
     public static String getPlayerGuildLeaderJustDisplayDiscord(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return getJustDisplayDiscord(getOrGetSavableUser(guild.leaderUUID));
     }
 
     public static String getPlayerGuildLeaderOffOnRegDiscord(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return getOffOnRegDiscord(getOrGetSavableUser(guild.leaderUUID));
     }
 
     public static String getPlayerGuildLeaderOffOnDisplayDiscord(SavableUser user) {
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (guild == null) return "";
         return getOffOnDisplayDiscord(getOrGetSavableUser(guild.leaderUUID));

@@ -2,12 +2,8 @@ package net.plasmere.streamline.scripts;
 
 import net.md_5.bungee.api.CommandSender;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.Guild;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
-import net.plasmere.streamline.utils.GuildUtils;
-import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.io.File;

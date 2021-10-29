@@ -310,7 +310,7 @@ party:
   connect: "&bPARTY &9> &d%player_formatted% &a+"
   # When a player disconnects.
   disconnect: "&bPARTY &9> &d%player_formatted% &c-"
-  # Guild Spy message.
+  # SavableGuild Spy message.
   spy: "&d%leader_formatted%&e's &3PARTY &9>> &d%sender_formatted% &8: &e%message%"
   # When it finds no party.
   no-party: "&cNo party found!"
@@ -804,7 +804,7 @@ guild:
   connect: "&2GUILD &9> &d%player_formatted% &a+"
   # When a player disconnects.
   disconnect: "&2GUILD &9> &d%player_formatted% &c-"
-  # For Guild Spy.
+  # For SavableGuild Spy.
   spy: "&d%leader_formatted%&e's &2GUILD &9>> &d%sender_formatted% &8: &e%message%"
   # When it finds no guild.
   no-guild: "&cNo guild found!"
@@ -1364,7 +1364,7 @@ stats:
     true: "&aTRUE"
     # If last.
     false: "&cFALSE"
-  # Guild Spy.
+  # SavableGuild Spy.
   gspy:
     # If not last in list.
     true: "&aTRUE"
@@ -1451,7 +1451,7 @@ pspyvs:
     # If toggled off.
     false: "&cFALSE"
 
-# Guild SPY view-self command.
+# SavableGuild SPY view-self command.
 gspyvs:
   # Message.
   message: "&eToggled &bGSPY &eview-self to %toggle%&e!"

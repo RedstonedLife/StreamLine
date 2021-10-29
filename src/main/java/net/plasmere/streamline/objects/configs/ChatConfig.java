@@ -268,4 +268,10 @@ public class ChatConfig {
     public int iterateChatsMapFromHigher(int fromHigher, Chat chat, MessageServerType messageServerType){
         return getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).lowerKey(fromHigher);
     }
+
+    public void setObject(String pathTo, Object object) {
+        conf.set(pathTo, object);
+        saveConfig();
+        reloadConfig();
+    }
 }

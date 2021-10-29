@@ -264,6 +264,7 @@ public class ConfigHandler {
 
     public void setObjectConf(String path, Object thing){
         conf.set(path, thing);
+        saveConf();
         reloadConfig();
     }
 
@@ -309,6 +310,7 @@ public class ConfigHandler {
 
     public void setObjectMess(String path, Object thing){
         mess.set(path, thing);
+        saveLocales();
         reloadLocales();
     }
 
@@ -354,6 +356,7 @@ public class ConfigHandler {
 
     public void setObjectDisBot(String path, Object thing){
         discordBot.set(path, thing);
+        saveDiscordBot();
         reloadDiscordBot();
     }
 
@@ -399,6 +402,7 @@ public class ConfigHandler {
 
     public void setObjectCommand(String path, Object thing){
         commands.set(path, thing);
+        saveCommands();
         reloadCommands();
     }
 

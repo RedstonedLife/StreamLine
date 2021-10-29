@@ -1,7 +1,10 @@
 package net.plasmere.streamline.objects.configs;
 
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.config.Configuration;
@@ -9,10 +12,10 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
+import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.DataChannel;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.Party;
-import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
@@ -160,7 +163,7 @@ public class DiscordData {
             }
 
             if (type.equals(ChatsHandler.getChannel("guild"))) {
-                Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(sender));
+                SavableGuild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(sender));
 
                 if (guild == null) return;
 
@@ -233,7 +236,7 @@ public class DiscordData {
             }
 
             if (chatChannel.equals(ChatsHandler.getChannel("guild"))) {
-                Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
+                SavableGuild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
 
                 if (guild == null) return;
 
@@ -304,7 +307,7 @@ public class DiscordData {
             }
 
             if (type.equals(ChatsHandler.getChannel("guild"))) {
-                Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
+                SavableGuild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
 
                 if (guild == null) return;
 
@@ -374,7 +377,7 @@ public class DiscordData {
             }
 
             if (channelData.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
-                Guild guild = GuildUtils.getGuild(channelData.identifier);
+                SavableGuild guild = GuildUtils.getGuild(channelData.identifier);
 
                 if (guild == null) return;
 
@@ -419,7 +422,7 @@ public class DiscordData {
             }
 
             if (channelData.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
-                Guild guild = GuildUtils.getGuild(channelData.identifier);
+                SavableGuild guild = GuildUtils.getGuild(channelData.identifier);
 
                 if (guild == null) {
                     return;
@@ -611,44 +614,75 @@ public class DiscordData {
         return number == verify;
     }
 
-    public void doVerify(String uuid, long discordID, long guildID) {
+    public void doVerify(String uuid, User user, Guild g) {
         Player player = PlayerUtils.getOrGetPlayerStatByUUID(uuid);
         if (player == null) return;
 
         toVerify.remove(uuid);
 
-        addVerified(discordID, uuid);
-        player.setDiscordID(discordID);
+        addVerified(user.getIdLong(), uuid);
+        player.setDiscordID(user.getIdLong());
 
-        Guild guild = GuildUtils.getGuild(player.uuid);
+        SavableGuild guild = GuildUtils.getGuild(player.uuid);
 
-        if (ConfigUtils.moduleDPCChangeOnVerify) {
-            if (ConfigUtils.moduleDPCChangeOnVerifyType.equals("discord")) {
-                StreamLine.getJda().getGuildById(guildID).getMemberById(discordID).modifyNickname(TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCChangeOnVerifyTo, player)
-                        .replace("%player_uuid%", player.uuid)
-                        .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
-                        .replace("%guild_name%", guild == null ? "" : guild.name)
-                );
+        if (g == null) {
+            if (ConfigUtils.debug) MessagingUtils.logInfo("Guild returned null!");
+            return;
+        }
+        Member member = g.getMember(user);
+        if (member == null) {
+            if (ConfigUtils.debug) MessagingUtils.logInfo("Member returned null!");
+            return;
+        }
+
+        if (ConfigUtils.debug) MessagingUtils.logInfo("Member " + member.getNickname() + " or " + member.getEffectiveName() + " has ID: " + member.getIdLong());
+
+        try {
+            if (ConfigUtils.moduleDPCChangeOnVerify) {
+                if (ConfigUtils.debug) MessagingUtils.logInfo(ConfigUtils.moduleDPCChangeOnVerifyTo);
+                if (ConfigUtils.debug) MessagingUtils.logInfo(ConfigUtils.moduleDPCChangeOnVerifyType);
+
+                String newName = MessageConfUtils.nullD();
+                if (ConfigUtils.moduleDPCChangeOnVerifyType.equals("discord")) {
+                    newName = TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCChangeOnVerifyTo, player)
+                            .replace("%player_uuid%", player.uuid)
+                            .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
+                            .replace("%guild_name%", guild == null ? "" : guild.name);
+                }
+                if (ConfigUtils.moduleDPCChangeOnVerifyType.equals("bungee")) {
+                    newName = TextUtils.replaceAllPlayerBungee(ConfigUtils.moduleDPCChangeOnVerifyTo, player)
+                            .replace("%player_uuid%", player.uuid)
+                            .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
+                            .replace("%guild_name%", guild == null ? "" : guild.name);
+                }
+
+                if (ConfigUtils.debug) MessagingUtils.logInfo("New name = " + newName);
+                g.modifyNickname(member, newName);
             }
-            if (ConfigUtils.moduleDPCChangeOnVerifyType.equals("bungee")) {
-                StreamLine.getJda().getGuildById(guildID).getMemberById(discordID).modifyNickname(TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCChangeOnVerifyTo, player)
-                        .replace("%player_uuid%", player.uuid)
-                        .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
-                        .replace("%guild_name%", guild == null ? "" : guild.name)
-                );
-            }
+        } catch (HierarchyException e) {
+            MessagingUtils.logSevere("Tried to modify a user with higher permissions than me (on Discord)!");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         try {
+            if (ConfigUtils.debug) MessagingUtils.logInfo("Roles as String : " + ConfigUtils.moduleDPCOnVerifyAdd);
+
             for (String roleID : ConfigUtils.moduleDPCOnVerifyAdd) {
+                if (ConfigUtils.debug) MessagingUtils.logInfo("Role String : " + roleID);
+
                 Role role = StreamLine.getJda().getRoleById(roleID);
                 if (role == null) {
                     MessagingUtils.logInfo("Role (" + roleID + ") was not found!");
                     continue;
                 }
 
-                StreamLine.getJda().getGuildById(guildID).addRoleToMember(discordID, role);
+                if (ConfigUtils.debug) MessagingUtils.logInfo("Role Name : " + role.getName());
+
+                g.addRoleToMember(user.getIdLong(), role);
             }
+
+            if (ConfigUtils.debug) MessagingUtils.logInfo("Roles as String : " + ConfigUtils.moduleDPCOnVerifyRemove);
 
             for (String roleID : ConfigUtils.moduleDPCOnVerifyRemove) {
                 Role role = StreamLine.getJda().getRoleById(roleID);
@@ -657,8 +691,10 @@ public class DiscordData {
                     continue;
                 }
 
-                StreamLine.getJda().getGuildById(guildID).removeRoleFromMember(discordID, role);
+                g.removeRoleFromMember(user.getIdLong(), role);
             }
+        } catch (HierarchyException e) {
+            MessagingUtils.logSevere("Tried to modify a user with higher permissions than me (on Discord)!");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,7 +1,7 @@
 package net.plasmere.streamline.utils;
 
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.savable.users.Player;
 
 public class FaceFetcher {
@@ -14,7 +14,7 @@ public class FaceFetcher {
     }
 
     public static String getPlaceholdersApplied(Player player, String string) {
-        Guild guild = GuildUtils.getGuild(player);
+        SavableGuild guild = GuildUtils.getGuild(player);
 
         return TextUtils.replaceAllPlayerBungee(string, player)
                 .replace("%player_uuid%", player.uuid)

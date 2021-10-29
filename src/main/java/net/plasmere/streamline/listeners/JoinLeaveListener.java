@@ -14,11 +14,11 @@ import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.enums.Condition;
 import net.plasmere.streamline.objects.GeyserFile;
 import net.plasmere.streamline.objects.Party;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
-import net.plasmere.streamline.objects.Guild;
 import net.plasmere.streamline.objects.savable.users.Player;
 import net.plasmere.streamline.utils.*;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -82,7 +82,7 @@ public class JoinLeaveListener implements Listener {
                         stat.updateKey("guild", "");
                     } else {
                         if (! GuildUtils.hasOnlineMemberAlready(stat)) {
-                            GuildUtils.addGuild(new Guild(stat.guild, false));
+                            GuildUtils.addGuild(new SavableGuild(stat.guild, false));
                         }
                     }
                 }
@@ -115,7 +115,7 @@ public class JoinLeaveListener implements Listener {
                         case "guild":
                             if (!ConfigUtils.guildSendJoins) continue;
 
-                            Guild guild = GuildUtils.getGuild(other);
+                            SavableGuild guild = GuildUtils.getGuild(other);
                             if (guild == null) continue;
 
                             if (guild.hasMember(stat)) {
@@ -407,7 +407,7 @@ public class JoinLeaveListener implements Listener {
                         case "guild":
                             if (! ConfigUtils.guildSendLeaves) continue;
 
-                            Guild guild = GuildUtils.getGuild(other);
+                            SavableGuild guild = GuildUtils.getGuild(other);
                             if (guild == null) continue;
 
                             if (guild.hasMember(stat)) {
@@ -497,7 +497,7 @@ public class JoinLeaveListener implements Listener {
                 Player p = PlayerUtils.getOrCreatePlayerStat(pl);
 
                 if (GuildUtils.pHasGuild(stat)) {
-                    Guild guild = GuildUtils.getGuild(stat);
+                    SavableGuild guild = GuildUtils.getGuild(stat);
 
                     if (guild == null || p.equals(stat)) continue;
                     if (guild.hasMember(p)) break;

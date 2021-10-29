@@ -27,14 +27,14 @@ public class VerifyCommand {
             int verifyNumber = StreamLine.discordData.getVerification(uuid);
             int trying = Integer.parseInt(args[2]);
 
-            Member member = event.getMessage().getMember();
-            if (member == null) return "We could not find you as a member!";
+//            Member member = StreamLine.getJda().getGuildById(event.getGuild().getIdLong()).getMemberById(event.getMessage().getAuthor().getIdLong());
+//            if (member == null) return "We could not find you as a member!";
 
             Player player = PlayerUtils.getOrGetPlayerStatByUUID(uuid);
             if (player == null) return "We could not find that player!";
 
             if (verifyNumber == trying) {
-                StreamLine.discordData.doVerify(uuid, member.getIdLong(), event.getGuild().getIdLong());
+                StreamLine.discordData.doVerify(uuid, event.getMessage().getAuthor(), event.getGuild());
                 return "Success! Discord account linked to " + player.latestName + "!";
             } else {
                 return "You did not enter the correct number!";

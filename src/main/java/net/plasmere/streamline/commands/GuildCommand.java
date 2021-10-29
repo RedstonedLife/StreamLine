@@ -7,7 +7,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.*;
 
@@ -304,7 +304,7 @@ public class GuildCommand extends Command implements TabExecutor {
         }
 
         try {
-            Guild guild = GuildUtils.getGuild(stat);
+            SavableGuild guild = GuildUtils.getGuild(stat);
             if (guild == null) return;
             guild.saveInfo();
         } catch (Exception e) {

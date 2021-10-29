@@ -3,12 +3,10 @@ package net.plasmere.streamline.objects.chats;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.connection.Server;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.Party;
-import net.plasmere.streamline.objects.configs.ChatConfig;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -199,7 +197,7 @@ public class ChatsHandler {
                 break;
             case "guild":
                 if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                    for (Guild guild : GuildUtils.getGuilds()) {
+                    for (SavableGuild guild : GuildUtils.getGuilds()) {
                         thing.add(guild.leaderUUID);
                     }
                 }
@@ -242,7 +240,7 @@ public class ChatsHandler {
                     break;
                 case "guild":
                     if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                        for (Guild guild : GuildUtils.getGuilds()) {
+                        for (SavableGuild guild : GuildUtils.getGuilds()) {
                             thing.add(guild.leaderUUID);
                         }
                     }

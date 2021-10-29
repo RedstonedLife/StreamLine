@@ -134,7 +134,7 @@ public class GeyserFile {
         }
         writer.close();
 
-        //MessagingUtils.logInfo("Just saved Guild info for leader (String): " + leaderString);
+        //MessagingUtils.logInfo("Just saved SavableGuild info for leader (String): " + leaderString);
     }
 
     public String toString(){

@@ -279,7 +279,7 @@ public class MessagingUtils {
         toPing.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
     }
 
-    public static void sendGuildConfigPluginMessage(ProxiedPlayer to, Guild guild) {
+    public static void sendGuildConfigPluginMessage(ProxiedPlayer to, SavableGuild guild) {
         if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
@@ -758,7 +758,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendBGUserMessage(Guild guild, CommandSender sender, CommandSender to, String msg){
+    public static void sendBGUserMessage(SavableGuild guild, CommandSender sender, CommandSender to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.leaderUUID)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
@@ -790,7 +790,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendBGUserMessageFromDiscord(Guild guild, String nameUsed, CommandSender to, String msg){
+    public static void sendBGUserMessageFromDiscord(SavableGuild guild, String nameUsed, CommandSender to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, guild.leaderUUID)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
@@ -825,7 +825,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendBGUserMessageFromDiscord(Guild guild, SavableUser sender, CommandSender to, String msg){
+    public static void sendBGUserMessageFromDiscord(SavableGuild guild, SavableUser sender, CommandSender to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.leaderUUID)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
@@ -857,7 +857,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendDiscordGEBMessage(Guild guild, DiscordMessage message){
+    public static void sendDiscordGEBMessage(SavableGuild guild, DiscordMessage message){
         if (! ConfigUtils.moduleDEnabled) {
             return;
         }
@@ -927,7 +927,7 @@ public class MessagingUtils {
     }
 
     public static void sendStatUserMessage(SavableUser user, CommandSender sender, String msg){
-        Guild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getGuild(user);
 
         if (user instanceof ConsolePlayer) {
             ConsolePlayer player = PlayerUtils.getConsoleStat();
@@ -1238,7 +1238,7 @@ public class MessagingUtils {
         return party.isMuted ? MessageConfUtils.partiesIsMutedTrue() : MessageConfUtils.partiesIsMutedFalse();
     }
 
-    public static String modsGuild(Guild guild){
+    public static String modsGuild(SavableGuild guild){
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
@@ -1268,7 +1268,7 @@ public class MessagingUtils {
         return msg.toString();
     }
 
-    public static String membersGuild(Guild guild){
+    public static String membersGuild(SavableGuild guild){
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
@@ -1298,7 +1298,7 @@ public class MessagingUtils {
         return msg.toString();
     }
 
-    public static String membersTGuild(Guild guild){
+    public static String membersTGuild(SavableGuild guild){
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
@@ -1328,7 +1328,7 @@ public class MessagingUtils {
         return msg.toString();
     }
 
-    public static String invitesGuild(Guild guild){
+    public static String invitesGuild(SavableGuild guild){
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
@@ -1358,11 +1358,11 @@ public class MessagingUtils {
         return msg.toString();
     }
 
-    public static String getIsPublicGuild(Guild guild){
+    public static String getIsPublicGuild(SavableGuild guild){
         return guild.isPublic ? MessageConfUtils.guildsIsPublicTrue() : MessageConfUtils.guildsIsPublicFalse();
     }
 
-    public static String getIsMutedGuild(Guild guild){
+    public static String getIsMutedGuild(SavableGuild guild){
         return guild.isMuted ? MessageConfUtils.guildsIsMutedTrue() : MessageConfUtils.guildsIsMutedFalse();
     }
 

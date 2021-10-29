@@ -1,12 +1,11 @@
 package net.plasmere.streamline.events;
 
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.events.enums.Condition;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.Party;
 import net.plasmere.streamline.objects.savable.users.Player;
 import net.plasmere.streamline.objects.lists.SingleSet;
@@ -57,7 +56,7 @@ public class EventsHandler {
                 case RUN_COMMAND_AS_SELF:
                 case SEND_MESSAGE_AS:
 //                    MessagingUtils.sendBUserAsMessage(p, adjust(event, player, i, context));
-                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(p, adjust(event, player, i));
+                    p.chat(adjust(event, player, i));
                     continue;
                 case SEND_SERVER:
                     p.connect(StreamLine.getInstance().getProxy().getServerInfo(adjust(event, player, i)));
@@ -113,7 +112,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_GUILD_MEMBERS:
-                    Guild guild = GuildUtils.getGuild(player);
+                    SavableGuild guild = GuildUtils.getGuild(player);
                     if (guild == null) continue;
 
                     for (SavableUser user : guild.totalMembers) {
@@ -161,7 +160,7 @@ public class EventsHandler {
                 case RUN_COMMAND_AS_SELF:
                 case SEND_MESSAGE_AS:
 //                    MessagingUtils.sendBUserAsMessage(p, adjust(event, player, i, context));
-                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(p, adjust(event, player, i, context));
+                    p.chat(adjust(event, player, i, context));
                     continue;
                 case SEND_SERVER:
                     p.connect(StreamLine.getInstance().getProxy().getServerInfo(adjust(event, player, i, context)));
@@ -217,7 +216,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_GUILD_MEMBERS:
-                    Guild guild = GuildUtils.getGuild(player);
+                    SavableGuild guild = GuildUtils.getGuild(player);
                     if (guild == null) continue;
 
                     for (SavableUser person : guild.totalMembers) {

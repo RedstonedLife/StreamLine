@@ -7,6 +7,8 @@ import net.plasmere.streamline.commands.messaging.*;
 import net.plasmere.streamline.commands.servers.GoToServerLobbyCommand;
 import net.plasmere.streamline.commands.servers.GoToServerVanillaCommand;
 import net.plasmere.streamline.commands.staff.*;
+import net.plasmere.streamline.commands.staff.debug.DeleteStatCommand;
+import net.plasmere.streamline.commands.staff.debug.ObjectEditCommand;
 import net.plasmere.streamline.commands.staff.events.BTagCommand;
 import net.plasmere.streamline.commands.staff.events.EventReloadCommand;
 import net.plasmere.streamline.commands.staff.punishments.BanCommand;
@@ -69,6 +71,7 @@ public class PluginUtils {
         if (CommandsConfUtils.comBDeleteStat) {
             registerCommand(plugin, new DeleteStatCommand(CommandsConfUtils.comBDeleteStatBase, CommandsConfUtils.comBDeleteStatPerm, stringListToArray(CommandsConfUtils.comBDeleteStatAliases)));
         }
+        registerCommand(plugin, new ObjectEditCommand("objectedit", "streamline.command.objectedit", stringListToArray(List.of("oje"))));
 
         // Staff.
         // // Reg.

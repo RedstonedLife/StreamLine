@@ -2,9 +2,8 @@ package net.plasmere.streamline.commands.staff;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
-import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 
@@ -20,7 +19,7 @@ public class GuildsCommand extends Command {
             return;
         }
 
-        for (Guild guild : GuildUtils.getGuilds()){
+        for (SavableGuild guild : GuildUtils.getGuilds()){
             MessagingUtils.sendBGUserMessage(guild, sender, sender, MessageConfUtils.guildsMessage());
         }
     }

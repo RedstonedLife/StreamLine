@@ -446,7 +446,7 @@ public class MessageConfUtils {
         return StreamLine.config.mess.getString("party.disconnect");
     }
 
-    // Guild.
+    // SavableGuild.
     public static String guildConnect() {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("guild.connect");
