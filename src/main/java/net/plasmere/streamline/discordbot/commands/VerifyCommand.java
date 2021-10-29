@@ -1,12 +1,11 @@
 package net.plasmere.streamline.discordbot.commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.UUIDUtils;
@@ -30,7 +29,7 @@ public class VerifyCommand {
 //            Member member = StreamLine.getJda().getGuildById(event.getGuild().getIdLong()).getMemberById(event.getMessage().getAuthor().getIdLong());
 //            if (member == null) return "We could not find you as a member!";
 
-            Player player = PlayerUtils.getOrGetPlayerStatByUUID(uuid);
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStatByUUID(uuid);
             if (player == null) return "We could not find that player!";
 
             if (verifyNumber == trying) {

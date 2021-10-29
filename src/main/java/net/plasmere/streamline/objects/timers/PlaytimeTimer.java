@@ -1,6 +1,6 @@
 package net.plasmere.streamline.objects.timers;
 
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.PlayerUtils;
 
 public class PlaytimeTimer implements Runnable {
@@ -24,7 +24,7 @@ public class PlaytimeTimer implements Runnable {
     public void done(){
         countdown = reset;
         try {
-            for (Player player : PlayerUtils.getJustPlayersOnline()) {
+            for (SavablePlayer player : PlayerUtils.getJustPlayersOnline()) {
                 player.addPlaySecond(1);
             }
 

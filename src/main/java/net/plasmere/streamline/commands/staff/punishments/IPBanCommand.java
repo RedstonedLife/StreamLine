@@ -10,7 +10,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 import org.apache.commons.collections4.list.TreeList;
 
@@ -39,7 +39,7 @@ public class IPBanCommand extends Command implements TabExecutor {
                 ipsToBan.add(args[1]);
             } else {
                 if (! (args[0].equals("check") && (args[1].equals("*") || args[1].equals("all")))) {
-                    Player other = PlayerUtils.getOrGetPlayerStat(args[1]);
+                    SavablePlayer other = PlayerUtils.getOrGetPlayerStat(args[1]);
 
                     if (other == null) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPlayer());
@@ -57,7 +57,7 @@ public class IPBanCommand extends Command implements TabExecutor {
                 }
 
                 if (! args[1].contains(".")) {
-                    Player other = PlayerUtils.getPlayerStat(args[1]);
+                    SavablePlayer other = PlayerUtils.getPlayerStat(args[1]);
 
                     if (other == null) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPlayer());
@@ -106,7 +106,7 @@ public class IPBanCommand extends Command implements TabExecutor {
                         bans.set(ipToBan + ".sentenced", Instant.now().toString());
                         StreamLine.bans.saveConfig();
 
-                        for (Player player : PlayerUtils.getPlayerStatsByIP(ip)) {
+                        for (SavablePlayer player : PlayerUtils.getPlayerStatsByIP(ip)) {
                             if (player.online) {
                                 ProxiedPlayer pp = PlayerUtils.getPPlayerByUUID(player.uuid);
 
@@ -175,7 +175,7 @@ public class IPBanCommand extends Command implements TabExecutor {
                     bans.set(ipToBan + ".sentenced", Instant.now().toString());
                     StreamLine.bans.saveConfig();
 
-                    for (Player player : PlayerUtils.getPlayerStatsByIP(ip)) {
+                    for (SavablePlayer player : PlayerUtils.getPlayerStatsByIP(ip)) {
                         if (player.online) {
                             ProxiedPlayer pp = PlayerUtils.getPPlayerByUUID(player.uuid);
 
@@ -222,7 +222,7 @@ public class IPBanCommand extends Command implements TabExecutor {
                 }
 
                 if (!args[1].contains(".")) {
-                    Player other = PlayerUtils.getPlayerStat(args[1]);
+                    SavablePlayer other = PlayerUtils.getPlayerStat(args[1]);
 
                     if (other == null) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
@@ -269,7 +269,7 @@ public class IPBanCommand extends Command implements TabExecutor {
                     bans.set(ipToBan + ".sentenced", Instant.now().toString());
                     StreamLine.bans.saveConfig();
 
-                    for (Player player : PlayerUtils.getPlayerStatsByIP(ip)) {
+                    for (SavablePlayer player : PlayerUtils.getPlayerStatsByIP(ip)) {
                         if (player.online) {
                             ProxiedPlayer pp = PlayerUtils.getPPlayerByUUID(player.uuid);
 

@@ -27,6 +27,8 @@ public abstract class From {
         DISCORDBOT,
         COMMANDS,
         CHATS,
+        RANKS,
+        VOTES,
     }
 
     // TreeMap < locale name , TreeMap < order , SingleSet < path , stringed value > > >

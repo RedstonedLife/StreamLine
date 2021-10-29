@@ -45,6 +45,12 @@ public class ObjectEditCommand extends Command implements TabExecutor {
                 case CHATS:
                     StreamLine.chatConfig.setObject(args[1], args[2].contains(",") ? TextUtils.getStringListFromString(args[2]) : args[2]);
                     break;
+                case RANKS:
+                    StreamLine.ranksConfig.setObject(args[1], args[2].contains(",") ? TextUtils.getStringListFromString(args[2]) : args[2]);
+                    break;
+                case VOTES:
+                    StreamLine.votes.setObject(args[1], args[2].contains(",") ? TextUtils.getStringListFromString(args[2]) : args[2]);
+                    break;
             }
         } catch (Throwable e) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());

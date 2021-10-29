@@ -7,9 +7,11 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.events.enums.Condition;
 import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.Party;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
+import net.plasmere.streamline.scripts.Script;
+import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.*;
 
 import java.util.ArrayList;
@@ -43,7 +45,7 @@ public class EventsHandler {
         StreamLine.getInstance().loadEvents();
     }
 
-    public static void runEvent(Event event, Player player){
+    public static void runEvent(Event event, SavablePlayer player){
         ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(player.uuid);
 
         if (p == null) return;
@@ -105,7 +107,7 @@ public class EventsHandler {
                     Party party = PartyUtils.getParty(player);
                     if (party == null) continue;
 
-                    for (Player user : party.totalMembers) {
+                    for (SavablePlayer user : party.totalMembers) {
                         if (user.online) {
                             MessagingUtils.sendEventUserMessage(player, user, event.actions.get(i).value);
                         }
@@ -138,6 +140,12 @@ public class EventsHandler {
 
                     MessagingUtils.sendPermissionedMessage(split[0], split[1]);
                     continue;
+                case RUN_SCRIPT:
+                    Script script = ScriptsHandler.getScript(event.actions.get(i).value);
+                    if (script == null) continue;
+
+                    script.execute(StreamLine.getInstance().getProxy().getConsole(), player);
+                    continue;
                 default:
                     MessagingUtils.logSevere("An event wasn't handled correctly...");
                     break;
@@ -145,7 +153,7 @@ public class EventsHandler {
         }
     }
 
-    public static void runEvent(Event event, Player player, String context){
+    public static void runEvent(Event event, SavablePlayer player, String context){
         ProxiedPlayer p = PlayerUtils.getPPlayerByUUID(player.uuid);
 
         if (p == null) return;
@@ -209,7 +217,7 @@ public class EventsHandler {
                     Party party = PartyUtils.getParty(player);
                     if (party == null) continue;
 
-                    for (Player person : party.totalMembers) {
+                    for (SavablePlayer person : party.totalMembers) {
                         if (person.online) {
                             MessagingUtils.sendBUserMessage(person.findSender(), event.actions.get(i).value);
                         }
@@ -242,6 +250,12 @@ public class EventsHandler {
 
                     MessagingUtils.sendPermissionedMessage(split[0], split[1]);
                     continue;
+                case RUN_SCRIPT:
+                    Script script = ScriptsHandler.getScript(event.actions.get(i).value);
+                    if (script == null) continue;
+
+                    script.execute(StreamLine.getInstance().getProxy().getConsole(), player);
+                    continue;
                 default:
                     MessagingUtils.logSevere("An event wasn't handled correctly...");
                     break;
@@ -249,14 +263,14 @@ public class EventsHandler {
         }
     }
 
-    public static String adjust(Event event, Player player, int i){
+    public static String adjust(Event event, SavablePlayer player, int i){
         return TextUtils.replaceAllPlayerBungee(event.actions.get(i).value, player)
                 .replace("%uniques%", String.valueOf(StreamLine.getInstance().getPlDir().listFiles().length))
                 .replace("%time%", String.valueOf(new Date()))
                 ;
     }
 
-    public static String adjust(Event event, Player player, int i, String context){
+    public static String adjust(Event event, SavablePlayer player, int i, String context){
         return TextUtils.replaceAllPlayerBungee(event.actions.get(i).value, player)
                 .replace("%uniques%", String.valueOf(StreamLine.getInstance().getPlDir().listFiles().length))
                 .replace("%time%", String.valueOf(new Date()))
@@ -300,7 +314,7 @@ public class EventsHandler {
         return "0";
     }
 
-    public static boolean checkTags(Event event, Player check){
+    public static boolean checkTags(Event event, SavablePlayer check){
         int success = 0;
 
         for (String tag : event.tags){
@@ -343,7 +357,7 @@ public class EventsHandler {
         return false;
     }
 
-    public static boolean checkEventConditions(Event event, Player triggerer){
+    public static boolean checkEventConditions(Event event, SavablePlayer triggerer){
         ProxiedPlayer player = PlayerUtils.getPPlayerByUUID(triggerer.uuid);
 
         for (SingleSet<Condition, String> thing : event.conditions.values()) {
@@ -398,7 +412,7 @@ public class EventsHandler {
         return true;
     }
 
-    public static boolean checkEventConditions(Event event, Player triggerer, Condition hardCondition, String hardString){
+    public static boolean checkEventConditions(Event event, SavablePlayer triggerer, Condition hardCondition, String hardString){
         if (! eventHasSoftCondition(event)) return checkIfHasConditionWithContext(event, hardCondition, hardString);
 
         ProxiedPlayer player = PlayerUtils.getPPlayerByUUID(triggerer.uuid);
@@ -455,7 +469,7 @@ public class EventsHandler {
         return checkIfHasConditionWithContext(event, hardCondition, hardString);
     }
 
-    public static boolean checkEventConditions(Event event, Player triggerer, Condition hardCondition, Iterable<String> hardString){
+    public static boolean checkEventConditions(Event event, SavablePlayer triggerer, Condition hardCondition, Iterable<String> hardString){
         if (! eventHasSoftCondition(event)) return checkIfHasConditionWithContext(event, hardCondition, hardString);
 
         ProxiedPlayer player = PlayerUtils.getPPlayerByUUID(triggerer.uuid);

@@ -712,7 +712,7 @@ commands:
           - "setedit"
           - "se"
           - "settingsedit"
-      # The settings command.
+      # The language command.
       language:
         # Enables / disables the use of the command.
         enabled: true
@@ -725,6 +725,18 @@ commands:
           - "lang"
           - "locale"
           - "loc"
+      # The votes command.
+      votes:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "votes"
+        # Custom permission.
+        permission: "streamline.command.votes"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "bvotes"
+          - "bvot"
     # For messaging commands...
     messaging:
       # The ignore command.

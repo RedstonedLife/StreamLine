@@ -57,6 +57,8 @@ public class StreamLine extends Plugin {
 	public static DiscordData discordData;
 	public static OfflineStats offlineStats;
 	public static ChatConfig chatConfig;
+	public static Votes votes;
+	public static RanksConfig ranksConfig;
 
 	public final static String customChannel = "streamline:channel";
 
@@ -373,6 +375,11 @@ public class StreamLine extends Plugin {
 		if (ConfigUtils.moduleDPC) {
 			discordData = new DiscordData();
 		}
+
+		if (ConfigUtils.moduleBRanksEnabled) {
+			ranksConfig = new RanksConfig();
+			votes = new Votes();
+		}
 	}
 
 	public void loadChatHistory() {
@@ -495,7 +502,7 @@ public class StreamLine extends Plugin {
 			}
 		}
 
-		// Setting up Player's HistorySave files.
+		// Setting up SavablePlayer's HistorySave files.
 		if (ConfigUtils.chatHistoryEnabled) {
 			loadChatHistory();
 		}

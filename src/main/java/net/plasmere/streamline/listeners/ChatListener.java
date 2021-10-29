@@ -14,7 +14,7 @@ import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -40,13 +40,13 @@ public class ChatListener implements Listener {
 
         String msg = e.getMessage();
 
-        Player stat = PlayerUtils.addPlayerStat(sender);
+        SavablePlayer stat = PlayerUtils.addPlayerStat(sender);
 
         stat.updateLastMessage(msg);
 
         try {
             for (ProxiedPlayer pl : StreamLine.getInstance().getProxy().getPlayers()){
-                Player p = PlayerUtils.getOrCreatePlayerStat(pl);
+                SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(pl);
 
                 if (GuildUtils.getGuild(p) == null && ! p.equals(stat)) continue;
                 if (GuildUtils.getGuild(p) != null) {

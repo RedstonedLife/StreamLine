@@ -22,7 +22,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.*;
 
-public class Player extends SavableUser {
+public class SavablePlayer extends SavableUser {
     public int totalXP;
     public int currentXP;
     public int lvl;
@@ -41,25 +41,25 @@ public class Player extends SavableUser {
 
     public int defaultLevel = 1;
 
-    public Player(ProxiedPlayer player) {
+    public SavablePlayer(ProxiedPlayer player) {
         super(player.getUniqueId().toString());
         this.player = player;
     }
 
-    public Player(ProxiedPlayer player, boolean create){
+    public SavablePlayer(ProxiedPlayer player, boolean create){
         super(player.getUniqueId().toString(), create);
         this.player = player;
     }
 
-    public Player(String thing){
+    public SavablePlayer(String thing){
         super(PlayerUtils.createCheck(thing), false);
     }
 
-    public Player(String thing, boolean createNew){
+    public SavablePlayer(String thing, boolean createNew){
         super(PlayerUtils.createCheck(thing), createNew);
     }
 
-    public Player(UUID uuid) {
+    public SavablePlayer(UUID uuid) {
         super(uuid.toString(), false);
     }
 

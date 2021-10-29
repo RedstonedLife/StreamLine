@@ -918,6 +918,6 @@ public abstract class SavableUser {
         }
         writer.close();
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Just saved Player info for player: " + this.uuid + " (Player: " + this.latestName + ")");
+        if (ConfigUtils.debug) MessagingUtils.logInfo("Just saved SavablePlayer info for player: " + this.uuid + " (SavablePlayer: " + this.latestName + ")");
     }
 }

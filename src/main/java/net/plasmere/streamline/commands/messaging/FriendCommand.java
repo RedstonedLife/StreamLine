@@ -7,7 +7,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -88,7 +88,7 @@ public class FriendCommand extends Command implements TabExecutor {
                     stat.tryAddNewPendingToFriend(other.uuid);
                     other.tryAddNewPendingFromFriend(stat.uuid);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendReqSelf(), other));
-                    if ((other instanceof Player && ((Player) other).online) || other instanceof ConsolePlayer) {
+                    if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof ConsolePlayer) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendReqOther(), sender));
                     }
                     break;
@@ -105,7 +105,7 @@ public class FriendCommand extends Command implements TabExecutor {
 
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendAcceptSelf(), other));
 
-                    if ((other instanceof Player && ((Player) other).online) || other instanceof ConsolePlayer) {
+                    if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof ConsolePlayer) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendAcceptOther(), sender));
                     }
                     break;
@@ -119,7 +119,7 @@ public class FriendCommand extends Command implements TabExecutor {
                     other.tryRemPendingToFriend(stat.uuid);
 
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendDenySelf(), other));
-                    if ((other instanceof Player && ((Player) other).online) || other instanceof ConsolePlayer) {
+                    if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof ConsolePlayer) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendDenyOther(), sender));
                     }
                     break;
@@ -141,7 +141,7 @@ public class FriendCommand extends Command implements TabExecutor {
                     stat.tryRemFriend(other.uuid);
                     other.tryRemFriend(stat.uuid);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendRemSelf(), other));
-                    if ((other instanceof Player && ((Player) other).online) || other instanceof ConsolePlayer) {
+                    if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof ConsolePlayer) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendRemOther(), sender));
                     }
                     break;

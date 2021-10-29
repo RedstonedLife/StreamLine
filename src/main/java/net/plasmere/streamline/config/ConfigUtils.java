@@ -46,7 +46,7 @@ public class ConfigUtils {
     // Say if...
     public static String moduleSayNotACommand = StreamLine.config.getConfString("modules.discord.say-if-not-a-command");
     public static String moduleSayCommandDisabled = StreamLine.config.getConfString("modules.discord.say-if-command-disabled");
-    // Player logins / logouts.
+    // SavablePlayer logins / logouts.
     public static String moduleDPlayerJoins = StreamLine.config.getConfString("modules.discord.player-joins");
     public static String moduleDPlayerLeaves = StreamLine.config.getConfString("modules.discord.player-leaves");
     // .. Proxy Chat.
@@ -97,7 +97,7 @@ public class ConfigUtils {
     public static boolean moduleStaffChatDoPrefix = StreamLine.config.getConfBoolean("modules.bungee.staffchat.enable-prefix");
     public static String moduleStaffChatPrefix = StreamLine.config.getConfString("modules.bungee.staffchat.prefix");
     public static boolean moduleStaffChatMToDiscord = StreamLine.config.getConfBoolean("modules.bungee.staffchat.minecraft-to-discord");
-    // Player logins / logouts.
+    // SavablePlayer logins / logouts.
 //    public static String moduleBPlayerJoins = StreamLine.config.getConfString("modules.bungee.player-joins");
 //    public static String moduleBPlayerJoinsPerm = StreamLine.config.getConfString("modules.bungee.joins-permission");
 //    public static String moduleBPlayerLeaves = StreamLine.config.getConfString("modules.bungee.player-leaves");
@@ -243,4 +243,7 @@ public class ConfigUtils {
     // bStats.
     public static boolean bstatsMakeDiscoverable = StreamLine.config.getConfBoolean("modules.bstats.make-server-discoverable");
     public static String bstatsDisvoverableAddress = StreamLine.config.getConfString("modules.bstats.discoverable-ip");
+    // Ranks.
+    public static boolean moduleBRanksEnabled = StreamLine.config.getConfBoolean("modules.bungee.ranks.enable");
+    public static String moduleBRanksUses = StreamLine.config.getConfString("modules.bungee.ranks.points.uses");
 }

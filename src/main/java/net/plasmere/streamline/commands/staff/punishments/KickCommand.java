@@ -9,7 +9,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class KickCommand extends Command implements TabExecutor {
         if (args.length <= 0) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else {
-            Player other = PlayerUtils.getOrGetPlayerStat(args[0]);
+            SavablePlayer other = PlayerUtils.getOrGetPlayerStat(args[0]);
 
             if (other == null) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPlayer());

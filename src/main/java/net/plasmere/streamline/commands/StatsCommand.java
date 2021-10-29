@@ -80,7 +80,7 @@ public class StatsCommand extends Command implements TabExecutor {
 //
 //                    PlayerUtils.info(sender, person);
 //                } else {
-//                    Player person = PlayerUtils.getOrGetPlayerStat(args[0]);
+//                    SavablePlayer person = PlayerUtils.getOrGetPlayerStat(args[0]);
 //
 //                    if (person == null) {
 //                        MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);

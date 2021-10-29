@@ -9,7 +9,7 @@ import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 
@@ -159,7 +159,7 @@ public class GuildUtils {
             return false;
         } catch (NullPointerException e) {
             if (ConfigUtils.debug) {
-                MessagingUtils.logWarning("Player's guild could not be found... Adding now!");
+                MessagingUtils.logWarning("SavablePlayer's guild could not be found... Adding now!");
             }
 
             player.updateKey("guild", player.uuid);
@@ -226,7 +226,7 @@ public class GuildUtils {
         }
 
         try {
-            //MessagingUtils.logInfo("createGuild Player.uuid > " + sender.uuid);
+            //MessagingUtils.logInfo("createGuild SavablePlayer.uuid > " + sender.uuid);
             SavableGuild guild = new SavableGuild(sender.uuid, name);
 
             addGuild(guild);
@@ -346,7 +346,7 @@ public class GuildUtils {
                 return;
             }
 
-            if (to instanceof Player && ((Player) to).online) {
+            if (to instanceof SavablePlayer && ((SavablePlayer) to).online) {
                 MessagingUtils.sendBGUserMessage(guild, from.findSender(), to.findSender(), TextUtils.replaceAllPlayerBungee(inviteUser, to)
                 );
             }
@@ -553,7 +553,7 @@ public class GuildUtils {
             return;
         }
 
-        if (sender instanceof Player && sender.online) {
+        if (sender instanceof SavablePlayer && sender.online) {
             try {
                 for (SavableUser player : new ArrayList<>(guild.totalMembers)) {
                     if (!player.online) continue;
@@ -568,7 +568,7 @@ public class GuildUtils {
                         MessagingUtils.sendBGUserMessage(guild, player.findSender(), m, warpMembers);
                     }
 
-                    m.connect(((Player) sender).getServer().getInfo());
+                    m.connect(((SavablePlayer) sender).getServer().getInfo());
                 }
             } catch (ConcurrentModificationException e) {
                 e.printStackTrace();
@@ -1257,7 +1257,7 @@ public class GuildUtils {
             for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
-                Player them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
                 if (! them.gspy) continue;
 
@@ -1270,7 +1270,7 @@ public class GuildUtils {
         }
     }
 
-    public static void sendChat(Player sender, SavableGuild guild, String msg) {
+    public static void sendChat(SavablePlayer sender, SavableGuild guild, String msg) {
         try {
             if (! isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1314,7 +1314,7 @@ public class GuildUtils {
             for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
-                Player them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
                 if (! them.gspy) continue;
 
@@ -1349,7 +1349,7 @@ public class GuildUtils {
             for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
-                Player them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
                 if (! them.gspy) continue;
 
@@ -1382,7 +1382,7 @@ public class GuildUtils {
             for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView)) continue;
 
-                Player them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
                 if (! them.gspy) continue;
 

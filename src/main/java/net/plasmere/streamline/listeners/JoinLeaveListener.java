@@ -19,7 +19,7 @@ import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -70,7 +70,7 @@ public class JoinLeaveListener implements Listener {
             file.updateKey(holder.getGeyserUUID(player.getName()), player.getName());
         }
 
-        Player stat = PlayerUtils.addPlayerStat(player);
+        SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
         stat.tryAddNewName(player.getName());
         stat.tryAddNewIP(player);
@@ -98,7 +98,7 @@ public class JoinLeaveListener implements Listener {
             for (ProxiedPlayer p : StreamLine.getInstance().getProxy().getPlayers()) {
                 if (!p.hasPermission(ConfigUtils.moduleBPlayerJoinsPerm)) continue;
 
-                Player other = PlayerUtils.getOrCreatePlayerStat(p);
+                SavablePlayer other = PlayerUtils.getOrCreatePlayerStat(p);
 
                 label:
                 for (String s : order) {
@@ -222,7 +222,7 @@ public class JoinLeaveListener implements Listener {
         boolean hasServer = false;
         ServerInfo server = ev.getTarget();
 
-        Player stat = PlayerUtils.addPlayerStat(player);
+        SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
         if (ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY) && ConfigUtils.redirectEnabled && StreamLine.lpHolder.enabled) {
             for (ServerInfo s : StreamLine.getInstance().getProxy().getServers().values()) {
@@ -340,7 +340,7 @@ public class JoinLeaveListener implements Listener {
 
         if (PluginUtils.isLocked()) return;
 
-        Player stat = PlayerUtils.addPlayerStat(player);
+        SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
         try {
             if (ConfigUtils.events) {
@@ -361,7 +361,7 @@ public class JoinLeaveListener implements Listener {
     public void onLeave(PlayerDisconnectEvent ev) {
         ProxiedPlayer player = ev.getPlayer();
 
-        Player stat = PlayerUtils.addPlayerStat(player);
+        SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
 //        switch (ConfigUtils.moduleBPlayerLeaves) {
 //            case "yes":
@@ -390,7 +390,7 @@ public class JoinLeaveListener implements Listener {
             for (ProxiedPlayer p : StreamLine.getInstance().getProxy().getPlayers()) {
                 if (! p.hasPermission(ConfigUtils.moduleBPlayerLeavesPerm)) continue;
 
-                Player other = PlayerUtils.getOrCreatePlayerStat(p);
+                SavablePlayer other = PlayerUtils.getOrCreatePlayerStat(p);
 
                 label:
                 for (String s : order) {
@@ -494,7 +494,7 @@ public class JoinLeaveListener implements Listener {
 
         try {
             for (ProxiedPlayer pl : StreamLine.getInstance().getProxy().getPlayers()){
-                Player p = PlayerUtils.getOrCreatePlayerStat(pl);
+                SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(pl);
 
                 if (GuildUtils.pHasGuild(stat)) {
                     SavableGuild guild = GuildUtils.getGuild(stat);
@@ -547,7 +547,7 @@ public class JoinLeaveListener implements Listener {
 
         ProxiedPlayer player = ev.getPlayer();
 
-        Player stat = PlayerUtils.addPlayerStat(player);
+        SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
         if (StreamLine.viaHolder.enabled) {
             if (ConfigUtils.lobbies) {

@@ -1,7 +1,9 @@
 net\plasmere\streamline\libs\Metrics$CustomChart.class
+net\plasmere\streamline\objects\savable\users\SavablePlayer.class
 net\plasmere\streamline\objects\timers\PlayerClearTimer.class
 net\plasmere\streamline\commands\staff\JDAPingerCommand.class
 net\plasmere\streamline\utils\MessagingUtils.class
+net\plasmere\streamline\objects\configs\RanksConfig.class
 net\plasmere\streamline\objects\timers\GuildXPTimer.class
 net\plasmere\streamline\commands\staff\StaffOnlineCommand.class
 net\plasmere\streamline\objects\messaging\BungeeMassMessage.class
@@ -30,6 +32,7 @@ net\plasmere\streamline\events\EventsHandler$WildCardCheck.class
 net\plasmere\streamline\commands\staff\punishments\KickCommand.class
 net\plasmere\streamline\config\from\From_1_0_14_2.class
 net\plasmere\streamline\utils\PartyUtils$1.class
+net\plasmere\streamline\utils\RanksUtils.class
 net\plasmere\streamline\utils\GuildUtils$1.class
 net\plasmere\streamline\listeners\ChatListener.class
 net\plasmere\streamline\utils\holders\GeyserHolder.class
@@ -43,6 +46,7 @@ net\plasmere\streamline\events\EventsReader.class
 net\plasmere\streamline\commands\staff\GuildsCommand.class
 net\plasmere\streamline\config\from\From_1_0_14_5.class
 net\plasmere\streamline\commands\staff\events\EventReloadCommand.class
+net\plasmere\streamline\commands\staff\VotesCommand.class
 net\plasmere\streamline\discordbot\MessageListener.class
 net\plasmere\streamline\commands\staff\scripts\ScriptCommand.class
 net\plasmere\streamline\config\from\From$FileType.class
@@ -122,7 +126,7 @@ net\plasmere\streamline\commands\staff\spy\SCViewCommand.class
 net\plasmere\streamline\listeners\LoggerListener.class
 net\plasmere\streamline\utils\GuildUtils.class
 net\plasmere\streamline\utils\api\EventBuilder.class
-net\plasmere\streamline\objects\savable\users\Player.class
+net\plasmere\streamline\objects\configs\Votes.class
 net\plasmere\streamline\objects\configs\ServerPermissions.class
 net\plasmere\streamline\objects\savable\users\SavableUser.class
 net\plasmere\streamline\commands\ReportCommand.class
@@ -157,7 +161,6 @@ net\plasmere\streamline\StreamLine$2.class
 net\plasmere\streamline\commands\staff\SudoCommand.class
 net\plasmere\streamline\objects\timers\OneSecondTimer.class
 net\plasmere\streamline\discordbot\commands\CommandsCommand.class
-net\plasmere\streamline\events\enums\Action$1.class
 net\plasmere\streamline\objects\messaging\DiscordMessage.class
 net\plasmere\streamline\StreamLine$8.class
 net\plasmere\streamline\commands\staff\GetStatsCommand.class

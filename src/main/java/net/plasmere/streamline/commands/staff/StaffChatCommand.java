@@ -4,7 +4,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -22,7 +22,7 @@ public class StaffChatCommand extends Command {
         if (sender instanceof ProxiedPlayer) {
             if (ConfigUtils.moduleStaffChat) {
                 if (sender.hasPermission(ConfigUtils.staffPerm)) {
-                    Player player = PlayerUtils.getPlayerStat(sender);
+                    SavablePlayer player = PlayerUtils.getPlayerStat(sender);
 
                     if (player == null) return;
 

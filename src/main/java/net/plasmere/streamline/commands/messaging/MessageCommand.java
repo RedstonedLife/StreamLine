@@ -6,7 +6,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -70,7 +70,7 @@ public class MessageCommand extends Command implements TabExecutor {
 
         if (sender instanceof ProxiedPlayer) {
             ProxiedPlayer p = (ProxiedPlayer) sender;
-            Player player = PlayerUtils.getOrCreatePlayerStatByUUID(p.getUniqueId().toString());
+            SavablePlayer player = PlayerUtils.getOrCreatePlayerStatByUUID(p.getUniqueId().toString());
             for (String uuid : player.ignoredList) {
                 ignored.add(UUIDUtils.getCachedName(uuid));
             }

@@ -512,6 +512,10 @@ modules:
       enabled: true
       # Creates the default script when not found...
       create-default: true
+    ranks:
+      enable: true
+      points:
+        uses: "%player_votes%"
   bstats:
     make-server-discoverable: true
     discoverable-ip: "my.server.net"

@@ -9,7 +9,7 @@ no-permission: "&cSorry, but you do not have permission to do this..."
 reload-message: "&aConfiguration reloaded!"
 # For things that only players can do.
 only-players: "&cSorry, but only online players can use this command...!"
-# Player not found...
+# SavablePlayer not found...
 no-player: "&cSorry, but that player either does not exist or is not online..."
 # Discord error title.
 discord-err-title: "ERROR"
@@ -216,7 +216,7 @@ online:
       # %server% = specific server.
       # %count% = amount of players on said server.
       servers: "&9%server%&8: &6%count% &donline&8..."
-      # Player format.
+      # SavablePlayer format.
       players:
         # Main bulk of player format.
         # Fillers:
@@ -1336,7 +1336,7 @@ stats:
   create: "&aJust created a stats profile for you! You can view it by doing &b/stats"
   # Points name.
   points-name: "&6Network Gold"
-  # Player bulk message.
+  # SavablePlayer bulk message.
   player: "&9----- &d%player_formatted% &7Network Info &9-----%newline%&eUUID&8: &b%uuid%%newline%&eMinecraft Version&8: &c%version%%newline%&eEXP&8: &6%total_xp%%newline%&eLevel&8: &6%level%%newline%&eXP Needed&8: &6%xplevel% &0(&6%xpneeded% &etotal needed&0)%newline%&ePlaytime&8: &6%playtime% &ehours%newline%&e%points_name%&8: &6%points%%newline%&eTags&8: &c%tags%%newline%&eDisplay Name&8: &d%player_formatted%%newline%&eAll names&8: &c%names%%newline%&2Guild&8: &r%guild%%newline%&2Guild Members&8: &6%guild_members%%newline%&2Guild EXP&7/&2LVL&8: &6%guild_xp_total%&7/&6%guild_lvl%%newline%&2Guild Leader&8: &d%guild_leader% &0(&b%guild_uuid%&0)%newline%&eSocial SPY &0(%sspy%&0) &eGuild SPY &0(%gspy%&0) &eParty SPY &0(%pspy%&0) &eOnline &0(%online%&0)"
   # ConsolePlayer bulk message.
   console-player: "&9----- &d%player_formatted% &7Network Info &9-----%newline%&eUUID&8: &b%uuid%%newline%&eMinecraft Version&8: &c%version%%newline%&e%points_name%&8: &6%points%%newline%&eTags&8: &c%tags%%newline%&eDisplay Name&8: &d%player_formatted%%newline%&2Guild&8: &r%guild%%newline%&2Guild Members&8: &6%guild_members%%newline%&2Guild EXP&7/&2LVL&8: &6%guild_xp_total%&7/&6%guild_lvl%%newline%&2Guild Leader&8: &d%guild_leader% &0(&b%guild_uuid%&0)"

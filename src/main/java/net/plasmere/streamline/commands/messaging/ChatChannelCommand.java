@@ -8,12 +8,11 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.TreeSet;
 
 public class ChatChannelCommand extends Command implements TabExecutor {
 
@@ -24,7 +23,7 @@ public class ChatChannelCommand extends Command implements TabExecutor {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (sender instanceof ProxiedPlayer) {
-            Player player = PlayerUtils.getPlayerStat(sender);
+            SavablePlayer player = PlayerUtils.getPlayerStat(sender);
             if (player == null) return;
 
             if (args.length <= 0) {

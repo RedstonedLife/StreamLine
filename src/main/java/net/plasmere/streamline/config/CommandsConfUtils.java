@@ -298,6 +298,11 @@ public class CommandsConfUtils {
     public static String comBLangBase = StreamLine.config.getCommandString("commands.bungee.configs.language.base");
     public static List<String> comBLangAliases = StreamLine.config.getCommandStringList("commands.bungee.configs.language.aliases");
     public static String comBLangPerm = StreamLine.config.getCommandString("commands.bungee.configs.language.permission");
+    // Votes.
+    public static boolean comBVotes = StreamLine.config.getCommandBoolean("commands.bungee.configs.votes.enabled");
+    public static String comBVotesBase = StreamLine.config.getCommandString("commands.bungee.configs.votes.base");
+    public static List<String> comBVotesAliases = StreamLine.config.getCommandStringList("commands.bungee.configs.votes.aliases");
+    public static String comBVotesPerm = StreamLine.config.getCommandString("commands.bungee.configs.votes.permission");
     // ... Messaging.
     // Ignore.
     public static boolean comBIgnore = StreamLine.config.getCommandBoolean("commands.bungee.messaging.ignore.enabled");

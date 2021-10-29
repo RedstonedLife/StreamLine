@@ -21,7 +21,7 @@ import net.plasmere.streamline.objects.messaging.BungeeMassMessage;
 import net.plasmere.streamline.objects.messaging.BungeeMessage;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
-import net.plasmere.streamline.objects.savable.users.Player;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 
 import java.util.*;
@@ -143,7 +143,7 @@ public class MessagingUtils {
     }
 
     public static void sendRoomMessageFromUser(ProxiedPlayer player, Server serverFrom, Chat room, String format, String message) {
-        for (Player p : PlayerUtils.getRoomedPlayers(room)) {
+        for (SavablePlayer p : PlayerUtils.getRoomedPlayers(room)) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
@@ -364,7 +364,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendDiscordJoinLeaveMessagePlain(boolean isJoin, Player player){
+    public static void sendDiscordJoinLeaveMessagePlain(boolean isJoin, SavablePlayer player){
         if (! ConfigUtils.moduleDEnabled) {
             return;
         }
@@ -395,7 +395,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendDiscordJoinLeaveMessageIcon(boolean isJoin, Player player){
+    public static void sendDiscordJoinLeaveMessageIcon(boolean isJoin, SavablePlayer player){
         if (! ConfigUtils.moduleDEnabled) {
             return;
         }
@@ -957,8 +957,8 @@ public class MessagingUtils {
             return;
         }
 
-        if (user instanceof Player) {
-            Player player = PlayerUtils.getOrGetPlayerStatByUUID(user.uuid);
+        if (user instanceof SavablePlayer) {
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStatByUUID(user.uuid);
 
             if (player == null) {
                 sendBUserMessage(sender, MessageConfUtils.noPlayer());
@@ -1011,7 +1011,7 @@ public class MessagingUtils {
         return stringBuilder.toString();
     }
 
-    public static String statIPs(Player player){
+    public static String statIPs(SavablePlayer player){
         StringBuilder stringBuilder = new StringBuilder();
 
         int i = 1;
@@ -1026,7 +1026,7 @@ public class MessagingUtils {
         return stringBuilder.toString();
     }
 
-    public static String statNames(Player player){
+    public static String statNames(SavablePlayer player){
         StringBuilder stringBuilder = new StringBuilder();
 
         int i = 1;
@@ -1046,10 +1046,12 @@ public class MessagingUtils {
                 .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
                 .replace("%from_normal%", PlayerUtils.getOffOnRegBungee(from))
                 .replace("%from_absolute%", PlayerUtils.getAbsoluteBungee(from))
+                .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                 .replace("%from_server%", from.findServer())
                 .replace("%to_display%", PlayerUtils.getOffOnDisplayBungee(to))
                 .replace("%to_normal%", PlayerUtils.getOffOnRegBungee(to))
                 .replace("%to_absolute%", PlayerUtils.getAbsoluteBungee(to))
+                .replace("%to_formatted%", PlayerUtils.getJustDisplayBungee(to))
                 .replace("%to_server%", to.findServer())
         ));
     }
@@ -1064,7 +1066,7 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendBUserMessage(Player sender, String msg){
+    public static void sendBUserMessage(SavablePlayer sender, String msg){
         if (sender instanceof ProxiedPlayer) {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
                     .replace("%version%", Objects.requireNonNull(sender).latestVersion)
@@ -1149,7 +1151,7 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (Player m : party.moderators){
+        for (SavablePlayer m : party.moderators){
             if (i < party.moderators.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesModsNLast(), m)
                         .replace("%version%", Objects.requireNonNull(m).latestVersion)
@@ -1170,7 +1172,7 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (Player m : party.members){
+        for (SavablePlayer m : party.members){
             if (i < party.members.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesMemsNLast(), m)
                         .replace("%version%", Objects.requireNonNull(m).latestVersion)
@@ -1191,7 +1193,7 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (Player m : party.totalMembers){
+        for (SavablePlayer m : party.totalMembers){
             if (i != party.totalMembers.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesTMemsNLast(), m)
                         .replace("%version%", Objects.requireNonNull(m).latestVersion)
@@ -1212,7 +1214,7 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (Player m : party.invites){
+        for (SavablePlayer m : party.invites){
 
             if (i < party.invites.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesInvsNLast(), m)
