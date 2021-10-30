@@ -93,6 +93,40 @@ public class From_1_0_14_5 extends From{
         addUpdatedCommandsEntry("commands.bungee.staff.chat-history.base", "chat-history");
         addUpdatedCommandsEntry("commands.bungee.staff.chat-history.permission", "streamline.command.chat-history");
         addUpdatedCommandsEntry("commands.bungee.staff.chat-history.aliases", Arrays.asList("chath", "chh"));
+
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.join", "streamline.command.party.join");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.leave", "streamline.command.party.leave");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.create", "streamline.command.party.create");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.promote", "streamline.command.party.promote");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.chat", "streamline.command.party.demote");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.list", "streamline.command.party.list");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.open", "streamline.command.party.open");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.close", "streamline.command.party.close");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.disband", "streamline.command.party.disband");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.accept", "streamline.command.party.accept");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.deny", "streamline.command.party.deny");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.invite", "streamline.command.party.invite");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.kick", "streamline.command.party.kick");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.mute", "streamline.command.party.mute");
+        addUpdatedCommandsEntry("commands.bungee.party.permissions.warp", "streamline.command.party.warp");
+
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.join", "streamline.command.guild.join");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.leave", "streamline.command.guild.leave");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.create", "streamline.command.guild.create");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.promote", "streamline.command.guild.promote");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.chat", "streamline.command.guild.demote");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.list", "streamline.command.guild.list");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.open", "streamline.command.guild.open");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.close", "streamline.command.guild.close");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.disband", "streamline.command.guild.disband");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.accept", "streamline.command.guild.accept");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.deny", "streamline.command.guild.deny");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.invite", "streamline.command.guild.invite");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.kick", "streamline.command.guild.kick");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.mute", "streamline.command.guild.mute");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.warp", "streamline.command.guild.warp");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.info", "streamline.command.guild.info");
+        addUpdatedCommandsEntry("commands.bungee.guild.permissions.rename", "streamline.command.guild.rename");
     }
 
     @Override

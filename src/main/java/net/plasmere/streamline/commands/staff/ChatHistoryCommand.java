@@ -69,7 +69,12 @@ public class ChatHistoryCommand extends Command implements TabExecutor {
         for (Long l : map.keySet()) {
             if (i >= view) break;
 
-            if (i == view - 1 || i == map.size() - 1) {
+//            if (i == 0) {
+//                builder.append(MessageConfUtils.historyChatBulk()
+//                        .replace("%timestamp%", new Date(l).toString())
+//                        .replace("%message%", "&r" + map.get(l))
+//                );
+            /*} else*/ if (i == view - 1 || i == map.size() - 1) {
                 builder.append(MessageConfUtils.historyChatBulk()
                         .replace("%timestamp%", new Date(l).toString())
                         .replace("%message%", map.get(l))

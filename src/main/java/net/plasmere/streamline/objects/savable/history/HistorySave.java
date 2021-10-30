@@ -99,7 +99,11 @@ public class HistorySave {
             try {
                 long timestamp = Long.parseLong(t);
                 if (timestamp >= timestampF) {
-                    map.put(timestamp, conf.getString(server + "." + timestamp));
+//                    if (map.size() == 0) {
+//                        map.put(timestamp, conf.getString(server + "." + t).substring(2));
+//                        continue;
+//                    }
+                    map.put(timestamp, conf.getString(server + "." + t));
                 }
             } catch (Exception e) {
                 // continue

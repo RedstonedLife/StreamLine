@@ -226,82 +226,146 @@ public class CommandsConfUtils {
     public static List<String> comBParJoinAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.join");
-     }
+    }
+    public static String comBParJoinPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.join");
+    }
     // Leave.
     public static List<String> comBParLeaveAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.leave");
      }
+    public static String comBParLeavePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.leave");
+    }
     // Create.
     public static List<String> comBParCreateAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.create");
      }
+    public static String comBParCreatePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.create");
+    }
     // Promote.
     public static List<String> comBParPromoteAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.promote");
      }
+    public static String comBParPromotePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.promote");
+    }
     // Demote.
     public static List<String> comBParDemoteAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.demote");
      }
+    public static String comBParDemotePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.demote");
+    }
     // Chat.
     public static List<String> comBParChatAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.chat");
      }
+    public static String comBParChatPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.chat");
+    }
     // List.
     public static List<String> comBParListAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.list");
      }
+    public static String comBParListPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.list");
+    }
     // Open.
     public static List<String> comBParOpenAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.open");
      }
+    public static String comBParOpenPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.open");
+    }
     // Close.
     public static List<String> comBParCloseAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.close");
      }
+    public static String comBParClosePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.close");
+    }
     // Disband.
     public static List<String> comBParDisbandAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.disband");
      }
+    public static String comBParDisbandPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.disband");
+    }
     // Accept.
     public static List<String> comBParAcceptAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.accept");
      }
+    public static String comBParAcceptPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.accept");
+    }
     // Deny.
     public static List<String> comBParDenyAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.deny");
      }
+    public static String comBParDenyPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.deny");
+    }
     // Invite.
     public static List<String> comBParInvAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.invite");
      }
+    public static String comBParInvitePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.invite");
+    }
     // Kick.
     public static List<String> comBParKickAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.kick");
      }
+    public static String comBParKickPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.kick");
+    }
     // Mute.
     public static List<String> comBParMuteAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.mute");
      }
+    public static String comBParMutePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.mute");
+    }
     // Warp.
     public static List<String> comBParWarpAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.warp");
      }
+    public static String comBParWarpPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.warp");
+    }
     // ... SavableGuild.
     //
     public static boolean comBGuild() {
@@ -328,92 +392,164 @@ public class CommandsConfUtils {
     public static List<String> comBGuildJoinAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.join");
-     }
+    }
+    public static String comBGuildJoinPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.join");
+    }
     // Leave.
     public static List<String> comBGuildLeaveAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.leave");
-     }
+    }
+    public static String comBGuildLeavePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.leave");
+    }
     // Create.
     public static List<String> comBGuildCreateAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.create");
-     }
+    }
+    public static String comBGuildCreatePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.create");
+    }
     // Promote.
     public static List<String> comBGuildPromoteAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.promote");
-     }
+    }
+    public static String comBGuildPromotePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.promote");
+    }
     // Demote.
     public static List<String> comBGuildDemoteAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.demote");
-     }
+    }
+    public static String comBGuildDemotePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.demote");
+    }
     // Chat.
     public static List<String> comBGuildChatAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.chat");
-     }
+    }
+    public static String comBGuildChatPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.chat");
+    }
     // List.
     public static List<String> comBGuildListAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.list");
-     }
+    }
+    public static String comBGuildListPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.list");
+    }
     // Open.
     public static List<String> comBGuildOpenAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.open");
-     }
+    }
+    public static String comBGuildOpenPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.open");
+    }
     // Close.
     public static List<String> comBGuildCloseAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.close");
-     }
+    }
+    public static String comBGuildClosePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.close");
+    }
     // Disband.
     public static List<String> comBGuildDisbandAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.disband");
-     }
+    }
+    public static String comBGuildDisbandPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.disband");
+    }
     // Accept.
     public static List<String> comBGuildAcceptAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.accept");
-     }
+    }
+    public static String comBGuildAcceptPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.accept");
+    }
     // Deny.
     public static List<String> comBGuildDenyAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.deny");
-     }
+    }
+    public static String comBGuildDenyPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.deny");
+    }
     // Invite.
     public static List<String> comBGuildInvAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.invite");
-     }
+    }
+    public static String comBGuildInvitePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.invite");
+    }
     // Kick.
     public static List<String> comBGuildKickAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.kick");
-     }
+    }
+    public static String comBGuildKickPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.kick");
+    }
     // Mute.
     public static List<String> comBGuildMuteAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.mute");
-     }
+    }
+    public static String comBGuildMutePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.mute");
+    }
     // Warp.
     public static List<String> comBGuildWarpAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.warp");
-     }
+    }
+    public static String comBGuildWarpPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.warp");
+    }
     // Info.
     public static List<String> comBGuildInfoAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.info");
      }
+    public static String comBGuildInfoPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.info");
+    }
     // Rename.
     public static List<String> comBGuildRenameAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.rename");
-     }
+    }
+    public static String comBGuildRenamePermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.rename");
+    }
     // ... Servers.
     // Lobby.
     public static boolean comBLobby() {
