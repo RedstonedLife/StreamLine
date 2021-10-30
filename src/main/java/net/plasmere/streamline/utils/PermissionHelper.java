@@ -16,7 +16,7 @@ public class PermissionHelper {
             return true;
         }
 
-        if (! ConfigUtils.moduleDEnabled) {
+        if (! ConfigUtils.moduleDEnabled()) {
             return false;
         }
 

@@ -47,6 +47,8 @@ public class RanksUtils {
     public static String getNewGroup(SavablePlayer player) {
         int intToTest = TextUtils.replaceAllPlayerRanks(player);
 
+        if (StreamLine.ranksConfig.checkedGroups().size() <= 0) return "";
+
         if (intToTest > StreamLine.ranksConfig.checkedGroups().firstKey()) {
             int currentReq = StreamLine.ranksConfig.checkedGroups().lastKey();
             while (intToTest < currentReq) {
@@ -71,7 +73,10 @@ public class RanksUtils {
             User user = api.getUserManager().getUser(player.getUniqueId());
             if (user == null) return FAILED;
 
-            Group group = api.getGroupManager().getGroup(getNewGroup(player));
+            String gString = getNewGroup(player);
+            if (gString.equals("")) return FAILED;
+
+            Group group = api.getGroupManager().getGroup(gString);
             if (group == null) return FAILED;
 
             if (getNewGroup(player).equals(user.getPrimaryGroup())) return OTHER;

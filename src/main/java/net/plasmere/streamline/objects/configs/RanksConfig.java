@@ -28,7 +28,7 @@ public class RanksConfig {
     public RanksConfig(){
         if (! StreamLine.getInstance().getConfDir().exists()) {
             if (StreamLine.getInstance().getConfDir().mkdirs()) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
             }
         }
 

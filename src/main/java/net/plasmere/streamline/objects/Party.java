@@ -313,7 +313,7 @@ public class Party {
     }
 
     public int getMaxSize(SavablePlayer leader){
-        if (! StreamLine.lpHolder.enabled) return ConfigUtils.partyMax;
+        if (! StreamLine.lpHolder.enabled) return ConfigUtils.partyMax();
 
         try {
             Collection<PermissionNode> perms =
@@ -331,8 +331,8 @@ public class Party {
             for (PermissionNode perm : perms) {
                 try {
                     String p = perm.getPermission();
-                    for (int i = 1; i <= ConfigUtils.partyMax; i++) {
-                        String pTry = ConfigUtils.partyMaxPerm + i;
+                    for (int i = 1; i <= ConfigUtils.partyMax(); i++) {
+                        String pTry = ConfigUtils.partyMaxPerm() + i;
                         if (p.equals(pTry)) {
                             isGood = true;
 
@@ -346,14 +346,14 @@ public class Party {
             }
 
             if (highestSize == 1)
-                return ConfigUtils.partyMax;
+                return ConfigUtils.partyMax();
             else if (isGood)
                 return highestSize;
             else
-                return ConfigUtils.partyMax;
+                return ConfigUtils.partyMax();
         } catch (Exception e) {
             e.printStackTrace();
-            return ConfigUtils.partyMax;
+            return ConfigUtils.partyMax();
         }
     }
 }

@@ -35,7 +35,7 @@ public class GuildCommand extends Command implements TabExecutor {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                 e.printStackTrace();
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildJoinAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildJoinAliases())) {
             if (args.length <= 1) {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -57,14 +57,14 @@ public class GuildCommand extends Command implements TabExecutor {
                     e.printStackTrace();
                 }
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildLeaveAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildLeaveAliases())) {
             try {
                 GuildUtils.leaveGuild(stat);
             } catch (Exception e) {
                 MessagingUtils.sendBUserMessage(stat.findSender(), MessageConfUtils.bungeeCommandErrorUnd());
                 e.printStackTrace();
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCreateAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCreateAliases())) {
             if (args.length <= 1) {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -80,7 +80,7 @@ public class GuildCommand extends Command implements TabExecutor {
                     e.printStackTrace();
                 }
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildPromoteAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildPromoteAliases())) {
             if (args.length <= 1) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
             } else {
@@ -97,7 +97,7 @@ public class GuildCommand extends Command implements TabExecutor {
                     e.printStackTrace();
                 }
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDemoteAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDemoteAliases())) {
             if (args.length <= 1) {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -119,7 +119,7 @@ public class GuildCommand extends Command implements TabExecutor {
                     e.printStackTrace();
                 }
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildChatAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildChatAliases())) {
             if (args.length <= 1) {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -135,35 +135,35 @@ public class GuildCommand extends Command implements TabExecutor {
                     e.printStackTrace();
                 }
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildListAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildListAliases())) {
             try {
                 GuildUtils.listGuild(stat);
             } catch (Exception e) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                 e.printStackTrace();
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildOpenAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildOpenAliases())) {
             try {
                 GuildUtils.openGuild(stat);
             } catch (Exception e) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                 e.printStackTrace();
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCloseAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCloseAliases())) {
             try {
                 GuildUtils.closeGuild(stat);
             } catch (Exception e) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                 e.printStackTrace();
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDisbandAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDisbandAliases())) {
             try {
                 GuildUtils.disband(stat);
             } catch (Throwable e) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                 e.printStackTrace();
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildAcceptAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildAcceptAliases())) {
             if (args.length <= 1) {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -185,7 +185,7 @@ public class GuildCommand extends Command implements TabExecutor {
                     e.printStackTrace();
                 }
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDenyAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDenyAliases())) {
             if (args.length <= 1) {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -207,7 +207,7 @@ public class GuildCommand extends Command implements TabExecutor {
                     e.printStackTrace();
                 }
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInvAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInvAliases())) {
             if (args.length <= 1) {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -229,7 +229,7 @@ public class GuildCommand extends Command implements TabExecutor {
                     e.printStackTrace();
                 }
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildKickAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildKickAliases())) {
             if (args.length <= 1) {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -251,28 +251,28 @@ public class GuildCommand extends Command implements TabExecutor {
                     e.printStackTrace();
                 }
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildMuteAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildMuteAliases())) {
             try {
                 GuildUtils.muteGuild(stat);
             } catch (Throwable e) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                 e.printStackTrace();
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildWarpAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildWarpAliases())) {
             try {
                 GuildUtils.warpGuild(stat);
             } catch (Throwable e) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                 e.printStackTrace();
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInfoAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInfoAliases())) {
             try {
                 GuildUtils.info(stat);
             } catch (Throwable e) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                 e.printStackTrace();
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases)) {
+        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases())) {
             if (args.length <= 1) {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -348,39 +348,39 @@ public class GuildCommand extends Command implements TabExecutor {
             return TextUtils.getCompletion(tabArgs1, args[0]);
         }
         if (args.length == 2) {
-            if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildJoinAliases)) {
+            if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildJoinAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildLeaveAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildLeaveAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCreateAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCreateAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildPromoteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildPromoteAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDemoteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDemoteAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildChatAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildChatAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildListAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildListAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildOpenAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildOpenAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCloseAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCloseAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDisbandAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDisbandAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildAcceptAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildAcceptAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDenyAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDenyAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInvAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInvAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildKickAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildKickAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[0]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildMuteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildMuteAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildWarpAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildWarpAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases())) {
                 return new ArrayList<>();
             } else {
                 return TextUtils.getCompletion(strPlayers, args[1]);

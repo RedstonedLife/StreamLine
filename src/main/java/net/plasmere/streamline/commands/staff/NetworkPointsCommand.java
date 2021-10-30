@@ -40,7 +40,7 @@ public class NetworkPointsCommand extends Command implements TabExecutor {
             }
 
             if (! stat.latestName.equals(sender.getName())) {
-                if (! sender.hasPermission(CommandsConfUtils.comBPointsOPerm)) {
+                if (! sender.hasPermission(CommandsConfUtils.comBPointsOPerm())) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                     return;
                 }
@@ -61,7 +61,7 @@ public class NetworkPointsCommand extends Command implements TabExecutor {
                 }
             }
 
-            if (! sender.hasPermission(CommandsConfUtils.comBPointsChPerm)) {
+            if (! sender.hasPermission(CommandsConfUtils.comBPointsChPerm())) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                 return;
             }
@@ -91,7 +91,7 @@ public class NetworkPointsCommand extends Command implements TabExecutor {
                         }
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
-                        if (ConfigUtils.errSendToConsole) e.printStackTrace();
+                        if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;
                 case "add":
@@ -117,7 +117,7 @@ public class NetworkPointsCommand extends Command implements TabExecutor {
                         }
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
-                        if (ConfigUtils.errSendToConsole) e.printStackTrace();
+                        if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;
                 case "set":
@@ -144,7 +144,7 @@ public class NetworkPointsCommand extends Command implements TabExecutor {
                         }
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
-                        if (ConfigUtils.errSendToConsole) e.printStackTrace();
+                        if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;
             }
@@ -153,7 +153,7 @@ public class NetworkPointsCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) return new ArrayList<>();
+        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm())) return new ArrayList<>();
 
         Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();

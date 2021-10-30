@@ -13,11 +13,11 @@ public class CommandsCommand {
     public static void sendMessage(String command, MessageReceivedEvent event){
         EmbedBuilder eb = new EmbedBuilder();
         event.getChannel().sendMessageEmbeds(eb.setDescription(compileCommands(event)).build()).queue();
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
     }
 
     private static String compileCommands(MessageReceivedEvent event){
-        String prefix = DiscordBotConfUtils.botPrefix;
+        String prefix = DiscordBotConfUtils.botPrefix();
 
         StringBuilder commands = new StringBuilder();
         commands.append("-- Commands --");

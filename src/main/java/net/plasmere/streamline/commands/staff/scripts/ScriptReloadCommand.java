@@ -16,7 +16,7 @@ public class ScriptReloadCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (sender.hasPermission(CommandsConfUtils.comBEReloadPerm)) {
+        if (sender.hasPermission(CommandsConfUtils.comBScriptRePerm())) {
             ScriptsHandler.unloadScripts();
             StreamLine.getInstance().loadScripts();
 

@@ -24,7 +24,7 @@ public class UUIDUtils {
         if (username.equals("%")) return username;
         if (username.contains("-")) return username;
 
-        if (ConfigUtils.offlineMode) {
+        if (ConfigUtils.offlineMode()) {
             return StreamLine.offlineStats.getUUID(username);
         }
 
@@ -42,7 +42,7 @@ public class UUIDUtils {
         if (uuid.equals("%")) return uuid;
         if (! uuid.contains("-")) return uuid;
 
-        if (ConfigUtils.offlineMode) {
+        if (ConfigUtils.offlineMode()) {
             return StreamLine.offlineStats.getPlayerName(uuid);
         }
 
@@ -58,7 +58,7 @@ public class UUIDUtils {
     static public String fetch(String username) {
         if (username.contains("-")) return getName(username);
 
-        if (ConfigUtils.offlineMode) {
+        if (ConfigUtils.offlineMode()) {
             return StreamLine.offlineStats.getUUID(username);
         }
 
@@ -105,7 +105,7 @@ public class UUIDUtils {
     public static String getName(String uuid) {
         if (! uuid.contains("-")) return fetch(uuid);
 
-        if (ConfigUtils.offlineMode) {
+        if (ConfigUtils.offlineMode()) {
             return StreamLine.offlineStats.getPlayerName(uuid);
         }
 
@@ -181,7 +181,7 @@ public class UUIDUtils {
         String name = thingThatMightBeAUUID;
 
         if (thingThatMightBeAUUID.equals("%")) {
-            return ConfigUtils.consoleName;
+            return ConfigUtils.consoleName();
         }
 
         if (thingThatMightBeAUUID.contains("-")) {

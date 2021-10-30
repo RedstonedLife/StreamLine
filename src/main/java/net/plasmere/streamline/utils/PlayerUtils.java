@@ -27,6 +27,7 @@ import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.scripts.Script;
 import net.plasmere.streamline.scripts.ScriptsHandler;
+import net.plasmere.streamline.utils.holders.LPHolder;
 import org.apache.commons.collections4.list.TreeList;
 
 import java.io.File;
@@ -530,7 +531,7 @@ public class PlayerUtils {
 
         for (SavableUser user : getJustPlayersOnline()) {
             if (! user.online) continue;
-            if (user.hasPermission(ConfigUtils.staffPerm)) {
+            if (user.hasPermission(ConfigUtils.staffPerm())) {
                 users.add(user);
             }
         }
@@ -644,7 +645,7 @@ public class PlayerUtils {
     public static SavablePlayer createPlayerStat(ProxiedPlayer player) {
         SavablePlayer stat = addPlayerStat(new SavablePlayer(player, true));
 
-        if (ConfigUtils.statsTell) {
+        if (ConfigUtils.statsTell()) {
             MessagingUtils.sendStatUserMessage(stat, player, create);
         }
 
@@ -658,7 +659,7 @@ public class PlayerUtils {
     public static SavablePlayer createPlayerStat(String name) {
         SavablePlayer stat = addPlayerStat(new SavablePlayer(UUIDUtils.getCachedUUID(name), true));
 
-        if (ConfigUtils.statsTell && stat.online) {
+        if (ConfigUtils.statsTell() && stat.online) {
             MessagingUtils.sendStatUserMessage(stat, stat.player, create);
         }
 
@@ -668,7 +669,7 @@ public class PlayerUtils {
     public static SavablePlayer createPlayerStatByUUID(String uuid) {
         SavablePlayer stat = addPlayerStat(new SavablePlayer(uuid, true));
 
-        if (ConfigUtils.statsTell && stat.online) {
+        if (ConfigUtils.statsTell() && stat.online) {
             MessagingUtils.sendStatUserMessage(stat, stat.player, create);
         }
 
@@ -1149,7 +1150,7 @@ public class PlayerUtils {
         from.updateLastTo(to);
         to.updateLastFrom(from);
 
-        switch (ConfigUtils.messReplyTo) {
+        switch (ConfigUtils.messReplyTo()) {
             case "sent-to":
                 from.updateReplyTo(to);
                 break;
@@ -1174,7 +1175,7 @@ public class PlayerUtils {
             for (ProxiedPlayer player : StreamLine.getInstance().getProxy().getPlayers()) {
                 SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(player);
 
-                if (! player.hasPermission(ConfigUtils.messViewPerm) || ! p.sspy) continue;
+                if (! player.hasPermission(ConfigUtils.messViewPerm()) || ! p.sspy) continue;
                 if (! p.sspyvs) if (from.uuid.equals(p.uuid) || to.uuid.equals(p.uuid)) continue;
 
                 MessagingUtils.sendBMessagenging(player, from, to, message, MessageConfUtils.replySSPY());
@@ -1187,7 +1188,7 @@ public class PlayerUtils {
             for (ProxiedPlayer player : StreamLine.getInstance().getProxy().getPlayers()) {
                 SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(player);
 
-                if (! player.hasPermission(ConfigUtils.messViewPerm) || ! p.sspy) continue;
+                if (! player.hasPermission(ConfigUtils.messViewPerm()) || ! p.sspy) continue;
                 if (! p.sspyvs) if (from.uuid.equals(p.uuid) || to.uuid.equals(p.uuid)) continue;
 
                 MessagingUtils.sendBMessagenging(player, from, to, message, MessageConfUtils.messageSSPY());
@@ -1211,7 +1212,7 @@ public class PlayerUtils {
         from.updateLastTo(to);
         to.updateLastFrom(from);
 
-        switch (ConfigUtils.messReplyTo) {
+        switch (ConfigUtils.messReplyTo()) {
             case "sent-to":
                 from.updateReplyTo(to);
                 break;
@@ -1236,7 +1237,7 @@ public class PlayerUtils {
             for (ProxiedPlayer player : StreamLine.getInstance().getProxy().getPlayers()) {
                 SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(player);
 
-                if (! player.hasPermission(ConfigUtils.messViewPerm) || ! p.sspy) continue;
+                if (! player.hasPermission(ConfigUtils.messViewPerm()) || ! p.sspy) continue;
                 if (! p.sspyvs) if (from.uuid.equals(p.uuid) || to.uuid.equals(p.uuid)) continue;
 
                 MessagingUtils.sendBMessagenging(player, from, to, message, MessageConfUtils.replySSPY());
@@ -1249,7 +1250,7 @@ public class PlayerUtils {
             for (ProxiedPlayer player : StreamLine.getInstance().getProxy().getPlayers()) {
                 SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(player);
 
-                if (! player.hasPermission(ConfigUtils.messViewPerm) || ! p.sspy) continue;
+                if (! player.hasPermission(ConfigUtils.messViewPerm()) || ! p.sspy) continue;
                 if (! p.sspyvs) if (from.uuid.equals(p.uuid) || to.uuid.equals(p.uuid)) continue;
 
                 MessagingUtils.sendBMessagenging(player, from, to, message, MessageConfUtils.messageSSPY());
@@ -1307,7 +1308,7 @@ public class PlayerUtils {
     }
 
     public static void addConn(SavablePlayer player){
-        connections.put(player, new SingleSet<>(ConfigUtils.lobbyTimeOut, 0));
+        connections.put(player, new SingleSet<>(ConfigUtils.lobbyTimeOut(), 0));
     }
 
     public static void tickConn(){
@@ -1343,7 +1344,7 @@ public class PlayerUtils {
     ---------------------------- */
 
     public static void updateDisplayName(SavablePlayer player){
-        if (! ConfigUtils.updateDisplayNames) return;
+        if (! ConfigUtils.updateDisplayNames()) return;
         if (! StreamLine.lpHolder.enabled) return;
 
         player.setDisplayName(getDisplayName(player));
@@ -1405,7 +1406,7 @@ public class PlayerUtils {
         }
 
         if (stat instanceof ConsolePlayer) {
-            return ConfigUtils.consoleDisplayName;
+            return ConfigUtils.consoleDisplayName();
         }
 
         if (stat instanceof SavablePlayer) {
@@ -1425,7 +1426,7 @@ public class PlayerUtils {
         }
 
         if (stat instanceof ConsolePlayer) {
-            return ConfigUtils.consoleName;
+            return ConfigUtils.consoleName();
         }
 
         if (stat instanceof SavablePlayer) {
@@ -1445,7 +1446,7 @@ public class PlayerUtils {
         }
 
         if (stat instanceof ConsolePlayer) {
-            return ConfigUtils.consoleDisplayName;
+            return ConfigUtils.consoleDisplayName();
         }
 
         if (stat instanceof SavablePlayer) {
@@ -1472,23 +1473,40 @@ public class PlayerUtils {
     }
 
     public static String getLuckPermsPrefix(String username){
-        if (! StreamLine.lpHolder.enabled) return "";
+        if (! StreamLine.lpHolder.isPresent()) {
+//            MessagingUtils.logInfo("LP Pre : LP not enabled!");
+            return "";
+        }
 
         User user = StreamLine.lpHolder.api.getUserManager().getUser(username);
         if (user == null) {
+//            MessagingUtils.logInfo("LP Pre : User not found!");
 //            MessagingUtils.logWarning("getLuckPermsPrefix -> user == null");
             return "";
         }
 
+        String prefix = "";
+
         Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(user.getPrimaryGroup());
         if (group == null) {
-//            MessagingUtils.logWarning("getLuckPermsPrefix -> group == null");
-            return "";
-        } else {
-//            MessagingUtils.logInfo("getLuckPermsPrefix -> group == " + group.getDisplayName() + " | " + group.getName() + " | " + group.getWeight());
-        }
+            TreeMap<Integer, String> preWeight = new TreeMap<>();
 
-        String prefix = "";
+            for (PrefixNode node : user.getNodes(NodeType.PREFIX)) {
+                preWeight.put(node.getPriority(), node.getMetaValue());
+            }
+
+            prefix = preWeight.get(PluginUtils.getCeilingInt(preWeight.keySet()));
+
+            if (prefix == null) {
+//            MessagingUtils.logWarning("getLuckPermsPrefix -> prefix == null");
+                prefix = "";
+            }
+
+//            MessagingUtils.logInfo("LP Pre : group == null | prefix = " + prefix);
+            return TextUtils.codedString(prefix);
+        } else {
+//            if (ConfigUtils.debug()) MessagingUtils.logInfo("getLuckPermsPrefix -> group == " + group.getDisplayName() + " | " + group.getName() + " | " + group.getWeight());
+        }
 
         TreeMap<Integer, String> preWeight = new TreeMap<>();
 
@@ -1504,10 +1522,12 @@ public class PlayerUtils {
         prefix = preWeight.get(PluginUtils.getCeilingInt(preWeight.keySet()));
 
         if (prefix == null) {
+//            MessagingUtils.logInfo("LP Pre : prefix == null | prefix = " + prefix);
 //            MessagingUtils.logWarning("getLuckPermsPrefix -> prefix == null");
             prefix = "";
         }
 
+//        MessagingUtils.logInfo("LP Pre : group != null | prefix = " + prefix);
         return TextUtils.codedString(prefix);
     }
 
@@ -1517,10 +1537,27 @@ public class PlayerUtils {
         User user = StreamLine.lpHolder.api.getUserManager().getUser(username);
         if (user == null) return "";
 
-        Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(user.getPrimaryGroup());
-        if (group == null) return "";
-
         String suffix = "";
+
+        Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(user.getPrimaryGroup());
+        if (group == null) {
+            TreeMap<Integer, String> sufWeight = new TreeMap<>();
+
+            for (SuffixNode node : user.getNodes(NodeType.SUFFIX)) {
+                sufWeight.put(node.getPriority(), node.getMetaValue());
+            }
+
+            suffix = sufWeight.get(PluginUtils.getCeilingInt(sufWeight.keySet()));
+
+            if (suffix == null) {
+//            MessagingUtils.logWarning("getLuckPermsPrefix -> prefix == null");
+                suffix = "";
+            }
+
+            return TextUtils.codedString(suffix);
+        } else {
+            if (ConfigUtils.debug()) MessagingUtils.logInfo("getLuckPermsPrefix -> group == " + group.getDisplayName() + " | " + group.getName() + " | " + group.getWeight());
+        }
 
         TreeMap<Integer, String> sufWeight = new TreeMap<>();
 
@@ -1622,7 +1659,7 @@ public class PlayerUtils {
         }
 
         if (stat instanceof ConsolePlayer) {
-            return ChatColor.stripColor(ConfigUtils.consoleDisplayName);
+            return ChatColor.stripColor(ConfigUtils.consoleDisplayName());
         }
 
         if (stat instanceof SavablePlayer) {
@@ -1642,7 +1679,7 @@ public class PlayerUtils {
         }
 
         if (stat instanceof ConsolePlayer) {
-            return ConfigUtils.consoleName;
+            return ConfigUtils.consoleName();
         }
 
         if (stat instanceof SavablePlayer) {
@@ -1662,7 +1699,7 @@ public class PlayerUtils {
         }
 
         if (stat instanceof ConsolePlayer) {
-            return ChatColor.stripColor(ConfigUtils.consoleDisplayName);
+            return ChatColor.stripColor(ConfigUtils.consoleDisplayName());
         }
 
         if (stat instanceof SavablePlayer) {
@@ -1678,7 +1715,7 @@ public class PlayerUtils {
         }
 
         if (stat instanceof ConsolePlayer) {
-            return ChatColor.stripColor(ConfigUtils.consoleName);
+            return ChatColor.stripColor(ConfigUtils.consoleName());
         }
 
         if (stat instanceof SavablePlayer) {
@@ -1802,7 +1839,7 @@ public class PlayerUtils {
     }
 
     public static void addTeleport(ProxiedPlayer sender, ProxiedPlayer to) {
-        teleports.put(sender, new SingleSet<>(ConfigUtils.helperTeleportDelay, to));
+        teleports.put(sender, new SingleSet<>(ConfigUtils.helperTeleportDelay(), to));
     }
 
     public static void tickBoosts() {
@@ -1814,7 +1851,7 @@ public class PlayerUtils {
             if (user == null) continue;
             if (! user.online) continue;
 
-            Script script = ScriptsHandler.getScript(ConfigUtils.boostsUponBoostRun);
+            Script script = ScriptsHandler.getScript(ConfigUtils.boostsUponBoostRun());
             if (script == null) continue;
 
             script.execute(StreamLine.getInstance().getProxy().getConsole(), user);
@@ -1915,6 +1952,22 @@ public class PlayerUtils {
 
     public static int getVotesForPlayerByUUID(String uuid) {
         return StreamLine.votes.getVotes(UUID.fromString(uuid));
+    }
+
+    public static List<ProxiedPlayer> getPlayersOnlineByGroup(Group group) {
+        List<ProxiedPlayer> thing = new ArrayList<>();
+        if (! StreamLine.lpHolder.enabled) return thing;
+
+        for (ProxiedPlayer player : getOnlinePPlayers()) {
+            User user = StreamLine.lpHolder.api.getUserManager().getUser(player.getUniqueId());
+            if (user == null) continue;
+
+            if (user.getPrimaryGroup().equals(group.getName())) {
+                thing.add(player);
+            }
+        }
+
+        return thing;
     }
 
 //    public static void updateServerAll(){

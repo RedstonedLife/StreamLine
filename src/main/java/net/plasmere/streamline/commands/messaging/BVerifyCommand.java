@@ -24,7 +24,7 @@ public class BVerifyCommand extends Command implements TabExecutor {
         if (sender instanceof ProxiedPlayer) {
             long verificationNum = StreamLine.discordData.getVerification(((ProxiedPlayer) sender).getUniqueId().toString());
             MessagingUtils.sendBUserMessage(sender, "&aYour verification number: &6" + verificationNum +
-                    "\n&aGo onto the discord and type &d" + DiscordBotConfUtils.botPrefix + "verify " + sender.getName() + " " + verificationNum + " &ato verify!");
+                    "\n&aGo onto the discord and type &d" + DiscordBotConfUtils.botPrefix() + "verify " + sender.getName() + " " + verificationNum + " &ato verify!");
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());
         }

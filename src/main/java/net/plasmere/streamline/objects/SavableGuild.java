@@ -33,7 +33,7 @@ public class SavableGuild {
     public int totalXP;
     public int currentXP;
     public int lvl;
-    public int maxSize = ConfigUtils.guildMax;
+    public int maxSize = ConfigUtils.guildMax();
 
     public List<String> savedKeys;
 
@@ -294,19 +294,19 @@ public class SavableGuild {
         }
 
         if (this.leaderUUID == null) {
-            try {
-                throw new Exception("Improper use of the SavableGuild's class! Report this to the owner of the StreamLine plugin...");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                throw new Exception("Improper use of the SavableGuild's class! Report this to the owner of the StreamLine plugin...");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
             return;
         }
         if (this.leaderUUID.equals("null") || this.leaderUUID.equals("")) {
-            try {
-                throw new Exception("Improper use of the SavableGuild's class! Report this to the owner of the StreamLine plugin...");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                throw new Exception("Improper use of the SavableGuild's class! Report this to the owner of the StreamLine plugin...");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
             return;
         }
 
@@ -520,16 +520,14 @@ public class SavableGuild {
     }
 
     public void setTotalXP(int amount){
-        int setAmount = amount;
-        int required = getNeededXp(this.lvl + 1);
+        this.totalXP = amount;
 
-        while (setAmount >= required) {
-            setAmount -= required;
+        while (xpUntilNextLevel() <= 0) {
             int setLevel = this.lvl + 1;
             updateKey("lvl", setLevel);
         }
 
-        updateKey("total-xp", setAmount);
+        updateKey("total-xp", amount);
         updateKey("current-xp", getCurrentXP());
     }
 

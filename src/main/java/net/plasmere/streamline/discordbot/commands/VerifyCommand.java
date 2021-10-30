@@ -14,11 +14,11 @@ public class VerifyCommand {
     public static void sendMessage(String command, MessageReceivedEvent event){
         EmbedBuilder eb = new EmbedBuilder();
         event.getChannel().sendMessageEmbeds(eb.setDescription(compileCommands(event)).build()).queue();
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
     }
 
     private static String compileCommands(MessageReceivedEvent event){
-        String[] args = event.getMessage().getContentRaw().toLowerCase().substring(DiscordBotConfUtils.botPrefix.length()).split(" ");
+        String[] args = event.getMessage().getContentRaw().toLowerCase().substring(DiscordBotConfUtils.botPrefix().length()).split(" ");
 
         try {
             String uuid = UUIDUtils.getCachedUUID(args[1]);
@@ -39,7 +39,7 @@ public class VerifyCommand {
                 return "You did not enter the correct number!";
             }
         } catch (Exception e) {
-            if (ConfigUtils.debug) e.printStackTrace();
+            if (ConfigUtils.debug()) e.printStackTrace();
             return "You did not enter a number or you might need to do /bverify on the network!";
         }
     }

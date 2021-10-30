@@ -23,12 +23,12 @@ public class ReportCommand extends Command {
             return;
         }
 
-        if (ConfigUtils.moduleReportsMToDiscord)
-            if (ConfigUtils.moduleDEnabled)
+        if (ConfigUtils.moduleReportsMToDiscord())
+            if (ConfigUtils.moduleDEnabled())
                 MessagingUtils.sendDiscordReportMessage(sender.getName(), true, msg);
-        if (ConfigUtils.moduleReportsSendChat)
+        if (ConfigUtils.moduleReportsSendChat())
             MessagingUtils.sendStaffMessageReport(sender.getName(), true, msg);
-        if (ConfigUtils.moduleReportsBConfirmation)
+        if (ConfigUtils.moduleReportsBConfirmation())
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bConfirmReportMessage()
                     .replace("%reporter%", sender.getName())
                     .replace("%report%", TextUtils.normalize(args))

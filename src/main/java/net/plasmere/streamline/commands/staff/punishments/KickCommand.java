@@ -38,7 +38,7 @@ public class KickCommand extends Command implements TabExecutor {
                 return;
             }
 
-            if (PlayerUtils.hasOfflinePermission(ConfigUtils.punKicksBypass, other.uuid)) {
+            if (PlayerUtils.hasOfflinePermission(ConfigUtils.punKicksBypass(), other.uuid)) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.kickCannot());
                 return;
             }
@@ -53,8 +53,8 @@ public class KickCommand extends Command implements TabExecutor {
                     .replace("%reason%", reason)
             );
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.punKicksDiscord) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.punKicksDiscord()) {
                     MessagingUtils.sendDiscordEBMessage(
                             new DiscordMessage(
                                     sender,
@@ -63,13 +63,13 @@ public class KickCommand extends Command implements TabExecutor {
                                             .replace("%punisher%", sender.getName())
                                             .replace("%reason%", reason)
                                     ,
-                                    DiscordBotConfUtils.textChannelKicks
+                                    DiscordBotConfUtils.textChannelKicks()
                             )
                     );
                 }
             }
 
-            MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm,
+            MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(),
                     TextUtils.replaceAllPlayerBungee(MessageConfUtils.kickStaff(), other)
                     .replace("%punisher%", sender.getName())
                     .replace("%reason%", reason)

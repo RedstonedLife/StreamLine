@@ -15,9 +15,9 @@ public class LPHolder {
     }
 
     public boolean isPresent(){
-        if (ProxyServer.getInstance().getPluginManager().getPlugin("ViaVersion") == null) {
-            return false;
-        }
+//        if (ProxyServer.getInstance().getPluginManager().getPlugin("LuckPerms") == null) {
+//            return false;
+//        }
 
         try {
             api = LuckPermsProvider.get();

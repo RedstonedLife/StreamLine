@@ -68,80 +68,83 @@ public class PluginUtils {
         commandsAmount = 0;
 
         // Debug.
-        if (CommandsConfUtils.comBDeleteStat) {
-            registerCommand(plugin, new DeleteStatCommand(CommandsConfUtils.comBDeleteStatBase, CommandsConfUtils.comBDeleteStatPerm, stringListToArray(CommandsConfUtils.comBDeleteStatAliases)));
+        if (CommandsConfUtils.comBDeleteStat()) {
+            registerCommand(plugin, new DeleteStatCommand(CommandsConfUtils.comBDeleteStatBase(), CommandsConfUtils.comBDeleteStatPerm(), stringListToArray(CommandsConfUtils.comBDeleteStatAliases())));
         }
         registerCommand(plugin, new ObjectEditCommand("objectedit", "streamline.command.objectedit", stringListToArray(List.of("oje"))));
 
         // Staff.
         // // Reg.
-        if (CommandsConfUtils.comBStream) {
-            registerCommand(plugin, new StreamCommand(CommandsConfUtils.comBStreamBase, CommandsConfUtils.comBStreamPerm, stringListToArray(CommandsConfUtils.comBStreamAliases)));
+        if (CommandsConfUtils.comBStream()) {
+            registerCommand(plugin, new StreamCommand(CommandsConfUtils.comBStreamBase(), CommandsConfUtils.comBStreamPerm(), stringListToArray(CommandsConfUtils.comBStreamAliases())));
         }
-        if (CommandsConfUtils.comBStaffChat) {
-            registerCommand(plugin, new StaffChatCommand(CommandsConfUtils.comBStaffChatBase, CommandsConfUtils.comBStaffChatPerm, stringListToArray(CommandsConfUtils.comBStaffChatAliases)));
+        if (CommandsConfUtils.comBStaffChat()) {
+            registerCommand(plugin, new StaffChatCommand(CommandsConfUtils.comBStaffChatBase(), CommandsConfUtils.comBStaffChatPerm(), stringListToArray(CommandsConfUtils.comBStaffChatAliases())));
         }
-        if (CommandsConfUtils.comBSudo) {
-            registerCommand(plugin, new SudoCommand(CommandsConfUtils.comBSudoBase, CommandsConfUtils.comBSudoPerm, stringListToArray(CommandsConfUtils.comBSudoAliases)));
+        if (CommandsConfUtils.comBSudo()) {
+            registerCommand(plugin, new SudoCommand(CommandsConfUtils.comBSudoBase(), CommandsConfUtils.comBSudoPerm(), stringListToArray(CommandsConfUtils.comBSudoAliases())));
         }
-        if (CommandsConfUtils.comBStaffOnline) {
-            registerCommand(plugin, new StaffOnlineCommand(CommandsConfUtils.comBStaffOnlineBase, CommandsConfUtils.comBStaffOnlinePerm, stringListToArray(CommandsConfUtils.comBStaffOnlineAliases)));
+        if (CommandsConfUtils.comBStaffOnline()) {
+            registerCommand(plugin, new StaffOnlineCommand(CommandsConfUtils.comBStaffOnlineBase(), CommandsConfUtils.comBStaffOnlinePerm(), stringListToArray(CommandsConfUtils.comBStaffOnlineAliases())));
         }
-        if (CommandsConfUtils.comBGlobalOnline && StreamLine.lpHolder.enabled) {
-            registerCommand(plugin, new GlobalOnlineCommand(CommandsConfUtils.comBGlobalOnlineBase, CommandsConfUtils.comBGlobalOnlinePerm, stringListToArray(CommandsConfUtils.comBGlobalOnlineAliases)));
+        if (CommandsConfUtils.comBGlobalOnline() && StreamLine.lpHolder.enabled) {
+            registerCommand(plugin, new GlobalOnlineCommand(CommandsConfUtils.comBGlobalOnlineBase(), CommandsConfUtils.comBGlobalOnlinePerm(), stringListToArray(CommandsConfUtils.comBGlobalOnlineAliases())));
         }
-        if (CommandsConfUtils.comBSettings) {
-            registerCommand(plugin, new SettingsEditCommand(CommandsConfUtils.comBSettingsBase, CommandsConfUtils.comBSettingsPerm, stringListToArray(CommandsConfUtils.comBSettingsAliases)));
+        if (CommandsConfUtils.comBSettings()) {
+            registerCommand(plugin, new SettingsEditCommand(CommandsConfUtils.comBSettingsBase(), CommandsConfUtils.comBSettingsPerm(), stringListToArray(CommandsConfUtils.comBSettingsAliases())));
         }
-        if (CommandsConfUtils.comBLang) {
-            registerCommand(plugin, new LanguageCommand(CommandsConfUtils.comBLangBase, CommandsConfUtils.comBLangPerm, stringListToArray(CommandsConfUtils.comBLangAliases)));
+        if (CommandsConfUtils.comBLang()) {
+            registerCommand(plugin, new LanguageCommand(CommandsConfUtils.comBLangBase(), CommandsConfUtils.comBLangPerm(), stringListToArray(CommandsConfUtils.comBLangAliases())));
         }
-        if (CommandsConfUtils.comBTeleport) {
-            registerCommand(plugin, new TeleportCommand(CommandsConfUtils.comBTeleportBase, CommandsConfUtils.comBTeleportPerm, stringListToArray(CommandsConfUtils.comBTeleportAliases)));
+        if (CommandsConfUtils.comBVotes()) {
+            registerCommand(plugin, new VotesCommand(CommandsConfUtils.comBVotesBase(), CommandsConfUtils.comBVotesPerm(), stringListToArray(CommandsConfUtils.comBVotesAliases())));
+        }
+        if (CommandsConfUtils.comBTeleport()) {
+            registerCommand(plugin, new TeleportCommand(CommandsConfUtils.comBTeleportBase(), CommandsConfUtils.comBTeleportPerm(), stringListToArray(CommandsConfUtils.comBTeleportAliases())));
         }
         // // Spying.
-        if (CommandsConfUtils.comBSSPY) {
-            registerCommand(plugin, new SSPYCommand(CommandsConfUtils.comBSSPYBase, CommandsConfUtils.comBSSPYPerm, stringListToArray(CommandsConfUtils.comBSSPYAliases)));
+        if (CommandsConfUtils.comBSSPY()) {
+            registerCommand(plugin, new SSPYCommand(CommandsConfUtils.comBSSPYBase(), CommandsConfUtils.comBSSPYPerm(), stringListToArray(CommandsConfUtils.comBSSPYAliases())));
         }
-        if (CommandsConfUtils.comBGSPY) {
-            registerCommand(plugin, new GSPYCommand(CommandsConfUtils.comBGSPYBase, CommandsConfUtils.comBGSPYPerm, stringListToArray(CommandsConfUtils.comBGSPYAliases)));
+        if (CommandsConfUtils.comBGSPY()) {
+            registerCommand(plugin, new GSPYCommand(CommandsConfUtils.comBGSPYBase(), CommandsConfUtils.comBGSPYPerm(), stringListToArray(CommandsConfUtils.comBGSPYAliases())));
         }
-        if (CommandsConfUtils.comBPSPY) {
-            registerCommand(plugin, new PSPYCommand(CommandsConfUtils.comBPSPYBase, CommandsConfUtils.comBPSPYPerm, stringListToArray(CommandsConfUtils.comBPSPYAliases)));
+        if (CommandsConfUtils.comBPSPY()) {
+            registerCommand(plugin, new PSPYCommand(CommandsConfUtils.comBPSPYBase(), CommandsConfUtils.comBPSPYPerm(), stringListToArray(CommandsConfUtils.comBPSPYAliases())));
         }
-        if (CommandsConfUtils.comBSCView) {
-            registerCommand(plugin, new SCViewCommand(CommandsConfUtils.comBSCViewBase, CommandsConfUtils.comBSCViewPerm, stringListToArray(CommandsConfUtils.comBSCViewAliases)));
+        if (CommandsConfUtils.comBSCView()) {
+            registerCommand(plugin, new SCViewCommand(CommandsConfUtils.comBSCViewBase(), CommandsConfUtils.comBSCViewPerm(), stringListToArray(CommandsConfUtils.comBSCViewAliases())));
         }
         // // Punishments.
-        if (CommandsConfUtils.comBMute && ConfigUtils.punMutes) {
-            registerCommand(plugin, new MuteCommand(CommandsConfUtils.comBMuteBase, CommandsConfUtils.comBMutePerm, stringListToArray(CommandsConfUtils.comBMuteAliases)));
+        if (CommandsConfUtils.comBMute() && ConfigUtils.punMutes()) {
+            registerCommand(plugin, new MuteCommand(CommandsConfUtils.comBMuteBase(), CommandsConfUtils.comBMutePerm(), stringListToArray(CommandsConfUtils.comBMuteAliases())));
         }
-        if (CommandsConfUtils.comBKick) {
-            registerCommand(plugin, new KickCommand(CommandsConfUtils.comBKickBase, CommandsConfUtils.comBKickPerm, stringListToArray(CommandsConfUtils.comBKickAliases)));
+        if (CommandsConfUtils.comBKick()) {
+            registerCommand(plugin, new KickCommand(CommandsConfUtils.comBKickBase(), CommandsConfUtils.comBKickPerm(), stringListToArray(CommandsConfUtils.comBKickAliases())));
         }
-        if (CommandsConfUtils.comBBan && ConfigUtils.punBans) {
-            registerCommand(plugin, new BanCommand(CommandsConfUtils.comBBanBase, CommandsConfUtils.comBBanPerm, stringListToArray(CommandsConfUtils.comBBanAliases)));
+        if (CommandsConfUtils.comBBan() && ConfigUtils.punBans()) {
+            registerCommand(plugin, new BanCommand(CommandsConfUtils.comBBanBase(), CommandsConfUtils.comBBanPerm(), stringListToArray(CommandsConfUtils.comBBanAliases())));
         }
-        if (CommandsConfUtils.comBIPBan && ConfigUtils.punIPBans) {
-            registerCommand(plugin, new IPBanCommand(CommandsConfUtils.comBIPBanBase, CommandsConfUtils.comBIPBanPerm, stringListToArray(CommandsConfUtils.comBIPBanAliases)));
+        if (CommandsConfUtils.comBIPBan() && ConfigUtils.punIPBans()) {
+            registerCommand(plugin, new IPBanCommand(CommandsConfUtils.comBIPBanBase(), CommandsConfUtils.comBIPBanPerm(), stringListToArray(CommandsConfUtils.comBIPBanAliases())));
         }
 
         // Utils.
         // // Other.
-        registerCommand(plugin, new ReloadCommand(CommandsConfUtils.comBReloadBase, CommandsConfUtils.comBReloadPerm, stringListToArray(CommandsConfUtils.comBReloadAliases)));
-        if (CommandsConfUtils.comBPing) {
-            registerCommand(plugin, new PingCommand(CommandsConfUtils.comBPingBase, CommandsConfUtils.comBPingPerm, stringListToArray(CommandsConfUtils.comBPingAliases)));
+        registerCommand(plugin, new ReloadCommand(CommandsConfUtils.comBReloadBase(), CommandsConfUtils.comBReloadPerm(), stringListToArray(CommandsConfUtils.comBReloadAliases())));
+        if (CommandsConfUtils.comBPing()) {
+            registerCommand(plugin, new PingCommand(CommandsConfUtils.comBPingBase(), CommandsConfUtils.comBPingPerm(), stringListToArray(CommandsConfUtils.comBPingAliases())));
         }
-        if (CommandsConfUtils.comBPlugins) {
-            registerCommand(plugin, new PluginsCommand(CommandsConfUtils.comBPluginsBase, CommandsConfUtils.comBPluginsPerm, stringListToArray(CommandsConfUtils.comBPluginsAliases)));
+        if (CommandsConfUtils.comBPlugins()) {
+            registerCommand(plugin, new PluginsCommand(CommandsConfUtils.comBPluginsBase(), CommandsConfUtils.comBPluginsPerm(), stringListToArray(CommandsConfUtils.comBPluginsAliases())));
         }
-        if (CommandsConfUtils.comBSPing) {
-            registerCommand(plugin, new JDAPingerCommand(CommandsConfUtils.comBSPingBase, CommandsConfUtils.comBSPingPerm, stringListToArray(CommandsConfUtils.comBSPingAliases)));
+        if (CommandsConfUtils.comBSPing()) {
+            registerCommand(plugin, new JDAPingerCommand(CommandsConfUtils.comBSPingBase(), CommandsConfUtils.comBSPingPerm(), stringListToArray(CommandsConfUtils.comBSPingAliases())));
         }
-        if (CommandsConfUtils.comBInfo) {
-            registerCommand(plugin, new InfoCommand(CommandsConfUtils.comBInfoBase, CommandsConfUtils.comBInfoPerm, stringListToArray(CommandsConfUtils.comBInfoAliases)));
+        if (CommandsConfUtils.comBInfo()) {
+            registerCommand(plugin, new InfoCommand(CommandsConfUtils.comBInfoBase(), CommandsConfUtils.comBInfoPerm(), stringListToArray(CommandsConfUtils.comBInfoAliases())));
         }
-        if (ConfigUtils.onCloseHackEnd) {
+        if (ConfigUtils.onCloseHackEnd()) {
             try {
                 PluginManager pm = StreamLine.getInstance().getProxy().getPluginManager();
 
@@ -160,87 +163,87 @@ public class PluginUtils {
                 e.printStackTrace();
             }
         }
-        if (CommandsConfUtils.comBEnd) {
-            registerCommand(plugin, new EndCommand(CommandsConfUtils.comBEndBase, CommandsConfUtils.comBEndPerm, stringListToArray(CommandsConfUtils.comBEndAliases)));
+        if (CommandsConfUtils.comBEnd()) {
+            registerCommand(plugin, new EndCommand(CommandsConfUtils.comBEndBase(), CommandsConfUtils.comBEndPerm(), stringListToArray(CommandsConfUtils.comBEndAliases())));
         }
         // // Events.
-        if (CommandsConfUtils.comBEReload) {
-            registerCommand(plugin, new EventReloadCommand(CommandsConfUtils.comBEReloadBase, CommandsConfUtils.comBEReloadPerm, stringListToArray(CommandsConfUtils.comBEReloadAliases)));
+        if (CommandsConfUtils.comBEReload()) {
+            registerCommand(plugin, new EventReloadCommand(CommandsConfUtils.comBEReloadBase(), CommandsConfUtils.comBEReloadPerm(), stringListToArray(CommandsConfUtils.comBEReloadAliases())));
         }
         // // Scripts.
-        if (CommandsConfUtils.comBScript) {
-            registerCommand(plugin, new ScriptCommand(CommandsConfUtils.comBScriptBase, CommandsConfUtils.comBScriptPerm, stringListToArray(CommandsConfUtils.comBScriptAliases)));
+        if (CommandsConfUtils.comBScript()) {
+            registerCommand(plugin, new ScriptCommand(CommandsConfUtils.comBScriptBase(), CommandsConfUtils.comBScriptPerm(), stringListToArray(CommandsConfUtils.comBScriptAliases())));
         }
-        if (CommandsConfUtils.comBScriptRe) {
-            registerCommand(plugin, new ScriptReloadCommand(CommandsConfUtils.comBScriptReBase, CommandsConfUtils.comBScriptRePerm, stringListToArray(CommandsConfUtils.comBScriptReAliases)));
+        if (CommandsConfUtils.comBScriptRe()) {
+            registerCommand(plugin, new ScriptReloadCommand(CommandsConfUtils.comBScriptReBase(), CommandsConfUtils.comBScriptRePerm(), stringListToArray(CommandsConfUtils.comBScriptReAliases())));
         }
 
         // All players.
         // // Reports.
-        if (CommandsConfUtils.comBReport) {
-            registerCommand(plugin, new ReportCommand(CommandsConfUtils.comBReportBase, CommandsConfUtils.comBReportPerm, stringListToArray(CommandsConfUtils.comBReportAliases)));
+        if (CommandsConfUtils.comBReport()) {
+            registerCommand(plugin, new ReportCommand(CommandsConfUtils.comBReportBase(), CommandsConfUtils.comBReportPerm(), stringListToArray(CommandsConfUtils.comBReportAliases())));
         }
         // // Messaging.
-        if (CommandsConfUtils.comBIgnore) {
-            registerCommand(plugin, new IgnoreCommand(CommandsConfUtils.comBIgnoreBase, CommandsConfUtils.comBIgnorePerm, stringListToArray(CommandsConfUtils.comBIgnoreAliases)));
+        if (CommandsConfUtils.comBIgnore()) {
+            registerCommand(plugin, new IgnoreCommand(CommandsConfUtils.comBIgnoreBase(), CommandsConfUtils.comBIgnorePerm(), stringListToArray(CommandsConfUtils.comBIgnoreAliases())));
         }
-        if (CommandsConfUtils.comBMessage) {
-            registerCommand(plugin, new MessageCommand(CommandsConfUtils.comBMessageBase, CommandsConfUtils.comBMessagePerm, stringListToArray(CommandsConfUtils.comBMessageAliases)));
+        if (CommandsConfUtils.comBMessage()) {
+            registerCommand(plugin, new MessageCommand(CommandsConfUtils.comBMessageBase(), CommandsConfUtils.comBMessagePerm(), stringListToArray(CommandsConfUtils.comBMessageAliases())));
         }
-        if (CommandsConfUtils.comBReply) {
-            registerCommand(plugin, new ReplyCommand(CommandsConfUtils.comBReplyBase, CommandsConfUtils.comBReplyPerm, stringListToArray(CommandsConfUtils.comBReplyAliases)));
+        if (CommandsConfUtils.comBReply()) {
+            registerCommand(plugin, new ReplyCommand(CommandsConfUtils.comBReplyBase(), CommandsConfUtils.comBReplyPerm(), stringListToArray(CommandsConfUtils.comBReplyAliases())));
         }
-        if (CommandsConfUtils.comBFriend) {
-            registerCommand(plugin, new FriendCommand(CommandsConfUtils.comBFriendBase, CommandsConfUtils.comBFriendPerm, stringListToArray(CommandsConfUtils.comBFriendAliases)));
+        if (CommandsConfUtils.comBFriend()) {
+            registerCommand(plugin, new FriendCommand(CommandsConfUtils.comBFriendBase(), CommandsConfUtils.comBFriendPerm(), stringListToArray(CommandsConfUtils.comBFriendAliases())));
         }
-        if (CommandsConfUtils.comBChatLevel) {
-            registerCommand(plugin, new ChatChannelCommand(CommandsConfUtils.comBChatLevelBase, CommandsConfUtils.comBChatLevelPerm, stringListToArray(CommandsConfUtils.comBChatLevelAliases)));
+        if (CommandsConfUtils.comBChatLevel()) {
+            registerCommand(plugin, new ChatChannelCommand(CommandsConfUtils.comBChatLevelBase(), CommandsConfUtils.comBChatLevelPerm(), stringListToArray(CommandsConfUtils.comBChatLevelAliases())));
         }
-        if (CommandsConfUtils.comBVerify) {
-            registerCommand(plugin, new BVerifyCommand(CommandsConfUtils.comBVerifyBase, CommandsConfUtils.comBVerifyPerm, stringListToArray(CommandsConfUtils.comBVerifyAliases)));
+        if (CommandsConfUtils.comBVerify()) {
+            registerCommand(plugin, new BVerifyCommand(CommandsConfUtils.comBVerifyBase(), CommandsConfUtils.comBVerifyPerm(), stringListToArray(CommandsConfUtils.comBVerifyAliases())));
         }
 
         // Servers.
-        if (CommandsConfUtils.comBLobby) {
-            registerCommand(plugin, new GoToServerLobbyCommand(CommandsConfUtils.comBLobbyBase, CommandsConfUtils.comBLobbyPerm, stringListToArray(CommandsConfUtils.comBLobbyAliases)));
+        if (CommandsConfUtils.comBLobby()) {
+            registerCommand(plugin, new GoToServerLobbyCommand(CommandsConfUtils.comBLobbyBase(), CommandsConfUtils.comBLobbyPerm(), stringListToArray(CommandsConfUtils.comBLobbyAliases())));
         }
-        if (CommandsConfUtils.comBFabric) {
-            registerCommand(plugin, new GoToServerVanillaCommand(CommandsConfUtils.comBFabricPerm));
+        if (CommandsConfUtils.comBFabric()) {
+            registerCommand(plugin, new GoToServerVanillaCommand(CommandsConfUtils.comBFabricPerm()));
         }
 
         // Parties / Guilds / Stats.
         // // Stats.
-        if (CommandsConfUtils.comBGetStats) {
-            registerCommand(plugin, new GetStatsCommand(CommandsConfUtils.comBGetStatsBase, CommandsConfUtils.comBGetStatsPerm, stringListToArray(CommandsConfUtils.comBGetStatsAliases)));
+        if (CommandsConfUtils.comBGetStats()) {
+            registerCommand(plugin, new GetStatsCommand(CommandsConfUtils.comBGetStatsBase(), CommandsConfUtils.comBGetStatsPerm(), stringListToArray(CommandsConfUtils.comBGetStatsAliases())));
         }
-        if (CommandsConfUtils.comBStats) {
-            registerCommand(plugin, new StatsCommand(CommandsConfUtils.comBStatsBase, CommandsConfUtils.comBStatsPerm, stringListToArray(CommandsConfUtils.comBStatsAliases)));
+        if (CommandsConfUtils.comBStats()) {
+            registerCommand(plugin, new StatsCommand(CommandsConfUtils.comBStatsBase(), CommandsConfUtils.comBStatsPerm(), stringListToArray(CommandsConfUtils.comBStatsAliases())));
         }
-        if (CommandsConfUtils.comBBTag) {
-            registerCommand(plugin, new BTagCommand(CommandsConfUtils.comBBTagBase, CommandsConfUtils.comBBTagPerm, stringListToArray(CommandsConfUtils.comBBTagAliases)));
+        if (CommandsConfUtils.comBBTag()) {
+            registerCommand(plugin, new BTagCommand(CommandsConfUtils.comBBTagBase(), CommandsConfUtils.comBBTagPerm(), stringListToArray(CommandsConfUtils.comBBTagAliases())));
         }
-        if (CommandsConfUtils.comBPoints) {
-            registerCommand(plugin, new NetworkPointsCommand(CommandsConfUtils.comBPointsBase, CommandsConfUtils.comBPointsPerm, stringListToArray(CommandsConfUtils.comBPointsAliases)));
+        if (CommandsConfUtils.comBPoints()) {
+            registerCommand(plugin, new NetworkPointsCommand(CommandsConfUtils.comBPointsBase(), CommandsConfUtils.comBPointsPerm(), stringListToArray(CommandsConfUtils.comBPointsAliases())));
         }
         // // Parties.
-        if (CommandsConfUtils.comBParties) {
-            registerCommand(plugin, new PartiesCommand(CommandsConfUtils.comBPartiesBase, CommandsConfUtils.comBPartiesPerm, stringListToArray(CommandsConfUtils.comBPartiesAliases)));
+        if (CommandsConfUtils.comBParties()) {
+            registerCommand(plugin, new PartiesCommand(CommandsConfUtils.comBPartiesBase(), CommandsConfUtils.comBPartiesPerm(), stringListToArray(CommandsConfUtils.comBPartiesAliases())));
         }
-        if (CommandsConfUtils.comBParty) {
-            registerCommand(plugin, new PartyCommand(CommandsConfUtils.comBPartyBase, CommandsConfUtils.comBParPerm, stringListToArray(CommandsConfUtils.comBParMainAliases)));
+        if (CommandsConfUtils.comBParty()) {
+            registerCommand(plugin, new PartyCommand(CommandsConfUtils.comBPartyBase(), CommandsConfUtils.comBParPerm(), stringListToArray(CommandsConfUtils.comBParMainAliases())));
         }
-        if (CommandsConfUtils.comBParQuick) {
-            registerCommand(plugin, new PCQuickCommand("pc", CommandsConfUtils.comBParPerm, stringListToArray(Arrays.asList("pch", "pchat"))));
+        if (CommandsConfUtils.comBParQuick()) {
+            registerCommand(plugin, new PCQuickCommand("pc", CommandsConfUtils.comBParPerm(), stringListToArray(Arrays.asList("pch", "pchat"))));
         }
         // // Guilds.
-        if (CommandsConfUtils.comBGuilds) {
-            registerCommand(plugin, new GuildsCommand(CommandsConfUtils.comBGuildsBase, CommandsConfUtils.comBGuildsPerm, stringListToArray(CommandsConfUtils.comBGuildsAliases)));
+        if (CommandsConfUtils.comBGuilds()) {
+            registerCommand(plugin, new GuildsCommand(CommandsConfUtils.comBGuildsBase(), CommandsConfUtils.comBGuildsPerm(), stringListToArray(CommandsConfUtils.comBGuildsAliases())));
         }
-        if (CommandsConfUtils.comBGuild) {
-            registerCommand(plugin, new GuildCommand(CommandsConfUtils.comBGuildBase, CommandsConfUtils.comBGuildPerm, stringListToArray(CommandsConfUtils.comBGuildMainAliases)));
+        if (CommandsConfUtils.comBGuild()) {
+            registerCommand(plugin, new GuildCommand(CommandsConfUtils.comBGuildBase(), CommandsConfUtils.comBGuildPerm(), stringListToArray(CommandsConfUtils.comBGuildMainAliases())));
         }
-        if (CommandsConfUtils.comBGuildQuick) {
-            registerCommand(plugin, new GCQuickCommand("gc", CommandsConfUtils.comBGuildPerm, stringListToArray(Arrays.asList("gch", "gchat"))));
+        if (CommandsConfUtils.comBGuildQuick()) {
+            registerCommand(plugin, new GCQuickCommand("gc", CommandsConfUtils.comBGuildPerm(), stringListToArray(Arrays.asList("gch", "gchat"))));
         }
 
         plugin.getLogger().info("Loaded " + commandsAmount + " command(s) into memory...!");

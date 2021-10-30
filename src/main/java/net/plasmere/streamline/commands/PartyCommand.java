@@ -35,7 +35,7 @@ public class PartyCommand extends Command implements TabExecutor {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParJoinAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParJoinAliases())) {
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -51,21 +51,21 @@ public class PartyCommand extends Command implements TabExecutor {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParLeaveAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParLeaveAliases())) {
                 try {
                     PartyUtils.leaveParty(player);
                 } catch (Exception e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCreateAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCreateAliases())) {
                 try {
                     PartyUtils.createParty(player);
                 } catch (Exception e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParPromoteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParPromoteAliases())) {
                 if (args.length <= 1) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } else {
@@ -76,7 +76,7 @@ public class PartyCommand extends Command implements TabExecutor {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDemoteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDemoteAliases())) {
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -92,7 +92,7 @@ public class PartyCommand extends Command implements TabExecutor {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParChatAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParChatAliases())) {
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -108,14 +108,14 @@ public class PartyCommand extends Command implements TabExecutor {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParListAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParListAliases())) {
                 try {
                     PartyUtils.listParty(player);
                 } catch (Exception e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParOpenAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParOpenAliases())) {
                 if (args.length <= 1) {
                     try {
                         PartyUtils.openParty(player);
@@ -135,21 +135,21 @@ public class PartyCommand extends Command implements TabExecutor {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCloseAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCloseAliases())) {
                 try {
                     PartyUtils.closeParty(player);
                 } catch (Exception e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDisbandAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDisbandAliases())) {
                 try {
                     PartyUtils.disband(player);
                 } catch (Throwable e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParAcceptAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParAcceptAliases())) {
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -165,7 +165,7 @@ public class PartyCommand extends Command implements TabExecutor {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDenyAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDenyAliases())) {
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -181,7 +181,7 @@ public class PartyCommand extends Command implements TabExecutor {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParInvAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParInvAliases())) {
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -197,7 +197,7 @@ public class PartyCommand extends Command implements TabExecutor {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParKickAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParKickAliases())) {
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -213,14 +213,14 @@ public class PartyCommand extends Command implements TabExecutor {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParMuteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParMuteAliases())) {
                 try {
                     PartyUtils.muteParty(player);
                 } catch (Throwable e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParWarpAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParWarpAliases())) {
                 try {
                     PartyUtils.warpParty(player);
                 } catch (Throwable e) {
@@ -280,39 +280,39 @@ public class PartyCommand extends Command implements TabExecutor {
             return TextUtils.getCompletion(tabArgs1, args[0]);
         }
         if (args.length == 2) {
-            if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildJoinAliases)) {
+            if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildJoinAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildLeaveAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildLeaveAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCreateAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCreateAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildPromoteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildPromoteAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDemoteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDemoteAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildChatAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildChatAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildListAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildListAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildOpenAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildOpenAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCloseAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCloseAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDisbandAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDisbandAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildAcceptAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildAcceptAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDenyAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDenyAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInvAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInvAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildKickAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildKickAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[0]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildMuteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildMuteAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildWarpAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildWarpAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases())) {
                 return new ArrayList<>();
             } else {
                 return TextUtils.getCompletion(strPlayers, args[1]);

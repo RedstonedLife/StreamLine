@@ -2016,3 +2016,13 @@ script:
   message: "&eJe viens d'exécuter le script &a%script% &eau &d%player_formatted%&e!"
   no-script: "&cAucun script valide sous ce nom!"
   reload: "&eScripts rechargés! (&b%count%&e)"
+
+votes:
+  console:
+    toggle: "&eToggled console printing to %toggle%&8!"
+    enabled: "&aTRUE"
+    disabled: "&cFALSE"
+  get: "&eVotes of &d%player_formatted%&8: &6%player_votes%"
+  remove: "&eRemoved &6%votes% &evote(s) from &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"
+  add: "&eAdded &6%votes% &evote(s) to &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"
+  set: "&eSet &6%votes% &evote(s) for &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"

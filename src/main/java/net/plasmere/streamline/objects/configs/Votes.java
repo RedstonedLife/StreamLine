@@ -63,7 +63,18 @@ public class Votes {
         }
     }
 
+    public boolean hasVotes(String uuid) {
+        for (String key : votes.getKeys()) {
+            if (key.equals(uuid)) return true;
+        }
+
+        return false;
+    }
+
     public int getVotes(UUID uuid){
+        if (! hasVotes(uuid.toString())) {
+            setVotes(uuid, 0);
+        }
         return votes.getInt(uuid.toString());
     }
 
@@ -85,7 +96,7 @@ public class Votes {
     }
 
     public boolean getConsole(){
-        if (! votes.getKeys().contains("console")) setConsole(true);
+        if (! votes.getKeys().contains("console")) setConsole(false);
 
         return votes.getBoolean("console");
     }

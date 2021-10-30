@@ -25,7 +25,7 @@ public class OfflineStats {
     public OfflineStats(){
         if (! StreamLine.getInstance().getPlDir().exists()) {
             if (StreamLine.getInstance().getPlDir().mkdirs()) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
             }
         }
 

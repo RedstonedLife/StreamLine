@@ -38,7 +38,7 @@ public class GoToServerLobbyCommand extends Command implements TabExecutor {
                 if (player.hasPermission("streamline.server.lobby") || player.hasPermission("streamline.*")) {
                     ProxyServer proxy = StreamLine.getInstance().getProxy();
 
-                    ServerInfo vanServer = proxy.getServerInfo(CommandsConfUtils.comBLobbyEnd);
+                    ServerInfo vanServer = proxy.getServerInfo(CommandsConfUtils.comBLobbyEnd());
 
                     if (!vanServer.canAccess(player))
                         player.sendMessage(new TextComponent(ChatColor.RED + "Cannot connect..."));

@@ -64,7 +64,7 @@ public class TextUtils {
         text = codedString(text);
 
         try {
-            //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
+            //String ntext = text.replace(ConfigUtils.linkPre(), "").replace(ConfigUtils.linkSuff, "");
 
             Pattern pattern = Pattern.compile("([<][#][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][>])+", Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(stripColor(text));
@@ -167,7 +167,7 @@ public class TextUtils {
 //        text = codedString(text);
 //
 //        try {
-//            //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
+//            //String ntext = text.replace(ConfigUtils.linkPre(), "").replace(ConfigUtils.linkSuff, "");
 //
 //            Pattern pattern = Pattern.compile("([<][#][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][>])+", Pattern.CASE_INSENSITIVE);
 //            Matcher matcher = pattern.matcher(stripColor(text));
@@ -234,7 +234,7 @@ public class TextUtils {
         text = ChatColor.translateAlternateColorCodes('&', newLined(text));
 
         try {
-            //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
+            //String ntext = text.replace(ConfigUtils.linkPre(), "").replace(ConfigUtils.linkSuff, "");
 
             Pattern pattern = Pattern.compile("(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?", Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(stripColor(text));
@@ -255,7 +255,7 @@ public class TextUtils {
         text = ChatColor.translateAlternateColorCodes('&', newLined(text));
 
         try {
-            //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
+            //String ntext = text.replace(ConfigUtils.linkPre(), "").replace(ConfigUtils.linkSuff, "");
 
             Pattern pattern = Pattern.compile("(http|ftp|https)://([\\w_-]+(?:(?:\\.[\\w_-]+)+))([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?", Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(stripColor(text));
@@ -910,7 +910,7 @@ public class TextUtils {
     }
 
     public static int replaceAllPlayerRanks(SavablePlayer player) {
-        String of = ConfigUtils.moduleBRanksUses
+        String of = ConfigUtils.moduleBRanksUses()
                 .replace("%player_level%", String.valueOf(player.lvl))
                 .replace("%player_xp_current%", String.valueOf(player.currentXP))
                 .replace("%player_xp_total%", String.valueOf(player.totalXP))

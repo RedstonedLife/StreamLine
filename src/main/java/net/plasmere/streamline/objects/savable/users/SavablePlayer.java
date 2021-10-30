@@ -112,7 +112,7 @@ public class SavablePlayer extends SavableUser {
 
     @Override
     public int getPointsFromConfig(){
-        return ConfigUtils.pointsDefault;
+        return ConfigUtils.pointsDefault();
     }
 
     @Override
@@ -136,7 +136,7 @@ public class SavablePlayer extends SavableUser {
 
     @Override
     public List<String> getTagsFromConfig(){
-        return ConfigUtils.tagsDefaults;
+        return ConfigUtils.tagsDefaults();
     }
 
     @Override
@@ -379,10 +379,10 @@ public class SavablePlayer extends SavableUser {
    9 × current_level – 158 (for levels 31+)
     */
 
-    public int getNeededXp(int fromLevel){
+    public int getNeededXp(int forLevel){
         int needed = 0;
 
-        needed = 2500 + (2500 * (fromLevel - defaultLevel));
+        needed = 2500 + (2500 * (forLevel - defaultLevel));
 
         return needed;
     }
@@ -396,16 +396,14 @@ public class SavablePlayer extends SavableUser {
     }
 
     public void setTotalXP(int amount){
-        int setAmount = amount;
-        int required = getNeededXp(this.lvl + 1);
+        this.totalXP = amount;
 
-        while (setAmount >= required) {
-            setAmount -= required;
+        while (xpUntilNextLevel() <= 0) {
             int setLevel = this.lvl + 1;
             updateKey("lvl", setLevel);
         }
 
-        updateKey("total-xp", setAmount);
+        updateKey("total-xp", amount);
         updateKey("current-xp", getCurrentXP());
     }
 

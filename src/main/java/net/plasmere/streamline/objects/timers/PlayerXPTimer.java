@@ -26,10 +26,10 @@ public class PlayerXPTimer implements Runnable {
         countdown = reset;
         try {
             for (SavablePlayer player : PlayerUtils.getJustPlayersOnline()) {
-                player.addTotalXP(ConfigUtils.xpPerGiveP);
+                player.addTotalXP(ConfigUtils.xpPerGiveP());
             }
 
-//            if (ConfigUtils.debug) MessagingUtils.logInfo("Just gave out XP to " + PlayerUtils.getJustPlayersOnline().size() + " online players!");
+//            if (ConfigUtils.debug()) MessagingUtils.logInfo("Just gave out XP to " + PlayerUtils.getJustPlayersOnline().size() + " online players!");
         } catch (Exception e){
             e.printStackTrace();
         }

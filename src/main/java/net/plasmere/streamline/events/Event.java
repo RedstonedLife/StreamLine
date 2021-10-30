@@ -46,7 +46,7 @@ public class Event {
         Configuration conditionsConf = configuration.getSection("conditions");
         int i = 1;
 
-        if (ConfigUtils.debug) {
+        if (ConfigUtils.debug()) {
             MessagingUtils.logInfo("Amount of conditions --> " + conditionsConf.getKeys().size());
         }
 
@@ -67,7 +67,7 @@ public class Event {
             i ++;
         }
 
-        if (ConfigUtils.debug) {
+        if (ConfigUtils.debug()) {
             MessagingUtils.logInfo("Event#compileCond():");
             for (Integer it : c.keySet()) {
                 MessagingUtils.logInfo("   > " + it + " : ( ( " +

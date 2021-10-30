@@ -25,7 +25,7 @@ public class SudoCommand extends Command implements TabExecutor {
         } else {
             ProxiedPlayer sudoOn = StreamLine.getInstance().getProxy().getPlayer(args[0]);
 
-            if (sudoOn.hasPermission(ConfigUtils.noSudoPerm)){
+            if (sudoOn.hasPermission(ConfigUtils.noSudoPerm())){
                 MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.sudoNoSudo(), sudoOn)
                 );
                 return;

@@ -28,7 +28,7 @@ public class ChatsHandler {
             createdChannels.add(chatChannel);
         }
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("ChatChannel: " + chatChannel.name);
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("ChatChannel: " + chatChannel.name);
 
         return chatChannel;
     }
@@ -38,7 +38,7 @@ public class ChatsHandler {
             activeChats.add(chat);
         }
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Chat: " + chat.chatChannel.name + " , " + chat.identifier);
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Chat: " + chat.chatChannel.name + " , " + chat.identifier);
 
         return chat;
     }

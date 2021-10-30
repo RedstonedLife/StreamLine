@@ -43,13 +43,13 @@ public class BanCommand extends Command implements TabExecutor {
                     return;
                 }
 
-                if (PlayerUtils.hasOfflinePermission(ConfigUtils.punBansBypass, otherUUID)) {
+                if (PlayerUtils.hasOfflinePermission(ConfigUtils.punBansBypass(), otherUUID)) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.banCannot());
                     return;
                 }
 
                 if (args.length >= 4 && (args[2].endsWith("y") || args[2].endsWith("mo") || args[2].endsWith("w") || args[2].endsWith("d") || args[2].endsWith("h") || args[2].endsWith("m") || args[2].endsWith("s"))) {
-                    if (! ConfigUtils.punBansReplaceable) {
+                    if (! ConfigUtils.punBansReplaceable()) {
                         if (bans.contains(otherUUID)) {
                             if (bans.getBoolean(otherUUID + ".banned")) {
                                 MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempAlready(), user));
@@ -94,8 +94,8 @@ public class BanCommand extends Command implements TabExecutor {
                             .replace("%date%", new Date(Long.parseLong(till)).toString())
                     );
 
-                    if (ConfigUtils.moduleDEnabled) {
-                        if (ConfigUtils.punBansDiscord) {
+                    if (ConfigUtils.moduleDEnabled()) {
+                        if (ConfigUtils.punBansDiscord()) {
                             MessagingUtils.sendDiscordEBMessage(
                                     new DiscordMessage(
                                             sender,
@@ -105,13 +105,13 @@ public class BanCommand extends Command implements TabExecutor {
                                                     .replace("%reason%", reason)
                                                     .replace("%date%", new Date(Long.parseLong(till)).toString())
                                             ,
-                                            DiscordBotConfUtils.textChannelBans
+                                            DiscordBotConfUtils.textChannelBans()
                                     )
                             );
                         }
                     }
 
-                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempStaff(), user)
+                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempStaff(), user)
                             .replace("%punisher%", sender.getName())
                             .replace("%reason%", reason)
                             .replace("%date%", new Date(Long.parseLong(till)).toString())
@@ -120,7 +120,7 @@ public class BanCommand extends Command implements TabExecutor {
                     return;
                 }
 
-                if (! ConfigUtils.punBansReplaceable) {
+                if (! ConfigUtils.punBansReplaceable()) {
                     if (bans.contains(otherUUID)) {
                         if (bans.getBoolean(otherUUID + ".banned")) {
                             MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBPermAlready(), user)
@@ -152,8 +152,8 @@ public class BanCommand extends Command implements TabExecutor {
                         .replace("%reason%", reason)
                 );
 
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.punBansDiscord) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.punBansDiscord()) {
                         MessagingUtils.sendDiscordEBMessage(
                                 new DiscordMessage(
                                         sender,
@@ -162,13 +162,13 @@ public class BanCommand extends Command implements TabExecutor {
                                                 .replace("%punisher%", sender.getName())
                                                 .replace("%reason%", reason)
                                         ,
-                                        DiscordBotConfUtils.textChannelBans
+                                        DiscordBotConfUtils.textChannelBans()
                                 )
                         );
                     }
                 }
 
-                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBPermStaff(), user)
+                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBPermStaff(), user)
                         .replace("%punisher%", sender.getName())
                         .replace("%reason%", reason)
                 );
@@ -178,12 +178,12 @@ public class BanCommand extends Command implements TabExecutor {
                     return;
                 }
 
-                if (PlayerUtils.hasOfflinePermission(ConfigUtils.punBansBypass, otherUUID)) {
+                if (PlayerUtils.hasOfflinePermission(ConfigUtils.punBansBypass(), otherUUID)) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.banCannot());
                     return;
                 }
 
-                if (!ConfigUtils.punBansReplaceable) {
+                if (!ConfigUtils.punBansReplaceable()) {
                     if (bans.contains(otherUUID)) {
                         if (bans.getBoolean(otherUUID + ".banned")) {
                             MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMTempAlready(), user)
@@ -229,7 +229,7 @@ public class BanCommand extends Command implements TabExecutor {
                         .replace("%date%", new Date(Long.parseLong(till)).toString())
                 );
 
-                if (ConfigUtils.punBansDiscord) {
+                if (ConfigUtils.punBansDiscord()) {
                     MessagingUtils.sendDiscordEBMessage(
                             new DiscordMessage(
                                     sender,
@@ -239,12 +239,12 @@ public class BanCommand extends Command implements TabExecutor {
                                             .replace("%reason%", reason)
                                             .replace("%date%", new Date(Long.parseLong(till)).toString())
                                     ,
-                                    DiscordBotConfUtils.textChannelBans
+                                    DiscordBotConfUtils.textChannelBans()
                             )
                     );
                 }
 
-                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempStaff(), user)
+                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempStaff(), user)
                         .replace("%punisher%", sender.getName())
                         .replace("%reason%", reason)
                         .replace("%date%", new Date(Long.parseLong(till)).toString())
@@ -262,7 +262,7 @@ public class BanCommand extends Command implements TabExecutor {
                 MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banUnSender(), user)
                 );
 
-                if (ConfigUtils.punBansDiscord) {
+                if (ConfigUtils.punBansDiscord()) {
                     MessagingUtils.sendDiscordEBMessage(
                             new DiscordMessage(
                                     sender,
@@ -270,12 +270,12 @@ public class BanCommand extends Command implements TabExecutor {
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.banUnDiscord(), user)
                                             .replace("%punisher%", sender.getName())
                                     ,
-                                    DiscordBotConfUtils.textChannelBans
+                                    DiscordBotConfUtils.textChannelBans()
                             )
                     );
                 }
 
-                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banUnStaff(), user)
+                MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.banUnStaff(), user)
                         .replace("%punisher%", sender.getName())
                 );
             } else if (args[0].equals("check")) {

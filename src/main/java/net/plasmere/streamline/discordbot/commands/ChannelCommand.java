@@ -15,13 +15,13 @@ public class ChannelCommand {
     public static void sendMessage(String command, MessageReceivedEvent event){
         EmbedBuilder eb = new EmbedBuilder();
         event.getChannel().sendMessageEmbeds(eb.setDescription(compileCommands(event)).build()).queue();
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
     }
 
     private static String compileCommands(MessageReceivedEvent event){
         // .channel <set | remove> <global | local | guild | party> <identifier>
         String message = event.getMessage().getContentRaw();
-        String[] args = event.getMessage().getContentRaw().toLowerCase().substring(DiscordBotConfUtils.botPrefix.length()).split(" ");
+        String[] args = event.getMessage().getContentRaw().toLowerCase().substring(DiscordBotConfUtils.botPrefix().length()).split(" ");
 
         long channelID = event.getChannel().getIdLong();
 

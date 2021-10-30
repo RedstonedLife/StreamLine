@@ -5,6 +5,7 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
+import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.RanksUtils;
 
@@ -55,7 +56,7 @@ public class OneSecondTimer implements Runnable {
             PlayerUtils.tickTeleport();
             PlayerUtils.tickBoosts();
 
-            if (ConfigUtils.moduleBRanksEnabled) {
+            if (ConfigUtils.moduleBRanksEnabled()) {
                 int success = 0;
                 int failed = 0;
                 int other = 0;
@@ -72,9 +73,14 @@ public class OneSecondTimer implements Runnable {
                         e.printStackTrace();
                     }
                 }
+
+                if (StreamLine.votes.getConsole()) MessagingUtils.logInfo(
+                        "Success: " + success + " Failed: " + failed + " Other: " + other + " Total: (" +
+                                (success + failed + other) + " | " + PlayerUtils.getOnlinePPlayers().size() + ")"
+                );
             }
         } catch (ConcurrentModificationException e) {
-            if (ConfigUtils.debug) e.printStackTrace();
+            if (ConfigUtils.debug()) e.printStackTrace();
         }
     }
 }

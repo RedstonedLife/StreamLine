@@ -31,7 +31,13 @@ public class From_1_0_14_5 extends From{
 
     @Override
     public void setupLocalesFix() {
-
+        addUpdatedLocalesEntry("votes.console.toggle", "&eToggled console printing to %toggle%&8!", "en_US");
+        addUpdatedLocalesEntry("votes.console.enabled", "&aTRUE", "en_US");
+        addUpdatedLocalesEntry("votes.console.disabled", "&cFALSE", "en_US");
+        addUpdatedLocalesEntry("votes.get", "&eVotes of &d%player_formatted%&8: &6%player_votes%", "en_US");
+        addUpdatedLocalesEntry("votes.remove", "&eRemoved &6%votes% &evote(s) from &d%player_formatted%&8! &eCurrent&8: &6%player_votes%", "en_US");
+        addUpdatedLocalesEntry("votes.add", "&eAdded &6%votes% &evote(s) to &d%player_formatted%&8! &eCurrent&8: &6%player_votes%", "en_US");
+        addUpdatedLocalesEntry("votes.set", "&eSet &6%votes% &evote(s) for &d%player_formatted%&8! &eCurrent&8: &6%player_votes%", "en_US");
     }
 
     @Override
@@ -53,6 +59,11 @@ public class From_1_0_14_5 extends From{
         addUpdatedCommandsEntry("commands.bungee.configs.votes.base", "votes");
         addUpdatedCommandsEntry("commands.bungee.configs.votes.permission", "streamline.command.votes");
         addUpdatedCommandsEntry("commands.bungee.configs.votes.aliases", Arrays.asList("bvotes", "bvot"));
+
+        addUpdatedCommandsEntry("commands.bungee.staff.script-reload.enabled", true);
+        addUpdatedCommandsEntry("commands.bungee.staff.script-reload.base", "slsr");
+        addUpdatedCommandsEntry("commands.bungee.staff.script-reload.permission", "streamline.command.scripts-reload");
+        addUpdatedCommandsEntry("commands.bungee.staff.script-reload.aliases", Arrays.asList("rslsc", "reloadslsc"));
     }
 
     @Override

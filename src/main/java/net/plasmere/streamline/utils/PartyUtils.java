@@ -103,13 +103,13 @@ public class PartyUtils {
 
             MessagingUtils.sendBPUserMessage(party, p, p, create);
 
-            // if (ConfigUtils.debug) MessagingUtils.logInfo("CREATE : totalMembers --> "  + party.totalMembers.size());
+            // if (ConfigUtils.debug()) MessagingUtils.logInfo("CREATE : totalMembers --> "  + party.totalMembers.size());
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleCreates) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleCreates()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, createTitle,
                             createConsole
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
         } catch (Exception e) {
@@ -141,21 +141,21 @@ public class PartyUtils {
 
             MessagingUtils.sendBPUserMessage(party, p, p, create);
 
-            // if (ConfigUtils.debug) MessagingUtils.logInfo("OPEN : totalMembers --> "  + party.totalMembers.size());
+            // if (ConfigUtils.debug()) MessagingUtils.logInfo("OPEN : totalMembers --> "  + party.totalMembers.size());
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleCreates) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleCreates()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, createTitle,
                             createConsole
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleOpens) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleOpens()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, openTitle,
                             openConsole
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
         } catch (Exception e) {
@@ -183,7 +183,7 @@ public class PartyUtils {
 
             if (party != null) {
                 if (party.totalMembers.size() <= 0) {
-                    if (ConfigUtils.debug) MessagingUtils.logInfo("#1 NO PARTY MEMBERS!");
+                    if (ConfigUtils.debug()) MessagingUtils.logInfo("#1 NO PARTY MEMBERS!");
                 }
             }
 
@@ -191,7 +191,7 @@ public class PartyUtils {
 
             if (party != null) {
                 if (party.totalMembers.size() <= 0) {
-                    if (ConfigUtils.debug) MessagingUtils.logInfo("#2 NO PARTY MEMBERS!");
+                    if (ConfigUtils.debug()) MessagingUtils.logInfo("#2 NO PARTY MEMBERS!");
                 }
             }
 
@@ -211,7 +211,7 @@ public class PartyUtils {
             }
 
             if (party.totalMembers.size() <= 0) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("#3 NO PARTY MEMBERS!");
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("#3 NO PARTY MEMBERS!");
             }
 
             if (to.online) {
@@ -220,7 +220,7 @@ public class PartyUtils {
             }
 
             if (party.totalMembers.size() <= 0) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("#4 NO PARTY MEMBERS!");
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("#4 NO PARTY MEMBERS!");
             }
 
             for (SavablePlayer pl : party.totalMembers) {
@@ -229,7 +229,7 @@ public class PartyUtils {
                 ProxiedPlayer member = PlayerUtils.getPPlayerByUUID(pl.uuid);
 
                 if (member == null) {
-                    if (ConfigUtils.debug) MessagingUtils.logInfo("member == null");
+                    if (ConfigUtils.debug()) MessagingUtils.logInfo("member == null");
                     continue;
                 }
 
@@ -246,11 +246,11 @@ public class PartyUtils {
             invites.remove(party);
             invites.put(party, party.invites);
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleInvites) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleInvites()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(player, inviteTitle,
                             TextUtils.replaceAllPlayerDiscord(inviteConsole, to)
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
         } catch (Exception e) {
@@ -321,25 +321,25 @@ public class PartyUtils {
                 party.addMember(accepter);
                 party.removeInvite(accepter);
 
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleJoins) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleJoins()) {
                         MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, joinsTitle,
                                 TextUtils.replaceAllPlayerDiscord(joinsConsole, accepter)
                                         .replace("%from_formatted%", PlayerUtils.getJustDisplayDiscord(from))
                                         .replace("%from_display%", PlayerUtils.getOffOnDisplayDiscord(from))
                                         .replace("%from_normal%", PlayerUtils.getOffOnRegDiscord(from))
                                         .replace("%from_absolute%", PlayerUtils.getAbsoluteDiscord(from))
-                                , DiscordBotConfUtils.textChannelParties));
+                                , DiscordBotConfUtils.textChannelParties()));
                     }
 
-                    if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleAccepts) {
+                    if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleAccepts()) {
                         MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, acceptTitle,
                                 TextUtils.replaceAllPlayerDiscord(acceptConsole, accepter)
                                         .replace("%from_formatted%", PlayerUtils.getJustDisplayDiscord(from))
                                         .replace("%from_display%", PlayerUtils.getOffOnDisplayDiscord(from))
                                         .replace("%from_normal%", PlayerUtils.getOffOnRegDiscord(from))
                                         .replace("%from_absolute%", PlayerUtils.getAbsoluteDiscord(from))
-                                , DiscordBotConfUtils.textChannelParties));
+                                , DiscordBotConfUtils.textChannelParties()));
                     }
                 }
             }
@@ -404,15 +404,15 @@ public class PartyUtils {
                 }
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleDenies) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleDenies()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, denyTitle,
                             TextUtils.replaceAllPlayerDiscord(denyConsole, denier)
                                     .replace("%from_formatted%", PlayerUtils.getJustDisplayDiscord(from))
                                     .replace("%from_display%", PlayerUtils.getOffOnDisplayDiscord(from))
                                     .replace("%from_normal%", PlayerUtils.getOffOnRegDiscord(from))
                                     .replace("%from_absolute%", PlayerUtils.getAbsoluteDiscord(from))
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
         } catch (Exception e) {
@@ -458,11 +458,11 @@ public class PartyUtils {
             m.connect(sender.getServer().getInfo());
         }
 
-        if (ConfigUtils.moduleDEnabled) {
-            if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleWarps) {
+        if (ConfigUtils.moduleDEnabled()) {
+            if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleWarps()) {
                 MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, warpTitle,
                         warpConsole
-                        , DiscordBotConfUtils.textChannelParties));
+                        , DiscordBotConfUtils.textChannelParties()));
             }
         }
     }
@@ -522,11 +522,11 @@ public class PartyUtils {
         }
         party.toggleMute();
 
-        if (ConfigUtils.moduleDEnabled) {
-            if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleMutes) {
+        if (ConfigUtils.moduleDEnabled()) {
+            if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleMutes()) {
                 MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, muteTitle,
                         muteConsole
-                        , DiscordBotConfUtils.textChannelParties));
+                        , DiscordBotConfUtils.textChannelParties()));
             }
         }
     }
@@ -592,11 +592,11 @@ public class PartyUtils {
             party.removeMemberFromParty(player);
         }
 
-        if (ConfigUtils.moduleDEnabled) {
-            if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleKicks) {
+        if (ConfigUtils.moduleDEnabled()) {
+            if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleKicks()) {
                 MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(player.player, kickTitle,
                         TextUtils.replaceAllPlayerDiscord(kickConsole, player)
-                        , DiscordBotConfUtils.textChannelParties));
+                        , DiscordBotConfUtils.textChannelParties()));
             }
         }
     }
@@ -641,11 +641,11 @@ public class PartyUtils {
 
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleDisbands) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleDisbands()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, disbandTitle,
                             disbandConsole
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
 
@@ -703,11 +703,11 @@ public class PartyUtils {
                 }
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleOpens) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleOpens()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, openTitle,
                             openConsole
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
         } catch (Exception e) {
@@ -762,11 +762,11 @@ public class PartyUtils {
                 }
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleOpens) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleOpens()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, openTitle,
                             openConsole
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
         }  catch (Exception e) {
@@ -819,11 +819,11 @@ public class PartyUtils {
                 }
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleCloses) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleCloses()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, closeTitle,
                             closeConsole
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
         } catch (Exception e) {
@@ -1005,11 +1005,11 @@ public class PartyUtils {
                     break;
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsolePromotes) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsolePromotes()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, promoteTitle,
                             TextUtils.replaceAllPlayerDiscord(promoteConsole, player)
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
         } catch (Exception e) {
@@ -1083,11 +1083,11 @@ public class PartyUtils {
                     break;
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleDemotes) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleDemotes()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, demoteTitle,
                             TextUtils.replaceAllPlayerDiscord(demoteConsole, player)
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
         } catch (Exception e) {
@@ -1136,11 +1136,11 @@ public class PartyUtils {
                     }
                 }
 
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleJoins) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleJoins()) {
                         MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, joinsTitle,
                                 joinsConsole
-                                , DiscordBotConfUtils.textChannelParties));
+                                , DiscordBotConfUtils.textChannelParties()));
                     }
                 }
             } else {
@@ -1152,7 +1152,7 @@ public class PartyUtils {
     }
 
     private static int getMaxSize(SavablePlayer leader){
-        if (! StreamLine.lpHolder.enabled) return ConfigUtils.partyMax;
+        if (! StreamLine.lpHolder.enabled) return ConfigUtils.partyMax();
 
         try {
             Collection<PermissionNode> perms =
@@ -1170,8 +1170,8 @@ public class PartyUtils {
             for (PermissionNode perm : perms) {
                 try {
                     String p = perm.getPermission();
-                    for (int i = 1; i <= ConfigUtils.partyMax; i++) {
-                        String pTry = ConfigUtils.partyMaxPerm + i;
+                    for (int i = 1; i <= ConfigUtils.partyMax(); i++) {
+                        String pTry = ConfigUtils.partyMaxPerm() + i;
                         if (p.equals(pTry)) {
                             isGood = true;
 
@@ -1185,14 +1185,14 @@ public class PartyUtils {
             }
 
             if (highestSize == 1)
-                return ConfigUtils.partyMax;
+                return ConfigUtils.partyMax();
             else if (isGood)
                 return highestSize;
             else
-                return ConfigUtils.partyMax;
+                return ConfigUtils.partyMax();
         } catch (Exception e) {
             e.printStackTrace();
-            return ConfigUtils.partyMax;
+            return ConfigUtils.partyMax();
         }
     }
 
@@ -1254,11 +1254,11 @@ public class PartyUtils {
 
                 party.removeMemberFromParty(sender);
 
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleLeaves) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleLeaves()) {
                         MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, leaveTitle,
                                 leaveConsole
-                                , DiscordBotConfUtils.textChannelParties));
+                                , DiscordBotConfUtils.textChannelParties()));
                     }
                 }
             } else {
@@ -1293,7 +1293,7 @@ public class PartyUtils {
                 return;
             }
 
-//            if (ConfigUtils.partyConsoleChats) {
+//            if (ConfigUtils.partyConsoleChats()) {
 //                MessagingUtils.sendBPUserMessage(party, p, StreamLine.getInstance().getProxy().getConsole(), chatConsole
 //                        .replace("%sender_display%", PlayerUtils.getOffOnDisplayBungee(sender))
 //                        .replace("%message%", msg)
@@ -1313,21 +1313,21 @@ public class PartyUtils {
                 );
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleChats) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleChats()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, chatTitle,
                             chatConsole
                                     .replace("%message%", msg)
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
 
-            if (ConfigUtils.moduleDPC) {
+            if (ConfigUtils.moduleDPC()) {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.leaderUUID, msg);
             }
 
             for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
-                if (! pp.hasPermission(ConfigUtils.partyView)) continue;
+                if (! pp.hasPermission(ConfigUtils.partyView())) continue;
 
                 SavablePlayer them = PlayerUtils.getPlayerStat(pp);
 
@@ -1361,7 +1361,7 @@ public class PartyUtils {
                 return;
             }
 
-//            if (ConfigUtils.partyConsoleChats) {
+//            if (ConfigUtils.partyConsoleChats()) {
 //                MessagingUtils.sendBPUserMessage(party, p, StreamLine.getInstance().getProxy().getConsole(), chatConsole
 //                        .replace("%sender_display%", PlayerUtils.getOffOnDisplayBungee(sender))
 //                        .replace("%message%", msg)
@@ -1392,21 +1392,21 @@ public class PartyUtils {
                 }
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.partyToDiscord && ConfigUtils.partyConsoleChats) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleChats()) {
                     MessagingUtils.sendDiscordPEBMessage(party, new DiscordMessage(p, chatTitle,
                             chatConsole
                                     .replace("%message%", msg)
-                            , DiscordBotConfUtils.textChannelParties));
+                            , DiscordBotConfUtils.textChannelParties()));
                 }
             }
 
-            if (ConfigUtils.moduleDPC) {
+            if (ConfigUtils.moduleDPC()) {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.leaderUUID, msg);
             }
 
             for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
-                if (! pp.hasPermission(ConfigUtils.partyView)) continue;
+                if (! pp.hasPermission(ConfigUtils.partyView())) continue;
 
                 SavablePlayer them = PlayerUtils.getPlayerStat(pp);
 
@@ -1424,7 +1424,7 @@ public class PartyUtils {
     }
 
     public static void sendChatFromDiscord(String nameUsed, Party party, String format, String msg) {
-        if (! ConfigUtils.moduleDEnabled) return;
+        if (! ConfigUtils.moduleDEnabled()) return;
 
         try {
             for (SavableUser pl : party.totalMembers) {
@@ -1433,17 +1433,17 @@ public class PartyUtils {
                 );
             }
 
-//            if (ConfigUtils.moduleDEnabled) {
-//                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleChats) {
+//            if (ConfigUtils.moduleDEnabled()) {
+//                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleChats()) {
 //                    MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), chatTitle,
 //                            chatConsole
 //                                    .replace("%message%", msg)
-//                            , DiscordBotConfUtils.textChannelGuilds));
+//                            , DiscordBotConfUtils.textChannelGuilds()));
 //                }
 //            }
 
             for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
-                if (! pp.hasPermission(ConfigUtils.guildView)) continue;
+                if (! pp.hasPermission(ConfigUtils.guildView())) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
@@ -1457,7 +1457,7 @@ public class PartyUtils {
     }
 
     public static void sendChatFromDiscord(SavableUser user, Party party, String format, String msg) {
-        if (! ConfigUtils.moduleDEnabled) return;
+        if (! ConfigUtils.moduleDEnabled()) return;
 
         try {
             for (SavableUser pl : party.totalMembers) {
@@ -1466,17 +1466,17 @@ public class PartyUtils {
                 );
             }
 
-//            if (ConfigUtils.moduleDEnabled) {
-//                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleChats) {
+//            if (ConfigUtils.moduleDEnabled()) {
+//                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleChats()) {
 //                    MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), chatTitle,
 //                            chatConsole
 //                                    .replace("%message%", msg)
-//                            , DiscordBotConfUtils.textChannelGuilds));
+//                            , DiscordBotConfUtils.textChannelGuilds()));
 //                }
 //            }
 
             for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
-                if (! pp.hasPermission(ConfigUtils.guildView)) continue;
+                if (! pp.hasPermission(ConfigUtils.guildView())) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 

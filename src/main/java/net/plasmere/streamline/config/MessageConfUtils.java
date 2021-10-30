@@ -1561,4 +1561,39 @@ public class MessageConfUtils {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("script.reload");
     }
+
+    public static String votesConsoleToggle() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.console.toggle");
+    }
+
+    public static String votesConsoleEnabled() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.console.enabled");
+    }
+
+    public static String votesConsoleDisabled() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.console.disabled");
+    }
+
+    public static String votesGet() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.get");
+    }
+
+    public static String votesRemove() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.remove");
+    }
+
+    public static String votesAdd() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.add");
+    }
+
+    public static String votesSet() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.set");
+    }
 }

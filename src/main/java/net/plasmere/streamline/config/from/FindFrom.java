@@ -50,11 +50,11 @@ public class FindFrom {
         }
 
         try {
-            if (! StreamLine.getInstance().versionFile.delete()) if (ConfigUtils.debug) {
+            if (! StreamLine.getInstance().versionFile.delete()) if (ConfigUtils.debug()) {
                 MessagingUtils.logSevere("COULD NOT DELETE VERSION FILE!");
             }
 
-            if (! StreamLine.getInstance().versionFile.createNewFile()) if (ConfigUtils.debug) {
+            if (! StreamLine.getInstance().versionFile.createNewFile()) if (ConfigUtils.debug()) {
                 MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
             }
 

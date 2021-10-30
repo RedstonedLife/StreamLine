@@ -28,12 +28,19 @@ public class VotesCommand extends Command implements TabExecutor {
 
         if (args.length <= 0) {
             votes.toggleConsole();
-            MessagingUtils.sendBUserMessage(sender, "&eToggled console printing to " + (votes.getConsole() ? "&aTRUE" : "&cFALSE") + "&8!");
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.votesConsoleToggle()
+                    .replace("%toggle%",
+                            (votes.getConsole() ? MessageConfUtils.votesConsoleEnabled() : MessageConfUtils.votesConsoleDisabled())
+                    )
+            );
         } else {
             UUID uuid = UUID.fromString(UUIDUtils.getCachedUUID(args[0]));
 
             if (args.length <= 1) {
-                MessagingUtils.sendBUserMessage(sender, "&eVotes of &d" + args[0] + "&8: &6" + votes.getVotes(uuid));
+                MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(
+                        TextUtils.replaceAllPlayerBungee(MessageConfUtils.votesGet(), PlayerUtils.getOrGetSavableUser(args[0])),
+                        PlayerUtils.getOrGetSavableUser(sender)
+                ));
                 return;
             }
 
@@ -50,7 +57,11 @@ public class VotesCommand extends Command implements TabExecutor {
                     try {
                         votes.remVotes(uuid, Integer.parseInt(args[2]));
 
-                        MessagingUtils.sendBUserMessage(sender, "&eRemoved &6" + args[2] + " &evote(s) from &d" + args[0] + "&8! &eCurrent&8: &6" + votes.getVotes(uuid));
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(
+                                TextUtils.replaceAllPlayerBungee(MessageConfUtils.votesRemove(), PlayerUtils.getOrGetSavableUser(args[0])),
+                                PlayerUtils.getOrGetSavableUser(sender))
+                                .replace("%votes%", args[2])
+                        );
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                         e.printStackTrace();
@@ -68,7 +79,11 @@ public class VotesCommand extends Command implements TabExecutor {
                     try {
                         votes.addVotes(uuid, Integer.parseInt(args[2]));
 
-                        MessagingUtils.sendBUserMessage(sender, "&eAdded &6" + args[2] + " &evote(s) to &d" + args[0] + "&8! &eCurrent&8: &6" + votes.getVotes(uuid));
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(
+                                        TextUtils.replaceAllPlayerBungee(MessageConfUtils.votesAdd(), PlayerUtils.getOrGetSavableUser(args[0])),
+                                        PlayerUtils.getOrGetSavableUser(sender))
+                                .replace("%votes%", args[2])
+                        );
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                         e.printStackTrace();
@@ -87,7 +102,11 @@ public class VotesCommand extends Command implements TabExecutor {
                     try {
                         votes.setVotes(uuid, Integer.parseInt(args[2]));
 
-                        MessagingUtils.sendBUserMessage(sender, "&eSet &6" + args[2] + " &evotes for &d" + args[0] + "&8! &eCurrent&8: &6" + votes.getVotes(uuid));
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(
+                                        TextUtils.replaceAllPlayerBungee(MessageConfUtils.votesSet(), PlayerUtils.getOrGetSavableUser(args[0])),
+                                        PlayerUtils.getOrGetSavableUser(sender))
+                                .replace("%votes%", args[2])
+                        );
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                         e.printStackTrace();

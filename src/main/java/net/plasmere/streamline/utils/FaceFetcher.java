@@ -6,7 +6,7 @@ import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 
 public class FaceFetcher {
     public static String getFaceAvatarURL(SavablePlayer player){
-        return getPlaceholdersApplied(player, ConfigUtils.moduleAvatarLink);
+        return getPlaceholdersApplied(player, ConfigUtils.moduleAvatarLink());
     }
 
     public static String getFaceAvatarURL(String username){

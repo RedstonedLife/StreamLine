@@ -22,7 +22,7 @@ public class JDAPingerCommand extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] strings) {
-        if (! ConfigUtils.moduleDEnabled) {
+        if (! ConfigUtils.moduleDEnabled()) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
             return;
         }
@@ -32,6 +32,6 @@ public class JDAPingerCommand extends Command {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         player.sendMessage(TextUtils.codedText("&aAttempting to ping..."));
 
-        JDAPingerUtils.sendMessage(Objects.requireNonNull(jda.getTextChannelById(DiscordBotConfUtils.textChannelBConsole)));
+        JDAPingerUtils.sendMessage(Objects.requireNonNull(jda.getTextChannelById(DiscordBotConfUtils.textChannelBConsole())));
     }
 }

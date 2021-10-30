@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 public class ChatListener implements Listener {
-    private final String prefix = ConfigUtils.moduleStaffChatPrefix;
+    private final String prefix = ConfigUtils.moduleStaffChatPrefix();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChat(ChatEvent e){
@@ -62,7 +62,7 @@ public class ChatListener implements Listener {
             ex.printStackTrace();
         }
 
-        if (ConfigUtils.punMutes && ConfigUtils.punMutesHard && stat.muted) {
+        if (ConfigUtils.punMutes() && ConfigUtils.punMutesHard() && stat.muted) {
             if (PlayerUtils.checkIfMuted(sender, stat)) {
                 e.setCancelled(true);
                 return;
@@ -71,7 +71,7 @@ public class ChatListener implements Listener {
 
         if (TextUtils.isCommand(msg)) return;
 
-        if (ConfigUtils.punMutes && stat.muted) {
+        if (ConfigUtils.punMutes() && stat.muted) {
             e.setCancelled(true);
             if (stat.mutedTill != null) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedTemp().replace("%date%", stat.mutedTill.toString()));
@@ -81,27 +81,27 @@ public class ChatListener implements Listener {
             return;
         }
 
-        if (ConfigUtils.moduleStaffChat) {
+        if (ConfigUtils.moduleStaffChat()) {
             if (stat.sc) {
-                if (! sender.hasPermission(ConfigUtils.staffPerm)) {
+                if (! sender.hasPermission(ConfigUtils.staffPerm())) {
                     return;
                 }
 
                 e.setCancelled(true);
                 MessagingUtils.sendStaffMessage(sender, MessageConfUtils.bungeeStaffChatFrom(), msg);
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.moduleStaffChatMToDiscord) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.moduleStaffChatMToDiscord()) {
                         MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
                                 MessageConfUtils.staffChatEmbedTitle(),
                                 TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordStaffChatMessage(), sender)
                                         .replace("%message%", msg),
-                                DiscordBotConfUtils.textChannelStaffChat));
+                                DiscordBotConfUtils.textChannelStaffChat()));
                     }
                 }
                 isStaffMessage = true;
-            } else if (ConfigUtils.moduleStaffChatDoPrefix) {
+            } else if (ConfigUtils.moduleStaffChatDoPrefix()) {
                 if (msg.startsWith(prefix) && ! prefix.equals("/")) {
-                    if (! sender.hasPermission(ConfigUtils.staffPerm)) {
+                    if (! sender.hasPermission(ConfigUtils.staffPerm())) {
                         return;
                     }
 
@@ -113,13 +113,13 @@ public class ChatListener implements Listener {
 
                     e.setCancelled(true);
                     MessagingUtils.sendStaffMessage(sender, MessageConfUtils.bungeeStaffChatFrom(), msg.substring(prefix.length()));
-                    if (ConfigUtils.moduleDEnabled) {
-                        if (ConfigUtils.moduleStaffChatMToDiscord) {
+                    if (ConfigUtils.moduleDEnabled()) {
+                        if (ConfigUtils.moduleStaffChatMToDiscord()) {
                             MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
                                     MessageConfUtils.staffChatEmbedTitle(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordStaffChatMessage(), sender)
                                             .replace("%message%", msg.substring(prefix.length())),
-                                    DiscordBotConfUtils.textChannelStaffChat));
+                                    DiscordBotConfUtils.textChannelStaffChat()));
                         }
                     }
                     isStaffMessage = true;
@@ -130,15 +130,15 @@ public class ChatListener implements Listener {
 
         if (! isStaffMessage) {
             if (StreamLine.serverConfig.getProxyChatEnabled()) {
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.moduleDPC) if (ConfigUtils.moduleDPCConsole) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.moduleDPC()) if (ConfigUtils.moduleDPCConsole()) {
                         MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
-                                        ConfigUtils.moduleDPCConsoleTitle,
-                                        ConfigUtils.moduleDPCConsoleMessage
+                                        ConfigUtils.moduleDPCConsoleTitle(),
+                                        ConfigUtils.moduleDPCConsoleMessage()
                                                 .replace("%message%", msg),
-                                        DiscordBotConfUtils.textChannelProxyChat
+                                        DiscordBotConfUtils.textChannelProxyChat()
                                 ),
-                                ConfigUtils.moduleDPCConsoleUseAvatar
+                                ConfigUtils.moduleDPCConsoleUseAvatar()
                         );
                     }
                 }
@@ -175,7 +175,7 @@ public class ChatListener implements Listener {
                                     MessagingUtils.sendMessageFromUserToConsole(sender, sender.getServer(), format, withEmotes);
                                 }
 
-                                if (ConfigUtils.moduleDPC) {
+                                if (ConfigUtils.moduleDPC()) {
                                     StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("global"), "", msg);
                                 }
                             } else {
@@ -195,7 +195,7 @@ public class ChatListener implements Listener {
                                         MessagingUtils.sendMessageFromUserToConsole(sender, sender.getServer(), format, withEmotes);
                                     }
 
-                                    if (ConfigUtils.moduleDPC) {
+                                    if (ConfigUtils.moduleDPC()) {
                                         StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("global"), chat.identifier, msg);
                                     }
                                 }
@@ -219,7 +219,7 @@ public class ChatListener implements Listener {
                                     MessagingUtils.sendMessageFromUserToConsole(sender, sender.getServer(), format, withEmotes);
                                 }
 
-                                if (ConfigUtils.moduleDPC) {
+                                if (ConfigUtils.moduleDPC()) {
                                     StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("global"), ch.identifier, msg);
                                 }
                             }
@@ -251,7 +251,7 @@ public class ChatListener implements Listener {
                             MessagingUtils.sendMessageFromUserToConsole(sender, sender.getServer(), format, withEmotes);
                         }
 
-                        if (ConfigUtils.moduleDPC) {
+                        if (ConfigUtils.moduleDPC()) {
                             StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("local"), sender.getServer().getInfo().getName(), msg);
                         }
 
@@ -269,7 +269,7 @@ public class ChatListener implements Listener {
                     e.setCancelled(true);
                 }
             } else {
-                if (ConfigUtils.moduleDPC) {
+                if (ConfigUtils.moduleDPC()) {
                     if (stat.chatChannel.equals(ChatsHandler.getChannel("global"))) {
                         if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("global"), "")) {
                             TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("global"), "");
@@ -335,7 +335,7 @@ public class ChatListener implements Listener {
                         MessagingUtils.sendMessageFromUserToConsole(sender, sender.getServer(), format, withEmotes);
                     }
 
-                    if (ConfigUtils.moduleDPC) {
+                    if (ConfigUtils.moduleDPC()) {
                         StreamLine.discordData.sendDiscordChannel(sender, stat.chatChannel, sender.getServer().getInfo().getName(), msg);
                     }
 
@@ -344,11 +344,11 @@ public class ChatListener implements Listener {
             }
         }
 
-        if (ConfigUtils.chatHistoryEnabled) {
+        if (ConfigUtils.chatHistoryEnabled()) {
             PlayerUtils.addLineToChatHistory(stat.uuid, sender.getServer().getInfo().getName(), msg);
         }
 
-        if (ConfigUtils.events) {
+        if (ConfigUtils.events()) {
             if (!msg.startsWith("/")) {
                 for (Event event : EventsHandler.getEvents()) {
                     if (!EventsHandler.checkTags(event, stat)) continue;

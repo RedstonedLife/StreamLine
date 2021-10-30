@@ -38,7 +38,7 @@ public class HistorySave {
     public Configuration loadConfig(){
         if (! file.exists()){
             try {
-                if (! file.createNewFile()) if (ConfigUtils.debug) MessagingUtils.logWarning("Could not make HistorySave file " + file.getName() + "!");
+                if (! file.createNewFile()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Could not make HistorySave file " + file.getName() + "!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -69,13 +69,14 @@ public class HistorySave {
 
     public String addLine(String server, long milliDate, String message) {
         conf.set(server + "." + milliDate, message);
+        saveConfig();
         reloadConfig();
         return message;
     }
 
 //    public String addLine(String line) {
 //        try {
-//            if (! file.exists()) if (! file.createNewFile()) if (ConfigUtils.debug) MessagingUtils.logWarning("Cannot create file for " + uuid);
+//            if (! file.exists()) if (! file.createNewFile()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Cannot create file for " + uuid);
 //
 //            TreeMap<Integer, String> lines = new TreeMap<>();
 //            int l = 0;

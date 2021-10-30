@@ -27,7 +27,7 @@ public class EventsHandler {
     public static void addEvent(Event event){
         //MessagingUtils.logInfo("Added Event: " + event.toString());
 
-        if (! ConfigUtils.events) return;
+        if (! ConfigUtils.events()) return;
 
         events.add(event);
     }
@@ -126,7 +126,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_STAFF:
-                    MessagingUtils.sendPermissionedMessage(ConfigUtils.staffPerm, event.actions.get(i).value);
+                    MessagingUtils.sendPermissionedMessage(ConfigUtils.staffPerm(), event.actions.get(i).value);
                     continue;
                 case SEND_MESSAGE_TO_PERMISSION:
                     String total = event.actions.get(i).value;
@@ -159,7 +159,7 @@ public class EventsHandler {
         if (p == null) return;
 
         for (Integer i : event.actions.keySet()) {
-            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#runEvent() --> i = " + i);
+            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#runEvent() --> i = " + i);
 
             switch (event.actions.get(i).key) {
                 case SEND_MESSAGE_TO:
@@ -236,7 +236,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_STAFF:
-                    MessagingUtils.sendPermissionedMessage(ConfigUtils.staffPerm, event.actions.get(i).value);
+                    MessagingUtils.sendPermissionedMessage(ConfigUtils.staffPerm(), event.actions.get(i).value);
                     continue;
                 case SEND_MESSAGE_TO_PERMISSION:
                     String total = event.actions.get(i).value;
@@ -365,12 +365,12 @@ public class EventsHandler {
                 case IN_SERVER:
                     try {
                         if (player == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$1 : case IN_SERVER : player == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$1 : case IN_SERVER : player == null");
                             return false;
                         }
                         ServerInfo server = player.getServer().getInfo();
                         if (server == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$1 : case IN_SERVER : server == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$1 : case IN_SERVER : server == null");
                             return false;
                         }
 
@@ -422,12 +422,12 @@ public class EventsHandler {
                 case IN_SERVER:
                     try {
                         if (player == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$2 : case IN_SERVER : player == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$2 : case IN_SERVER : player == null");
                             return false;
                         }
                         ServerInfo server = player.getServer().getInfo();
                         if (server == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$2 : case IN_SERVER : server == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$2 : case IN_SERVER : server == null");
                             return false;
                         }
 
@@ -475,7 +475,7 @@ public class EventsHandler {
         ProxiedPlayer player = PlayerUtils.getPPlayerByUUID(triggerer.uuid);
 
         for (SingleSet<Condition, String> thing : event.conditions.values()) {
-            if (ConfigUtils.debug) {
+            if (ConfigUtils.debug()) {
                 MessagingUtils.logInfo("Condition == " + thing.key);
                 MessagingUtils.logInfo("Cond.val == " + thing.value);
             }
@@ -484,12 +484,12 @@ public class EventsHandler {
                 case IN_SERVER:
                     try {
                         if (player == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$3 : case IN_SERVER : player == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$3 : case IN_SERVER : player == null");
                             return false;
                         }
                         ServerInfo server = player.getServer().getInfo();
                         if (server == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$3 : case IN_SERVER : server == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$3 : case IN_SERVER : server == null");
                             return false;
                         }
 

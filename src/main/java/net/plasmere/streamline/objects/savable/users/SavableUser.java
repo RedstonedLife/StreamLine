@@ -110,13 +110,13 @@ public abstract class SavableUser {
 
     public String findServer() {
         if (this.uuid.equals("%")) {
-            return ConfigUtils.consoleServer;
+            return ConfigUtils.consoleServer();
         } else {
             ProxiedPlayer player = PlayerUtils.getPPlayerByUUID(this.uuid);
 
             if (player == null) return MessageConfUtils.nullB();
 
-            if (player.getServer() == null) return ConfigUtils.consoleServer;
+            if (player.getServer() == null) return ConfigUtils.consoleServer();
 
             return player.getServer().getInfo().getName();
         }
@@ -302,7 +302,7 @@ public abstract class SavableUser {
                 data = reader.nextLine();
             }
 
-            if (! data.contains("=")) if (ConfigUtils.debug) {
+            if (! data.contains("=")) if (ConfigUtils.debug()) {
                 MessagingUtils.logInfo("PLAYER DATA (" + this.latestName + ") ERROR : data has no split for --> " + data);
                 continue;
             }
@@ -324,7 +324,7 @@ public abstract class SavableUser {
         defaults.add("latest-version=" + latestVersion);
         defaults.add("guild=");
         defaults.add("tags=" + defaultTags());
-        defaults.add("points=" + (this.uuid.equals("%") ? ConfigUtils.consoleDefaultPoints : ConfigUtils.pointsDefault));
+        defaults.add("points=" + (this.uuid.equals("%") ? ConfigUtils.consoleDefaultPoints() : ConfigUtils.pointsDefault()));
         defaults.add("last-from=");
         defaults.add("last-to=");
         defaults.add("last-message=");
@@ -406,7 +406,7 @@ public abstract class SavableUser {
 
         if (this.latestName == null) {
             try {
-                if (ConfigUtils.deleteBadStats) {
+                if (ConfigUtils.deleteBadStats()) {
                     this.dispose();
                 }
                 throw new Exception("Bad User Data for user: " + this.uuid + "!");
@@ -418,7 +418,7 @@ public abstract class SavableUser {
 
         if (this.latestName.equals("null")) {
             try {
-                if (ConfigUtils.deleteBadStats) {
+                if (ConfigUtils.deleteBadStats()) {
                     this.dispose();
                 }
                 throw new Exception("Bad User Data for user: " + this.uuid + "!");
@@ -918,6 +918,6 @@ public abstract class SavableUser {
         }
         writer.close();
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Just saved SavablePlayer info for player: " + this.uuid + " (SavablePlayer: " + this.latestName + ")");
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Just saved SavablePlayer info for player: " + this.uuid + " (SavablePlayer: " + this.latestName + ")");
     }
 }

@@ -19,7 +19,7 @@ public class StaffChatCommand {
 
     public static void sendMessage(String command, MessageReceivedEvent event){
         String om = event.getMessage().getContentDisplay();
-        String prefix = DiscordBotConfUtils.botPrefix;
+        String prefix = DiscordBotConfUtils.botPrefix();
 
         String msg = om.substring((prefix + command + " ").length());
 
@@ -28,7 +28,7 @@ public class StaffChatCommand {
 
         for (ProxiedPlayer player : staff){
             try {
-                if (! player.hasPermission(ConfigUtils.staffPerm)) {
+                if (! player.hasPermission(ConfigUtils.staffPerm())) {
                     staffs.remove(player);
                 }
             } catch (Exception e){
@@ -52,6 +52,6 @@ public class StaffChatCommand {
             e.printStackTrace();
         }
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
     }
 }

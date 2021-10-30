@@ -729,7 +729,7 @@ parties:
   # %ispublic% = true if open, false if not.
   # %ismuted% = true if muted, false if not.
   # Main message.
-  parties: "&5PARTY &9>> &eleader&8(&b%leader_formatted%&8)&e, size&8(&3%size%&8)&e, partyMax&8(&3%max%&8)&e, permMax&8(&3%maxmax%&8)&e, mods&8(&3%mods_count% &4--> %mods%&8)&e, members&8(&3%members_count% &4--> %members%&8)&e, all&8(&3%total_count% &4--> %totalmembers%&8)&e, invites&8(&3%invites_count% &4--> %invites%&8)&e, public&8(%ispublic%&8)&e, muted&8(%ismuted%&8)&e."
+  parties: "&5PARTY &9>> &eleader&8(&b%leader_formatted%&8)&e, size&8(&3%size%&8)&e, partyMax()&8(&3%max%&8)&e, permMax&8(&3%maxmax%&8)&e, mods&8(&3%mods_count% &4--> %mods%&8)&e, members&8(&3%members_count% &4--> %members%&8)&e, all&8(&3%total_count% &4--> %totalmembers%&8)&e, invites&8(&3%invites_count% &4--> %invites%&8)&e, public&8(%ispublic%&8)&e, muted&8(%ismuted%&8)&e."
   # Mods in message.
   mods:
     # If not last in list.
@@ -1261,7 +1261,7 @@ guilds:
   # %ispublic% = true if open, false if not.
   # %ismuted% = true if muted, false if not.
   # Main message.
-  guilds: "&5GUILD &9>> &eleader&8(&b%leader_formatted%&8)&e, size&8(&3%size%&8)&e, guildMax&8(&3%max%&8)&e, mods&8(&3%mods_count% &4--> %mods%&8)&e, members&8(&3%members_count% &4--> %members%&8)&e, all&8(&3%total_count% &4--> %totalmembers%&8)&e, invites&8(&3%invites_count% &4--> %invites%&8)&e, public&8(%ispublic%&8)&e, muted&8(%ismuted%&8)&e."
+  guilds: "&5GUILD &9>> &eleader&8(&b%leader_formatted%&8)&e, size&8(&3%size%&8)&e, guildMax()&8(&3%max%&8)&e, mods&8(&3%mods_count% &4--> %mods%&8)&e, members&8(&3%members_count% &4--> %members%&8)&e, all&8(&3%total_count% &4--> %totalmembers%&8)&e, invites&8(&3%invites_count% &4--> %invites%&8)&e, public&8(%ispublic%&8)&e, muted&8(%ismuted%&8)&e."
   # Mods of guild.
   mods:
     # If not last in list.
@@ -2021,3 +2021,13 @@ script:
   message: "&eJust ran script &a%script% &eon &d%player_formatted%&e!"
   no-script: "&cNo valid script by this name!"
   reload: "&eReloaded scripts! (&b%count%&e)"
+
+votes:
+  console:
+    toggle: "&eToggled console printing to %toggle%&8!"
+    enabled: "&aTRUE"
+    disabled: "&cFALSE"
+  get: "&eVotes of &d%player_formatted%&8: &6%player_votes%"
+  remove: "&eRemoved &6%votes% &evote(s) from &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"
+  add: "&eAdded &6%votes% &evote(s) to &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"
+  set: "&eSet &6%votes% &evote(s) for &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"

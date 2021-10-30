@@ -41,7 +41,7 @@ public class JoinLeaveListener implements Listener {
 
         String uuid = UUIDUtils.fetch(ev.getConnection().getName());
 
-        if (ConfigUtils.punBans) {
+        if (ConfigUtils.punBans()) {
             String reason = PlayerUtils.checkIfBanned(uuid);
             if (reason != null) {
                 ev.setCancelReason(TextUtils.codedText(reason));
@@ -49,7 +49,7 @@ public class JoinLeaveListener implements Listener {
             }
         }
 
-        if (ConfigUtils.punIPBans) {
+        if (ConfigUtils.punIPBans()) {
             String reason = PlayerUtils.checkIfIPBanned(ip);
             if (reason != null) {
                 ev.setCancelReason(TextUtils.codedText(reason));
@@ -62,7 +62,7 @@ public class JoinLeaveListener implements Listener {
     public void onJoin(PostLoginEvent ev) {
         ProxiedPlayer player = ev.getPlayer();
 
-        if (ConfigUtils.offlineMode) {
+        if (ConfigUtils.offlineMode()) {
             StreamLine.offlineStats.addStat(player.getUniqueId().toString(), player.getName());
         }
 
@@ -91,12 +91,12 @@ public class JoinLeaveListener implements Listener {
             e.printStackTrace();
         }
 
-        String joinsOrder = ConfigUtils.moduleBPlayerJoins;
+        String joinsOrder = ConfigUtils.moduleBPlayerJoins();
 
         if (!joinsOrder.equals("")) {
             String[] order = joinsOrder.split(",");
             for (ProxiedPlayer p : StreamLine.getInstance().getProxy().getPlayers()) {
-                if (!p.hasPermission(ConfigUtils.moduleBPlayerJoinsPerm)) continue;
+                if (!p.hasPermission(ConfigUtils.moduleBPlayerJoinsPerm())) continue;
 
                 SavablePlayer other = PlayerUtils.getOrCreatePlayerStat(p);
 
@@ -104,8 +104,8 @@ public class JoinLeaveListener implements Listener {
                 for (String s : order) {
                     switch (s) {
                         case "staff":
-                            if (player.hasPermission(ConfigUtils.staffPerm)) {
-                                if (p.hasPermission(ConfigUtils.staffPerm)) {
+                            if (player.hasPermission(ConfigUtils.staffPerm())) {
+                                if (p.hasPermission(ConfigUtils.staffPerm())) {
                                     MessagingUtils.sendBUserMessage(p, TextUtils.replaceAllPlayerBungee(MessageConfUtils.bungeeOnline(), stat)
                                     );
                                     break label;
@@ -113,7 +113,7 @@ public class JoinLeaveListener implements Listener {
                             }
                             break;
                         case "guild":
-                            if (!ConfigUtils.guildSendJoins) continue;
+                            if (!ConfigUtils.guildSendJoins()) continue;
 
                             SavableGuild guild = GuildUtils.getGuild(other);
                             if (guild == null) continue;
@@ -125,7 +125,7 @@ public class JoinLeaveListener implements Listener {
                             }
                             break;
                         case "party":
-                            if (!ConfigUtils.partySendJoins) continue;
+                            if (!ConfigUtils.partySendJoins()) continue;
 
                             Party party = PartyUtils.getParty(other);
                             if (party == null) continue;
@@ -148,16 +148,16 @@ public class JoinLeaveListener implements Listener {
             }
         }
 
-        if (ConfigUtils.moduleDEnabled) {
-            switch (ConfigUtils.moduleDPlayerJoins) {
+        if (ConfigUtils.moduleDEnabled()) {
+            switch (ConfigUtils.moduleDPlayerJoins()) {
                 case "yes":
-                    if (ConfigUtils.joinsLeavesAsConsole) {
+                    if (ConfigUtils.joinsLeavesAsConsole()) {
                         MessagingUtils.sendDiscordEBMessage(new DiscordMessage(StreamLine.getInstance().getProxy().getConsole(),
                                 MessageConfUtils.discordOnlineEmbed(),
                                 TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordOnline(), stat),
-                                DiscordBotConfUtils.textChannelBJoins));
+                                DiscordBotConfUtils.textChannelBJoins()));
                     } else {
-                        if (ConfigUtils.joinsLeavesIcon) {
+                        if (ConfigUtils.joinsLeavesIcon()) {
                             MessagingUtils.sendDiscordJoinLeaveMessageIcon(true, stat);
                         } else {
                             MessagingUtils.sendDiscordJoinLeaveMessagePlain(true, stat);
@@ -165,14 +165,14 @@ public class JoinLeaveListener implements Listener {
                     }
                     break;
                 case "staff":
-                    if (player.hasPermission(ConfigUtils.staffPerm)) {
-                        if (ConfigUtils.joinsLeavesAsConsole) {
+                    if (player.hasPermission(ConfigUtils.staffPerm())) {
+                        if (ConfigUtils.joinsLeavesAsConsole()) {
                             MessagingUtils.sendDiscordEBMessage(new DiscordMessage(StreamLine.getInstance().getProxy().getConsole(),
                                     MessageConfUtils.discordOnlineEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordOnline(), stat),
-                                    DiscordBotConfUtils.textChannelBJoins));
+                                    DiscordBotConfUtils.textChannelBJoins()));
                         } else {
-                            if (ConfigUtils.joinsLeavesIcon) {
+                            if (ConfigUtils.joinsLeavesIcon()) {
                                 MessagingUtils.sendDiscordJoinLeaveMessageIcon(true, stat);
                             } else {
                                 MessagingUtils.sendDiscordJoinLeaveMessagePlain(true, stat);
@@ -204,7 +204,7 @@ public class JoinLeaveListener implements Listener {
             StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("global"), "");
         }
 
-        if (ConfigUtils.events) {
+        if (ConfigUtils.events()) {
             for (Event event : EventsHandler.getEvents()) {
                 if (! EventsHandler.checkTags(event, stat)) continue;
 
@@ -224,10 +224,10 @@ public class JoinLeaveListener implements Listener {
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
-        if (ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY) && ConfigUtils.redirectEnabled && StreamLine.lpHolder.enabled) {
+        if (ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY) && ConfigUtils.redirectEnabled() && StreamLine.lpHolder.enabled) {
             for (ServerInfo s : StreamLine.getInstance().getProxy().getServers().values()) {
                 String sv = s.getName();
-                if (player.hasPermission(ConfigUtils.redirectPre + sv)) {
+                if (player.hasPermission(ConfigUtils.redirectPre() + sv)) {
                     Group group = StreamLine.lpHolder.api.getGroupManager().getGroup(Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(player.getName())).getPrimaryGroup());
 
                     if (group == null) {
@@ -239,7 +239,7 @@ public class JoinLeaveListener implements Listener {
                     Collection<Node> nodes = group.getNodes();
 
                     for (Node node : nodes) {
-                        if (node.getKey().equals(ConfigUtils.redirectPre + sv)) {
+                        if (node.getKey().equals(ConfigUtils.redirectPre() + sv)) {
                             hasServer = true;
                             server = s;
                             break;
@@ -249,7 +249,7 @@ public class JoinLeaveListener implements Listener {
                     Collection<Node> nods = Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(player.getName())).getNodes();
 
                     for (Node node : nods) {
-                        if (node.getKey().equals(ConfigUtils.redirectPre + sv)) {
+                        if (node.getKey().equals(ConfigUtils.redirectPre() + sv)) {
                             hasServer = true;
                             server = s;
                             break;
@@ -263,12 +263,12 @@ public class JoinLeaveListener implements Listener {
             }
 
             if (! hasServer) {
-                server = StreamLine.getInstance().getProxy().getServerInfo(ConfigUtils.redirectMain);
+                server = StreamLine.getInstance().getProxy().getServerInfo(ConfigUtils.redirectMain());
             }
         }
 
-        if (StreamLine.viaHolder.enabled && ConfigUtils.redirectEnabled) {
-            if (! hasServer && ConfigUtils.lobbies && ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY)){
+        if (StreamLine.viaHolder.enabled && ConfigUtils.redirectEnabled()) {
+            if (! hasServer && ConfigUtils.lobbies() && ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY)){
                 for (SingleSet<String, String> set : StreamLine.lobbies.getInfo().values()) {
                     String sName = set.key;
 
@@ -285,8 +285,8 @@ public class JoinLeaveListener implements Listener {
             }
 
             if (! ev.getReason().equals(ServerConnectEvent.Reason.JOIN_PROXY)) {
-                if (ConfigUtils.vbEnabled) {
-                    if (!player.hasPermission(ConfigUtils.vbOverridePerm)) {
+                if (ConfigUtils.vbEnabled()) {
+                    if (!player.hasPermission(ConfigUtils.vbOverridePerm())) {
                         int version = StreamLine.viaHolder.via.getPlayerVersion(player.getUniqueId());
 
                         if (!StreamLine.serverPermissions.isAllowed(version, server.getName())) {
@@ -319,7 +319,7 @@ public class JoinLeaveListener implements Listener {
             StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("local"), server.getName());
         }
 
-        if (ConfigUtils.events) {
+        if (ConfigUtils.events()) {
             for (Event event : EventsHandler.getEvents()) {
                 if (!EventsHandler.checkTags(event, stat)) continue;
 
@@ -343,7 +343,7 @@ public class JoinLeaveListener implements Listener {
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
         try {
-            if (ConfigUtils.events) {
+            if (ConfigUtils.events()) {
                 for (Event event : EventsHandler.getEvents()) {
                     if (!EventsHandler.checkTags(event, stat)) continue;
 
@@ -363,19 +363,19 @@ public class JoinLeaveListener implements Listener {
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
-//        switch (ConfigUtils.moduleBPlayerLeaves) {
+//        switch (ConfigUtils.moduleBPlayerLeaves()) {
 //            case "yes":
 //                MessagingUtils.sendBungeeMessage(new BungeeMassMessage(StreamLine.getInstance().getProxy().getConsole(),
 //                        MessageConfUtils.bungeeOffline.replace("%player_absolute%", player.getName())
 //                                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrCreatePlayerStat(player))),
-//                        ConfigUtils.moduleBPlayerLeavesPerm));
+//                        ConfigUtils.moduleBPlayerLeavesPerm()));
 //                break;
 //            case "staff":
-//                if (player.hasPermission(ConfigUtils.staffPerm)) {
+//                if (player.hasPermission(ConfigUtils.staffPerm())) {
 //                    MessagingUtils.sendBungeeMessage(new BungeeMassMessage(StreamLine.getInstance().getProxy().getConsole(),
 //                            MessageConfUtils.bungeeOffline.replace("%player_absolute%", player.getName())
 //                                    .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrCreatePlayerStat(player))),
-//                            ConfigUtils.moduleBPlayerLeavesPerm));
+//                            ConfigUtils.moduleBPlayerLeavesPerm()));
 //                }
 //                break;
 //            case "no":
@@ -383,12 +383,12 @@ public class JoinLeaveListener implements Listener {
 //                break;
 //        }
 
-        String leavesOrder = ConfigUtils.moduleBPlayerLeaves;
+        String leavesOrder = ConfigUtils.moduleBPlayerLeaves();
 
         if (! leavesOrder.equals("")) {
             String[] order = leavesOrder.split(",");
             for (ProxiedPlayer p : StreamLine.getInstance().getProxy().getPlayers()) {
-                if (! p.hasPermission(ConfigUtils.moduleBPlayerLeavesPerm)) continue;
+                if (! p.hasPermission(ConfigUtils.moduleBPlayerLeavesPerm())) continue;
 
                 SavablePlayer other = PlayerUtils.getOrCreatePlayerStat(p);
 
@@ -396,8 +396,8 @@ public class JoinLeaveListener implements Listener {
                 for (String s : order) {
                     switch (s) {
                         case "staff":
-                            if (player.hasPermission(ConfigUtils.staffPerm)) {
-                                if (p.hasPermission(ConfigUtils.staffPerm)) {
+                            if (player.hasPermission(ConfigUtils.staffPerm())) {
+                                if (p.hasPermission(ConfigUtils.staffPerm())) {
                                     MessagingUtils.sendBUserMessage(p, TextUtils.replaceAllPlayerBungee(MessageConfUtils.bungeeOffline(), stat)
                                     );
                                     break label;
@@ -405,7 +405,7 @@ public class JoinLeaveListener implements Listener {
                             }
                             break;
                         case "guild":
-                            if (! ConfigUtils.guildSendLeaves) continue;
+                            if (! ConfigUtils.guildSendLeaves()) continue;
 
                             SavableGuild guild = GuildUtils.getGuild(other);
                             if (guild == null) continue;
@@ -417,7 +417,7 @@ public class JoinLeaveListener implements Listener {
                             }
                             break;
                         case "party":
-                            if (! ConfigUtils.partySendLeaves) continue;
+                            if (! ConfigUtils.partySendLeaves()) continue;
 
                             Party party = PartyUtils.getParty(other);
                             if (party == null) continue;
@@ -440,16 +440,16 @@ public class JoinLeaveListener implements Listener {
             }
         }
 
-        if (ConfigUtils.moduleDEnabled) {
-            switch (ConfigUtils.moduleDPlayerLeaves) {
+        if (ConfigUtils.moduleDEnabled()) {
+            switch (ConfigUtils.moduleDPlayerLeaves()) {
                 case "yes":
-                    if (ConfigUtils.joinsLeavesAsConsole) {
+                    if (ConfigUtils.joinsLeavesAsConsole()) {
                         MessagingUtils.sendDiscordEBMessage(new DiscordMessage(StreamLine.getInstance().getProxy().getConsole(),
                                 MessageConfUtils.discordOfflineEmbed(),
                                 TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordOffline(), stat),
-                                DiscordBotConfUtils.textChannelBLeaves));
+                                DiscordBotConfUtils.textChannelBLeaves()));
                     } else {
-                        if (ConfigUtils.joinsLeavesIcon) {
+                        if (ConfigUtils.joinsLeavesIcon()) {
                             MessagingUtils.sendDiscordJoinLeaveMessageIcon(false, stat);
                         } else {
                             MessagingUtils.sendDiscordJoinLeaveMessagePlain(false, stat);
@@ -457,14 +457,14 @@ public class JoinLeaveListener implements Listener {
                     }
                     break;
                 case "staff":
-                    if (player.hasPermission(ConfigUtils.staffPerm)) {
-                        if (ConfigUtils.joinsLeavesAsConsole) {
+                    if (player.hasPermission(ConfigUtils.staffPerm())) {
+                        if (ConfigUtils.joinsLeavesAsConsole()) {
                             MessagingUtils.sendDiscordEBMessage(new DiscordMessage(StreamLine.getInstance().getProxy().getConsole(),
                                     MessageConfUtils.discordOfflineEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordOffline(), stat),
-                                    DiscordBotConfUtils.textChannelBLeaves));
+                                    DiscordBotConfUtils.textChannelBLeaves()));
                         } else {
-                            if (ConfigUtils.joinsLeavesIcon) {
+                            if (ConfigUtils.joinsLeavesIcon()) {
                                 MessagingUtils.sendDiscordJoinLeaveMessageIcon(false, stat);
                             } else {
                                 MessagingUtils.sendDiscordJoinLeaveMessagePlain(false, stat);
@@ -515,7 +515,7 @@ public class JoinLeaveListener implements Listener {
             StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("global"), "");
         }
 
-        if (ConfigUtils.events) {
+        if (ConfigUtils.events()) {
             for (Event event : EventsHandler.getEvents()) {
                 if (!EventsHandler.checkTags(event, stat)) continue;
 
@@ -550,7 +550,7 @@ public class JoinLeaveListener implements Listener {
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
         if (StreamLine.viaHolder.enabled) {
-            if (ConfigUtils.lobbies) {
+            if (ConfigUtils.lobbies()) {
                 Server server = PlayerUtils.getPPlayer(stat.uuid).getServer();
 
                 if (server == null) {
