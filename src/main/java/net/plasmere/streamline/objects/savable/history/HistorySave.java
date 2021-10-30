@@ -6,6 +6,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
+import org.apache.commons.collections4.list.TreeList;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -72,6 +73,40 @@ public class HistorySave {
         saveConfig();
         reloadConfig();
         return message;
+    }
+
+    public TreeList<String> getTimestamps(String server) {
+        return new TreeList<>(conf.getSection(server).getKeys());
+    }
+
+    public TreeList<String> getTalkedInServers() {
+        return new TreeList<>(conf.getKeys());
+    }
+
+    public TreeMap<Long, String> getTimestampsWithMessageFrom(String timestampFrom, String server) {
+        TreeMap<Long, String> map = new TreeMap<>();
+
+        TreeList<String> ts = getTimestamps(server);
+
+        long timestampF;
+        try {
+            timestampF = Long.parseLong(timestampFrom);
+        } catch (Exception e) {
+            return map;
+        }
+
+        for (String t : ts) {
+            try {
+                long timestamp = Long.parseLong(t);
+                if (timestamp >= timestampF) {
+                    map.put(timestamp, conf.getString(server + "." + timestamp));
+                }
+            } catch (Exception e) {
+                // continue
+            }
+        }
+
+        return map;
     }
 
 //    public String addLine(String line) {

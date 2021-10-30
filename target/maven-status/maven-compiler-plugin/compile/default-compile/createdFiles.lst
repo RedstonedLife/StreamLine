@@ -57,6 +57,7 @@ net\plasmere\streamline\libs\Metrics$SimplePie.class
 net\plasmere\streamline\objects\chats\ChatsHandler.class
 net\plasmere\streamline\utils\PlayerUtils.class
 net\plasmere\streamline\objects\chats\ChatChannel.class
+net\plasmere\streamline\commands\staff\ChatHistoryCommand.class
 net\plasmere\streamline\utils\TimeUtil.class
 net\plasmere\streamline\config\DiscordBotConfUtils.class
 net\plasmere\streamline\scripts\ScriptAs.class

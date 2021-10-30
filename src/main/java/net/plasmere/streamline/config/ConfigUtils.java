@@ -1,5 +1,6 @@
 package net.plasmere.streamline.config;
 
+import net.md_5.bungee.config.Configuration;
 import net.plasmere.streamline.StreamLine;
 
 import java.util.List;
@@ -351,6 +352,16 @@ public class ConfigUtils {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfString("modules.bungee.parties.base-permission");
     }
+    public static Configuration getGroupSizeConfig() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfSection("modules.bungee.parties.group-size");
+    }
+
+    public static int getGroupedSize(String group) {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfInteger("modules.bungee.parties.group-size." + group);
+    }
+
     public static boolean partyConsoleChats() {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfBoolean("modules.bungee.parties.console.chat");
@@ -789,6 +800,14 @@ public class ConfigUtils {
     public static boolean chatHistoryLoadHistoryStartup() {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfBoolean("modules.bungee.chat-history.load-history-on-startup");
+    }
+    public static int chatHistoryViewDefault() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfInteger("modules.bungee.chat-history.view.default");
+    }
+    public static int chatHistoryViewMax() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfInteger("modules.bungee.chat-history.view.max");
     }
     // Scripts.
     public static boolean scriptsEnabled() {

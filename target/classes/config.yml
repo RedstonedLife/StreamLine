@@ -247,7 +247,10 @@ modules:
       # the max you want them to have,
       # but less than the "max-size" above.
       # EXAMPLE: give people "streamline.party.max.10"
-      base-permission: "streamline.party.max."
+      base-permission: "streamline.party.group."
+      group-size:
+        'default': 10
+        'admin': 100
       # Whether or not party things should be able to be seen on discord console.
       console:
         chats: true
@@ -506,6 +509,9 @@ modules:
       # This will enabled loading player chat history on start up.
       # This will be resource intensive, only enable if you want it to be faster.
       load-history-on-startup: false
+      view:
+        default: 7
+        max: 20
     # Scripts for the plugin.
     scripts:
       # Enables it.

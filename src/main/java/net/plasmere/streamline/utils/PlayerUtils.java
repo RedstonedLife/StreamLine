@@ -997,7 +997,7 @@ public class PlayerUtils {
     ---------------------------- */
 
     public static void info(CommandSender sender, SavableUser of){
-        if (! sender.hasPermission(CommandsConfUtils.comBStatsPerm)) {
+        if (! sender.hasPermission(CommandsConfUtils.comBStatsPerm())) {
             MessagingUtils.sendBUserMessage(sender, noPermission);
         }
 
@@ -1009,7 +1009,7 @@ public class PlayerUtils {
     }
 
     public static void remTag(CommandSender sender, SavableUser of, String tag){
-        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) {
+        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm())) {
             MessagingUtils.sendBUserMessage(sender, noPermission);
             return;
         }
@@ -1022,7 +1022,7 @@ public class PlayerUtils {
     }
 
     public static void addTag(CommandSender sender, SavableUser of, String tag){
-        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) {
+        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm())) {
             MessagingUtils.sendBUserMessage(sender, noPermission);
             return;
         }
@@ -1035,7 +1035,7 @@ public class PlayerUtils {
     }
 
     public static void listTags(CommandSender sender, SavableUser of){
-        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) {
+        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm())) {
             MessagingUtils.sendBUserMessage(sender, noPermission);
             return;
         }
@@ -1556,7 +1556,7 @@ public class PlayerUtils {
 
             return TextUtils.codedString(suffix);
         } else {
-            if (ConfigUtils.debug()) MessagingUtils.logInfo("getLuckPermsPrefix -> group == " + group.getDisplayName() + " | " + group.getName() + " | " + group.getWeight());
+//            if (ConfigUtils.debug()) MessagingUtils.logInfo("getLuckPermsPrefix -> group == " + group.getDisplayName() + " | " + group.getName() + " | " + group.getWeight());
         }
 
         TreeMap<Integer, String> sufWeight = new TreeMap<>();

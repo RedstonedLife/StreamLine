@@ -874,19 +874,36 @@ public class CommandsConfUtils {
     public static boolean comBScriptRe() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandBoolean("commands.bungee.staff.script-reload.enabled");
-     }
+    }
     public static String comBScriptReBase() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.staff.script-reload.base");
-     }
+    }
     public static List<String> comBScriptReAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.staff.script-reload.aliases");
-     }
+    }
     public static String comBScriptRePerm() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.staff.script-reload.permission");
-     }
+    }
+    // Chat History.
+    public static boolean comBChH() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.staff.chat-history.enabled");
+    }
+    public static String comBChHBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.staff.chat-history.base");
+    }
+    public static List<String> comBChHAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.staff.chat-history.aliases");
+    }
+    public static String comBChHPerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.staff.chat-history.permission");
+    }
     // // Configs.
     // Settings.
     public static boolean comBSettings() {

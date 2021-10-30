@@ -102,6 +102,9 @@ public class PluginUtils {
         if (CommandsConfUtils.comBTeleport()) {
             registerCommand(plugin, new TeleportCommand(CommandsConfUtils.comBTeleportBase(), CommandsConfUtils.comBTeleportPerm(), stringListToArray(CommandsConfUtils.comBTeleportAliases())));
         }
+        if (CommandsConfUtils.comBChH()) {
+            registerCommand(plugin, new ChatHistoryCommand(CommandsConfUtils.comBChHBase(), CommandsConfUtils.comBChHPerm(), stringListToArray(CommandsConfUtils.comBChHAliases())));
+        }
         // // Spying.
         if (CommandsConfUtils.comBSSPY()) {
             registerCommand(plugin, new SSPYCommand(CommandsConfUtils.comBSSPYBase(), CommandsConfUtils.comBSSPYPerm(), stringListToArray(CommandsConfUtils.comBSSPYAliases())));

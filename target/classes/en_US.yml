@@ -2031,3 +2031,8 @@ votes:
   remove: "&eRemoved &6%votes% &evote(s) from &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"
   add: "&eAdded &6%votes% &evote(s) to &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"
   set: "&eSet &6%votes% &evote(s) for &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"
+
+history:
+  message: "&eShowing &cchat history &efor &d%player_formatted%&8:%newline%%chat_bulk%"
+  chat-bulk:
+    message: "&b%timestamp% &4> &r%message%"

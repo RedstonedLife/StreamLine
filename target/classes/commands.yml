@@ -685,7 +685,7 @@ commands:
           - "slscr"
           - "streamlinescript"
           - "script"
-      # The bteleport command.
+      # The script-reload command.
       script-reload:
         # Enables / disables the use of the command.
         enabled: true
@@ -697,6 +697,18 @@ commands:
         aliases:
           - "reloadslsc"
           - "rslsc"
+      # The chat-history command.
+      chat-history:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "chat-history"
+        # Custom permission.
+        permission: "streamline.command.chat-history"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "chath"
+          - "chh"
     # For configs commands...
     configs:
       # The settings command.

@@ -26,7 +26,7 @@ public class GoToServerVanillaCommand extends Command {
             if (player.hasPermission("streamline.server.fabric") || player.hasPermission("streamline.*")) {
                 ProxyServer proxy = StreamLine.getInstance().getProxy();
 
-                ServerInfo vanServer = proxy.getServerInfo(CommandsConfUtils.comBFabricEnd);
+                ServerInfo vanServer = proxy.getServerInfo(CommandsConfUtils.comBFabricEnd());
 
                 if (!vanServer.canAccess(player))
                     player.sendMessage(new TextComponent(ChatColor.RED + "Cannot connect..."));

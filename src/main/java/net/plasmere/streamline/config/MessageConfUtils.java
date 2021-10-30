@@ -1596,4 +1596,14 @@ public class MessageConfUtils {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("votes.set");
     }
+
+    public static String historyMessage() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("history.message");
+    }
+
+    public static String historyChatBulk() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("history.chat-bulk.message");
+    }
 }

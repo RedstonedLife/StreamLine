@@ -44,7 +44,7 @@ public class PingCommand extends Command implements TabExecutor {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                 }
             } else {
-                if (sender.hasPermission(CommandsConfUtils.comBPingPermOthers) && CommandsConfUtils.comBPingOthers) {
+                if (sender.hasPermission(CommandsConfUtils.comBPingPermOthers()) && CommandsConfUtils.comBPingOthers()) {
                     if (! PlayerUtils.getPlayerNamesForAllOnline().contains(args[0])) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPlayer());
                         return;
@@ -68,7 +68,7 @@ public class PingCommand extends Command implements TabExecutor {
     public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         List<String> strings = new ArrayList<>();
 
-        if (sender.hasPermission(CommandsConfUtils.comBPingPermOthers) && CommandsConfUtils.comBPingOthers) {
+        if (sender.hasPermission(CommandsConfUtils.comBPingPermOthers()) && CommandsConfUtils.comBPingOthers()) {
             for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()) {
                 strings.add(player.getName());
             }

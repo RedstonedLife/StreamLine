@@ -23,7 +23,7 @@ public class StatsCommand extends Command implements TabExecutor {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (sender instanceof ProxiedPlayer) {
-            if (args.length <= 0 || ! CommandsConfUtils.comBStatsOthers) {
+            if (args.length <= 0 || ! CommandsConfUtils.comBStatsOthers()) {
                 PlayerUtils.info(sender, PlayerUtils.getOrGetPlayerStat(sender.getName()));
             } else {
                 SavableUser person = PlayerUtils.getOrGetSavableUser(args[0]);
@@ -62,7 +62,7 @@ public class StatsCommand extends Command implements TabExecutor {
 
         strPlayers.add("%");
 
-        if (sender.hasPermission(CommandsConfUtils.comBStatsPermOthers)) {
+        if (sender.hasPermission(CommandsConfUtils.comBStatsPermOthers())) {
             return TextUtils.getCompletion(strPlayers, args[0]);
         }
 

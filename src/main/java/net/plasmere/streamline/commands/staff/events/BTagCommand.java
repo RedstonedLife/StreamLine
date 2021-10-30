@@ -39,7 +39,7 @@ public class BTagCommand extends Command implements TabExecutor {
             }
 
             if (! stat.latestName.equals(sender.getName())) {
-                if (! sender.hasPermission(CommandsConfUtils.comBBTagOPerm)) {
+                if (! sender.hasPermission(CommandsConfUtils.comBBTagOPerm())) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                     return;
                 }
@@ -50,7 +50,7 @@ public class BTagCommand extends Command implements TabExecutor {
                 case "rem":
                 case "r":
                 case "-":
-                    if (! sender.hasPermission(CommandsConfUtils.comBBTagChPerm)) {
+                    if (! sender.hasPermission(CommandsConfUtils.comBBTagChPerm())) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                         return;
                     }
@@ -64,7 +64,7 @@ public class BTagCommand extends Command implements TabExecutor {
                 case "add":
                 case "a":
                 case "+":
-                    if (! sender.hasPermission(CommandsConfUtils.comBBTagChPerm)) {
+                    if (! sender.hasPermission(CommandsConfUtils.comBBTagChPerm())) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                         return;
                     }
@@ -87,7 +87,7 @@ public class BTagCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) return new ArrayList<>();
+        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm())) return new ArrayList<>();
 
         Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();

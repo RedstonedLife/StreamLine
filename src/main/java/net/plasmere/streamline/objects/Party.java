@@ -312,45 +312,33 @@ public class Party {
         }
     }
 
+    public boolean hasGroupedSize(String group) {
+        for (String key : ConfigUtils.getGroupSizeConfig().getKeys()) {
+            if (group.equals(key)) return true;
+        }
+
+        return false;
+    }
+
     public int getMaxSize(SavablePlayer leader){
         if (! StreamLine.lpHolder.enabled) return ConfigUtils.partyMax();
 
         try {
-            Collection<PermissionNode> perms =
-                    Objects.requireNonNull(StreamLine.lpHolder.api.getGroupManager().getGroup(
-                            Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(leader.getName())).getPrimaryGroup()
-                    )).getNodes(NodeType.PERMISSION);
+            String group = StreamLine.lpHolder.api.getUserManager().getUser(leader.latestName).getPrimaryGroup();
 
-            for (Group group : Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(leader.getName())).getInheritedGroups(QueryOptions.defaultContextualOptions())){
-                perms.addAll(group.getNodes(NodeType.PERMISSION));
+            if (group.equals("")){
+                group = "default";
             }
 
-            boolean isGood = false;
+            int max = 0;
 
-            int highestSize = 1;
-            for (PermissionNode perm : perms) {
-                try {
-                    String p = perm.getPermission();
-                    for (int i = 1; i <= ConfigUtils.partyMax(); i++) {
-                        String pTry = ConfigUtils.partyMaxPerm() + i;
-                        if (p.equals(pTry)) {
-                            isGood = true;
-
-                            if (highestSize < i)
-                                highestSize = i;
-                        }
-                    }
-                } catch (Exception e) {
-                    // Do nothing.
-                }
+            if (! hasGroupedSize(group) && ! group.equals("default")) {
+                group = "default";
+            } else if (! hasGroupedSize(group) && group.equals("default")){
+                return 1;
             }
 
-            if (highestSize == 1)
-                return ConfigUtils.partyMax();
-            else if (isGood)
-                return highestSize;
-            else
-                return ConfigUtils.partyMax();
+            return ConfigUtils.getGroupedSize(group);
         } catch (Exception e) {
             e.printStackTrace();
             return ConfigUtils.partyMax();

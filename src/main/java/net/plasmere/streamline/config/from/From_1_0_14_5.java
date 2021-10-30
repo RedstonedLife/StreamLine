@@ -27,6 +27,12 @@ public class From_1_0_14_5 extends From{
 
         addUpdatedConfigEntry("modules.bungee.ranks.enable", true);
         addUpdatedConfigEntry("modules.bungee.ranks.points.uses", "%player_votes%");
+
+        addUpdatedConfigEntry("modules.bungee.parties.group-size.default", 10);
+        addUpdatedConfigEntry("modules.bungee.parties.group-size.admin", 100);
+
+        addUpdatedConfigEntry("modules.bungee.chat-history.view.default", 7);
+        addUpdatedConfigEntry("modules.bungee.chat-history.view.max", 20);
     }
 
     @Override
@@ -38,6 +44,24 @@ public class From_1_0_14_5 extends From{
         addUpdatedLocalesEntry("votes.remove", "&eRemoved &6%votes% &evote(s) from &d%player_formatted%&8! &eCurrent&8: &6%player_votes%", "en_US");
         addUpdatedLocalesEntry("votes.add", "&eAdded &6%votes% &evote(s) to &d%player_formatted%&8! &eCurrent&8: &6%player_votes%", "en_US");
         addUpdatedLocalesEntry("votes.set", "&eSet &6%votes% &evote(s) for &d%player_formatted%&8! &eCurrent&8: &6%player_votes%", "en_US");
+
+        addUpdatedLocalesEntry("history.message", "&eShowing &cchat history &efor &d%player_formatted%&8:%newline%%chat_bulk%", "en_US");
+        addUpdatedLocalesEntry("history.chat-bulk.message", "&b%timestamp% &4> &r%message%", "en_US");
+
+        // FR
+        // ||
+        // vv
+
+        addUpdatedLocalesEntry("votes.console.toggle", "&eToggled console printing to %toggle%&8!", "fr_FR");
+        addUpdatedLocalesEntry("votes.console.enabled", "&aTRUE", "fr_FR");
+        addUpdatedLocalesEntry("votes.console.disabled", "&cFALSE", "fr_FR");
+        addUpdatedLocalesEntry("votes.get", "&eVotes of &d%player_formatted%&8: &6%player_votes%", "fr_FR");
+        addUpdatedLocalesEntry("votes.remove", "&eRemoved &6%votes% &evote(s) from &d%player_formatted%&8! &eCurrent&8: &6%player_votes%", "fr_FR");
+        addUpdatedLocalesEntry("votes.add", "&eAdded &6%votes% &evote(s) to &d%player_formatted%&8! &eCurrent&8: &6%player_votes%", "fr_FR");
+        addUpdatedLocalesEntry("votes.set", "&eSet &6%votes% &evote(s) for &d%player_formatted%&8! &eCurrent&8: &6%player_votes%", "fr_FR");
+
+        addUpdatedLocalesEntry("history.message", "&eShowing &cchat history &efor &d%player_formatted%&8:%newline%%chat_bulk%", "fr_FR");
+        addUpdatedLocalesEntry("history.chat-bulk.message", "&b%timestamp% &4> &r%message%", "fr_FR");
     }
 
     @Override
@@ -64,6 +88,11 @@ public class From_1_0_14_5 extends From{
         addUpdatedCommandsEntry("commands.bungee.staff.script-reload.base", "slsr");
         addUpdatedCommandsEntry("commands.bungee.staff.script-reload.permission", "streamline.command.scripts-reload");
         addUpdatedCommandsEntry("commands.bungee.staff.script-reload.aliases", Arrays.asList("rslsc", "reloadslsc"));
+
+        addUpdatedCommandsEntry("commands.bungee.staff.chat-history.enabled", true);
+        addUpdatedCommandsEntry("commands.bungee.staff.chat-history.base", "chat-history");
+        addUpdatedCommandsEntry("commands.bungee.staff.chat-history.permission", "streamline.command.chat-history");
+        addUpdatedCommandsEntry("commands.bungee.staff.chat-history.aliases", Arrays.asList("chath", "chh"));
     }
 
     @Override
