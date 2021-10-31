@@ -59,6 +59,7 @@ public class StreamLine extends Plugin {
 	public static ChatConfig chatConfig;
 	public static Votes votes;
 	public static RanksConfig ranksConfig;
+	public static ChatFilters chatFilters;
 
 	public final static String customChannel = "streamline:channel";
 
@@ -379,6 +380,10 @@ public class StreamLine extends Plugin {
 		if (ConfigUtils.moduleBRanksEnabled()) {
 			ranksConfig = new RanksConfig();
 			votes = new Votes();
+		}
+
+		if (ConfigUtils.moduleBChatFiltersEnabled()) {
+			chatFilters = new ChatFilters();
 		}
 	}
 

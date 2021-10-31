@@ -6,6 +6,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.DataChannel;
+import net.plasmere.streamline.objects.filters.FilterHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.io.File;
@@ -17,21 +18,19 @@ import java.util.TreeMap;
 public class ChatFilters {
     private Configuration conf;
     private final String fileString = "chat-filters.yml";
-    private final File file = new File(StreamLine.getInstance().getPlDir(), fileString);
-    public TreeMap<Long, DataChannel> loadedChannels = new TreeMap<>();
-
-    public TreeMap<String, Integer> toVerify = new TreeMap<>();
+    private final File file = new File(StreamLine.getInstance().getConfDir(), fileString);
 
     public ChatFilters(){
-        if (! StreamLine.getInstance().getPlDir().exists()) {
-            if (StreamLine.getInstance().getPlDir().mkdirs()) {
+        if (! StreamLine.getInstance().getConfDir().exists()) {
+            if (StreamLine.getInstance().getConfDir().mkdirs()) {
                 if (ConfigUtils.debug()) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
             }
         }
 
         conf = loadConfig();
+        loadChatFilters();
 
-        MessagingUtils.logInfo("Loaded offline stats!");
+        MessagingUtils.logInfo("Loaded chat filters!");
     }
 
     public Configuration getConf() {
@@ -75,27 +74,7 @@ public class ChatFilters {
         }
     }
 
-   public void addStat(String uuid, String playername) {
-        reloadConfig();
-        conf.set(uuid, playername);
-        conf.set(playername, uuid);
-        saveConfig();
-   }
-
-    public void remStat(String uuid, String playername) {
-        reloadConfig();
-        conf.set(uuid, null);
-        conf.set(playername, null);
-        saveConfig();
-    }
-
-    public String getPlayerName(String uuid) {
-        reloadConfig();
-        return conf.getString(uuid);
-    }
-
-    public String getUUID(String playername) {
-        reloadConfig();
-        return conf.getString(playername);
+    public void loadChatFilters() {
+        FilterHandler.loadFiltersFromConfiguration(conf);
     }
 }

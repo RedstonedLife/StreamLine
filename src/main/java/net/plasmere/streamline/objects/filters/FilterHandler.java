@@ -32,6 +32,18 @@ public class FilterHandler {
     }
 
     public static void loadFiltersFromConfiguration(Configuration configuration) {
+        for (String key : configuration.getKeys()) {
+            try {
+                Configuration section = configuration.getSection(key);
+                boolean enabled = section.getBoolean("enabled");
+                String regex = section.getString("regex");
+                List<String> replacements = section.getStringList("replace-with");
 
+                ChatFilter filter = new ChatFilter(key, enabled, regex, replacements);
+                addFilter(filter);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
