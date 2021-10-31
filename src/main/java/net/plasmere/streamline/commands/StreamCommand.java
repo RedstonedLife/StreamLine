@@ -5,11 +5,14 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
-public class StreamCommand extends Command {
+public class StreamCommand extends SLCommand {
     private String perm = "";
 
     public StreamCommand(String base, String perm, String[] aliases) {
@@ -19,7 +22,7 @@ public class StreamCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args){
+    public void run(CommandSender sender, String[] args){
         if (sender instanceof ProxiedPlayer){
             ProxiedPlayer player = (ProxiedPlayer) sender;
 
@@ -48,5 +51,10 @@ public class StreamCommand extends Command {
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());
         }
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

@@ -4,12 +4,13 @@ import net.plasmere.streamline.StreamLine;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.Collection;
 
-public class PluginsCommand extends Command {
+public class PluginsCommand extends SLCommand {
 
     public PluginsCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);

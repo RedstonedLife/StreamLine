@@ -2,7 +2,8 @@ package net.plasmere.streamline.commands.staff.punishments;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
@@ -16,13 +17,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class KickCommand extends Command implements TabExecutor {
+public class KickCommand extends SLCommand {
     public KickCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         if (args.length <= 0) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else {
@@ -78,7 +79,7 @@ public class KickCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
+    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
         Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();
 

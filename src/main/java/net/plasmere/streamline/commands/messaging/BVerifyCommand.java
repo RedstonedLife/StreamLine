@@ -2,7 +2,8 @@ package net.plasmere.streamline.commands.messaging;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -13,14 +14,14 @@ import net.plasmere.streamline.utils.TextUtils;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
-public class BVerifyCommand extends Command implements TabExecutor {
+public class BVerifyCommand extends SLCommand {
 
     public BVerifyCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         if (sender instanceof ProxiedPlayer) {
             long verificationNum = StreamLine.discordData.getVerification(((ProxiedPlayer) sender).getUniqueId().toString());
             MessagingUtils.sendBUserMessage(sender, "&aYour verification number: &6" + verificationNum +
@@ -31,7 +32,7 @@ public class BVerifyCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
         TreeSet<String> options = new TreeSet<>();
 
         options.add("local");

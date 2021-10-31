@@ -1,7 +1,8 @@
 package net.plasmere.streamline.commands.staff.debug;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
@@ -15,13 +16,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeleteStatCommand extends Command implements TabExecutor {
+public class DeleteStatCommand extends SLCommand {
     public DeleteStatCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         if (args.length < 1) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
             return;
@@ -52,7 +53,7 @@ public class DeleteStatCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
         List<String> uuids = new ArrayList<>();
 
         File folder = StreamLine.getInstance().getPlDir();

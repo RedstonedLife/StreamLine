@@ -2,7 +2,8 @@ package net.plasmere.streamline.commands.staff.punishments;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.md_5.bungee.config.Configuration;
 import net.plasmere.streamline.StreamLine;
@@ -20,7 +21,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class IPBanCommand extends Command implements TabExecutor {
+public class IPBanCommand extends SLCommand {
     private Configuration bans = StreamLine.bans.getBans();
 
     public IPBanCommand(String base, String perm, String[] aliases){
@@ -28,7 +29,7 @@ public class IPBanCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         if (args.length <= 1) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else if (args.length > 2 && ! args[0].equals("add") && ! args[0].equals("temp")) {
@@ -380,7 +381,7 @@ public class IPBanCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
+    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
         Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> banned = new ArrayList<>();

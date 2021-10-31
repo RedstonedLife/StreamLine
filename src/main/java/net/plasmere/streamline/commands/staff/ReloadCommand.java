@@ -4,9 +4,10 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.*;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 
-public class ReloadCommand extends Command {
+public class ReloadCommand extends SLCommand {
     private String perm = "";
 
     public ReloadCommand(String base, String perm, String[] aliases){

@@ -10,18 +10,19 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 
 import java.util.*;
 
-public class GlobalOnlineCommand extends Command {
+public class GlobalOnlineCommand extends SLCommand {
 
     public GlobalOnlineCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         try {
             compileList(sender);
         } catch (Exception e) {

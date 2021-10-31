@@ -1,7 +1,8 @@
 package net.plasmere.streamline.utils.api;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
@@ -12,7 +13,7 @@ import net.plasmere.streamline.utils.PluginUtils;
 import java.util.List;
 import java.util.TreeSet;
 
-public class CommandBuilder extends Command {
+public class CommandBuilder extends SLCommand {
 
     /**
      *
@@ -93,7 +94,7 @@ public class CommandBuilder extends Command {
      * @param args -> The arguments of the command.
      */
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         if(sender.hasPermission(getPermissionNeeded()))
             executeEvents(PlayerUtils.getPlayerStat(sender));
     }

@@ -2,7 +2,8 @@ package net.plasmere.streamline.commands.messaging;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
@@ -18,13 +19,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class FriendCommand extends Command implements TabExecutor {
+public class FriendCommand extends SLCommand {
     public FriendCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         SavableUser stat = PlayerUtils.getOrCreateSavableUser(sender);
 
         if (stat == null) {
@@ -157,7 +158,7 @@ public class FriendCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
+    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
         if (sender instanceof ProxiedPlayer) {
             Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
             List<String> strPlayers = new ArrayList<>();

@@ -6,16 +6,17 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 
-public class ReportCommand extends Command {
+public class ReportCommand extends SLCommand {
 
     public ReportCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         String msg = TextUtils.normalize(args);
 
         if (msg.length() <= 0){

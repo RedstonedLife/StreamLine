@@ -2,7 +2,8 @@ package net.plasmere.streamline.commands;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
@@ -13,13 +14,13 @@ import net.plasmere.streamline.utils.*;
 
 import java.util.*;
 
-public class GuildCommand extends Command implements TabExecutor {
+public class GuildCommand extends SLCommand {
     public GuildCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         SavableUser stat = PlayerUtils.getOrGetSavableUser(sender);
         
         if (stat == null) {
@@ -399,7 +400,7 @@ public class GuildCommand extends Command implements TabExecutor {
 
     // Usage: /guild <join|leave|create|promote|demote|chat|list|open|close|disband|accept|deny|invite|kick|mute|warp>
     @Override
-    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args)
+    public Collection<String> tabComplete(final CommandSender sender, final String[] args)
     {
         Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
         List<String> strPlayers = new ArrayList<>();

@@ -1,7 +1,8 @@
 package net.plasmere.streamline.commands.staff.events;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
@@ -9,13 +10,13 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 
-public class EventReloadCommand extends Command {
+public class EventReloadCommand extends SLCommand {
     public EventReloadCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         if (sender.hasPermission(CommandsConfUtils.comBEReloadPerm())) {
             EventsHandler.unloadEvents();
             StreamLine.getInstance().loadEvents();

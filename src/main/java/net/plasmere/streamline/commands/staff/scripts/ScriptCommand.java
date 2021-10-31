@@ -1,7 +1,8 @@
 package net.plasmere.streamline.commands.staff.scripts;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
@@ -16,13 +17,13 @@ import org.apache.commons.collections4.list.TreeList;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ScriptCommand extends Command implements TabExecutor {
+public class ScriptCommand extends SLCommand {
     public ScriptCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         if (args.length < 3) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
             return;
@@ -58,7 +59,7 @@ public class ScriptCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
         TreeList<String> scripts = new TreeList<>();
 
         File folder = StreamLine.getInstance().getScriptsDir();

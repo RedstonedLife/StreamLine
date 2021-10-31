@@ -15,7 +15,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.utils.TextUtils;
 
@@ -23,13 +24,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class GoToServerLobbyCommand extends Command implements TabExecutor {
+public class GoToServerLobbyCommand extends SLCommand {
     public GoToServerLobbyCommand(String base, String perm, String[] aliases) {
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args){
+    public void run(CommandSender sender, String[] args){
         Map<String, ServerInfo> servers = ProxyServer.getInstance().getServers();
         if ( args.length == 0 ) {
             if (sender instanceof ProxiedPlayer) {
@@ -72,7 +73,7 @@ public class GoToServerLobbyCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args)
+    public Collection<String> tabComplete(final CommandSender sender, final String[] args)
     {
         TreeSet<String> servers = new TreeSet<>();
 

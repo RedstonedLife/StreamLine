@@ -6,19 +6,20 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.*;
 
-public class StaffOnlineCommand extends Command {
+public class StaffOnlineCommand extends SLCommand {
 
     public StaffOnlineCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
-    public void execute(CommandSender sender, String[] args){
+    public void run(CommandSender sender, String[] args){
         Collection<ProxiedPlayer> staffs = StreamLine.getInstance().getProxy().getPlayers();
         Set<ProxiedPlayer> lstaffs = new HashSet<>(staffs);
 
@@ -56,5 +57,10 @@ public class StaffOnlineCommand extends Command {
         }
 
         return staff.toString();
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

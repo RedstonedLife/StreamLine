@@ -2,7 +2,8 @@ package net.plasmere.streamline.commands.staff.settings;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigHandler;
@@ -13,13 +14,13 @@ import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.*;
 
-public class LanguageCommand extends Command implements TabExecutor {
+public class LanguageCommand extends SLCommand {
     public LanguageCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         if (args.length < 1) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else if (args.length > 1){
@@ -40,7 +41,7 @@ public class LanguageCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
+    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
         TreeSet<String> locales = new TreeSet<>();
 
         locales.addAll(ConfigHandler.acceptableTranslations());

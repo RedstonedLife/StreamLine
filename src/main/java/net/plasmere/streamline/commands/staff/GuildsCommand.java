@@ -1,19 +1,20 @@
 package net.plasmere.streamline.commands.staff;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 
-public class GuildsCommand extends Command {
+public class GuildsCommand extends SLCommand {
     public GuildsCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         if (GuildUtils.getGuilds().size() <= 0) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.guildsNone());
             return;

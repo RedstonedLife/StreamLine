@@ -1,20 +1,23 @@
 package net.plasmere.streamline.commands.messaging;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
-public class ReplyCommand extends Command {
+public class ReplyCommand extends SLCommand {
     public ReplyCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         String thing = "";
 
         if (PlayerUtils.isInOnlineList(sender.getName())) thing = sender.getName();
@@ -39,5 +42,10 @@ public class ReplyCommand extends Command {
 
             PlayerUtils.doMessageWithIgnoreCheck(stat, statTo, TextUtils.normalize(args), true);
         }
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

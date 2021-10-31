@@ -6,7 +6,8 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class PingCommand extends Command implements TabExecutor {
+public class PingCommand extends SLCommand {
     private String perm = "";
 
     public PingCommand(String base, String perm, String[] aliases){
@@ -26,7 +27,7 @@ public class PingCommand extends Command implements TabExecutor {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] args){
+    public void run(CommandSender sender, String[] args){
         if (sender instanceof ProxiedPlayer){
             if (args.length > 1) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());

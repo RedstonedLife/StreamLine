@@ -9,13 +9,14 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
+import net.plasmere.streamline.objects.command.SLCommand;
+import java.util.Collection;
 
 import net.dv8tion.jda.api.JDA;
 
 import java.util.Objects;
 
-public class JDAPingerCommand extends Command {
+public class JDAPingerCommand extends SLCommand {
     public JDAPingerCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
     }
