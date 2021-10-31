@@ -36,15 +36,7 @@ public class StaffChatCommand {
             }
         }
 
-        for (ProxiedPlayer player : staffs) {
-            player.sendMessage(TextUtils.codedText(MessageConfUtils.bungeeStaffChatMessage()
-                            .replace("%player_display%", event.getAuthor().getName())
-                            .replace("%from_display%", MessageConfUtils.bungeeStaffChatFrom())
-                            .replace("%message%", msg)
-                            .replace("%newline%", "\n")
-                    )
-            );
-        }
+        MessagingUtils.sendStaffMessageFromDiscord(event.getAuthor().getId(), MessageConfUtils.discordStaffChatFrom(), event.getMessage().getContentRaw());
 
         try {
             event.getChannel().sendMessage(eb.setTitle("Success!").setDescription("Message sent!").build()).queue();

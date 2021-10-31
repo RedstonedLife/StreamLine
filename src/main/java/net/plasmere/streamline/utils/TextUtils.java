@@ -557,7 +557,10 @@ public class TextUtils {
         } else {
             User user = StreamLine.getJda().getUserById(dID);
 
-            if (user == null) return of;
+            if (user == null) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Discord User of ID " + dID + " returned null...");
+                return of;
+            }
 
             return of
                     .replace("%player_absolute%", user.getName())
@@ -661,7 +664,10 @@ public class TextUtils {
         } else {
             User user = StreamLine.getJda().getUserById(dID);
 
-            if (user == null) return of;
+            if (user == null) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Discord User of ID " + dID + " returned null...");
+                return of;
+            }
 
             return of
                     .replace("%user_absolute%", user.getName())
@@ -727,10 +733,11 @@ public class TextUtils {
             return of;
         }
 
+        User u = StreamLine.getJda().getUserById(dID);
+        if (u == null) return of;
+
         if (StreamLine.discordData.isVerified(dID)) {
             SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(dID));
-
-            if (user == null) return of;
 
             return of
                     .replace("%sender_uuid%", user.uuid)
@@ -765,7 +772,10 @@ public class TextUtils {
         } else {
             User user = StreamLine.getJda().getUserById(dID);
 
-            if (user == null) return of;
+            if (user == null) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Discord User of ID " + dID + " returned null...");
+                return of;
+            }
 
             return of
                     .replace("%sender_absolute%", user.getName())

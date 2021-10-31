@@ -33,6 +33,8 @@ public class From_1_0_14_5 extends From{
 
         addUpdatedConfigEntry("modules.bungee.chat-history.view.default", 7);
         addUpdatedConfigEntry("modules.bungee.chat-history.view.max", 20);
+
+        addUpdatedConfigEntry("modules.bungee.chat-filters.enabled", true);
     }
 
     @Override

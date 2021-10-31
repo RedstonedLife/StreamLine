@@ -522,6 +522,8 @@ modules:
       enable: true
       points:
         uses: "%player_votes%"
+    chat-filters:
+      enabled: true
   bstats:
     make-server-discoverable: true
     discoverable-ip: "my.server.net"

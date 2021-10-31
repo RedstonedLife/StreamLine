@@ -836,4 +836,9 @@ public class ConfigUtils {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfString("modules.bungee.ranks.points.uses");
     }
+    // Chat Filters.
+    public static boolean moduleBChatFiltersEnabled() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.bungee.chat-filters.enabled");
+    }
 }
