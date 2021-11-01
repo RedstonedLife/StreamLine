@@ -14,9 +14,9 @@ public class LPHolder {
     }
 
     public boolean isPresent(){
-//        if (StreamLine.getProxy().getPluginManager().getPlugin("ViaVersion") == null) {
-//            return false;
-//        }
+        if (! StreamLine.getProxy().getPluginManager().getPlugin("LuckPerms").isPresent()) {
+            return false;
+        }
 
         try {
             api = LuckPermsProvider.get();

@@ -26,7 +26,7 @@ public class GeyserHolder {
     }
 
     public boolean isPresent(){
-        if (! StreamLine.getProxy().getPluginManager().getPlugin("Geyser-Velocity").isPresent()) {
+        if (! StreamLine.getProxy().getPluginManager().getPlugin("Geyser-Velocity").isPresent() && ! StreamLine.getProxy().getPluginManager().getPlugin("geyser-velocity").isPresent()) {
             return false;
         }
 

@@ -17,7 +17,7 @@ public class ViaHolder {
     }
 
     public boolean isPresent(){
-        if (StreamLine.getProxy().getPluginManager().getPlugin("ViaVersion") == null) {
+        if (! StreamLine.getProxy().getPluginManager().getPlugin("viaversion").isPresent() && ! StreamLine.getProxy().getPluginManager().getPlugin("ViaVersion").isPresent()) {
             return false;
         }
 
