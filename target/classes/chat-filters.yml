@@ -1,0 +1,17 @@
+urls:
+  enabled: true
+  regex: ^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
+  replace-with:
+    - https://store.server.net
+bad-words:
+  enabled: true
+  regex: \bass\b|\barse\b|\bnigger
+  replace-with:
+    - baby hippo
+    - bad word
+you-can-create-your-own-filters-in-this-file:
+  enabled: false
+  regex: \badd\b|\bregex\b|\bhere
+  replace-with:
+    - add phrases you want to replace them with here
+    - it will pick a random phrase to replace it with

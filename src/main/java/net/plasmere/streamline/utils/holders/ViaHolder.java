@@ -31,11 +31,11 @@ public class ViaHolder {
         return false;
     }
 
-    public ProtocolVersion getVersion(int version){
+    public ProtocolVersion getVersion(int version) {
         return ProtocolVersion.getProtocol(version);
     }
 
-    public ProtocolVersion getProtocal(UUID uuid){
+    public ProtocolVersion getProtocol(UUID uuid){
         return ProtocolVersion.getProtocol(via.getPlayerVersion(uuid));
     }
 }

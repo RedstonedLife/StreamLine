@@ -12,7 +12,6 @@ import net.md_5.bungee.api.score.Scoreboard;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -99,7 +98,7 @@ public class SavablePlayer extends SavableUser {
             if (StreamLine.geyserHolder.enabled && StreamLine.geyserHolder.file.hasProperty(this.uuid)) {
                 toLatestVersion = "GEYSER";
             } else {
-                toLatestVersion = StreamLine.viaHolder.getProtocal(UUID.fromString(this.uuid)).getName();
+                toLatestVersion = StreamLine.viaHolder.getProtocol(UUID.fromString(this.uuid)).getName();
             }
         } else {
             toLatestVersion = "Not Enabled";
