@@ -80,9 +80,9 @@ public class ChatFilters {
     }
 
     public void saveFilter(ChatFilter filter) {
-        conf.set(filter.name + "enabled", filter.enabled);
-        conf.set(filter.name + "regex", filter.regex);
-        conf.set(filter.name + "replace-with", filter.replacements);
+        conf.set(filter.name + ".enabled", filter.enabled);
+        conf.set(filter.name + ".regex", filter.regex);
+        conf.set(filter.name + ".replace-with", filter.replacements);
 
         saveConfig();
         reloadConfig();

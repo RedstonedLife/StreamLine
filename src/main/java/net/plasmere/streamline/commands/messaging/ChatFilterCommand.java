@@ -58,6 +58,8 @@ public class ChatFilterCommand extends SLCommand {
                 break;
             case "toggle":
                 try {
+                    FilterHandler.reloadAllFilters();
+
                     ChatFilter filter = FilterHandler.getFilterByName(TextUtils.argsToStringMinus(args, 0));
                     filter.toggleEnabled();
                     MessagingUtils.sendChatFilterMessage(sender, filter, TextUtils.replaceAllSenderBungee(MessageConfUtils.filtersCommandToggle(), sender));
@@ -80,7 +82,7 @@ public class ChatFilterCommand extends SLCommand {
             return TextUtils.getCompletion(options1, args[0]);
         }
         if (args.length == 2) {
-            if (args[1].equals("toggle")) {
+            if (args[0].equals("toggle")) {
                 return TextUtils.getCompletion(FilterHandler.getAllFiltersByName(), args[1]);
             }
         }

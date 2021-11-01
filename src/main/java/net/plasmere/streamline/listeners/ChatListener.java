@@ -41,6 +41,8 @@ public class ChatListener {
         String msg = e.getMessage();
 
         if (ConfigUtils.moduleBChatFiltersEnabled()) {
+            FilterHandler.reloadAllFilters();
+
             for (ChatFilter filter : FilterHandler.filters) {
                 if (! filter.enabled) continue;
                 msg = filter.applyFilter(msg);

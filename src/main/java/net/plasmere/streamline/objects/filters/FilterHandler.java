@@ -2,7 +2,9 @@ package net.plasmere.streamline.objects.filters;
 
 
 
+import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.backend.Configuration;
+import net.plasmere.streamline.objects.configs.ChatFilters;
 import org.apache.commons.collections4.list.TreeList;
 
 import java.io.File;
@@ -13,13 +15,7 @@ public class FilterHandler {
     public static List<ChatFilter> filters = new ArrayList<>();
 
     public static TreeList<String> getAllFiltersByName() {
-        TreeList<String> strings = new TreeList<>();
-
-        for (ChatFilter filter : filters) {
-            strings.add(filter.name);
-        }
-
-        return strings;
+        return new TreeList<>(StreamLine.chatFilters.getConf().getKeys());
     }
 
     public static ChatFilter addFilter(ChatFilter filter) {
@@ -58,5 +54,15 @@ public class FilterHandler {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void unloadAllFilters() {
+        filters = new ArrayList<>();
+    }
+
+    public static void reloadAllFilters() {
+        unloadAllFilters();
+        StreamLine.chatFilters.reloadConfig();
+        StreamLine.chatFilters.loadChatFilters();
     }
 }
