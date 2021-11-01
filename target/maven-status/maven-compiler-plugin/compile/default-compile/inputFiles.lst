@@ -21,6 +21,7 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\GCQuickCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\GuildCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\commands\VerifyCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\ChatFilters.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\Party.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\OfflineStats.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\SudoCommand.java
@@ -39,6 +40,7 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\MessagingUtils.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\GetStatsCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\MessageListener.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\filters\FilterHandler.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\VotesCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\from\From_1_0_14_0.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\TextUtils.java
@@ -66,6 +68,7 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\chats\ChatChannel.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\ReportCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\DiscordData.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\filters\ChatFilter.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\FaceFetcher.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\savable\history\HistorySave.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\GuildXPTimer.java
@@ -76,6 +79,7 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\commands\ChannelCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\scripts\Script.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\debug\DeleteStatCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\command\SLCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\lists\SingleSetThree.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\lists\SingleSet.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\PartiesCommand.java
@@ -115,6 +119,7 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\punishments\BanCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\PartyCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\scripts\ScriptsHandler.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\ChatFilterCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\PlayerSaveTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\PlaytimeTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\savable\users\SavableUser.java

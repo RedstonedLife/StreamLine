@@ -2,6 +2,8 @@ package net.plasmere.streamline.utils.api;
 
 import net.md_5.bungee.api.CommandSender;
 import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
@@ -70,7 +72,7 @@ public class CommandBuilder extends SLCommand {
      * @param events -> All the events that are going to be executed when executing the command.
      */
     public CommandBuilder(String commandLabel, List<Event> events) {
-        super(commandLabel);
+        super(commandLabel, "");
         this.commandLabel = commandLabel;
         this.events = events;
     }
@@ -83,7 +85,7 @@ public class CommandBuilder extends SLCommand {
      * @param commandLabel
      */
     public CommandBuilder(String commandLabel) {
-        super(commandLabel);
+        super(commandLabel, "");
         this.commandLabel = commandLabel;
     }
 
@@ -97,6 +99,11 @@ public class CommandBuilder extends SLCommand {
     public void run(CommandSender sender, String[] args) {
         if(sender.hasPermission(getPermissionNeeded()))
             executeEvents(PlayerUtils.getPlayerStat(sender));
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 
     private void executeEvents(SavablePlayer player) {

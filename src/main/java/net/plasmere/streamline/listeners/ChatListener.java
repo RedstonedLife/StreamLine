@@ -11,6 +11,8 @@ import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
+import net.plasmere.streamline.objects.filters.ChatFilter;
+import net.plasmere.streamline.objects.filters.FilterHandler;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.SavableGuild;
@@ -39,6 +41,15 @@ public class ChatListener implements Listener {
         ProxiedPlayer sender = (ProxiedPlayer) e.getSender();
 
         String msg = e.getMessage();
+
+        if (ConfigUtils.moduleBChatFiltersEnabled()) {
+            FilterHandler.reloadAllFilters();
+
+            for (ChatFilter filter : FilterHandler.filters) {
+                if (! filter.enabled) continue;
+                msg = filter.applyFilter(msg);
+            }
+        }
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(sender);
 

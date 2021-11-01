@@ -779,6 +779,19 @@ commands:
         aliases:
           - "chath"
           - "chh"
+      # The chat-filter command.
+      chat-filter:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "chat-filter"
+        # Custom permission.
+        permission: "streamline.command.chat-filter"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "chatf"
+          - "chf"
+          - "filter"
     # For configs commands...
     configs:
       # The settings command.

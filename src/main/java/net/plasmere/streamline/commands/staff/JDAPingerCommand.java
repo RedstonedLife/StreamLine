@@ -10,6 +10,8 @@ import net.plasmere.streamline.utils.TextUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 import net.dv8tion.jda.api.JDA;
@@ -22,7 +24,7 @@ public class JDAPingerCommand extends SLCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] strings) {
+    public void run(CommandSender sender, String[] strings) {
         if (! ConfigUtils.moduleDEnabled()) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
             return;
@@ -34,5 +36,10 @@ public class JDAPingerCommand extends SLCommand {
         player.sendMessage(TextUtils.codedText("&aAttempting to ping..."));
 
         JDAPingerUtils.sendMessage(Objects.requireNonNull(jda.getTextChannelById(DiscordBotConfUtils.textChannelBConsole())));
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

@@ -2,6 +2,8 @@ net\plasmere\streamline\libs\Metrics$CustomChart.class
 net\plasmere\streamline\objects\savable\users\SavablePlayer.class
 net\plasmere\streamline\objects\timers\PlayerClearTimer.class
 net\plasmere\streamline\commands\staff\JDAPingerCommand.class
+net\plasmere\streamline\objects\filters\FilterHandler.class
+net\plasmere\streamline\objects\command\SLCommand.class
 net\plasmere\streamline\utils\MessagingUtils.class
 net\plasmere\streamline\objects\configs\RanksConfig.class
 net\plasmere\streamline\objects\timers\GuildXPTimer.class
@@ -57,6 +59,7 @@ net\plasmere\streamline\libs\Metrics$SimplePie.class
 net\plasmere\streamline\objects\chats\ChatsHandler.class
 net\plasmere\streamline\utils\PlayerUtils.class
 net\plasmere\streamline\objects\chats\ChatChannel.class
+net\plasmere\streamline\objects\filters\ChatFilter.class
 net\plasmere\streamline\commands\staff\ChatHistoryCommand.class
 net\plasmere\streamline\utils\TimeUtil.class
 net\plasmere\streamline\config\DiscordBotConfUtils.class
@@ -155,7 +158,9 @@ net\plasmere\streamline\libs\Metrics$SingleLineChart.class
 net\plasmere\streamline\objects\DataChannel.class
 net\plasmere\streamline\scripts\Script.class
 net\plasmere\streamline\utils\PluginUtils.class
+net\plasmere\streamline\commands\staff\ChatFilterCommand.class
 net\plasmere\streamline\objects\configs\Lobbies.class
+net\plasmere\streamline\objects\configs\ChatFilters.class
 net\plasmere\streamline\objects\configs\DiscordData.class
 net\plasmere\streamline\commands\staff\spy\SSPYCommand.class
 net\plasmere\streamline\StreamLine$2.class

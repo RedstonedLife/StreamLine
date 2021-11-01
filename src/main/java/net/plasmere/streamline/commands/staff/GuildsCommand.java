@@ -2,6 +2,8 @@ package net.plasmere.streamline.commands.staff;
 
 import net.md_5.bungee.api.CommandSender;
 import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.SavableGuild;
@@ -23,5 +25,10 @@ public class GuildsCommand extends SLCommand {
         for (SavableGuild guild : GuildUtils.getGuilds()){
             MessagingUtils.sendBGUserMessage(guild, sender, sender, MessageConfUtils.guildsMessage());
         }
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

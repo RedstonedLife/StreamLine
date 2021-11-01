@@ -17,6 +17,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.dv8tion.jda.api.JDA;
 import net.plasmere.streamline.objects.chats.Chat;
+import net.plasmere.streamline.objects.filters.ChatFilter;
 import net.plasmere.streamline.objects.messaging.BungeeMassMessage;
 import net.plasmere.streamline.objects.messaging.BungeeMessage;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
@@ -450,7 +451,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
                                             .build()
                             ).queue();
                 } else {
@@ -490,7 +491,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
                                             .build()
                             ).queue();
                 } else {
@@ -527,7 +528,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
                                             .build()
                             ).queue();
                 } else {
@@ -733,7 +734,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(msg, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
                                             .build()
                             ).queue();
                 } else {
@@ -901,7 +902,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(msg, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
                                             .build()
                             ).queue();
                 } else {
@@ -1378,5 +1379,29 @@ public class MessagingUtils {
                 .replace("%num_events%", String.valueOf(EventsHandler.getEvents().size()))
                 .replace("%discord%", "https://discord.gg/tny494zXfn")
         ));
+    }
+
+    public static void sendChatFilterMessage(CommandSender sender, ChatFilter filter, String message) {
+        sender.sendMessage(TextUtils.codedText(message
+                .replace("%toggle%", filter.enabled ? MessageConfUtils.filtersEnabled() : MessageConfUtils.filtersDisabled())
+                .replace("%regex%", filter.regex)
+                .replace("%replacements%", getReplacementsStringFromFilter(filter))
+                .replace("%name%", filter.name)
+        ));
+    }
+
+    public static String getReplacementsStringFromFilter(ChatFilter filter) {
+        StringBuilder builder = new StringBuilder();
+
+        int i = 1;
+        for (String replacement : filter.replacements) {
+            if (i == filter.replacements.size()) {
+                builder.append(MessageConfUtils.filtersReplacementsLast().replace("%replacement%", replacement));
+            } else {
+                builder.append(MessageConfUtils.filtersReplacementsNLast().replace("%replacement%", replacement));
+            }
+        }
+
+        return builder.toString();
     }
 }

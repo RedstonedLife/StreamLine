@@ -11,6 +11,8 @@ import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class StaffChatCommand extends SLCommand {
@@ -52,5 +54,10 @@ public class StaffChatCommand extends SLCommand {
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());
         }
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

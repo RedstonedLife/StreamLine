@@ -1,6 +1,8 @@
 package net.plasmere.streamline.objects.filters;
 
 import net.md_5.bungee.config.Configuration;
+import net.plasmere.streamline.StreamLine;
+import org.apache.commons.collections4.list.TreeList;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,6 +10,10 @@ import java.util.List;
 
 public class FilterHandler {
     public static List<ChatFilter> filters = new ArrayList<>();
+
+    public static TreeList<String> getAllFiltersByName() {
+        return new TreeList<>(StreamLine.chatFilters.getConf().getKeys());
+    }
 
     public static ChatFilter addFilter(ChatFilter filter) {
         if (filters.contains(filter)) return filter;
@@ -17,7 +23,7 @@ public class FilterHandler {
     }
 
     public static ChatFilter remFilter(ChatFilter filter) {
-        if (! filters.contains(filter)) return filter;
+        if (!filters.contains(filter)) return filter;
 
         filters.remove(filter);
         return filter;
@@ -45,5 +51,15 @@ public class FilterHandler {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void unloadAllFilters() {
+        filters = new ArrayList<>();
+    }
+
+    public static void reloadAllFilters() {
+        unloadAllFilters();
+        StreamLine.chatFilters.reloadConfig();
+        StreamLine.chatFilters.loadChatFilters();
     }
 }

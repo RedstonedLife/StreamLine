@@ -2036,3 +2036,15 @@ history:
   message: "&eShowing &cchat history &efor &d%player_formatted%&8:%newline%%chat_bulk%"
   chat-bulk:
     message: "&b%timestamp% &4> &r%message%"
+
+filters:
+  enabled: "&aTRUE"
+  disabled: "&cFALSE"
+  replacements:
+    last: "&c%replacement%"
+    not-last: "&c%replacement%&8, "
+  command:
+    toggle:
+      message: "&eJust toggled chat filter &b\"&c%name%&b\" &eto %toggle%"
+    create:
+      message: "&eJust created a new chat filter as &0(%toggle%&8, &eregex&8: &c%regex%&8, &ereplacements&8: &0(%replacements%&0) &0)"

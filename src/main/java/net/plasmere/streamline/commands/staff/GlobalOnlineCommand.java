@@ -151,4 +151,9 @@ public class GlobalOnlineCommand extends SLCommand {
 
         return text.toString();
     }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
+    }
 }

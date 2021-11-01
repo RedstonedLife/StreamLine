@@ -2,6 +2,8 @@ package net.plasmere.streamline.commands.staff.scripts;
 
 import net.md_5.bungee.api.CommandSender;
 import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
@@ -27,5 +29,10 @@ public class ScriptReloadCommand extends SLCommand {
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
         }
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

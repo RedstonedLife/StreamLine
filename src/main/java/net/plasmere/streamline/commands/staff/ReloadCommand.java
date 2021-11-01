@@ -5,6 +5,8 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.*;
 import net.md_5.bungee.api.CommandSender;
 import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class ReloadCommand extends SLCommand {
@@ -17,7 +19,7 @@ public class ReloadCommand extends SLCommand {
     }
 
     @Override
-    public void execute(CommandSender sender, String[] strings) {
+    public void run(CommandSender sender, String[] strings) {
         if (sender.hasPermission(perm)) {
             try {
                 StreamLine.config.reloadConfig();
@@ -29,5 +31,10 @@ public class ReloadCommand extends SLCommand {
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.prefix() + MessageConfUtils.noPerm());
         }
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

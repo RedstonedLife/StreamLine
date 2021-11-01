@@ -54,7 +54,10 @@ public class OneSecondTimer implements Runnable {
             }
 
             PlayerUtils.tickTeleport();
-            PlayerUtils.tickBoosts();
+
+            if (ConfigUtils.moduleDEnabled()) {
+                PlayerUtils.tickBoosts();
+            }
 
             if (ConfigUtils.moduleBRanksEnabled()) {
                 int success = 0;

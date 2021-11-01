@@ -5,6 +5,8 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -16,7 +18,7 @@ public class PluginsCommand extends SLCommand {
         super(base, perm, aliases);
     }
 
-    public void execute(CommandSender sender, String[] args) {
+    public void run(CommandSender sender, String[] args) {
         if (args.length > 0) {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Sorry, but you entered too many arguments..."));
             sender.sendMessage(new TextComponent(ChatColor.RED + "Usage: /plugins"));
@@ -42,5 +44,10 @@ public class PluginsCommand extends SLCommand {
         }
 
         return pl.toString();
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

@@ -7,6 +7,8 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class ReportCommand extends SLCommand {
@@ -34,5 +36,10 @@ public class ReportCommand extends SLCommand {
                     .replace("%reporter%", sender.getName())
                     .replace("%report%", TextUtils.normalize(args))
             );
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

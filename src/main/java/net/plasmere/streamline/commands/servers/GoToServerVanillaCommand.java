@@ -11,6 +11,8 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.plasmere.streamline.objects.command.SLCommand;
+
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class GoToServerVanillaCommand extends SLCommand {
@@ -41,5 +43,10 @@ public class GoToServerVanillaCommand extends SLCommand {
         } else {
             sender.sendMessage(new TextComponent(ChatColor.RED + "Sorry, but only a player can do this..."));
         }
+    }
+
+    @Override
+    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+        return new ArrayList<>();
     }
 }

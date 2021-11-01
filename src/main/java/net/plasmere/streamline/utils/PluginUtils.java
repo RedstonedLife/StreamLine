@@ -107,6 +107,9 @@ public class PluginUtils {
         if (CommandsConfUtils.comBChH()) {
             registerCommand(plugin, new ChatHistoryCommand(CommandsConfUtils.comBChHBase(), CommandsConfUtils.comBChHPerm(), stringListToArray(CommandsConfUtils.comBChHAliases())));
         }
+        if (CommandsConfUtils.comBChF()) {
+            registerCommand(plugin, new ChatFilterCommand(CommandsConfUtils.comBChFBase(), CommandsConfUtils.comBChFPerm(), stringListToArray(CommandsConfUtils.comBChFAliases())));
+        }
         // // Spying.
         if (CommandsConfUtils.comBSSPY()) {
             registerCommand(plugin, new SSPYCommand(CommandsConfUtils.comBSSPYBase(), CommandsConfUtils.comBSSPYPerm(), stringListToArray(CommandsConfUtils.comBSSPYAliases())));
