@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class ReportCommand {
     public static void sendMessage(String command, MessageReceivedEvent event){
         String om = event.getMessage().getContentDisplay();
-        String prefix = DiscordBotConfUtils.botPrefix;
+        String prefix = DiscordBotConfUtils.botPrefix();
 
         String msg = om.substring((prefix + command + " ").length());
 
@@ -20,20 +20,20 @@ public class ReportCommand {
             return;
         }
 
-        if (ConfigUtils.moduleReportsDConfirmation)
+        if (ConfigUtils.moduleReportsDConfirmation())
             MessagingUtils.sendDSelfMessage(event, MessageConfUtils.reportEmbedTitle(), MessageConfUtils.dConfirmReportMessage()
                     .replace("%report%", msg)
             );
 
-        if (ConfigUtils.moduleReportsDToMinecraft)
+        if (ConfigUtils.moduleReportsDToMinecraft())
             MessagingUtils.sendStaffMessageReport(event.getAuthor().getName(), false, msg);
 
-        if (ConfigUtils.moduleReportToChannel) {
-            if (ConfigUtils.moduleReportChannelPingsRole)
-                MessagingUtils.sendDiscordPingRoleMessage(DiscordBotConfUtils.textChannelReports, DiscordBotConfUtils.roleReports);
+        if (ConfigUtils.moduleReportToChannel()) {
+            if (ConfigUtils.moduleReportChannelPingsRole())
+                MessagingUtils.sendDiscordPingRoleMessage(DiscordBotConfUtils.textChannelReports(), DiscordBotConfUtils.roleReports());
             MessagingUtils.sendDiscordReportMessage(event.getAuthor().getName(), false, msg);
         }
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
     }
 }

@@ -24,14 +24,14 @@ import java.util.TreeSet;
 public class ServerConfig {
     private Configuration serverConfig;
     private final String setstring = "settings.yml";
-    private final File scfile = new File(StreamLine.getInstance().getconfDir(), setstring);
+    private final File scfile = new File(StreamLine.getInstance().getConfDir(), setstring);
 
     public ServerConfig(){
-        if (! StreamLine.getInstance().getconfDir().exists()) {
+        if (! StreamLine.getInstance().getConfDir().exists()) {
             if (! ConfigUtils.scMakeDefault) return;
 
-            if (StreamLine.getInstance().getconfDir().mkdirs()) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getconfDir().getName());
+            if (StreamLine.getInstance().getConfDir().mkdirs()) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
             }
         }
 

@@ -25,7 +25,7 @@ public class BVerifyCommand extends SLCommand {
         if (sender instanceof Player) {
             long verificationNum = StreamLine.discordData.getVerification(((Player) sender).getUniqueId().toString());
             MessagingUtils.sendBUserMessage(sender, "&aYour verification number: &6" + verificationNum +
-                    "\n&aGo onto the discord and type &d" + DiscordBotConfUtils.botPrefix + "verify " + PlayerUtils.getSourceName(sender) + " " + verificationNum + " &ato verify!");
+                    "\n&aGo onto the discord and type &d" + DiscordBotConfUtils.botPrefix() + "verify " + PlayerUtils.getSourceName(sender) + " " + verificationNum + " &ato verify!");
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());
         }

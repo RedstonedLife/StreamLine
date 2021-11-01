@@ -17,15 +17,15 @@ import java.util.TreeMap;
 public class OfflineStats {
     private Configuration conf;
     private final String fileString = "offline-stats.yml";
-    private final File file = new File(StreamLine.getInstance().getplDir(), fileString);
+    private final File file = new File(StreamLine.getInstance().getPlDir(), fileString);
     public TreeMap<Long, DataChannel> loadedChannels = new TreeMap<>();
 
     public TreeMap<String, Integer> toVerify = new TreeMap<>();
 
     public OfflineStats(){
-        if (! StreamLine.getInstance().getplDir().exists()) {
-            if (StreamLine.getInstance().getplDir().mkdirs()) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getconfDir().getName());
+        if (! StreamLine.getInstance().getPlDir().exists()) {
+            if (StreamLine.getInstance().getPlDir().mkdirs()) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
             }
         }
 

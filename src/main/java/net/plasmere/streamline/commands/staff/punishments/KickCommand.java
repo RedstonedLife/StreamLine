@@ -53,7 +53,7 @@ public class KickCommand extends SLCommand {
                     .replace("%reason%", reason)
             );
 
-            if (ConfigUtils.moduleDEnabled) {
+            if (ConfigUtils.moduleDEnabled()) {
                 if (ConfigUtils.punKicksDiscord) {
                     MessagingUtils.sendDiscordEBMessage(
                             new DiscordMessage(
@@ -69,7 +69,7 @@ public class KickCommand extends SLCommand {
                 }
             }
 
-            MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm,
+            MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(),
                     TextUtils.replaceAllPlayerBungee(MessageConfUtils.kickStaff(), other)
                     .replace("%punisher%", PlayerUtils.getSourceName(sender))
                     .replace("%reason%", reason)

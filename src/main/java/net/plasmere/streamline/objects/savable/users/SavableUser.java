@@ -68,7 +68,7 @@ public abstract class SavableUser {
 
         preConstruct(fileName);
 
-        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getplDir(), fileName);
+        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getPlDir(), fileName);
 
         if (createNew) {
             try {
@@ -299,7 +299,7 @@ public abstract class SavableUser {
                 data = reader.nextLine();
             }
 
-            if (! data.contains("=")) if (ConfigUtils.debug) {
+            if (! data.contains("=")) if (ConfigUtils.debug()) {
                 MessagingUtils.logInfo("PLAYER DATA (" + this.latestName + ") ERROR : data has no split for --> " + data);
                 continue;
             }
@@ -881,7 +881,7 @@ public abstract class SavableUser {
         }
         writer.close();
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Just saved SavablePlayer info for player: " + this.uuid + " (SavablePlayer: " + this.latestName + ")");
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Just saved SavablePlayer info for player: " + this.uuid + " (SavablePlayer: " + this.latestName + ")");
     }
 
     public void sendMessage(Component message) {

@@ -19,7 +19,7 @@ public class EventReloadCommand extends SLCommand {
 
     @Override
     public void run(CommandSource sender, String[] args) {
-        if (sender.hasPermission(CommandsConfUtils.comBEReloadPerm)) {
+        if (sender.hasPermission(CommandsConfUtils.comBEReloadPerm())) {
             EventsHandler.unloadEvents();
             StreamLine.getInstance().loadEvents();
 

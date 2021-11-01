@@ -41,7 +41,7 @@ public class ProxyPingListener {
                         .replace("%max%", String.valueOf(maxPlayers))
                     , ConfigUtils.linkPre));
 
-//            if (ConfigUtils.debug) MessagingUtils.logInfo(TextUtils.codedString(StreamLine.getInstance().getCurrentMOTD()
+//            if (ConfigUtils.debug()) MessagingUtils.logInfo(TextUtils.codedString(StreamLine.getInstance().getCurrentMOTD()
 //                    .replace("%online%", String.valueOf(StreamLine.getInstance().getProxy().getAllPlayers().size()))
 //                    .replace("%max%", String.valueOf(StreamLine.getInstance().getProxy().getConfig().getPlayerLimit()))));
         }
@@ -49,7 +49,7 @@ public class ProxyPingListener {
         if (ConfigUtils.scVersion) {
             builder.version(new ServerPing.Version(response.getVersion().getProtocol(), StreamLine.serverConfig.getVersion()));
 
-//            if (ConfigUtils.debug) MessagingUtils.logInfo(StreamLine.serverConfig.getVersion());
+//            if (ConfigUtils.debug()) MessagingUtils.logInfo(StreamLine.serverConfig.getVersion());
         }
 
         if (ConfigUtils.scSample) {
@@ -66,7 +66,7 @@ public class ProxyPingListener {
 
             builder.samplePlayers(sample);
 
-//            if (ConfigUtils.debug) {
+//            if (ConfigUtils.debug()) {
 //                for (String s : sampleString) {
 //                    MessagingUtils.logInfo(s);
 //                }

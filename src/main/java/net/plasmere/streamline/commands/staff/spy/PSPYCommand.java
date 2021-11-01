@@ -26,7 +26,7 @@ public class PSPYCommand extends SLCommand {
             if (player == null) return;
 
             if (args.length > 0) {
-                if (PluginUtils.checkEqualsStrings(args[0], PluginUtils.stringListToArray(ConfigUtils.viewSelfAliases))) {
+                if (PluginUtils.checkEqualsStrings(args[0], PluginUtils.stringListToArray(ConfigUtils.viewSelfAliases()))) {
                     player.togglePSPYVS();
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.pspyvsToggle()
                             .replace("%toggle%", (player.pspyvs ? MessageConfUtils.pspyvsOn() : MessageConfUtils.pspyvsOff()))

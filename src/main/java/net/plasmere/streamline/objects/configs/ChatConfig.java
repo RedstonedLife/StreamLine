@@ -24,12 +24,12 @@ import java.util.TreeMap;
 public class ChatConfig {
     private Configuration conf;
     private final String fileString = "chats.yml";
-    private final File file = new File(StreamLine.getInstance().getconfDir(), fileString);
+    private final File file = new File(StreamLine.getInstance().getConfDir(), fileString);
 
     public ChatConfig(){
-        if (! StreamLine.getInstance().getconfDir().exists()) {
-            if (StreamLine.getInstance().getconfDir().mkdirs()) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getconfDir().getName());
+        if (! StreamLine.getInstance().getConfDir().exists()) {
+            if (StreamLine.getInstance().getConfDir().mkdirs()) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
             }
         }
 
@@ -267,5 +267,11 @@ public class ChatConfig {
 
     public int iterateChatsMapFromHigher(int fromHigher, Chat chat, MessageServerType messageServerType){
         return getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).lowerKey(fromHigher);
+    }
+
+    public void setObject(String pathTo, Object object) {
+        conf.set(pathTo, object);
+        saveConfig();
+        reloadConfig();
     }
 }

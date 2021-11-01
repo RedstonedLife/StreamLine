@@ -5,15 +5,16 @@ import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.events.enums.Condition;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.Party;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
+import net.plasmere.streamline.scripts.Script;
+import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class EventsHandler {
     public static void addEvent(Event event){
         //MessagingUtils.logInfo("Added Event: " + event.toString());
 
-        if (! ConfigUtils.events) return;
+        if (! ConfigUtils.events()) return;
 
         events.add(event);
     }
@@ -115,7 +116,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_GUILD_MEMBERS:
-                    Guild guild = GuildUtils.getGuild(player);
+                    SavableGuild guild = GuildUtils.getGuild(player);
                     if (guild == null) continue;
 
                     for (SavableUser user : guild.totalMembers) {
@@ -127,7 +128,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_STAFF:
-                    MessagingUtils.sendPermissionedMessage(ConfigUtils.staffPerm, event.actions.get(i).value);
+                    MessagingUtils.sendPermissionedMessage(ConfigUtils.staffPerm(), event.actions.get(i).value);
                     continue;
                 case SEND_MESSAGE_TO_PERMISSION:
                     String total = event.actions.get(i).value;
@@ -140,6 +141,12 @@ public class EventsHandler {
                     String[] split = total.split(";", 2);
 
                     MessagingUtils.sendPermissionedMessage(split[0], split[1]);
+                    continue;
+                case RUN_SCRIPT:
+                    Script script = ScriptsHandler.getScript(event.actions.get(i).value);
+                    if (script == null) continue;
+
+                    script.execute(StreamLine.getInstance().getProxy().getConsoleCommandSource(), player);
                     continue;
                 default:
                     MessagingUtils.logSevere("An event wasn't handled correctly...");
@@ -154,7 +161,7 @@ public class EventsHandler {
         if (p == null) return;
 
         for (Integer i : event.actions.keySet()) {
-            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#runEvent() --> i = " + i);
+            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#runEvent() --> i = " + i);
 
             switch (event.actions.get(i).key) {
                 case SEND_MESSAGE_TO:
@@ -221,7 +228,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_GUILD_MEMBERS:
-                    Guild guild = GuildUtils.getGuild(player);
+                    SavableGuild guild = GuildUtils.getGuild(player);
                     if (guild == null) continue;
 
                     for (SavableUser person : guild.totalMembers) {
@@ -233,7 +240,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_STAFF:
-                    MessagingUtils.sendPermissionedMessage(ConfigUtils.staffPerm, event.actions.get(i).value);
+                    MessagingUtils.sendPermissionedMessage(ConfigUtils.staffPerm(), event.actions.get(i).value);
                     continue;
                 case SEND_MESSAGE_TO_PERMISSION:
                     String total = event.actions.get(i).value;
@@ -247,6 +254,12 @@ public class EventsHandler {
 
                     MessagingUtils.sendPermissionedMessage(split[0], split[1]);
                     continue;
+                case RUN_SCRIPT:
+                    Script script = ScriptsHandler.getScript(event.actions.get(i).value);
+                    if (script == null) continue;
+
+                    script.execute(StreamLine.getInstance().getProxy().getConsoleCommandSource(), player);
+                    continue;
                 default:
                     MessagingUtils.logSevere("An event wasn't handled correctly...");
                     break;
@@ -256,14 +269,14 @@ public class EventsHandler {
 
     public static String adjust(Event event, SavablePlayer player, int i){
         return TextUtils.replaceAllPlayerBungee(event.actions.get(i).value, player)
-                .replace("%uniques%", String.valueOf(StreamLine.getInstance().getplDir().listFiles().length))
+                .replace("%uniques%", String.valueOf(StreamLine.getInstance().getPlDir().listFiles().length))
                 .replace("%time%", String.valueOf(new Date()))
                 ;
     }
 
     public static String adjust(Event event, SavablePlayer player, int i, String context){
         return TextUtils.replaceAllPlayerBungee(event.actions.get(i).value, player)
-                .replace("%uniques%", String.valueOf(StreamLine.getInstance().getplDir().listFiles().length))
+                .replace("%uniques%", String.valueOf(StreamLine.getInstance().getPlDir().listFiles().length))
                 .replace("%time%", String.valueOf(new Date()))
                 .replace(("%arg:" + findArgAmount(event.actions.get(i).value) + "%"), extractArg(event, context, i))
                 ;
@@ -356,12 +369,12 @@ public class EventsHandler {
                 case IN_SERVER:
                     try {
                         if (player == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$1 : case IN_SERVER : player == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$1 : case IN_SERVER : player == null");
                             return false;
                         }
                         ServerInfo server = player.getCurrentServer().get().getServerInfo();
                         if (server == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$1 : case IN_SERVER : server == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$1 : case IN_SERVER : server == null");
                             return false;
                         }
 
@@ -413,12 +426,12 @@ public class EventsHandler {
                 case IN_SERVER:
                     try {
                         if (player == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$2 : case IN_SERVER : player == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$2 : case IN_SERVER : player == null");
                             return false;
                         }
                         ServerInfo server = player.getCurrentServer().get().getServerInfo();
                         if (server == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$2 : case IN_SERVER : server == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$2 : case IN_SERVER : server == null");
                             return false;
                         }
 
@@ -466,7 +479,7 @@ public class EventsHandler {
         Player player = PlayerUtils.getPPlayerByUUID(triggerer.uuid);
 
         for (SingleSet<Condition, String> thing : event.conditions.values()) {
-            if (ConfigUtils.debug) {
+            if (ConfigUtils.debug()) {
                 MessagingUtils.logInfo("Condition == " + thing.key);
                 MessagingUtils.logInfo("Cond.val == " + thing.value);
             }
@@ -475,12 +488,12 @@ public class EventsHandler {
                 case IN_SERVER:
                     try {
                         if (player == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$3 : case IN_SERVER : player == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$3 : case IN_SERVER : player == null");
                             return false;
                         }
                         ServerInfo server = player.getCurrentServer().get().getServerInfo();
                         if (server == null) {
-                            if (ConfigUtils.debug) MessagingUtils.logInfo("EventsHandler#checkEventConditions$3 : case IN_SERVER : server == null");
+                            if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#checkEventConditions$3 : case IN_SERVER : server == null");
                             return false;
                         }
 

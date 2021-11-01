@@ -19,9 +19,9 @@ public class SettingsEditCommand extends SLCommand {
     public SettingsEditCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Settings make base: " + base);
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Settings make perm: " + perm);
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Settings make aliases: " + Arrays.toString(aliases));
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Settings make base: " + base);
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Settings make perm: " + perm);
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Settings make aliases: " + Arrays.toString(aliases));
     }
 
     @Override
@@ -240,9 +240,9 @@ public class SettingsEditCommand extends SLCommand {
                         String theEmote = args[2];
                         String toEPerm = TextUtils.argsToStringMinus(args, 0, 1, 2);
 
-                        StreamLine.serverConfig.setEmotePermission(theEmote, toEPerm);
+                        StreamLine.serverConfig.setEmotePermission(theEmote, toEPerm());
 
-                        sendSetMessageEmote(sender, MessageConfUtils.settingsSetEmotePermissions(), theEmote, toEPerm);
+                        sendSetMessageEmote(sender, MessageConfUtils.settingsSetEmotePermissions(), theEmote, toEPerm());
                         break;
                     case "maintenance-mode-enabled":
                         String enabledMM = TextUtils.argsToStringMinus(args, 0, 1);

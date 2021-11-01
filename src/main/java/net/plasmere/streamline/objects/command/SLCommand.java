@@ -33,7 +33,7 @@ public abstract class SLCommand implements SimpleCommand {
 
     public Collection<String> preTabComplete(CommandSource sender, String[] args){
         if (args == null) return new ArrayList<>();
-        if (args.length <= 0) return new ArrayList<>();
+//        if (args.length <= 0) return new ArrayList<>();
 
         return onTabComplete(sender, args);
     }

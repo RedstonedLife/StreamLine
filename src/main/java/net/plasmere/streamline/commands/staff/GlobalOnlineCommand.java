@@ -103,6 +103,8 @@ public class GlobalOnlineCommand extends SLCommand {
 
         int i = 1;
         for (Group group : groups){
+            if (PlayerUtils.getPlayersOnlineByGroup(group).size() <= 0) continue;
+
             if (i != groups.size())
                 msg.append(TextUtils.newLined(getGroupedPlayers(group.getName(), playerGroup, playerServers))).append("\n");
             else

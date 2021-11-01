@@ -1,8 +1,5 @@
-package net.plasmere.streamline.commands.staff;
+package net.plasmere.streamline.commands.debug;
 
-import com.mojang.brigadier.Command;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.velocitypowered.api.command.CommandSource;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
@@ -57,14 +54,14 @@ public class DeleteStatCommand extends SLCommand {
     public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         List<String> uuids = new ArrayList<>();
 
-        File folder = StreamLine.getInstance().getplDir();
+        File folder = StreamLine.getInstance().getPlDir();
         File[] files = folder.listFiles();
 
         if (files == null) return uuids;
 
         for (File file : files) {
             if (file.isDirectory()) continue;
-            if (file.getName().startsWith(ConfigUtils.consoleName) || ! file.getName().contains("-")) continue;
+            if (file.getName().startsWith(ConfigUtils.consoleName()) || ! file.getName().contains("-")) continue;
 
             uuids.add(file.getName().replace(".properties", ""));
         }

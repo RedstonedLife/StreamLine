@@ -23,8 +23,8 @@ public class StaffChatCommand extends SLCommand {
     @Override
     public void run(CommandSource sender, String[] args) {
         if (sender instanceof Player) {
-            if (ConfigUtils.moduleStaffChat) {
-                if (sender.hasPermission(ConfigUtils.staffPerm)) {
+            if (ConfigUtils.moduleStaffChat()) {
+                if (sender.hasPermission(ConfigUtils.staffPerm())) {
                     SavablePlayer player = PlayerUtils.getPlayerStat(sender);
 
                     if (player == null) return;
@@ -40,12 +40,12 @@ public class StaffChatCommand extends SLCommand {
                     }
 
                     MessagingUtils.sendStaffMessage(sender, MessageConfUtils.bungeeStaffChatFrom(), TextUtils.normalize(args));
-                    if (ConfigUtils.moduleDEnabled) {
+                    if (ConfigUtils.moduleDEnabled()) {
                         MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
                                 MessageConfUtils.staffChatEmbedTitle(),
                                 TextUtils.replaceAllPlayerBungee(MessageConfUtils.discordStaffChatMessage(), sender)
                                         .replace("%message%", TextUtils.normalize(args)),
-                                DiscordBotConfUtils.textChannelStaffChat));
+                                DiscordBotConfUtils.textChannelStaffChat()));
                     }
                 } else {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.prefix() + MessageConfUtils.noPerm());

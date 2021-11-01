@@ -9,10 +9,9 @@ import org.geysermc.connector.GeyserConnector;
 import org.geysermc.connector.network.session.GeyserSession;
 
 import java.io.File;
-import java.util.UUID;
 
 public class GeyserHolder {
-    public File playerPath = new File(StreamLine.getInstance().getplDir(), "geyser" + File.separator);
+    public File playerPath = new File(StreamLine.getInstance().getPlDir(), "geyser" + File.separator);
     public GeyserConnector connector;
     public boolean enabled;
     public GeyserFile file;

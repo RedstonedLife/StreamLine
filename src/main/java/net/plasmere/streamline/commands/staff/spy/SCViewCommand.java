@@ -27,7 +27,7 @@ public class SCViewCommand extends SLCommand {
             if (player == null) return;
 
             if (args.length > 0) {
-                if (PluginUtils.checkEqualsStrings(args[0], PluginUtils.stringListToArray(ConfigUtils.viewSelfAliases))) {
+                if (PluginUtils.checkEqualsStrings(args[0], PluginUtils.stringListToArray(ConfigUtils.viewSelfAliases()))) {
                     player.toggleSCVS();
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.scvsToggle()
                             .replace("%toggle%", (player.scvs ? MessageConfUtils.scvsOn() : MessageConfUtils.scvsOff()))

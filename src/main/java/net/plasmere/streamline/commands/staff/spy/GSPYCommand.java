@@ -27,7 +27,7 @@ public class GSPYCommand extends SLCommand {
             if (player == null) return;
 
             if (args.length > 0) {
-                if (PluginUtils.checkEqualsStrings(args[0], PluginUtils.stringListToArray(ConfigUtils.viewSelfAliases))) {
+                if (PluginUtils.checkEqualsStrings(args[0], PluginUtils.stringListToArray(ConfigUtils.viewSelfAliases()))) {
                     player.toggleGSPYVS();
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.gspyvsToggle()
                             .replace("%toggle%", (player.gspyvs ? MessageConfUtils.gspyvsOn() : MessageConfUtils.gspyvsOff()))

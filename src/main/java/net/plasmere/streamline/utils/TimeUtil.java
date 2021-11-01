@@ -138,7 +138,7 @@ public class TimeUtil {
         try {
             return Double.parseDouble(timeToParse) * factor;
         } catch (Exception e) {
-            if (ConfigUtils.debug) e.printStackTrace();
+            if (ConfigUtils.debug()) e.printStackTrace();
             return -1d;
         }
     }

@@ -40,7 +40,7 @@ public class NetworkPointsCommand extends SLCommand {
             }
 
             if (! stat.latestName.equals(PlayerUtils.getSourceName(sender))) {
-                if (! sender.hasPermission(CommandsConfUtils.comBPointsOPerm)) {
+                if (! sender.hasPermission(CommandsConfUtils.comBPointsOPerm())) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                     return;
                 }
@@ -61,7 +61,7 @@ public class NetworkPointsCommand extends SLCommand {
                 }
             }
 
-            if (! sender.hasPermission(CommandsConfUtils.comBPointsChPerm)) {
+            if (! sender.hasPermission(CommandsConfUtils.comBPointsChPerm())) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                 return;
             }
@@ -153,7 +153,7 @@ public class NetworkPointsCommand extends SLCommand {
 
     @Override
     public Collection<String> onTabComplete(CommandSource sender, String[] args) {
-        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) return new ArrayList<>();
+        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm())) return new ArrayList<>();
 
         Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();

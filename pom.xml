@@ -6,7 +6,7 @@
 
     <groupId>net.plasmere</groupId>
     <artifactId>StreamLine-Velocity</artifactId>
-    <version>1.0.14.4</version>
+    <version>1.0.14.6</version>
     <packaging>jar</packaging>
 
     <name>StreamLine</name>
@@ -121,7 +121,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.3.0_299</version>
+            <version>4.3.0_339</version>
         </dependency>
         <!--LuckPerms-->
         <dependency>
@@ -164,15 +164,22 @@
             <version>3.36.0.2</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/net.kyori/adventure-text-serializer-legacy/4.9.2 -->
-        <dependency>
-            <groupId>net.kyori</groupId>
-            <artifactId>adventure-text-serializer-legacy</artifactId>
-            <version>4.9.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>net.kyori</groupId>-->
+<!--            <artifactId>adventure-text-serializer-legacy</artifactId>-->
+<!--            <version>4.9.2</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <version>1.18.22</version>
         </dependency>
+        <!--https://bstats.org/getting-started/include-metrics?addedPlugin=true&software=velocity&pluginId=13213&pluginName=StreamLine-->
+<!--        <dependency>-->
+<!--            <groupId>org.bstats</groupId>-->
+<!--            <artifactId>bstats-bukkit</artifactId>-->
+<!--            <version>2.2.1</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
     </dependencies>
 </project>

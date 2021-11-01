@@ -28,12 +28,12 @@ public class ReportCommand extends SLCommand {
             return;
         }
 
-        if (ConfigUtils.moduleReportsMToDiscord)
-            if (ConfigUtils.moduleDEnabled)
+        if (ConfigUtils.moduleReportsMToDiscord())
+            if (ConfigUtils.moduleDEnabled())
                 MessagingUtils.sendDiscordReportMessage(PlayerUtils.getSourceName(sender), true, msg);
-        if (ConfigUtils.moduleReportsSendChat)
+        if (ConfigUtils.moduleReportsSendChat())
             MessagingUtils.sendStaffMessageReport(PlayerUtils.getSourceName(sender), true, msg);
-        if (ConfigUtils.moduleReportsBConfirmation)
+        if (ConfigUtils.moduleReportsBConfirmation())
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bConfirmReportMessage()
                     .replace("%reporter%", PlayerUtils.getSourceName(sender))
                     .replace("%report%", TextUtils.normalize(args))

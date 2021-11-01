@@ -24,7 +24,7 @@ public class SudoCommand extends SLCommand {
         } else {
             Player sudoOn = StreamLine.getInstance().getProxy().getPlayer(args[0]).get();
 
-            if (sudoOn.hasPermission(ConfigUtils.noSudoPerm)){
+            if (sudoOn.hasPermission(ConfigUtils.noSudoPerm())){
                 MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.sudoNoSudo(), sudoOn)
                 );
                 return;

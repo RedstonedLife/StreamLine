@@ -1,10 +1,13 @@
 package net.plasmere.streamline.objects.timers;
 
+import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
+import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
+import net.plasmere.streamline.utils.RanksUtils;
 
 import java.util.*;
 
@@ -52,8 +55,32 @@ public class OneSecondTimer implements Runnable {
 
             PlayerUtils.tickTeleport();
             PlayerUtils.tickBoosts();
+
+            if (ConfigUtils.moduleBRanksEnabled()) {
+                int success = 0;
+                int failed = 0;
+                int other = 0;
+
+                for (Player player : PlayerUtils.getOnlinePPlayers()) {
+                    try {
+                        int result = RanksUtils.checkAndChange(PlayerUtils.getPlayerStat(player));
+
+                        if (result == 1) success ++;
+                        if (result == 0) other ++;
+                        if (result == -1) failed ++;
+                    } catch (Exception e) {
+                        failed ++;
+                        e.printStackTrace();
+                    }
+                }
+
+                if (StreamLine.votes.getConsole()) MessagingUtils.logInfo(
+                        "Success: " + success + " Failed: " + failed + " Other: " + other + " Total: (" +
+                                (success + failed + other) + " | " + PlayerUtils.getOnlinePPlayers().size() + ")"
+                );
+            }
         } catch (ConcurrentModificationException e) {
-            if (ConfigUtils.debug) e.printStackTrace();
+            if (ConfigUtils.debug()) e.printStackTrace();
         }
     }
 }

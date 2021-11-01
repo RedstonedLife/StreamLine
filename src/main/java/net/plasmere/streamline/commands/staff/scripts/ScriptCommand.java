@@ -61,7 +61,7 @@ public class ScriptCommand extends SLCommand {
     public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         TreeList<String> scripts = new TreeList<>();
 
-        File folder = StreamLine.getInstance().getscriptsDir();
+        File folder = StreamLine.getInstance().getScriptsDir();
         File[] files = folder.listFiles();
 
         if (files == null) return scripts;

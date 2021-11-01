@@ -24,7 +24,7 @@ public class StaffOnlineCommand extends SLCommand {
 
         for (Player player : staffs){
             try {
-                if (! player.hasPermission(ConfigUtils.staffPerm)) {
+                if (! player.hasPermission(ConfigUtils.staffPerm())) {
                     lstaffs.remove(player);
                 }
             } catch (Exception e){

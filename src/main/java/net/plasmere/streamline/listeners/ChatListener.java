@@ -11,13 +11,13 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.enums.Condition;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
-import net.plasmere.streamline.objects.Guild;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 
@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 public class ChatListener {
-    private static String prefix = ConfigUtils.moduleStaffChatPrefix;
+    private static String prefix = ConfigUtils.moduleStaffChatPrefix();
 
     @Subscribe(order = PostOrder.FIRST)
     public static void onPlayerChat(PlayerChatEvent e){
@@ -52,7 +52,7 @@ public class ChatListener {
                 }
 
                 if (GuildUtils.pHasGuild(stat)) {
-                    GuildUtils.addGuild(new Guild(stat.guild, false));
+                    GuildUtils.addGuild(new SavableGuild(stat.guild, false));
                 }
                 break;
             }
@@ -60,7 +60,7 @@ public class ChatListener {
             ex.printStackTrace();
         }
 
-        if (ConfigUtils.punMutes && ConfigUtils.punMutesHard && stat.muted) {
+        if (ConfigUtils.punMutes() && ConfigUtils.punMutesHard() && stat.muted) {
             if (PlayerUtils.checkIfMuted(sender, stat)) {
                 e.setResult(PlayerChatEvent.ChatResult.denied());
                 return;
@@ -69,7 +69,7 @@ public class ChatListener {
 
         if (TextUtils.isCommand(msg)) return;
 
-        if (ConfigUtils.punMutes && stat.muted) {
+        if (ConfigUtils.punMutes() && stat.muted) {
             e.setResult(PlayerChatEvent.ChatResult.denied());
             if (stat.mutedTill != null) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedTemp().replace("%date%", stat.mutedTill.toString()));
@@ -79,27 +79,27 @@ public class ChatListener {
             return;
         }
 
-        if (ConfigUtils.moduleStaffChat) {
+        if (ConfigUtils.moduleStaffChat()) {
             if (stat.sc) {
-                if (! sender.hasPermission(ConfigUtils.staffPerm)) {
+                if (! sender.hasPermission(ConfigUtils.staffPerm())) {
                     return;
                 }
 
                 e.setResult(PlayerChatEvent.ChatResult.denied());
                 MessagingUtils.sendStaffMessage(sender, MessageConfUtils.bungeeStaffChatFrom(), msg);
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.moduleStaffChatMToDiscord) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.moduleStaffChatMToDiscord()) {
                         MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
                                 MessageConfUtils.staffChatEmbedTitle(),
                                 TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordStaffChatMessage(), sender)
                                         .replace("%message%", msg),
-                                DiscordBotConfUtils.textChannelStaffChat));
+                                DiscordBotConfUtils.textChannelStaffChat()));
                     }
                 }
                 isStaffMessage = true;
-            } else if (ConfigUtils.moduleStaffChatDoPrefix) {
+            } else if (ConfigUtils.moduleStaffChatDoPrefix()) {
                 if (msg.startsWith(prefix) && ! prefix.equals("/")) {
-                    if (! sender.hasPermission(ConfigUtils.staffPerm)) {
+                    if (! sender.hasPermission(ConfigUtils.staffPerm())) {
                         return;
                     }
 
@@ -111,13 +111,13 @@ public class ChatListener {
 
                     e.setResult(PlayerChatEvent.ChatResult.denied());
                     MessagingUtils.sendStaffMessage(sender, MessageConfUtils.bungeeStaffChatFrom(), msg.substring(prefix.length()));
-                    if (ConfigUtils.moduleDEnabled) {
-                        if (ConfigUtils.moduleStaffChatMToDiscord) {
+                    if (ConfigUtils.moduleDEnabled()) {
+                        if (ConfigUtils.moduleStaffChatMToDiscord()) {
                             MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
                                     MessageConfUtils.staffChatEmbedTitle(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordStaffChatMessage(), sender)
                                             .replace("%message%", msg.substring(prefix.length())),
-                                    DiscordBotConfUtils.textChannelStaffChat));
+                                    DiscordBotConfUtils.textChannelStaffChat()));
                         }
                     }
                     isStaffMessage = true;
@@ -128,15 +128,15 @@ public class ChatListener {
 
         if (! isStaffMessage) {
             if (StreamLine.serverConfig.getProxyChatEnabled()) {
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.moduleDPC) if (ConfigUtils.moduleDPCConsole) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.moduleDPC()) if (ConfigUtils.moduleDPCConsole()) {
                         MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
-                                        ConfigUtils.moduleDPCConsoleTitle,
-                                        ConfigUtils.moduleDPCConsoleMessage
+                                        ConfigUtils.moduleDPCConsoleTitle(),
+                                        ConfigUtils.moduleDPCConsoleMessage()
                                                 .replace("%message%", msg),
-                                        DiscordBotConfUtils.textChannelProxyChat
+                                        DiscordBotConfUtils.textChannelProxyChat()
                                 ),
-                                ConfigUtils.moduleDPCConsoleUseAvatar
+                                ConfigUtils.moduleDPCConsoleUseAvatar()
                         );
                     }
                 }
@@ -173,7 +173,7 @@ public class ChatListener {
                                     MessagingUtils.sendMessageFromUserToConsole(sender, sender.getCurrentServer().get(), format, withEmotes);
                                 }
 
-                                if (ConfigUtils.moduleDPC) {
+                                if (ConfigUtils.moduleDPC()) {
                                     StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("global"), "", msg);
                                 }
                             } else {
@@ -193,7 +193,7 @@ public class ChatListener {
                                         MessagingUtils.sendMessageFromUserToConsole(sender, sender.getCurrentServer().get(), format, withEmotes);
                                     }
 
-                                    if (ConfigUtils.moduleDPC) {
+                                    if (ConfigUtils.moduleDPC()) {
                                         StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("global"), chat.identifier, msg);
                                     }
                                 }
@@ -217,7 +217,7 @@ public class ChatListener {
                                     MessagingUtils.sendMessageFromUserToConsole(sender, sender.getCurrentServer().get(), format, withEmotes);
                                 }
 
-                                if (ConfigUtils.moduleDPC) {
+                                if (ConfigUtils.moduleDPC()) {
                                     StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("global"), ch.identifier, msg);
                                 }
                             }
@@ -249,7 +249,7 @@ public class ChatListener {
                             MessagingUtils.sendMessageFromUserToConsole(sender, sender.getCurrentServer().get(), format, withEmotes);
                         }
 
-                        if (ConfigUtils.moduleDPC) {
+                        if (ConfigUtils.moduleDPC()) {
                             StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("local"), sender.getCurrentServer().get().getServerInfo().getName(), msg);
                         }
 
@@ -284,7 +284,7 @@ public class ChatListener {
                             MessagingUtils.sendMessageFromUserToConsole(sender, sender.getCurrentServer().get(), format, withEmotes);
                         }
 
-                        if (ConfigUtils.moduleDPC) {
+                        if (ConfigUtils.moduleDPC()) {
                             StreamLine.discordData.sendDiscordChannel(sender, stat.chatChannel, sender.getCurrentServer().get().getServerInfo().getName(), msg);
                         }
 
@@ -293,7 +293,7 @@ public class ChatListener {
                 }
 
             } else {
-                if (ConfigUtils.moduleDPC) {
+                if (ConfigUtils.moduleDPC()) {
                     if (stat.chatChannel.equals(ChatsHandler.getChannel("global"))) {
                         if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("global"), "")) {
                             TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("global"), "");
@@ -341,11 +341,11 @@ public class ChatListener {
             }
         }
 
-        if (ConfigUtils.chatHistoryEnabled) {
+        if (ConfigUtils.chatHistoryEnabled()) {
             PlayerUtils.addLineToChatHistory(stat.uuid, sender.getCurrentServer().get().getServerInfo().getName(), msg);
         }
 
-        if (ConfigUtils.events) {
+        if (ConfigUtils.events()) {
             if (!msg.startsWith("/")) {
                 for (Event event : EventsHandler.getEvents()) {
                     if (!EventsHandler.checkTags(event, stat)) continue;

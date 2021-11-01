@@ -6,11 +6,10 @@ import net.plasmere.streamline.config.backend.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
+import org.apache.commons.collections4.list.TreeList;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.time.Instant;
-import java.util.Date;
 import java.util.TreeMap;
 
 public class HistorySave {
@@ -21,7 +20,7 @@ public class HistorySave {
 
     public HistorySave(String uuid) {
         this.fileString = uuid + ".yml";
-        this.file = new File(StreamLine.getInstance().getchatHistoryDir(), this.fileString);
+        this.file = new File(StreamLine.getInstance().getChatHistoryDir(), this.fileString);
         this.uuid = uuid;
 
         this.conf = loadConfig();
@@ -38,7 +37,7 @@ public class HistorySave {
     public Configuration loadConfig(){
         if (! file.exists()){
             try {
-                if (! file.createNewFile()) if (ConfigUtils.debug) MessagingUtils.logWarning("Could not make HistorySave file " + file.getName() + "!");
+                if (! file.createNewFile()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Could not make HistorySave file " + file.getName() + "!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -73,9 +72,43 @@ public class HistorySave {
         return message;
     }
 
+    public TreeList<String> getTimestamps(String server) {
+        return new TreeList<>(conf.getSection(server).getKeys());
+    }
+
+    public TreeList<String> getTalkedInServers() {
+        return new TreeList<>(conf.getKeys());
+    }
+
+    public TreeMap<Long, String> getTimestampsWithMessageFrom(String timestampFrom, String server) {
+        TreeMap<Long, String> map = new TreeMap<>();
+
+        TreeList<String> ts = getTimestamps(server);
+
+        long timestampF;
+        try {
+            timestampF = Long.parseLong(timestampFrom);
+        } catch (Exception e) {
+            return map;
+        }
+
+        for (String t : ts) {
+            try {
+                long timestamp = Long.parseLong(t);
+                if (timestamp >= timestampF) {
+                    map.put(timestamp, conf.getString(server + "." + t));
+                }
+            } catch (Exception e) {
+                // continue
+            }
+        }
+
+        return map;
+    }
+
 //    public String addLine(String line) {
 //        try {
-//            if (! file.exists()) if (! file.createNewFile()) if (ConfigUtils.debug) MessagingUtils.logWarning("Cannot create file for " + uuid);
+//            if (! file.exists()) if (! file.createNewFile()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Cannot create file for " + uuid);
 //
 //            TreeMap<Integer, String> lines = new TreeMap<>();
 //            int l = 0;

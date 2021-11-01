@@ -5,16 +5,14 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.Party;
-import net.plasmere.streamline.objects.configs.ChatConfig;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PartyUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeSet;
@@ -30,7 +28,7 @@ public class ChatsHandler {
             createdChannels.add(chatChannel);
         }
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("ChatChannel: " + chatChannel.name);
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("ChatChannel: " + chatChannel.name);
 
         return chatChannel;
     }
@@ -40,7 +38,7 @@ public class ChatsHandler {
             activeChats.add(chat);
         }
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Chat: " + chat.chatChannel.name + " , " + chat.identifier);
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Chat: " + chat.chatChannel.name + " , " + chat.identifier);
 
         return chat;
     }
@@ -199,7 +197,7 @@ public class ChatsHandler {
                 break;
             case "guild":
                 if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                    for (Guild guild : GuildUtils.getGuilds()) {
+                    for (SavableGuild guild : GuildUtils.getGuilds()) {
                         thing.add(guild.leaderUUID);
                     }
                 }
@@ -242,7 +240,7 @@ public class ChatsHandler {
                     break;
                 case "guild":
                     if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                        for (Guild guild : GuildUtils.getGuilds()) {
+                        for (SavableGuild guild : GuildUtils.getGuilds()) {
                             thing.add(guild.leaderUUID);
                         }
                     }

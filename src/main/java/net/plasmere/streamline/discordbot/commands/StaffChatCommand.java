@@ -19,32 +19,11 @@ public class StaffChatCommand {
 
     public static void sendMessage(String command, MessageReceivedEvent event){
         String om = event.getMessage().getContentDisplay();
-        String prefix = DiscordBotConfUtils.botPrefix;
+        String prefix = DiscordBotConfUtils.botPrefix();
 
         String msg = om.substring((prefix + command + " ").length());
 
-        Collection<Player> staff = StreamLine.getInstance().getProxy().getAllPlayers();
-        Set<Player> staffs = new HashSet<>(staff);
-
-        for (Player player : staff){
-            try {
-                if (! player.hasPermission(ConfigUtils.staffPerm)) {
-                    staffs.remove(player);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        for (Player player : staffs) {
-            player.sendMessage(TextUtils.codedText(MessageConfUtils.bungeeStaffChatMessage()
-                            .replace("%player_display%", event.getAuthor().getName())
-                            .replace("%from_display%", MessageConfUtils.bungeeStaffChatFrom())
-                            .replace("%message%", msg)
-                            .replace("%newline%", "\n")
-                    )
-            );
-        }
+        MessagingUtils.sendStaffMessageFromDiscord(event.getAuthor().getId(), MessageConfUtils.discordStaffChatFrom(), msg);
 
         try {
             event.getChannel().sendMessage(eb.setTitle("Success!").setDescription("Message sent!").build()).queue();
@@ -52,6 +31,6 @@ public class StaffChatCommand {
             e.printStackTrace();
         }
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
     }
 }

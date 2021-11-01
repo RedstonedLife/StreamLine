@@ -27,6 +27,8 @@ public abstract class From {
         DISCORDBOT,
         COMMANDS,
         CHATS,
+        VOTES,
+        RANKS,
     }
 
     // TreeMap < locale name , TreeMap < order , SingleSet < path , stringed value > > >
@@ -54,13 +56,13 @@ public abstract class From {
     public final String fr_FRString = "fr_FR.yml";
     public final File fr_FRFile = new File(translationPath, fr_FRString);
     public final String setstring = "settings.yml";
-    public final File scfile = new File(StreamLine.getInstance().getconfDir(), setstring);
+    public final File scfile = new File(StreamLine.getInstance().getConfDir(), setstring);
     public final String disbotString = "discord-bot.yml";
     public final File disbotFile = new File(StreamLine.getInstance().getDataFolder(), disbotString);
     public final String commandString = "commands.yml";
     public final File commandFile = new File(StreamLine.getInstance().getDataFolder(), commandString);
     public final String chatsString = "chats.yml";
-    public final File chatsFile = new File(StreamLine.getInstance().getconfDir(), chatsString);
+    public final File chatsFile = new File(StreamLine.getInstance().getConfDir(), chatsString);
 
     public TreeMap<String, String> catchAll_values = new TreeMap<>();
 

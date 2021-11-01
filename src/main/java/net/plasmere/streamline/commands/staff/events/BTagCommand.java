@@ -39,7 +39,7 @@ public class BTagCommand extends SLCommand {
             }
 
             if (! stat.latestName.equals(PlayerUtils.getSourceName(sender))) {
-                if (! sender.hasPermission(CommandsConfUtils.comBBTagOPerm)) {
+                if (! sender.hasPermission(CommandsConfUtils.comBBTagOPerm())) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                     return;
                 }
@@ -50,7 +50,7 @@ public class BTagCommand extends SLCommand {
                 case "rem":
                 case "r":
                 case "-":
-                    if (! sender.hasPermission(CommandsConfUtils.comBBTagChPerm)) {
+                    if (! sender.hasPermission(CommandsConfUtils.comBBTagChPerm())) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                         return;
                     }
@@ -64,7 +64,7 @@ public class BTagCommand extends SLCommand {
                 case "add":
                 case "a":
                 case "+":
-                    if (! sender.hasPermission(CommandsConfUtils.comBBTagChPerm)) {
+                    if (! sender.hasPermission(CommandsConfUtils.comBBTagChPerm())) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                         return;
                     }
@@ -87,7 +87,7 @@ public class BTagCommand extends SLCommand {
 
     @Override
     public Collection<String> onTabComplete(CommandSource sender, String[] args) {
-        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm)) return new ArrayList<>();
+        if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm())) return new ArrayList<>();
 
         Collection<Player> players = StreamLine.getInstance().getProxy().getAllPlayers();
         List<String> strPlayers = new ArrayList<>();

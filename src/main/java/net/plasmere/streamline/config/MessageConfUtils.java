@@ -446,7 +446,7 @@ public class MessageConfUtils {
         return StreamLine.config.mess.getString("party.disconnect");
     }
 
-    // Guild.
+    // SavableGuild.
     public static String guildConnect() {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("guild.connect");
@@ -1560,5 +1560,50 @@ public class MessageConfUtils {
     public static String scriptReload() {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("script.reload");
+    }
+
+    public static String votesConsoleToggle() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.console.toggle");
+    }
+
+    public static String votesConsoleEnabled() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.console.enabled");
+    }
+
+    public static String votesConsoleDisabled() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.console.disabled");
+    }
+
+    public static String votesGet() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.get");
+    }
+
+    public static String votesRemove() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.remove");
+    }
+
+    public static String votesAdd() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.add");
+    }
+
+    public static String votesSet() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("votes.set");
+    }
+
+    public static String historyMessage() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("history.message");
+    }
+
+    public static String historyChatBulk() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("history.chat-bulk.message");
     }
 }

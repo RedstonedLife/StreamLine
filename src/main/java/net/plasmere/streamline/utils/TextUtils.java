@@ -3,16 +3,15 @@ package net.plasmere.streamline.utils;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.dv8tion.jda.api.entities.User;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.lists.SingleSet;
@@ -367,7 +366,7 @@ public class TextUtils {
 
     public static String newLined(String text){
         try {
-            return text.replace("%newline%", "\n").replace("%uniques%", String.valueOf(StreamLine.getInstance().getplDir().listFiles().length));
+            return text.replace("%newline%", "\n").replace("%uniques%", String.valueOf(StreamLine.getInstance().getPlDir().listFiles().length));
         } catch (Exception e) {
             return text.replace("%newline%", "\n");
         }
@@ -552,7 +551,10 @@ public class TextUtils {
         } else {
             User user = StreamLine.getJda().getUserById(dID);
 
-            if (user == null) return of;
+            if (user == null) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Discord User of ID " + dID + " returned null...");
+                return of;
+            }
 
             return of
                     .replace("%player_absolute%", user.getName())
@@ -654,7 +656,10 @@ public class TextUtils {
         } else {
             User user = StreamLine.getJda().getUserById(dID);
 
-            if (user == null) return of;
+            if (user == null) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Discord User of ID " + dID + " returned null...");
+                return of;
+            }
 
             return of
                     .replace("%user_absolute%", user.getName())
@@ -756,7 +761,10 @@ public class TextUtils {
         } else {
             User user = StreamLine.getJda().getUserById(dID);
 
-            if (user == null) return of;
+            if (user == null) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Discord User of ID " + dID + " returned null...");
+                return of;
+            }
 
             return of
                     .replace("%sender_absolute%", user.getName())
@@ -893,6 +901,29 @@ public class TextUtils {
         return replaceAllSenderDiscord(of, PlayerUtils.getOrGetSavableUser(sender));
     }
 
+    public static int replaceAllPlayerRanks(SavablePlayer player) {
+        String of = ConfigUtils.moduleBRanksUses()
+                .replace("%player_level%", String.valueOf(player.lvl))
+                .replace("%player_xp_current%", String.valueOf(player.currentXP))
+                .replace("%player_xp_total%", String.valueOf(player.totalXP))
+                .replace("%player_play_seconds%", String.valueOf(player.playSeconds))
+                .replace("%player_play_minutes%", String.valueOf(player.getPlayMinutes()))
+                .replace("%player_play_hours%", String.valueOf(player.getPlayHours()))
+                .replace("%player_play_days%", String.valueOf(player.getPlayDays()))
+                .replace("%player_votes%", String.valueOf(PlayerUtils.getVotesForPlayer(player)))
+                ;
+
+        int toReturn = 0;
+
+        try {
+            toReturn = Integer.parseInt(of);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return toReturn;
+    }
+
     public static Collection<RegisteredServer> getServers() {
         return StreamLine.getInstance().getProxy().getAllServers();
     }
@@ -903,5 +934,11 @@ public class TextUtils {
         }
 
         return false;
+    }
+
+    public static List<String> getStringListFromString(String string) {
+        String[] strings = string.split(",");
+
+        return List.of(strings);
     }
 }

@@ -23,7 +23,7 @@ public class ConsolePlayer extends SavableUser {
     public void preConstruct(String string) {
         this.uuid = "%";
 
-        this.latestName = ConfigUtils.consoleName;
+        this.latestName = ConfigUtils.consoleName();
         this.displayName = ConfigUtils.consoleDisplayName;
         this.tagList = ConfigUtils.consoleDefaultTags;
 

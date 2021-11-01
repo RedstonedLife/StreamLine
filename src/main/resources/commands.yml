@@ -235,6 +235,40 @@ commands:
           - "wa"
           - "summon"
           - "warp"
+      # All permissions for the command.
+      permissions:
+        # Join subcommand.
+        join: "streamline.command.party.join"
+        # Leave subcommand.
+        leave: "streamline.command.party.leave"
+        # Create subcommand.
+        create: "streamline.command.party.create"
+        # Promote subcommand.
+        promote: "streamline.command.party.promote"
+        # Demote subcommand.
+        demote: "streamline.command.party.demote"
+        # Chat subcommand.
+        chat: "streamline.command.party.chat"
+        # List subcommand.
+        list: "streamline.command.party.list"
+        # Open subcommand.
+        open: "streamline.command.party.open"
+        # Close subcommand.
+        close: "streamline.command.party.close"
+        # Disband subcommand.
+        disband: "streamline.command.party.disband"
+        # Accept subcommand.
+        accept: "streamline.command.party.accept"
+        # Deny subcommand.
+        deny: "streamline.command.party.deny"
+        # Invite subcommand.
+        invite: "streamline.command.party.invite"
+        # Kick subcommand.
+        kick: "streamline.command.party.kick"
+        # Mute subcommand.
+        mute: "streamline.command.party.mute"
+        # Warp subcommand.
+        warp: "streamline.command.party.warp"
     # The guild command.
     guild:
       # Enables / disables the use of the "guild" bungee command.
@@ -340,6 +374,42 @@ commands:
           - "rename"
           - "ren"
           - "rn"
+      # All permissions for the command.
+      permissions:
+        # Join subcommand.
+        join: "streamline.command.guild.join"
+        # Leave subcommand.
+        leave: "streamline.command.guild.leave"
+        # Create subcommand.
+        create: "streamline.command.guild.create"
+        # Promote subcommand.
+        promote: "streamline.command.guild.promote"
+        # Demote subcommand.
+        demote: "streamline.command.guild.demote"
+        # Chat subcommand.
+        chat: "streamline.command.guild.chat"
+        # List subcommand.
+        list: "streamline.command.guild.list"
+        # Open subcommand.
+        open: "streamline.command.guild.open"
+        # Close subcommand.
+        close: "streamline.command.guild.close"
+        # Disband subcommand.
+        disband: "streamline.command.guild.disband"
+        # Accept subcommand.
+        accept: "streamline.command.guild.accept"
+        # Deny subcommand.
+        deny: "streamline.command.guild.deny"
+        # Invite subcommand.
+        invite: "streamline.command.guild.invite"
+        # Kick subcommand.
+        kick: "streamline.command.guild.kick"
+        # Mute subcommand.
+        mute: "streamline.command.guild.mute"
+        # Warp subcommand.
+        warp: "streamline.command.guild.warp"
+        info: "streamline.command.guild.info"
+        rename: "streamline.command.guild.rename"
     # Stats command.
     stats:
       # Enables / disables the use of the "stats" bungee command.
@@ -685,7 +755,7 @@ commands:
           - "slscr"
           - "streamlinescript"
           - "script"
-      # The bteleport command.
+      # The script-reload command.
       script-reload:
         # Enables / disables the use of the command.
         enabled: true
@@ -697,6 +767,18 @@ commands:
         aliases:
           - "reloadslsc"
           - "rslsc"
+      # The chat-history command.
+      chat-history:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "chat-history"
+        # Custom permission.
+        permission: "streamline.command.chat-history"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "chath"
+          - "chh"
     # For configs commands...
     configs:
       # The settings command.
@@ -712,7 +794,7 @@ commands:
           - "setedit"
           - "se"
           - "settingsedit"
-      # The settings command.
+      # The language command.
       language:
         # Enables / disables the use of the command.
         enabled: true
@@ -725,6 +807,18 @@ commands:
           - "lang"
           - "locale"
           - "loc"
+      # The votes command.
+      votes:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "votes"
+        # Custom permission.
+        permission: "streamline.command.votes"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "bvotes"
+          - "bvot"
     # For messaging commands...
     messaging:
       # The ignore command.

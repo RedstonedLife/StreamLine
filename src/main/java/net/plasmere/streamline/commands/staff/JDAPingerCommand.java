@@ -24,7 +24,7 @@ public class JDAPingerCommand extends SLCommand {
 
     @Override
     public void run(CommandSource sender, String[] strings) {
-        if (! ConfigUtils.moduleDEnabled) {
+        if (! ConfigUtils.moduleDEnabled()) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
             return;
         }
@@ -34,7 +34,7 @@ public class JDAPingerCommand extends SLCommand {
         Player player = (Player) sender;
         player.sendMessage(TextUtils.codedText("&aAttempting to ping..."));
 
-        JDAPingerUtils.sendMessage(Objects.requireNonNull(jda.getTextChannelById(DiscordBotConfUtils.textChannelBConsole)));
+        JDAPingerUtils.sendMessage(Objects.requireNonNull(jda.getTextChannelById(DiscordBotConfUtils.textChannelBConsole())));
     }
 
     @Override

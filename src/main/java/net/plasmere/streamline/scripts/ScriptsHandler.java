@@ -16,14 +16,14 @@ public class ScriptsHandler {
 
         scripts.add(script);
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Loaded script: " + script);
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Loaded script: " + script);
 
         return script;
     }
 
     public static Script addScript(Script script) {
         scripts.add(script);
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Loaded script: " + script);
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Loaded script: " + script);
         return script;
     }
 

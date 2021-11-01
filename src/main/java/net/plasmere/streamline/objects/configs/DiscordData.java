@@ -1,17 +1,20 @@
 package net.plasmere.streamline.objects.configs;
 
-import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import com.velocitypowered.api.command.CommandSource;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
+import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.config.backend.ConfigurationProvider;
 import net.plasmere.streamline.config.backend.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.DataChannel;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.Party;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
@@ -32,15 +35,15 @@ import java.util.*;
 public class DiscordData {
     private Configuration conf;
     private final String fileString = "discord-data.yml";
-    private final File file = new File(StreamLine.getInstance().getconfDir(), fileString);
+    private final File file = new File(StreamLine.getInstance().getConfDir(), fileString);
     public TreeMap<Long, DataChannel> loadedChannels = new TreeMap<>();
 
     public TreeMap<String, Integer> toVerify = new TreeMap<>();
 
     public DiscordData(){
-        if (! StreamLine.getInstance().getconfDir().exists()) {
-            if (StreamLine.getInstance().getconfDir().mkdirs()) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getconfDir().getName());
+        if (! StreamLine.getInstance().getConfDir().exists()) {
+            if (StreamLine.getInstance().getConfDir().mkdirs()) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Made folder: " + StreamLine.getInstance().getConfDir().getName());
             }
         }
 
@@ -105,7 +108,7 @@ public class DiscordData {
                 long l = Long.parseLong(key);
                 loadedChannels.put(l, getChannel(l));
 
-//                if (ConfigUtils.debug) MessagingUtils.logInfo("ID: " + l + " | Channel: " + loadedChannels.get(l).chat.chatChannel.name + " , " + loadedChannels.get(l).chat.identifier);
+//                if (ConfigUtils.debug()) MessagingUtils.logInfo("ID: " + l + " | Channel: " + loadedChannels.get(l).chat.chatChannel.name + " , " + loadedChannels.get(l).chat.identifier);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -130,7 +133,7 @@ public class DiscordData {
     }
 
     public void sendDiscordChannel(CommandSource sender, ChatChannel type, String identifier, String message) {
-        if (! ConfigUtils.moduleDEnabled) return;
+        if (! ConfigUtils.moduleDEnabled()) return;
 
         TreeSet<Long> channels = getChannelsByData(type, identifier);
 
@@ -139,11 +142,11 @@ public class DiscordData {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 sender,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDLocalTitle.replace("%server%", PlayerUtils.getServer(sender))),
-                                ConfigUtils.moduleDPCDDLocalMessage
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDLocalTitle().replace("%server%", PlayerUtils.getServer(sender))),
+                                ConfigUtils.moduleDPC()DDLocalMessage()
                                         .replace("%message%", message),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDLocalUseAvatar
+                        ConfigUtils.moduleDPC()DDLocalUseAvatar()
                 );
             }
 
@@ -151,33 +154,33 @@ public class DiscordData {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 sender,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDGlobalTitle.replace("%server%", "network")),
-                                ConfigUtils.moduleDPCDDGlobalMessage
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDGlobalTitle().replace("%server%", "network")),
+                                ConfigUtils.moduleDPC()DDGlobalMessage()
                                         .replace("%message%", message),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDGlobalUseAvatar
+                        ConfigUtils.moduleDPC()DDGlobalUseAvatar()
                 );
             }
 
             if (type.equals(ChatsHandler.getChannel("guild"))) {
-                Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(sender));
+                SavableGuild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(sender));
 
                 if (guild == null) return;
 
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 sender,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDGuildTitle
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDGuildTitle()
                                         .replace("%guild_name%", guild.name)
                                         .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.leaderUUID).latestName)
                                         .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
                                         .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
                                         .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
                                 ),
-                                ConfigUtils.moduleDPCDDGuildMessage
+                                ConfigUtils.moduleDPC()DDGuildMessage()
                                         .replace("%message%", message),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDGuildUseAvatar
+                        ConfigUtils.moduleDPC()DDGuildUseAvatar()
                 );
             }
 
@@ -189,23 +192,23 @@ public class DiscordData {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 sender,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDPartyTitle
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDPartyTitle()
                                         .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.leaderUUID).latestName)
                                         .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                                         .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                                         .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                                 ),
-                                ConfigUtils.moduleDPCDDPartyMessage
+                                ConfigUtils.moduleDPC()DDPartyMessage()
                                         .replace("%message%", message),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDPartyUseAvatar
+                        ConfigUtils.moduleDPC()DDPartyUseAvatar()
                 );
             }
         }
     }
 
     public void sendDiscordJoinChannel(CommandSource player, ChatChannel chatChannel, String identifier) {
-        if (! ConfigUtils.moduleDEnabled) return;
+        if (! ConfigUtils.moduleDEnabled()) return;
 
         TreeSet<Long> channels = getChannelsByData(chatChannel, identifier);
 
@@ -214,10 +217,10 @@ public class DiscordData {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDLocalTitle.replace("%server%", PlayerUtils.getServer(player))),
-                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDLocalJoins, player),
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDLocalTitle().replace("%server%", PlayerUtils.getServer(player))),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPC()DDLocalJoins(), player),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDLocalUseAvatar
+                        ConfigUtils.moduleDPC()DDLocalUseAvatar()
                 );
             }
 
@@ -225,31 +228,31 @@ public class DiscordData {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDGlobalTitle.replace("%server%", "network")),
-                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGlobalJoins, player),
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDGlobalTitle().replace("%server%", "network")),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPC()DDGlobalJoins(), player),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDGlobalUseAvatar
+                        ConfigUtils.moduleDPC()DDGlobalUseAvatar()
                 );
             }
 
             if (chatChannel.equals(ChatsHandler.getChannel("guild"))) {
-                Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
+                SavableGuild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
 
                 if (guild == null) return;
 
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDGuildTitle
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDGuildTitle()
                                         .replace("%guild_name%", guild.name)
                                         .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.leaderUUID).latestName)
                                         .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
                                         .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
                                         .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
                                 ),
-                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGuildJoins, player),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPC()DDGuildJoins(), player),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDGuildUseAvatar
+                        ConfigUtils.moduleDPC()DDGuildUseAvatar()
                 );
             }
 
@@ -261,22 +264,22 @@ public class DiscordData {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDPartyTitle
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDPartyTitle()
                                         .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.leaderUUID).latestName)
                                         .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                                         .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                                         .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                                 ),
-                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDPartyJoins, player),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPC()DDPartyJoins(), player),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDPartyUseAvatar
+                        ConfigUtils.moduleDPC()DDPartyUseAvatar()
                 );
             }
         }
     }
 
     public void sendDiscordLeaveChannel(CommandSource player, ChatChannel type, String identifier) {
-        if (! ConfigUtils.moduleDEnabled) return;
+        if (! ConfigUtils.moduleDEnabled()) return;
 
         TreeSet<Long> channels = getChannelsByData(type, identifier);
 
@@ -285,10 +288,10 @@ public class DiscordData {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDLocalTitle.replace("%server%", PlayerUtils.getServer(player))),
-                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDLocalLeaves, player),
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDLocalTitle().replace("%server%", PlayerUtils.getServer(player))),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPC()DDLocalLeaves(), player),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDLocalUseAvatar
+                        ConfigUtils.moduleDPC()DDLocalUseAvatar()
                 );
             }
 
@@ -296,31 +299,31 @@ public class DiscordData {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDGlobalTitle.replace("%server%", "network")),
-                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGlobalLeaves, player),
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDGlobalTitle().replace("%server%", "network")),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPC()DDGlobalLeaves(), player),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDGlobalUseAvatar
+                        ConfigUtils.moduleDPC()DDGlobalUseAvatar()
                 );
             }
 
             if (type.equals(ChatsHandler.getChannel("guild"))) {
-                Guild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
+                SavableGuild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
 
                 if (guild == null) return;
 
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDGuildTitle
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDGuildTitle()
                                         .replace("%guild_name%", guild.name)
                                         .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.leaderUUID).latestName)
                                         .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
                                         .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
                                         .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
                                 ),
-                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGuildLeaves, player),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPC()DDGuildLeaves(), player),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDGuildUseAvatar
+                        ConfigUtils.moduleDPC()DDGuildUseAvatar()
                 );
             }
 
@@ -332,15 +335,15 @@ public class DiscordData {
                 MessagingUtils.sendDiscordEBMessage(
                         new DiscordMessage(
                                 player,
-                                TextUtils.formatted(ConfigUtils.moduleDPCDDPartyTitle
+                                TextUtils.formatted(ConfigUtils.moduleDPC()DDPartyTitle()
                                         .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.leaderUUID).latestName)
                                         .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                                         .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                                         .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
                                 ),
-                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDPartyLeaves, player),
+                                TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPC()DDPartyLeaves(), player),
                                 channel.toString()),
-                        ConfigUtils.moduleDPCDDPartyUseAvatar
+                        ConfigUtils.moduleDPC()DDPartyUseAvatar()
                 );
             }
         }
@@ -374,7 +377,7 @@ public class DiscordData {
             }
 
             if (channelData.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
-                Guild guild = GuildUtils.getGuild(channelData.identifier);
+                SavableGuild guild = GuildUtils.getGuild(channelData.identifier);
 
                 if (guild == null) return;
 
@@ -419,7 +422,7 @@ public class DiscordData {
             }
 
             if (channelData.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
-                Guild guild = GuildUtils.getGuild(channelData.identifier);
+                SavableGuild guild = GuildUtils.getGuild(channelData.identifier);
 
                 if (guild == null) {
                     return;
@@ -446,7 +449,7 @@ public class DiscordData {
         for (Long id : loadedChannels.keySet()) {
             DataChannel set = loadedChannels.get(id);
 
-//            if (ConfigUtils.debug) MessagingUtils.logInfo("ID: " + id);
+//            if (ConfigUtils.debug()) MessagingUtils.logInfo("ID: " + id);
 
             if (type.equals(ChatsHandler.getChannel("global"))) {
                 if (set.chatChannel.equals(type)) toReturn.add(id);
@@ -456,7 +459,7 @@ public class DiscordData {
             try {
                 if (set.chatChannel.equals(type) && set.identifier.equals(identifier)) toReturn.add(id);
             } catch (Exception e) {
-                if (ConfigUtils.debug) MessagingUtils.logInfo("ID that broke: " + id);
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("ID that broke: " + id);
                 e.printStackTrace();
             }
         }
@@ -611,54 +614,87 @@ public class DiscordData {
         return number == verify;
     }
 
-    public void doVerify(String uuid, long discordID, long guildID) {
+    public void doVerify(String uuid, User user, Guild g) {
         SavablePlayer player = PlayerUtils.getOrGetPlayerStatByUUID(uuid);
         if (player == null) return;
 
         toVerify.remove(uuid);
 
-        addVerified(discordID, uuid);
-        player.setDiscordID(discordID);
+        addVerified(user.getIdLong(), uuid);
+        player.setDiscordID(user.getIdLong());
 
-        Guild guild = GuildUtils.getGuild(player.uuid);
+        SavableGuild guild = GuildUtils.getGuild(player.uuid);
 
-        if (ConfigUtils.moduleDPCChangeOnVerify) {
-            if (ConfigUtils.moduleDPCChangeOnVerifyType.equals("discord")) {
-                StreamLine.getJda().getGuildById(guildID).getMemberById(discordID).modifyNickname(TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCChangeOnVerifyTo, player)
-                        .replace("%player_uuid%", player.uuid)
-                        .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
-                        .replace("%guild_name%", guild == null ? "" : guild.name)
-                );
+        if (g == null) {
+            if (ConfigUtils.debug()) MessagingUtils.logInfo("Guild returned null!");
+            return;
+        }
+        Member member = g.getMember(user);
+        if (member == null) {
+            if (ConfigUtils.debug()) MessagingUtils.logInfo("Member returned null!");
+            return;
+        }
+
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Member " + member.getNickname() + " or " + member.getEffectiveName() + " has ID: " + member.getIdLong());
+
+        try {
+            if (ConfigUtils.moduleDPC()ChangeOnVerify()) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo(ConfigUtils.moduleDPC()ChangeOnVerifyTo());
+                if (ConfigUtils.debug()) MessagingUtils.logInfo(ConfigUtils.moduleDPC()ChangeOnVerifyType());
+
+                String newName = MessageConfUtils.nullD();
+                if (ConfigUtils.moduleDPC()ChangeOnVerifyType().equals("discord")) {
+                    newName = TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPC()ChangeOnVerifyTo(), player)
+                            .replace("%player_uuid%", player.uuid)
+                            .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
+                            .replace("%guild_name%", guild == null ? "" : guild.name);
+                }
+                if (ConfigUtils.moduleDPC()ChangeOnVerifyType().equals("bungee")) {
+                    newName = TextUtils.replaceAllPlayerBungee(ConfigUtils.moduleDPC()ChangeOnVerifyTo(), player)
+                            .replace("%player_uuid%", player.uuid)
+                            .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
+                            .replace("%guild_name%", guild == null ? "" : guild.name);
+                }
+
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("New name = " + newName);
+                g.modifyNickname(member, newName);
             }
-            if (ConfigUtils.moduleDPCChangeOnVerifyType.equals("bungee")) {
-                StreamLine.getJda().getGuildById(guildID).getMemberById(discordID).modifyNickname(TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCChangeOnVerifyTo, player)
-                        .replace("%player_uuid%", player.uuid)
-                        .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
-                        .replace("%guild_name%", guild == null ? "" : guild.name)
-                );
-            }
+        } catch (HierarchyException e) {
+            MessagingUtils.logSevere("Tried to modify a user with higher permissions than me (on Discord)!");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         try {
-            for (String roleID : ConfigUtils.moduleDPCOnVerifyAdd) {
+            if (ConfigUtils.debug()) MessagingUtils.logInfo("Roles as String : " + ConfigUtils.moduleDPC()OnVerifyAdd());
+
+            for (String roleID : ConfigUtils.moduleDPC()OnVerifyAdd()) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Role String : " + roleID);
+
                 Role role = StreamLine.getJda().getRoleById(roleID);
                 if (role == null) {
                     MessagingUtils.logInfo("Role (" + roleID + ") was not found!");
                     continue;
                 }
 
-                StreamLine.getJda().getGuildById(guildID).addRoleToMember(discordID, role);
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Role Name : " + role.getName());
+
+                g.addRoleToMember(user.getIdLong(), role);
             }
 
-            for (String roleID : ConfigUtils.moduleDPCOnVerifyRemove) {
+            if (ConfigUtils.debug()) MessagingUtils.logInfo("Roles as String : " + ConfigUtils.moduleDPC()OnVerifyRemove());
+
+            for (String roleID : ConfigUtils.moduleDPC()OnVerifyRemove()) {
                 Role role = StreamLine.getJda().getRoleById(roleID);
                 if (role == null) {
                     MessagingUtils.logInfo("Role (" + roleID + ") was not found!");
                     continue;
                 }
 
-                StreamLine.getJda().getGuildById(guildID).removeRoleFromMember(discordID, role);
+                g.removeRoleFromMember(user.getIdLong(), role);
             }
+        } catch (HierarchyException e) {
+            MessagingUtils.logSevere("Tried to modify a user with higher permissions than me (on Discord)!");
         } catch (Exception e) {
             e.printStackTrace();
         }

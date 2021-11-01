@@ -313,7 +313,7 @@ party:
   connect: "&bGROUPE &9> &d%player_formatted% &a+"
   # When a player disconnects.
   disconnect: "&bGROUPE &9> &d%player_formatted% &c-"
-  # Guild Spy message.
+  # SavableGuild Spy message.
   spy: "&3GROUPE &ede &d%leader_formatted% &9>> &d%sender_formatted% &8: &e%message%"
   # When it finds no party.
   no-party: "&cAucun groupe trouvés!"
@@ -807,7 +807,7 @@ guild:
   connect: "&2GUILDE &9> &d%player_formatted% &a+"
   # When a player disconnects.
   disconnect: "&2GUILDE &9> &d%player_formatted% &c-"
-  # For Guild Spy.
+  # For SavableGuild Spy.
   spy: "&2GUILDE &ede &d%leader_formatted% &9>> &d%sender_formatted% &8: &e%message%"
   # When it finds no guild.
   no-guild: "&cAucune guilde trouvées!"
@@ -1367,7 +1367,7 @@ stats:
     true: "&aACTIVÉ"
     # If last.
     false: "&cDÉSACTIVÉ"
-  # Guild Spy.
+  # SavableGuild Spy.
   gspy:
     # If not last in list.
     true: "&aACTIVÉ"
@@ -1454,7 +1454,7 @@ pspyvs:
     # If toggled off.
     false: "&cDÉSACTIVÉ"
 
-# Guild SPY view-self command.
+# SavableGuild SPY view-self command.
 gspyvs:
   # Message.
   message: "&eChangement de &bGSPY &evue personnelle en %toggle%&e!"
@@ -2016,3 +2016,13 @@ script:
   message: "&eJe viens d'exécuter le script &a%script% &eau &d%player_formatted%&e!"
   no-script: "&cAucun script valide sous ce nom!"
   reload: "&eScripts rechargés! (&b%count%&e)"
+
+votes:
+  console:
+    toggle: "&eToggled console printing to %toggle%&8!"
+    enabled: "&aTRUE"
+    disabled: "&cFALSE"
+  get: "&eVotes of &d%player_formatted%&8: &6%player_votes%"
+  remove: "&eRemoved &6%votes% &evote(s) from &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"
+  add: "&eAdded &6%votes% &evote(s) to &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"
+  set: "&eSet &6%votes% &evote(s) for &d%player_formatted%&8! &eCurrent&8: &6%player_votes%"

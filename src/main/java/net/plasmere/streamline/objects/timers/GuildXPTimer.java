@@ -1,13 +1,12 @@
 package net.plasmere.streamline.objects.timers;
 
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class GuildXPTimer implements Runnable {
@@ -37,7 +36,7 @@ public class GuildXPTimer implements Runnable {
                 if (user.guild == null) user.updateKey("guild", "");
                 if (user.guild.equals("")) continue;
 
-                Guild guild = GuildUtils.getOrGetGuild(user.guild);
+                SavableGuild guild = GuildUtils.getOrGetGuild(user.guild);
 
                 guild.addTotalXP(ConfigUtils.xpPerGiveG);
             }

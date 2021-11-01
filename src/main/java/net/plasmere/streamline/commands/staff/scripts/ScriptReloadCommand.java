@@ -19,7 +19,7 @@ public class ScriptReloadCommand extends SLCommand {
 
     @Override
     public void run(CommandSource sender, String[] args) {
-        if (sender.hasPermission(CommandsConfUtils.comBEReloadPerm)) {
+        if (sender.hasPermission(CommandsConfUtils.comBEReloadPerm())) {
             ScriptsHandler.unloadScripts();
             StreamLine.getInstance().loadScripts();
 

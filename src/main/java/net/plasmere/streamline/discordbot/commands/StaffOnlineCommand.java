@@ -21,7 +21,7 @@ public class StaffOnlineCommand {
 
         for (Player player : staffs){
             try {
-                if (! player.hasPermission(ConfigUtils.staffPerm)) {
+                if (! player.hasPermission(ConfigUtils.staffPerm())) {
                     lstaffs.remove(player);
                 }
             } catch (Exception e){
@@ -36,7 +36,7 @@ public class StaffOnlineCommand {
                         .replace("%staffbulk%", getStaffList(lstaffs))
         );
 
-        if (ConfigUtils.debug) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Sent message for \"" + command + "\"!");
     }
 
     private static String getStaffList(Set<Player> lstaffs){

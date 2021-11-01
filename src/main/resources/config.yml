@@ -131,12 +131,12 @@ modules:
             type: "discord"
           # Give people roles upon verifying?
           add-roles:
-            - "put_id_here"
-            - "put_id_here"
+            - 'put_id_here'
+            - 'put_id_here'
           # Remove roles from people upon verifying?
           remove-roles:
-            - "put_id_here"
-            - "put_id_here"
+            - 'put_id_here'
+            - 'put_id_here'
         # What to use to determine a player's Discord to Minecraft display name.
         # Options:
         # stat = looks up the player's stat from a list.
@@ -230,7 +230,7 @@ modules:
       # --> If a player leaves who is staff, they will be shown (only to staff)
       # --> If a player leaves who is in your guild, they will be shown if not staff (and you are staff)
       # --> If a player leaves who is in your party, they will be shown if not staff (and you are staff), or in your guild.
-      # --> If a player leaves who is in your friends list, they will be shown if not staff (and you are staff), or in your guild, or in your party.
+    # --> If a player leaves who is in your friends list, they will be shown if not staff (and you are staff), or in your guild, or in your party.
     # --> If none above, will not be shown.
     # NOTE: per-server connection events can be made with the events module.
     player-leaves-order: "staff,guild,party,friend"
@@ -247,7 +247,10 @@ modules:
       # the max you want them to have,
       # but less than the "max-size" above.
       # EXAMPLE: give people "streamline.party.max.10"
-      base-permission: "streamline.party.max."
+      base-permission: "streamline.party.group."
+      group-size:
+        'default': 10
+        'admin': 100
       # Whether or not party things should be able to be seen on discord console.
       console:
         chats: true
@@ -506,9 +509,21 @@ modules:
       # This will enabled loading player chat history on start up.
       # This will be resource intensive, only enable if you want it to be faster.
       load-history-on-startup: false
+      view:
+        default: 7
+        max: 20
     # Scripts for the plugin.
     scripts:
       # Enables it.
       enabled: true
       # Creates the default script when not found...
       create-default: true
+    ranks:
+      enable: true
+      points:
+        uses: "%player_votes%"
+    chat-filters:
+      enabled: true
+  bstats:
+    make-server-discoverable: true
+    discoverable-ip: "my.server.net"

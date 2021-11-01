@@ -5,7 +5,7 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
@@ -17,32 +17,55 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class GuildUtils {
-    private static final List<Guild> guilds = new ArrayList<>();
+public class GuildUtils {private static final List<SavableGuild> guilds = new ArrayList<>();
 
-    public static List<Guild> getGuilds() {
-        List<Guild> rem = new ArrayList<>();
+    public static List<SavableGuild> getGuilds() {
+        List<SavableGuild> rem = new ArrayList<>();
 
-        for (Guild g : guilds) {
+        for (SavableGuild g : guilds) {
             if (g.leaderUUID == null) rem.add(g);
         }
 
-        for (Guild g : rem) {
+        for (SavableGuild g : rem) {
             guilds.remove(g);
         }
 
         return guilds;
     }
-    // Guild , Invites
-    public static Map<Guild, List<SavableUser>> invites = new HashMap<>();
+    // SavableGuild , Invites
+    public static Map<SavableGuild, List<SavableUser>> invites = new HashMap<>();
 
-    public static void removeInvite(Guild guild, SavableUser player) {
+    public static int allGuildsCount() {
+        File[] files = StreamLine.getInstance().getGDir().listFiles();
+
+        if (files == null) return 0;
+
+        int amount = 0;
+        for (File file : files) {
+            try {
+                if (! file.getName().endsWith(".properties")) continue;
+
+                SavableGuild guild = getOrGetGuild(file.getName().replace(".properties", ""));
+
+                if (guild == null) continue;
+                if (guild.leaderUUID == null) continue;
+
+                amount ++;
+            } catch (Exception e) {
+                // do nothing
+            }
+        }
+
+        return amount;
+    }
+
+    public static void removeInvite(SavableGuild guild, SavableUser player) {
         invites.get(guild).remove(player);
     }
 
-    public static Guild getGuild(SavableUser stat) {
+    public static SavableGuild getGuild(SavableUser stat) {
         try {
-            for (Guild guild : guilds) {
+            for (SavableGuild guild : guilds) {
                 if (guild.hasMember(stat)) {
                     return guild;
                 }
@@ -54,13 +77,13 @@ public class GuildUtils {
         }
     }
 
-    public static Guild getOrGetGuild(String uuid){
-        Guild guild = getGuild(uuid);
+    public static SavableGuild getOrGetGuild(String uuid){
+        SavableGuild guild = getGuild(uuid);
 
         if (guild == null) {
             if (existsByUUID(uuid)) {
                 try {
-                    guild = new Guild(uuid, false);
+                    guild = new SavableGuild(uuid, false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -71,7 +94,7 @@ public class GuildUtils {
     }
 
     public static void loadAllMembersInAllGuilds(){
-        for (Guild guild : guilds) {
+        for (SavableGuild guild : guilds) {
             guild.loadAllMembers();
         }
     }
@@ -87,9 +110,9 @@ public class GuildUtils {
         return false;
     }
 
-    public static Guild getGuild(String uuid) {
+    public static SavableGuild getGuild(String uuid) {
         try {
-            for (Guild guild : guilds) {
+            for (SavableGuild guild : guilds) {
                 if (guild.hasMember(PlayerUtils.getOrGetSavableUser(uuid))) {
                     return guild;
                 }
@@ -102,39 +125,39 @@ public class GuildUtils {
     }
 
     public static boolean hasGuild(SavableUser player) {
-        for (Guild guild : guilds) {
+        for (SavableGuild guild : guilds) {
             if (guild.hasMember(player)) return true;
         }
         return false;
     }
 
     public static boolean existsByUUID(String uuid){
-        File file = new File(StreamLine.getInstance().getgDir(), uuid + ".properties");
+        File file = new File(StreamLine.getInstance().getGDir(), uuid + ".properties");
 
         return file.exists();
     }
 
     public static boolean exists(String username){
-        File file = new File(StreamLine.getInstance().getgDir(), Objects.requireNonNull(PlayerUtils.getOrCreatePlayerStat(username)).guild + ".properties");
+        File file = new File(StreamLine.getInstance().getGDir(), Objects.requireNonNull(PlayerUtils.getOrCreatePlayerStat(username)).guild + ".properties");
 
         return file.exists();
     }
 
-    public static boolean isGuild(Guild guild){
+    public static boolean isGuild(SavableGuild guild){
         return guilds.contains(guild);
     }
 
     public static boolean pHasGuild(SavableUser player) {
         if (!existsByUUID(player.uuid)) return false;
 
-        Guild guild;
+        SavableGuild guild;
         try {
-            guild = new Guild(player.guild, false);
+            guild = new SavableGuild(player.guild, false);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         } catch (NullPointerException e) {
-            if (ConfigUtils.debug) {
+            if (ConfigUtils.debug()) {
                 MessagingUtils.logWarning("SavablePlayer's guild could not be found... Adding now!");
             }
 
@@ -149,7 +172,7 @@ public class GuildUtils {
         return true;
     }
 
-    public static boolean checkPlayer(Guild guild, SavableUser player, SavableUser sender){
+    public static boolean checkPlayer(SavableGuild guild, SavableUser player, SavableUser sender){
         if (! isGuild(guild) || guild == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
             return false;
@@ -169,7 +192,7 @@ public class GuildUtils {
     }
 
     public static void createGuild(SavableUser sender, String name) {
-        Guild g = getGuild(sender);
+        SavableGuild g = getGuild(sender);
 
         if (g != null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), alreadyMade);
@@ -181,20 +204,20 @@ public class GuildUtils {
             return;
         }
 
-        if (ConfigUtils.guildIncludeColors) {
-            if (name.length() > ConfigUtils.guildMaxLength) {
+        if (ConfigUtils.guildIncludeColors()) {
+            if (name.length() > ConfigUtils.guildMaxLength()) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), nameTooLong
                         .replace("%length%", String.valueOf(name.length()))
-                        .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength))
+                        .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength()))
                         .replace("%codes%", withCodes)
                 );
                 return;
             }
         } else {
-            if (TextUtils.stripColor(name).length() > ConfigUtils.guildMaxLength) {
+            if (TextUtils.stripColor(name).length() > ConfigUtils.guildMaxLength()) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), nameTooLong
                         .replace("%length%", String.valueOf(TextUtils.stripColor(name).length()))
-                        .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength))
+                        .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength()))
                         .replace("%codes%", withoutCodes)
                 );
                 return;
@@ -203,17 +226,17 @@ public class GuildUtils {
 
         try {
             //MessagingUtils.logInfo("createGuild SavablePlayer.uuid > " + sender.uuid);
-            Guild guild = new Guild(sender.uuid, name);
+            SavableGuild guild = new SavableGuild(sender.uuid, name);
 
             addGuild(guild);
 
             MessagingUtils.sendBGUserMessage(guild, sender.findSender(), sender.findSender(),  create);
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleCreates) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleCreates()) {
                     MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), createTitle,
                             createConsole
-                            , DiscordBotConfUtils.textChannelGuilds));
+                            , DiscordBotConfUtils.textChannelGuilds()));
                 }
             }
         } catch (Exception e) {
@@ -221,8 +244,8 @@ public class GuildUtils {
         }
     }
 
-    public static void addGuild(Guild guild){
-        Guild g;
+    public static void addGuild(SavableGuild guild){
+        SavableGuild g;
 
         try {
             g = getGuild(guild.leaderUUID);
@@ -235,9 +258,9 @@ public class GuildUtils {
 
         try {
             if (guilds.size() > 0) {
-                List<Guild> rem = new ArrayList<>();
+                List<SavableGuild> rem = new ArrayList<>();
 
-                for (Guild gu : guilds) {
+                for (SavableGuild gu : guilds) {
                     String s = gu.leaderUUID;
 
                     if (s == null) {
@@ -250,7 +273,7 @@ public class GuildUtils {
                     }
                 }
 
-                for (Guild gd : rem) {
+                for (SavableGuild gd : rem) {
                     guilds.remove(gd);
                 }
             }
@@ -263,11 +286,11 @@ public class GuildUtils {
     }
 
     public static boolean hasLeader(String leader){
-        List<Guild> toRem = new ArrayList<>();
+        List<SavableGuild> toRem = new ArrayList<>();
 
         boolean hasLeader = false;
 
-        for (Guild guild : guilds){
+        for (SavableGuild guild : guilds){
             if (guild.leaderUUID == null) {
                 toRem.add(guild);
                 continue;
@@ -275,7 +298,7 @@ public class GuildUtils {
             if (guild.leaderUUID.equals(leader)) hasLeader = true;
         }
 
-        for (Guild guild : toRem) {
+        for (SavableGuild guild : toRem) {
             try {
                 guild.dispose();
             } catch (Throwable throwable) {
@@ -287,7 +310,7 @@ public class GuildUtils {
         return hasLeader;
     }
 
-    public static void removeGuild(Guild guild){
+    public static void removeGuild(SavableGuild guild){
         try {
             guild.saveInfo();
         } catch (IOException e) {
@@ -298,7 +321,7 @@ public class GuildUtils {
 
     public static void sendInvite(SavableUser to, SavableUser from) {
         try {
-            Guild guild = getGuild(from);
+            SavableGuild guild = getGuild(from);
 
             if (! checkPlayer(guild, to, from)) return;
 
@@ -341,11 +364,11 @@ public class GuildUtils {
             invites.remove(guild);
             invites.put(guild, guild.invites);
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleInvites) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleInvites()) {
                     MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(from.findSender(), inviteTitle,
                             TextUtils.replaceAllPlayerDiscord(inviteConsole, to)
-                            , DiscordBotConfUtils.textChannelGuilds));
+                            , DiscordBotConfUtils.textChannelGuilds()));
                 }
             }
         } catch (Exception e) {
@@ -355,7 +378,7 @@ public class GuildUtils {
 
     public static void acceptInvite(SavableUser accepter, SavableUser from) {
         try {
-            Guild guild = getGuild(from);
+            SavableGuild guild = getGuild(from);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(accepter.findSender(), acceptFailure);
@@ -411,25 +434,25 @@ public class GuildUtils {
                 guild.addMember(accepter);
                 guild.remFromInvites(from, accepter);
 
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleJoins) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleJoins()) {
                         MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(accepter.findSender(), joinsTitle,
                                 TextUtils.replaceAllPlayerDiscord(joinsConsole, accepter)
                                         .replace("%from_formatted%", PlayerUtils.getJustDisplayDiscord(from))
                                         .replace("%from_display%", PlayerUtils.getOffOnDisplayDiscord(from))
                                         .replace("%from_normal%", PlayerUtils.getOffOnRegDiscord(from))
                                         .replace("%from_absolute%", PlayerUtils.getAbsoluteDiscord(from))
-                                , DiscordBotConfUtils.textChannelGuilds));
+                                , DiscordBotConfUtils.textChannelGuilds()));
                     }
 
-                    if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleAccepts) {
+                    if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleAccepts()) {
                         MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(accepter.findSender(), acceptTitle,
                                 TextUtils.replaceAllPlayerDiscord(acceptConsole, accepter)
                                         .replace("%from_formatted%", PlayerUtils.getJustDisplayDiscord(from))
                                         .replace("%from_display%", PlayerUtils.getOffOnDisplayDiscord(from))
                                         .replace("%from_normal%", PlayerUtils.getOffOnRegDiscord(from))
                                         .replace("%from_absolute%", PlayerUtils.getAbsoluteDiscord(from))
-                                , DiscordBotConfUtils.textChannelGuilds));
+                                , DiscordBotConfUtils.textChannelGuilds()));
                     }
                 }
             } else {
@@ -442,7 +465,7 @@ public class GuildUtils {
 
     public static void denyInvite(SavableUser denier, SavableUser from) {
         try {
-            Guild guild = getGuild(from);
+            SavableGuild guild = getGuild(from);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(denier.findSender(), denyFailure);
@@ -487,15 +510,15 @@ public class GuildUtils {
 
                 guild.remFromInvites(from, denier);
 
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleDenies) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleDenies()) {
                         MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(denier.findSender(), denyTitle,
                                 TextUtils.replaceAllPlayerDiscord(denyConsole, denier)
                                         .replace("%from_formatted%", PlayerUtils.getJustDisplayDiscord(from))
                                         .replace("%from_display%", PlayerUtils.getOffOnDisplayDiscord(from))
                                         .replace("%from_normal%", PlayerUtils.getOffOnRegDiscord(from))
                                         .replace("%from_absolute%", PlayerUtils.getAbsoluteDiscord(from))
-                                , DiscordBotConfUtils.textChannelGuilds));
+                                , DiscordBotConfUtils.textChannelGuilds()));
                     }
                 }
             } else {
@@ -507,7 +530,7 @@ public class GuildUtils {
     }
 
     public static void warpGuild(SavableUser sender){
-        Guild guild = getGuild(sender);
+        SavableGuild guild = getGuild(sender);
 
         if (!isGuild(guild) || guild == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -530,32 +553,26 @@ public class GuildUtils {
         }
 
         if (sender instanceof SavablePlayer && sender.online) {
-            for (SavableUser pl : guild.totalMembers) {
-                if (! pl.online) continue;
-
-                if (pl.equals(sender)) {
-                    MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), warpSender);
-                } else {
-                    MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), warpMembers);
-                }
-
-                if (pl instanceof SavablePlayer) {
-                    SavablePlayer p = (SavablePlayer) pl;
+            try {
+                for (SavableUser player : new ArrayList<>(guild.totalMembers)) {
+                    SavablePlayer p = (SavablePlayer) player;
                     if (! p.online) continue;
                     p.player.createConnectionRequest(StreamLine.getProxy().getServer(((SavablePlayer) sender).getServer().getServerInfo().getName()).get());
                 }
+            } catch (ConcurrentModificationException e) {
+                e.printStackTrace();
             }
         }
 
-        if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleWarps) {
+        if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleWarps()) {
             MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), warpTitle,
                     warpConsole
-                    , DiscordBotConfUtils.textChannelGuilds));
+                    , DiscordBotConfUtils.textChannelGuilds()));
         }
     }
 
     public static void muteGuild(SavableUser sender){
-        Guild guild = getGuild(sender);
+        SavableGuild guild = getGuild(sender);
 
         if (!isGuild(guild) || guild == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -593,17 +610,17 @@ public class GuildUtils {
         }
         guild.toggleMute();
 
-        if (ConfigUtils.moduleDEnabled) {
-            if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleMutes) {
+        if (ConfigUtils.moduleDEnabled()) {
+            if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleMutes()) {
                 MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), muteTitle,
                         muteConsole
-                        , DiscordBotConfUtils.textChannelGuilds));
+                        , DiscordBotConfUtils.textChannelGuilds()));
             }
         }
     }
 
     public static void kickMember(SavableUser sender, SavableUser player) {
-        Guild guild = getGuild(sender);
+        SavableGuild guild = getGuild(sender);
 
         if (!isGuild(guild) || guild == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), kickFailure);
@@ -652,11 +669,11 @@ public class GuildUtils {
                 guild.removeMemberFromGuild(player);
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleKicks) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleKicks()) {
                     MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), kickTitle,
                             TextUtils.replaceAllPlayerDiscord(kickConsole, player)
-                            , DiscordBotConfUtils.textChannelGuilds));
+                            , DiscordBotConfUtils.textChannelGuilds()));
                 }
             }
         } catch (Exception e) {
@@ -666,7 +683,7 @@ public class GuildUtils {
     }
 
     public static void info(SavableUser sender){
-        Guild guild = getGuild(sender);
+        SavableGuild guild = getGuild(sender);
 
         if (!isGuild(guild) || guild == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -683,7 +700,7 @@ public class GuildUtils {
 
     public static void disband(SavableUser sender) {
         try {
-            Guild guild = getGuild(sender);
+            SavableGuild guild = getGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -713,11 +730,11 @@ public class GuildUtils {
 
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleDisbands) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleDisbands()) {
                     MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), disbandTitle,
                             disbandConsole
-                            , DiscordBotConfUtils.textChannelGuilds));
+                            , DiscordBotConfUtils.textChannelGuilds()));
                 }
             }
 
@@ -730,7 +747,7 @@ public class GuildUtils {
 
     public static void openGuild(SavableUser sender) {
         try {
-            Guild guild = getGuild(sender);
+            SavableGuild guild = getGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -763,11 +780,11 @@ public class GuildUtils {
                     }
                 }
 
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleOpens) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleOpens()) {
                         MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), openTitle,
                                 openConsole
-                                , DiscordBotConfUtils.textChannelGuilds));
+                                , DiscordBotConfUtils.textChannelGuilds()));
                     }
                 }
             }
@@ -778,7 +795,7 @@ public class GuildUtils {
 
     public static void closeGuild(SavableUser sender) {
         try {
-            Guild guild = getGuild(sender);
+            SavableGuild guild = getGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -811,11 +828,11 @@ public class GuildUtils {
                     }
                 }
 
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleCloses) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleCloses()) {
                         MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), closeTitle,
                                 closeConsole
-                                , DiscordBotConfUtils.textChannelGuilds));
+                                , DiscordBotConfUtils.textChannelGuilds()));
                     }
                 }
             }
@@ -826,7 +843,7 @@ public class GuildUtils {
 
     public static void listGuild(SavableUser sender) {
         try {
-            Guild guild = getGuild(sender);
+            SavableGuild guild = getGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -854,7 +871,7 @@ public class GuildUtils {
         }
     }
 
-    private static String moderators(Guild guild) {
+    private static String moderators(SavableGuild guild) {
         try {
             if (! (guild.moderators.size() > 0)) {
                 return listModBulkNone;
@@ -882,7 +899,7 @@ public class GuildUtils {
         }
     }
 
-    private static String members(Guild guild) {
+    private static String members(SavableGuild guild) {
         try {
             if (! (guild.members.size() > 0)) {
                 return listMemberBulkNone;
@@ -913,7 +930,7 @@ public class GuildUtils {
 
     public static void promotePlayer(SavableUser sender, SavableUser player) {
         try {
-            Guild guild = getGuild(sender);
+            SavableGuild guild = getGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -989,11 +1006,11 @@ public class GuildUtils {
                     break;
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsolePromotes) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsolePromotes()) {
                     MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), promoteTitle,
                             TextUtils.replaceAllPlayerDiscord(promoteConsole, player)
-                            , DiscordBotConfUtils.textChannelGuilds));
+                            , DiscordBotConfUtils.textChannelGuilds()));
                 }
             }
         } catch (Exception e) {
@@ -1003,7 +1020,7 @@ public class GuildUtils {
 
     public static void demotePlayer(SavableUser sender, SavableUser player) {
         try {
-            Guild guild = getGuild(sender);
+            SavableGuild guild = getGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1063,11 +1080,11 @@ public class GuildUtils {
                     break;
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleDemotes) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleDemotes()) {
                     MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), demoteTitle,
                             TextUtils.replaceAllPlayerDiscord(demoteConsole, player)
-                            , DiscordBotConfUtils.textChannelGuilds));
+                            , DiscordBotConfUtils.textChannelGuilds()));
                 }
             }
         } catch (Exception e) {
@@ -1077,7 +1094,7 @@ public class GuildUtils {
 
     public static void joinGuild(SavableUser sender, SavableUser from) {
         try {
-            Guild guild = getGuild(from);
+            SavableGuild guild = getGuild(from);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1112,11 +1129,11 @@ public class GuildUtils {
                     }
                 }
 
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleJoins) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleJoins()) {
                         MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), joinsTitle,
                                 joinsConsole
-                                , DiscordBotConfUtils.textChannelGuilds));
+                                , DiscordBotConfUtils.textChannelGuilds()));
                     }
                 }
             } else {
@@ -1129,7 +1146,7 @@ public class GuildUtils {
 
     public static void leaveGuild(SavableUser sender) {
         try {
-            Guild guild = getGuild(sender);
+            SavableGuild guild = getGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1170,11 +1187,11 @@ public class GuildUtils {
 
                 guild.removeMemberFromGuild(sender);
 
-                if (ConfigUtils.moduleDEnabled) {
-                    if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleLeaves) {
+                if (ConfigUtils.moduleDEnabled()) {
+                    if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleLeaves()) {
                         MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), leaveTitle,
                                 leaveConsole
-                                , DiscordBotConfUtils.textChannelGuilds));
+                                , DiscordBotConfUtils.textChannelGuilds()));
                     }
                 }
             } else {
@@ -1187,7 +1204,7 @@ public class GuildUtils {
 
     public static void sendChat(SavableUser sender, String msg) {
         try {
-            Guild guild = getGuild(sender);
+            SavableGuild guild = getGuild(sender);
 
             if (! isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1213,21 +1230,21 @@ public class GuildUtils {
                 );
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleChats) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleChats()) {
                     MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), chatTitle,
                             chatConsole
                                     .replace("%message%", msg)
-                            , DiscordBotConfUtils.textChannelGuilds));
+                            , DiscordBotConfUtils.textChannelGuilds()));
                 }
             }
 
-            if (ConfigUtils.moduleDPC) {
+            if (ConfigUtils.moduleDPC()) {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.leaderUUID, msg);
             }
 
             for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
-                if (! pp.hasPermission(ConfigUtils.guildView)) continue;
+                if (! pp.hasPermission(ConfigUtils.guildView())) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
@@ -1242,7 +1259,7 @@ public class GuildUtils {
         }
     }
 
-    public static void sendChat(SavablePlayer sender, Guild guild, String msg) {
+    public static void sendChat(SavablePlayer sender, SavableGuild guild, String msg) {
         try {
             if (! isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1270,21 +1287,21 @@ public class GuildUtils {
                 );
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleChats) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleChats()) {
                     MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), chatTitle,
                             chatConsole
                                     .replace("%message%", msg)
-                            , DiscordBotConfUtils.textChannelGuilds));
+                            , DiscordBotConfUtils.textChannelGuilds()));
                 }
             }
 
-            if (ConfigUtils.moduleDPC) {
+            if (ConfigUtils.moduleDPC()) {
                 StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.leaderUUID, msg);
             }
 
             for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
-                if (! pp.hasPermission(ConfigUtils.guildView)) continue;
+                if (! pp.hasPermission(ConfigUtils.guildView())) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
@@ -1299,8 +1316,8 @@ public class GuildUtils {
         }
     }
 
-    public static void sendChatFromDiscord(String nameUsed, Guild guild, String format, String msg) {
-        if (! ConfigUtils.moduleDEnabled) return;
+    public static void sendChatFromDiscord(String nameUsed, SavableGuild guild, String format, String msg) {
+        if (! ConfigUtils.moduleDEnabled()) return;
 
         try {
             for (SavableUser pl : guild.totalMembers) {
@@ -1309,17 +1326,17 @@ public class GuildUtils {
                 );
             }
 
-//            if (ConfigUtils.moduleDEnabled) {
-//                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleChats) {
+//            if (ConfigUtils.moduleDEnabled()) {
+//                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleChats()) {
 //                    MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), chatTitle,
 //                            chatConsole
 //                                    .replace("%message%", msg)
-//                            , DiscordBotConfUtils.textChannelGuilds));
+//                            , DiscordBotConfUtils.textChannelGuilds()));
 //                }
 //            }
 
             for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
-                if (! pp.hasPermission(ConfigUtils.guildView)) continue;
+                if (! pp.hasPermission(ConfigUtils.guildView())) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
@@ -1332,8 +1349,8 @@ public class GuildUtils {
         }
     }
 
-    public static void sendChatFromDiscord(SavableUser user, Guild guild, String format, String msg) {
-        if (! ConfigUtils.moduleDEnabled) return;
+    public static void sendChatFromDiscord(SavableUser user, SavableGuild guild, String format, String msg) {
+        if (! ConfigUtils.moduleDEnabled()) return;
 
         try {
             for (SavableUser pl : guild.totalMembers) {
@@ -1342,17 +1359,17 @@ public class GuildUtils {
                 );
             }
 
-//            if (ConfigUtils.moduleDEnabled) {
-//                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleChats) {
+//            if (ConfigUtils.moduleDEnabled()) {
+//                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleChats()) {
 //                    MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), chatTitle,
 //                            chatConsole
 //                                    .replace("%message%", msg)
-//                            , DiscordBotConfUtils.textChannelGuilds));
+//                            , DiscordBotConfUtils.textChannelGuilds()));
 //                }
 //            }
 
             for (Player pp : StreamLine.getInstance().getProxy().getAllPlayers()){
-                if (! pp.hasPermission(ConfigUtils.guildView)) continue;
+                if (! pp.hasPermission(ConfigUtils.guildView())) continue;
 
                 SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
 
@@ -1367,7 +1384,7 @@ public class GuildUtils {
 
     public static void rename(SavableUser sender, String newName){
         try {
-            Guild guild = getGuild(sender);
+            SavableGuild guild = getGuild(sender);
 
             if (! isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1386,20 +1403,20 @@ public class GuildUtils {
 
             String oldName = guild.name;
 
-            if (ConfigUtils.guildIncludeColors) {
-                if (newName.length() > ConfigUtils.guildMaxLength) {
+            if (ConfigUtils.guildIncludeColors()) {
+                if (newName.length() > ConfigUtils.guildMaxLength()) {
                     MessagingUtils.sendBUserMessage(sender.findSender(), nameTooLong
                             .replace("%length%", String.valueOf(newName.length()))
-                            .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength))
+                            .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength()))
                             .replace("%codes%", withCodes)
                     );
                     return;
                 }
             } else {
-                if (TextUtils.stripColor(newName).length() > ConfigUtils.guildMaxLength) {
+                if (TextUtils.stripColor(newName).length() > ConfigUtils.guildMaxLength()) {
                     MessagingUtils.sendBUserMessage(sender.findSender(), nameTooLong
                             .replace("%length%", String.valueOf(TextUtils.stripColor(newName).length()))
-                            .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength))
+                            .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength()))
                             .replace("%codes%", withoutCodes)
                     );
                     return;
@@ -1422,13 +1439,13 @@ public class GuildUtils {
                 }
             }
 
-            if (ConfigUtils.moduleDEnabled) {
-                if (ConfigUtils.guildToDiscord && ConfigUtils.guildConsoleRenames) {
+            if (ConfigUtils.moduleDEnabled()) {
+                if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleRenames()) {
                     MessagingUtils.sendDiscordGEBMessage(guild, new DiscordMessage(sender.findSender(), renameTitle,
                             renameConsole
                                     .replace("%new%", newName)
                                     .replace("%old_name%", oldName)
-                            , DiscordBotConfUtils.textChannelGuilds));
+                            , DiscordBotConfUtils.textChannelGuilds()));
                 }
             }
         } catch (Exception e) {
@@ -1437,9 +1454,9 @@ public class GuildUtils {
     }
 
     public static void saveAll(){
-        List<Guild> gs = new ArrayList<>(getGuilds());
+        List<SavableGuild> gs = new ArrayList<>(getGuilds());
 
-        for (Guild guild : gs) {
+        for (SavableGuild guild : gs) {
             try {
                 guild.saveInfo();
             } catch (Exception e) {

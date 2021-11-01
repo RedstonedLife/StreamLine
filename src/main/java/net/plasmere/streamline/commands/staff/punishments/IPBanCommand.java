@@ -66,7 +66,7 @@ public class IPBanCommand extends SLCommand {
 
                     String otherUUID = other.uuid;
 
-                    if (PlayerUtils.hasOfflinePermission(ConfigUtils.punIPBansBypass, otherUUID)) {
+                    if (PlayerUtils.hasOfflinePermission(ConfigUtils.punIPBansBypass(), otherUUID)) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.ipBanCannot());
                         return;
                     }
@@ -75,7 +75,7 @@ public class IPBanCommand extends SLCommand {
                 if (args.length >= 4 && (args[2].endsWith("y") || args[2].endsWith("mo") || args[2].endsWith("w") || args[2].endsWith("d") || args[2].endsWith("h") || args[2].endsWith("m") || args[2].endsWith("s"))) {
                     for (String ip : ipsToBan) {
                         String ipToBan = ip.replace(".", "_");
-                        if (! ConfigUtils.punIPBansReplaceable) {
+                        if (! ConfigUtils.punIPBansReplaceable()) {
                             if (bans.contains(ipToBan)) {
                                 if (bans.getBoolean(ipToBan + ".banned")) {
                                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.ipBanBTempAlready()
@@ -125,8 +125,8 @@ public class IPBanCommand extends SLCommand {
                                 .replace("%date%", new Date(Long.parseLong(till)).toString())
                         );
 
-                        if (ConfigUtils.moduleDEnabled) {
-                            if (ConfigUtils.punIPBansDiscord) {
+                        if (ConfigUtils.moduleDEnabled()) {
+                            if (ConfigUtils.punIPBansDiscord()) {
                                 MessagingUtils.sendDiscordEBMessage(
                                         new DiscordMessage(
                                                 sender,
@@ -137,13 +137,13 @@ public class IPBanCommand extends SLCommand {
                                                         .replace("%reason%", reason)
                                                         .replace("%date%", new Date(Long.parseLong(till)).toString())
                                                 ,
-                                                DiscordBotConfUtils.textChannelIPBans
+                                                DiscordBotConfUtils.textChannelIPBans()
                                         )
                                 );
                             }
                         }
 
-                        MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.ipBanBTempStaff()
+                        MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), MessageConfUtils.ipBanBTempStaff()
                                 .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                 .replace("%ip%", ip)
                                 .replace("%reason%", reason)
@@ -156,7 +156,7 @@ public class IPBanCommand extends SLCommand {
 
                 for (String ip : ipsToBan) {
                     String ipToBan = ip.replace(".", "_");
-                    if (! ConfigUtils.punIPBansReplaceable) {
+                    if (! ConfigUtils.punIPBansReplaceable()) {
                         if (bans.contains(ipToBan)) {
                             if (bans.getBoolean(ipToBan + ".banned")) {
                                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.ipBanBPermAlready()
@@ -192,8 +192,8 @@ public class IPBanCommand extends SLCommand {
                             .replace("%reason%", reason)
                     );
 
-                    if (ConfigUtils.moduleDEnabled) {
-                        if (ConfigUtils.punIPBansDiscord) {
+                    if (ConfigUtils.moduleDEnabled()) {
+                        if (ConfigUtils.punIPBansDiscord()) {
                             MessagingUtils.sendDiscordEBMessage(
                                     new DiscordMessage(
                                             sender,
@@ -203,13 +203,13 @@ public class IPBanCommand extends SLCommand {
                                                     .replace("%ip%", ip)
                                                     .replace("%reason%", reason)
                                             ,
-                                            DiscordBotConfUtils.textChannelIPBans
+                                            DiscordBotConfUtils.textChannelIPBans()
                                     )
                             );
                         }
                     }
 
-                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.ipBanBPermStaff()
+                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), MessageConfUtils.ipBanBPermStaff()
                             .replace("%punisher%", PlayerUtils.getSourceName(sender))
                             .replace("%ip%", ip)
                             .replace("%reason%", reason)
@@ -231,14 +231,14 @@ public class IPBanCommand extends SLCommand {
 
                     String otherUUID = other.uuid;
 
-                    if (PlayerUtils.hasOfflinePermission(ConfigUtils.punIPBansBypass, otherUUID)) {
+                    if (PlayerUtils.hasOfflinePermission(ConfigUtils.punIPBansBypass(), otherUUID)) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.ipBanCannot());
                         return;
                     }
                 }
                 for (String ip : ipsToBan) {
                     String ipToBan = ip.replace(".", "_");
-                    if (!ConfigUtils.punIPBansReplaceable) {
+                    if (!ConfigUtils.punIPBansReplaceable()) {
                         if (bans.contains(ipToBan)) {
                             if (bans.getBoolean(ipToBan + ".banned")) {
                                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.ipBanBTempAlready()
@@ -288,7 +288,7 @@ public class IPBanCommand extends SLCommand {
                             .replace("%date%", new Date(Long.parseLong(till)).toString())
                     );
 
-                    if (ConfigUtils.punIPBansDiscord) {
+                    if (ConfigUtils.punIPBansDiscord()) {
                         MessagingUtils.sendDiscordEBMessage(
                                 new DiscordMessage(
                                         sender,
@@ -299,12 +299,12 @@ public class IPBanCommand extends SLCommand {
                                                 .replace("%reason%", reason)
                                                 .replace("%date%", new Date(Long.parseLong(till)).toString())
                                         ,
-                                        DiscordBotConfUtils.textChannelIPBans
+                                        DiscordBotConfUtils.textChannelIPBans()
                                 )
                         );
                     }
 
-                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.ipBanBTempStaff()
+                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), MessageConfUtils.ipBanBTempStaff()
                             .replace("%punisher%", PlayerUtils.getSourceName(sender))
                             .replace("%ip%", ip)
                             .replace("%reason%", reason)
@@ -329,7 +329,7 @@ public class IPBanCommand extends SLCommand {
                             .replace("%ip%", ip)
                     );
 
-                    if (ConfigUtils.punIPBansDiscord) {
+                    if (ConfigUtils.punIPBansDiscord()) {
                         MessagingUtils.sendDiscordEBMessage(
                                 new DiscordMessage(
                                         sender,
@@ -338,12 +338,12 @@ public class IPBanCommand extends SLCommand {
                                                 .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                 .replace("%ip%", ip)
                                         ,
-                                        DiscordBotConfUtils.textChannelIPBans
+                                        DiscordBotConfUtils.textChannelIPBans()
                                 )
                         );
                     }
 
-                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm, MessageConfUtils.ipBanUnStaff()
+                    MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), MessageConfUtils.ipBanUnStaff()
                             .replace("%punisher%", PlayerUtils.getSourceName(sender))
                             .replace("%ip%", ip)
                     );

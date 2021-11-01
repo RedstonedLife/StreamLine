@@ -26,7 +26,7 @@ public class SSPYCommand extends SLCommand {
             if (player == null) return;
 
             if (args.length > 0) {
-                if (PluginUtils.checkEqualsStrings(args[0], PluginUtils.stringListToArray(ConfigUtils.viewSelfAliases))) {
+                if (PluginUtils.checkEqualsStrings(args[0], PluginUtils.stringListToArray(ConfigUtils.viewSelfAliases()))) {
                     player.toggleSSPYVS();
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.sspyvsToggle()
                             .replace("%toggle%", (player.sspyvs ? MessageConfUtils.sspyvsOn() : MessageConfUtils.sspyvsOff()))

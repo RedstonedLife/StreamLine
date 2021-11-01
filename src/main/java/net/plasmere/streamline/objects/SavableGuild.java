@@ -13,7 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class Guild {
+public class SavableGuild {
     private TreeMap<String, String> info = new TreeMap<>();
     private final String filePrePath = StreamLine.getInstance().getDataFolder() + File.separator + "guilds" + File.separator;
 
@@ -33,7 +33,7 @@ public class Guild {
     public int totalXP;
     public int currentXP;
     public int lvl;
-    public int maxSize = ConfigUtils.guildMax;
+    public int maxSize = ConfigUtils.guildMax();
 
     public List<String> savedKeys;
 
@@ -43,7 +43,7 @@ public class Guild {
         LEADER
     }
 
-    public Guild(String creatorUUID, String name) throws IOException {
+    public SavableGuild(String creatorUUID, String name) throws IOException {
         this.leaderUUID = creatorUUID;
         this.name = name;
         this.totalMembersByUUID.add(creatorUUID);
@@ -56,7 +56,7 @@ public class Guild {
         construct(leaderUUID, true);
     }
 
-    public Guild(String uuid, boolean create) throws IOException {
+    public SavableGuild(String uuid, boolean create) throws IOException {
         construct(uuid, create);
     }
 
@@ -71,7 +71,7 @@ public class Guild {
     private void construct(String uuid, boolean createNew) throws IOException {
         if (uuid == null) return;
 
-        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getgDir(), uuid);
+        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getGDir(), uuid);
 
         if (createNew) {
             try {
@@ -294,19 +294,19 @@ public class Guild {
         }
 
         if (this.leaderUUID == null) {
-            try {
-                throw new Exception("Improper use of the Guild's class! Report this to the owner of the StreamLine plugin...");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                throw new Exception("Improper use of the SavableGuild's class! Report this to the owner of the StreamLine plugin...");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
             return;
         }
         if (this.leaderUUID.equals("null") || this.leaderUUID.equals("")) {
-            try {
-                throw new Exception("Improper use of the Guild's class! Report this to the owner of the StreamLine plugin...");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                throw new Exception("Improper use of the SavableGuild's class! Report this to the owner of the StreamLine plugin...");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
             return;
         }
 
@@ -520,16 +520,14 @@ public class Guild {
     }
 
     public void setTotalXP(int amount){
-        int setAmount = amount;
-        int required = getNeededXp(this.lvl + 1);
+        this.totalXP = amount;
 
-        while (setAmount >= required) {
-            setAmount -= required;
+        while (xpUntilNextLevel() <= 0) {
             int setLevel = this.lvl + 1;
             updateKey("lvl", setLevel);
         }
 
-        updateKey("total-xp", setAmount);
+        updateKey("total-xp", amount);
         updateKey("current-xp", getCurrentXP());
     }
 

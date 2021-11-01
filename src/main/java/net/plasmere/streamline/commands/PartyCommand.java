@@ -19,7 +19,7 @@ public class PartyCommand extends SLCommand {
     @Override
     public void run(CommandSource sender, String[] args) {
         if (sender instanceof Player) {
-            SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStat(((Player) sender).getUsername());
 
             if (player == null) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
@@ -34,7 +34,12 @@ public class PartyCommand extends SLCommand {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParJoinAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParJoinAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParJoinPermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -50,21 +55,36 @@ public class PartyCommand extends SLCommand {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParLeaveAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParLeaveAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParLeavePermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 try {
                     PartyUtils.leaveParty(player);
                 } catch (Exception e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCreateAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCreateAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParCreatePermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 try {
                     PartyUtils.createParty(player);
                 } catch (Exception e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParPromoteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParPromoteAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParPromotePermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 if (args.length <= 1) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } else {
@@ -75,7 +95,12 @@ public class PartyCommand extends SLCommand {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDemoteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDemoteAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParDemotePermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -91,7 +116,12 @@ public class PartyCommand extends SLCommand {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParChatAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParChatAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParChatPermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -107,14 +137,24 @@ public class PartyCommand extends SLCommand {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParListAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParListAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParListPermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 try {
                     PartyUtils.listParty(player);
                 } catch (Exception e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParOpenAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParOpenAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParOpenPermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 if (args.length <= 1) {
                     try {
                         PartyUtils.openParty(player);
@@ -134,21 +174,36 @@ public class PartyCommand extends SLCommand {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCloseAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCloseAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParClosePermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 try {
                     PartyUtils.closeParty(player);
                 } catch (Exception e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDisbandAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDisbandAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParDisbandPermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 try {
                     PartyUtils.disband(player);
                 } catch (Throwable e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParAcceptAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParAcceptAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParAcceptPermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -164,7 +219,12 @@ public class PartyCommand extends SLCommand {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDenyAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDenyAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParDenyPermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -180,7 +240,12 @@ public class PartyCommand extends SLCommand {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParInvAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParInvAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParInvitePermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -196,7 +261,12 @@ public class PartyCommand extends SLCommand {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParKickAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParKickAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParKickPermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 if (args.length <= 1) {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
@@ -212,14 +282,24 @@ public class PartyCommand extends SLCommand {
                         e.printStackTrace();
                     }
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParMuteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParMuteAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParMutePermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 try {
                     PartyUtils.muteParty(player);
                 } catch (Throwable e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParWarpAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParWarpAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParWarpPermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
                 try {
                     PartyUtils.warpParty(player);
                 } catch (Throwable e) {
@@ -279,39 +359,44 @@ public class PartyCommand extends SLCommand {
             return TextUtils.getCompletion(tabArgs1, args[0]);
         }
         if (args.length == 2) {
-            if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildJoinAliases)) {
+            if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParJoinAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParJoinPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildLeaveAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParLeaveAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCreateAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCreateAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildPromoteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParPromoteAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParPromotePermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDemoteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDemoteAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParDemotePermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildChatAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParChatAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildListAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParListAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildOpenAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParOpenAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCloseAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCloseAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDisbandAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDisbandAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildAcceptAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParAcceptAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParAcceptPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDenyAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDenyAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParDenyPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInvAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParInvAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParInvitePermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildKickAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParKickAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParKickPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[0]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildMuteAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParMuteAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildWarpAliases)) {
-                return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases)) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParWarpAliases())) {
                 return new ArrayList<>();
             } else {
                 return TextUtils.getCompletion(strPlayers, args[1]);

@@ -1,9 +1,8 @@
 package net.plasmere.streamline.commands.staff;
 
 import com.velocitypowered.api.command.CommandSource;
-import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.Guild;
+import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -23,7 +22,7 @@ public class GuildsCommand extends SLCommand {
             return;
         }
 
-        for (Guild guild : GuildUtils.getGuilds()){
+        for (SavableGuild guild : GuildUtils.getGuilds()){
             MessagingUtils.sendBGUserMessage(guild, sender, sender, MessageConfUtils.guildsMessage());
         }
     }
