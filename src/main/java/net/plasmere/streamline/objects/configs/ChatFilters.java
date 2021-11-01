@@ -19,7 +19,7 @@ import java.util.TreeMap;
 public class ChatFilters {
     private Configuration conf;
     private final String fileString = "chat-filters.yml";
-    private final File file = new File(StreamLine.getInstance().getPlDir(), fileString);
+    private final File file = new File(StreamLine.getInstance().getConfDir(), fileString);
     public TreeMap<Long, DataChannel> loadedChannels = new TreeMap<>();
 
     public TreeMap<String, Integer> toVerify = new TreeMap<>();
