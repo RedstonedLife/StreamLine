@@ -1791,11 +1791,15 @@ public class PlayerUtils {
     }
 
     public static Player getPPlayer(String string){
-        if (string.contains("-")) {
-            return StreamLine.getInstance().getProxy().getPlayer(UUID.fromString(string)).get();
-        }
+        try {
+            if (string.contains("-")) {
+                return StreamLine.getInstance().getProxy().getPlayer(UUID.fromString(string)).get();
+            }
 
-        return StreamLine.getInstance().getProxy().getPlayer(string).get();
+            return StreamLine.getInstance().getProxy().getPlayer(string).get();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static Player getPPlayerByUUID(String uuid){

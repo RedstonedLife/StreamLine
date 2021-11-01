@@ -450,7 +450,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(((Player) message.sender).getUsername()), FaceFetcher.getFaceAvatarURL(((Player) message.sender).getUsername()))
                                             .build()
                             ).queue();
                 } else {
@@ -490,7 +490,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(((Player) message.sender).getUsername()), FaceFetcher.getFaceAvatarURL(((Player) message.sender).getUsername()))
                                             .build()
                             ).queue();
                 } else {
@@ -527,7 +527,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(((Player) message.sender).getUsername()), FaceFetcher.getFaceAvatarURL(((Player) message.sender).getUsername()))
                                             .build()
                             ).queue();
                 } else {
@@ -733,7 +733,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(msg, message.sender))
-                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(((Player) message.sender).getUsername()), FaceFetcher.getFaceAvatarURL(((Player) message.sender).getUsername()))
                                             .build()
                             ).queue();
                 } else {
@@ -901,7 +901,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(msg, message.sender))
-                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName), FaceFetcher.getFaceAvatarURL(Objects.requireNonNull(PlayerUtils.getPlayerStat(message.sender)).latestName))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(((Player) message.sender).getUsername()), FaceFetcher.getFaceAvatarURL(((Player) message.sender).getUsername()))
                                             .build()
                             ).queue();
                 } else {
