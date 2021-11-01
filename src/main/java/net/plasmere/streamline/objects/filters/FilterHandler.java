@@ -3,6 +3,7 @@ package net.plasmere.streamline.objects.filters;
 
 
 import net.plasmere.streamline.config.backend.Configuration;
+import org.apache.commons.collections4.list.TreeList;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,6 +11,16 @@ import java.util.List;
 
 public class FilterHandler {
     public static List<ChatFilter> filters = new ArrayList<>();
+
+    public static TreeList<String> getAllFiltersByName() {
+        TreeList<String> strings = new TreeList<>();
+
+        for (ChatFilter filter : filters) {
+            strings.add(filter.name);
+        }
+
+        return strings;
+    }
 
     public static ChatFilter addFilter(ChatFilter filter) {
         if (filters.contains(filter)) return filter;

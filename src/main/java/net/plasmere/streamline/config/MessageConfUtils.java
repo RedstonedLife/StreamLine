@@ -1606,4 +1606,29 @@ public class MessageConfUtils {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("history.chat-bulk.message");
     }
+
+    public static String filtersEnabled() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("filters.enabled");
+    }
+    public static String filtersDisabled() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("filters.disabled");
+    }
+    public static String filtersReplacementsLast() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("filters.replacements.last");
+    }
+    public static String filtersReplacementsNLast() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("filters.replacements.not-last");
+    }
+    public static String filtersCommandToggle() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("filters.command.toggle.message");
+    }
+    public static String filtersCommandCreate() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("filters.command.create.message");
+    }
 }

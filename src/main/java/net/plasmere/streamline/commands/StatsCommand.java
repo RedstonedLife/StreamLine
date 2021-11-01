@@ -24,7 +24,7 @@ public class StatsCommand extends SLCommand {
     @Override
     public void run(CommandSource sender, String[] args) {
         if (sender instanceof Player) {
-            if (args.length <= 0 || ! CommandsConfUtils.comBStatsOthers) {
+            if (args.length <= 0 || ! CommandsConfUtils.comBStatsOthers()) {
                 PlayerUtils.info(sender, PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender)));
             } else {
                 SavableUser person = PlayerUtils.getOrGetSavableUser(args[0]);
@@ -63,7 +63,7 @@ public class StatsCommand extends SLCommand {
 
         strPlayers.add("%");
 
-        if (sender.hasPermission(CommandsConfUtils.comBStatsPermOthers)) {
+        if (sender.hasPermission(CommandsConfUtils.comBStatsPermOthers())) {
             return TextUtils.getCompletion(strPlayers, args[0]);
         }
 

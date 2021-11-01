@@ -27,7 +27,7 @@ public class GoToServerVanillaCommand extends SLCommand {
             if (player.hasPermission("streamline.server.fabric") || player.hasPermission("streamline.*")) {
                 ProxyServer proxy = StreamLine.getInstance().getProxy();
 
-                RegisteredServer vanServer = proxy.getServer(CommandsConfUtils.comBFabricEnd).get();
+                RegisteredServer vanServer = proxy.getServer(CommandsConfUtils.comBFabricEnd()).get();
 
                 MessagingUtils.sendBUserMessage(sender, "&aConnecting now...");
                 player.createConnectionRequest(vanServer);

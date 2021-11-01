@@ -209,7 +209,7 @@ public class TextUtils {
 //        }
 //    }
 
-    public static String argsToStringMinus(String[] args, int... toRemove){
+    public static String[] argsMinus(String[] args, int... toRemove) {
         TreeMap<Integer, String> argsSet = new TreeMap<>();
 
         for (int i = 0; i < args.length; i++) {
@@ -220,7 +220,11 @@ public class TextUtils {
             argsSet.remove(remove);
         }
 
-        return normalize(argsSet);
+        return argsSet.values().toArray(new String[0]);
+    }
+
+    public static String argsToStringMinus(String[] args, int... toRemove){
+        return normalize(argsMinus(args, toRemove));
     }
 
     public static String argsToString(String[] args){

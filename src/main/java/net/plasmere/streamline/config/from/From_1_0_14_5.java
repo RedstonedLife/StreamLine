@@ -50,6 +50,13 @@ public class From_1_0_14_5 extends From {
         addUpdatedLocalesEntry("history.message", "&eShowing &cchat history &efor &d%player_formatted%&8:%newline%%chat_bulk%", "en_US");
         addUpdatedLocalesEntry("history.chat-bulk.message", "&b%timestamp% &4> &r%message%", "en_US");
 
+        addUpdatedLocalesEntry("filters.enabled", "&aTRUE", "en_US");
+        addUpdatedLocalesEntry("filters.disabled", "&cFALSE", "en_US");
+        addUpdatedLocalesEntry("filters.replacements.last", "&c%replacement%", "en_US");
+        addUpdatedLocalesEntry("filters.replacements.not-last", "&c%replacement%&8, ", "en_US");
+        addUpdatedLocalesEntry("filters.command.toggle.message", "&eJust toggled chat filter &b\"&c%name%&b\" &eto %toggle%", "en_US");
+        addUpdatedLocalesEntry("filters.command.create.message", "&eJust created a new chat filter as &0(%toggle%&8, &eregex&8: &c%regex%&8, &ereplacements&8: &0(%replacements%&0) &0)", "en_US");
+
         // FR
         // ||
         // vv
@@ -64,6 +71,13 @@ public class From_1_0_14_5 extends From {
 
         addUpdatedLocalesEntry("history.message", "&eShowing &cchat history &efor &d%player_formatted%&8:%newline%%chat_bulk%", "fr_FR");
         addUpdatedLocalesEntry("history.chat-bulk.message", "&b%timestamp% &4> &r%message%", "fr_FR");
+
+        addUpdatedLocalesEntry("filters.enabled", "&aTRUE", "fr_FR");
+        addUpdatedLocalesEntry("filters.disabled", "&cFALSE", "fr_FR");
+        addUpdatedLocalesEntry("filters.replacements.last", "&c%replacement%", "fr_FR");
+        addUpdatedLocalesEntry("filters.replacements.not-last", "&c%replacement%&8, ", "fr_FR");
+        addUpdatedLocalesEntry("filters.command.toggle.message", "&eJust toggled chat filter &b\"&c%name%&b\" &eto %toggle%", "fr_FR");
+        addUpdatedLocalesEntry("filters.command.create.message", "&eJust created a new chat filter as &0(%toggle%&8, &eregex&8: &c%regex%&8, &ereplacements&8: &0(%replacements%&0) &0)", "fr_FR");
     }
 
     @Override
@@ -129,6 +143,11 @@ public class From_1_0_14_5 extends From {
         addUpdatedCommandsEntry("commands.bungee.guild.permissions.warp", "streamline.command.guild.warp");
         addUpdatedCommandsEntry("commands.bungee.guild.permissions.info", "streamline.command.guild.info");
         addUpdatedCommandsEntry("commands.bungee.guild.permissions.rename", "streamline.command.guild.rename");
+
+        addUpdatedCommandsEntry("commands.bungee.staff.chat-filter.enabled", true);
+        addUpdatedCommandsEntry("commands.bungee.staff.chat-filter.base", "chat-filter");
+        addUpdatedCommandsEntry("commands.bungee.staff.chat-filter.permission", "streamline.command.chat-filter");
+        addUpdatedCommandsEntry("commands.bungee.staff.chat-filter.aliases", Arrays.asList("chatf", "chf", "filter"));
     }
 
     @Override

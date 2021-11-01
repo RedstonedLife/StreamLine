@@ -1,4 +1,4 @@
-package net.plasmere.streamline.commands.staff;
+package net.plasmere.streamline.commands.messaging;
 
 import com.velocitypowered.api.command.CommandSource;
 import net.plasmere.streamline.config.ConfigUtils;

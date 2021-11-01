@@ -16,6 +16,8 @@ import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
+import net.plasmere.streamline.objects.filters.ChatFilter;
+import net.plasmere.streamline.objects.filters.FilterHandler;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
@@ -37,6 +39,13 @@ public class ChatListener {
         Player sender = e.getPlayer();
 
         String msg = e.getMessage();
+
+        if (ConfigUtils.moduleBChatFiltersEnabled()) {
+            for (ChatFilter filter : FilterHandler.filters) {
+                if (! filter.enabled) continue;
+                msg = filter.applyFilter(msg);
+            }
+        }
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(sender);
 

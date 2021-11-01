@@ -36,7 +36,7 @@ public class GoToServerLobbyCommand extends SLCommand {
                 if (player.hasPermission("streamline.server.lobby") || player.hasPermission("streamline.*")) {
                     ProxyServer proxy = StreamLine.getInstance().getProxy();
 
-                    RegisteredServer vanServer = proxy.getServer(CommandsConfUtils.comBLobbyEnd).get();
+                    RegisteredServer vanServer = proxy.getServer(CommandsConfUtils.comBLobbyEnd()).get();
 
                     MessagingUtils.sendBUserMessage(sender, "&aConnecting now...");
                     player.createConnectionRequest(vanServer);

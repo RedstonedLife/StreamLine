@@ -41,7 +41,7 @@ public class PingCommand extends SLCommand {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                 }
             } else {
-                if (sender.hasPermission(CommandsConfUtils.comBPingPermOthers) && CommandsConfUtils.comBPingOthers) {
+                if (sender.hasPermission(CommandsConfUtils.comBPingPermOthers()) && CommandsConfUtils.comBPingOthers()) {
                     if (! PlayerUtils.getPlayerNamesForAllOnline().contains(args[0])) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPlayer());
                         return;
@@ -65,7 +65,7 @@ public class PingCommand extends SLCommand {
     public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         List<String> strings = new ArrayList<>();
 
-        if (sender.hasPermission(CommandsConfUtils.comBPingPermOthers) && CommandsConfUtils.comBPingOthers) {
+        if (sender.hasPermission(CommandsConfUtils.comBPingPermOthers()) && CommandsConfUtils.comBPingOthers()) {
             for (Player player : PlayerUtils.getOnlinePPlayers()) {
                 strings.add(player.getUsername());
             }

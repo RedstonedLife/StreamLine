@@ -6,6 +6,7 @@ import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.config.backend.ConfigurationProvider;
 import net.plasmere.streamline.config.backend.YamlConfiguration;
 import net.plasmere.streamline.objects.DataChannel;
+import net.plasmere.streamline.objects.filters.ChatFilter;
 import net.plasmere.streamline.objects.filters.FilterHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 
@@ -74,6 +75,15 @@ public class ChatFilters {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void saveFilter(ChatFilter filter) {
+        conf.set(filter.name + "enabled", filter.enabled);
+        conf.set(filter.name + "regex", filter.regex);
+        conf.set(filter.name + "replace-with", filter.replacements);
+
+        saveConfig();
+        reloadConfig();
     }
 
     public void loadChatFilters() {

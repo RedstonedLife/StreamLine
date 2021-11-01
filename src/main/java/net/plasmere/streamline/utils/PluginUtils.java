@@ -99,11 +99,17 @@ public class PluginUtils {
         if (CommandsConfUtils.comBLang()) {
             registerCommand(new LanguageCommand(CommandsConfUtils.comBLangBase(), CommandsConfUtils.comBLangPerm(), stringListToArray(CommandsConfUtils.comBLangAliases())));
         }
+        if (CommandsConfUtils.comBVotes()) {
+            registerCommand(new VotesCommand(CommandsConfUtils.comBVotesBase(), CommandsConfUtils.comBVotesPerm(), stringListToArray(CommandsConfUtils.comBVotesAliases())));
+        }
         if (CommandsConfUtils.comBTeleport()) {
             registerCommand(new TeleportCommand(CommandsConfUtils.comBTeleportBase(), CommandsConfUtils.comBTeleportPerm(), stringListToArray(CommandsConfUtils.comBTeleportAliases())));
         }
         if (CommandsConfUtils.comBChH()) {
             registerCommand(new ChatHistoryCommand(CommandsConfUtils.comBChHBase(), CommandsConfUtils.comBChHPerm(), stringListToArray(CommandsConfUtils.comBChHAliases())));
+        }
+        if (CommandsConfUtils.comBChF()) {
+            registerCommand(new ChatFilterCommand(CommandsConfUtils.comBChFBase(), CommandsConfUtils.comBChFPerm(), stringListToArray(CommandsConfUtils.comBChFAliases())));
         }
         // // Spying.
         if (CommandsConfUtils.comBSSPY()) {

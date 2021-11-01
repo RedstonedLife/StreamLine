@@ -1041,6 +1041,23 @@ public class CommandsConfUtils {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.staff.chat-history.permission");
     }
+    // Chat Filter.
+    public static boolean comBChF() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.staff.chat-filter.enabled");
+    }
+    public static String comBChFBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.staff.chat-filter.base");
+    }
+    public static List<String> comBChFAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.staff.chat-filter.aliases");
+    }
+    public static String comBChFPerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.staff.chat-filter.permission");
+    }
     // // Configs.
     // Settings.
     public static boolean comBSettings() {
