@@ -33,6 +33,8 @@ public class ChatFilters {
 
         conf = loadConfig();
 
+        loadChatFilters();
+
         MessagingUtils.logInfo("Loaded chat filters!");
     }
 
