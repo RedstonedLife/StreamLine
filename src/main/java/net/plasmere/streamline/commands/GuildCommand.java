@@ -435,14 +435,17 @@ public class GuildCommand extends SLCommand {
         }
         if (args.length == 2) {
             if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildJoinAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBGuildJoinPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildLeaveAliases())) {
                 return new ArrayList<>();
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCreateAliases())) {
                 return new ArrayList<>();
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildPromoteAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBGuildPromotePermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDemoteAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBGuildDemotePermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildChatAliases())) {
                 return new ArrayList<>();
@@ -455,12 +458,16 @@ public class GuildCommand extends SLCommand {
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDisbandAliases())) {
                 return new ArrayList<>();
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildAcceptAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBGuildAcceptPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDenyAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBGuildDenyPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInvAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBGuildInvitePermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildKickAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBGuildKickPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[0]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildMuteAliases())) {
                 return new ArrayList<>();
