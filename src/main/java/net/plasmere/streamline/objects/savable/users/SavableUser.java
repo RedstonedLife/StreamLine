@@ -109,13 +109,17 @@ public abstract class SavableUser {
         if (this.uuid.equals("%")) {
             return ConfigUtils.consoleServer();
         } else {
-            Player player = PlayerUtils.getPPlayerByUUID(this.uuid);
+            try {
+                Player player = PlayerUtils.getPPlayerByUUID(this.uuid);
 
-            if (player == null) return MessageConfUtils.nullB();
+                if (player == null) return MessageConfUtils.nullB();
 
-            if (player.getCurrentServer().isPresent()) return ConfigUtils.consoleServer();
+                if (player.getCurrentServer().isPresent()) return ConfigUtils.consoleServer();
 
-            return player.getCurrentServer().get().getServerInfo().getName();
+                return player.getCurrentServer().get().getServerInfo().getName();
+            } catch (Exception e) {
+                return MessageConfUtils.nullB();
+            }
         }
     }
 
