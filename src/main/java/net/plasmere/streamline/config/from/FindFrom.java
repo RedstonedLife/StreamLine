@@ -44,6 +44,7 @@ public class FindFrom {
                 new From_1_0_14_3(language);
                 new From_1_0_14_5(language);
                 break;
+            case "1.0.14.4":
             case "1.0.14.5":
                 new From_1_0_14_5(language);
                 break;

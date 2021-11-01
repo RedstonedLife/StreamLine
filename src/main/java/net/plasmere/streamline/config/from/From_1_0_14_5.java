@@ -21,7 +21,7 @@ public class From_1_0_14_5 extends From {
 
     @Override
     public void setupConfigFix() {
-        MessagingUtils.logSevere("Set up you bStats settings. They are at the bottom of your config.yml.");
+        MessagingUtils.logSevere("Set up your bStats settings. They are at the bottom of your config.yml.");
         addUpdatedConfigEntry("modules.bstats.make-server-discoverable", true);
         addUpdatedConfigEntry("modules.bstats.discoverable-ip", "my.server.net");
 
