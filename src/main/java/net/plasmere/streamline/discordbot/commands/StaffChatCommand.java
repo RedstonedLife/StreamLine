@@ -23,20 +23,7 @@ public class StaffChatCommand {
 
         String msg = om.substring((prefix + command + " ").length());
 
-        Collection<ProxiedPlayer> staff = StreamLine.getInstance().getProxy().getPlayers();
-        Set<ProxiedPlayer> staffs = new HashSet<>(staff);
-
-        for (ProxiedPlayer player : staff){
-            try {
-                if (! player.hasPermission(ConfigUtils.staffPerm())) {
-                    staffs.remove(player);
-                }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        MessagingUtils.sendStaffMessageFromDiscord(event.getAuthor().getId(), MessageConfUtils.discordStaffChatFrom(), event.getMessage().getContentRaw());
+        MessagingUtils.sendStaffMessageFromDiscord(event.getAuthor().getId(), MessageConfUtils.discordStaffChatFrom(), msg);
 
         try {
             event.getChannel().sendMessage(eb.setTitle("Success!").setDescription("Message sent!").build()).queue();
