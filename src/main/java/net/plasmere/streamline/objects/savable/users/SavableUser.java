@@ -107,13 +107,13 @@ public abstract class SavableUser {
 
     public String findServer() {
         if (this.uuid.equals("%")) {
-            return ConfigUtils.consoleServer;
+            return ConfigUtils.consoleServer();
         } else {
             Player player = PlayerUtils.getPPlayerByUUID(this.uuid);
 
             if (player == null) return MessageConfUtils.nullB();
 
-            if (player.getCurrentServer().isPresent()) return ConfigUtils.consoleServer;
+            if (player.getCurrentServer().isPresent()) return ConfigUtils.consoleServer();
 
             return player.getCurrentServer().get().getServerInfo().getName();
         }
@@ -321,7 +321,7 @@ public abstract class SavableUser {
         defaults.add("latest-version=" + latestVersion);
         defaults.add("guild=");
         defaults.add("tags=" + defaultTags());
-        defaults.add("points=" + (this.uuid.equals("%") ? ConfigUtils.consoleDefaultPoints : ConfigUtils.pointsDefault));
+        defaults.add("points=" + (this.uuid.equals("%") ? ConfigUtils.consoleDefaultPoints() : ConfigUtils.pointsDefault()));
         defaults.add("last-from=");
         defaults.add("last-to=");
         defaults.add("last-message=");
@@ -403,7 +403,7 @@ public abstract class SavableUser {
 
         if (this.latestName == null) {
             try {
-                if (ConfigUtils.deleteBadStats) {
+                if (ConfigUtils.deleteBadStats()) {
                     this.dispose();
                 }
                 throw new Exception("Bad User Data for user: " + this.uuid + "!");
@@ -415,7 +415,7 @@ public abstract class SavableUser {
 
         if (this.latestName.equals("null")) {
             try {
-                if (ConfigUtils.deleteBadStats) {
+                if (ConfigUtils.deleteBadStats()) {
                     this.dispose();
                 }
                 throw new Exception("Bad User Data for user: " + this.uuid + "!");

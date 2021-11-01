@@ -23,36 +23,36 @@ public class ProxyPingListener {
         int onlinePlayers = players.getOnline();
         int maxPlayers = players.getMax();
 
-        if (ConfigUtils.scOnlinePlayers) {
+        if (ConfigUtils.scOnlinePlayers()) {
             onlinePlayers = StreamLine.serverConfig.onlinePlayers();
 
             builder.onlinePlayers(onlinePlayers);
         }
 
-        if (ConfigUtils.scMaxPlayers) {
+        if (ConfigUtils.scMaxPlayers()) {
             maxPlayers = StreamLine.serverConfig.maxPlayers();
 
             builder.maximumPlayers(maxPlayers);
         }
 
-        if (ConfigUtils.scMOTD) {
+        if (ConfigUtils.scMOTD()) {
             builder.description(TextUtils.clhText(StreamLine.getInstance().getCurrentMOTD()
                         .replace("%online%", String.valueOf(onlinePlayers))
                         .replace("%max%", String.valueOf(maxPlayers))
-                    , ConfigUtils.linkPre));
+                    , ConfigUtils.linkPre()));
 
 //            if (ConfigUtils.debug()) MessagingUtils.logInfo(TextUtils.codedString(StreamLine.getInstance().getCurrentMOTD()
 //                    .replace("%online%", String.valueOf(StreamLine.getInstance().getProxy().getAllPlayers().size()))
 //                    .replace("%max%", String.valueOf(StreamLine.getInstance().getProxy().getConfig().getPlayerLimit()))));
         }
 
-        if (ConfigUtils.scVersion) {
+        if (ConfigUtils.scVersion()) {
             builder.version(new ServerPing.Version(response.getVersion().getProtocol(), StreamLine.serverConfig.getVersion()));
 
 //            if (ConfigUtils.debug()) MessagingUtils.logInfo(StreamLine.serverConfig.getVersion());
         }
 
-        if (ConfigUtils.scSample) {
+        if (ConfigUtils.scSample()) {
             UUID fake = new UUID(0, 0);
             String[] sampleString = StreamLine.serverConfig.getSampleArray();
             ServerPing.SamplePlayer[] sample = new ServerPing.SamplePlayer[sampleString.length];

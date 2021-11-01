@@ -22,12 +22,12 @@ public class ReadyListener implements EventListener {
     public void onEvent(@Nonnull GenericEvent event) {
         if (! ConfigUtils.moduleDEnabled()) return;
 
-        if (ConfigUtils.moduleStartups) {
+        if (ConfigUtils.moduleStartups()) {
             if (event instanceof ReadyEvent) {
                 try {
                     JDA jda = event.getJDA();
 
-                    MessagingUtils.sendDiscordEBMessage(jda, new DiscordMessage(StreamLine.getInstance().getProxy().getConsoleCommandSource(), MessageConfUtils.startTitle(), MessageConfUtils.startMessage(), DiscordBotConfUtils.textChannelOfflineOnline));
+                    MessagingUtils.sendDiscordEBMessage(jda, new DiscordMessage(StreamLine.getInstance().getProxy().getConsoleCommandSource(), MessageConfUtils.startTitle(), MessageConfUtils.startMessage(), DiscordBotConfUtils.textChannelOfflineOnline()));
 
 //                    Objects.requireNonNull(event.getJDA().getTextChannelById(ConfigUtils.textChannelOfflineOnline)).sendMessageEmbeds(eb.setDescription("Bot online!").build()).queue();
                 } catch (NullPointerException n) {

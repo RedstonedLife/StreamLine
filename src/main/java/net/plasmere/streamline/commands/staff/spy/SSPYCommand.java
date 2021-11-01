@@ -48,7 +48,7 @@ public class SSPYCommand extends SLCommand {
     @Override
     public Collection<String> onTabComplete(CommandSource sender, String[] args) {
         if (args.length <= 1) {
-            return TextUtils.getCompletion(ConfigUtils.viewSelfAliases, args[0]);
+            return TextUtils.getCompletion(ConfigUtils.viewSelfAliases(), args[0]);
         } else {
             return new ArrayList<>();
         }

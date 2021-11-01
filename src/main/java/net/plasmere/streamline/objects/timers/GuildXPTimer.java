@@ -38,13 +38,13 @@ public class GuildXPTimer implements Runnable {
 
                 SavableGuild guild = GuildUtils.getOrGetGuild(user.guild);
 
-                guild.addTotalXP(ConfigUtils.xpPerGiveG);
+                guild.addTotalXP(ConfigUtils.xpPerGiveG());
             }
         } catch (Exception e){
             e.printStackTrace();
         }
 
-        //MessagingUtils.logInfo("Just gave " + ConfigUtils.xpPerGiveG + " GEXP to " + GuildUtils.getGuilds().size() + " guilds!");
+        //MessagingUtils.logInfo("Just gave " + ConfigUtils.xpPerGiveG() + " GEXP to " + GuildUtils.getGuilds().size() + " guilds!");
 
         //StreamLine.getInstance().getProxy().getScheduler().schedule(StreamLine.getInstance(), new GuildXPTimer(ConfigUtils.timePerGiveG), 1, 1, TimeUnit.SECONDS);
     }

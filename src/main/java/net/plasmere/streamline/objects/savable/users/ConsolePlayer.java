@@ -24,15 +24,15 @@ public class ConsolePlayer extends SavableUser {
         this.uuid = "%";
 
         this.latestName = ConfigUtils.consoleName();
-        this.displayName = ConfigUtils.consoleDisplayName;
-        this.tagList = ConfigUtils.consoleDefaultTags;
+        this.displayName = ConfigUtils.consoleDisplayName();
+        this.tagList = ConfigUtils.consoleDefaultTags();
 
         this.server = StreamLine.getInstance().getProxy();
     }
 
     @Override
     public int getPointsFromConfig(){
-        return ConfigUtils.consoleDefaultPoints;
+        return ConfigUtils.consoleDefaultPoints();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ConsolePlayer extends SavableUser {
 
     @Override
     public List<String> getTagsFromConfig(){
-        return ConfigUtils.consoleDefaultTags;
+        return ConfigUtils.consoleDefaultTags();
     }
 
     @Override

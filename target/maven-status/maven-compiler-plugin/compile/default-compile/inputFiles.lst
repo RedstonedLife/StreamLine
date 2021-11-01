@@ -1,3 +1,4 @@
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\RanksUtils.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\PlayerClearTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\PluginsCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\PluginUtils.java
@@ -9,11 +10,12 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\NetworkPointsCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\messaging\ChatChannelCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\from\From_1_0_13_3.java
-C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\DeleteStatCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\from\From_1_0_14_3.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\ChatConfig.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\OneSecondTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\TeleportCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\messaging\ChatHistoryCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\messaging\ChatFilterCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\scripts\ScriptReloadCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\scripts\ScriptCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\StaffChatCommand.java
@@ -21,10 +23,12 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\GCQuickCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\GuildCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\commands\VerifyCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\ChatFilters.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\Party.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\OfflineStats.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\SudoCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\lists\ProxiedPlayerSet.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\RanksConfig.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\listeners\LoggerListener.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\listeners\JoinLeaveListener.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\StatsCommand.java
@@ -40,8 +44,9 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\backend\JsonConfiguration.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\GetStatsCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\MessageListener.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\filters\FilterHandler.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\VotesCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\from\From_1_0_14_0.java
-C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\Guild.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\TextUtils.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\commands\StaffOnlineCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\holders\ViaHolder.java
@@ -52,6 +57,7 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\PlayerXPTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\from\From.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\PCQuickCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\libs\Metrics.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\events\EventsReader.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\EndCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\chats\ChatsHandler.java
@@ -65,11 +71,13 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\chats\ChatChannel.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\ReportCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\DiscordData.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\filters\ChatFilter.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\FaceFetcher.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\savable\history\HistorySave.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\GuildXPTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\api\EventBuilder.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\holders\GeyserHolder.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\debug\ObjectEditCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\commands\StaffChatCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\Lobbies.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\commands\ChannelCommand.java
@@ -88,11 +96,13 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\TimeUtil.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\spy\GSPYCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\api\ChatLevelManager.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\debug\DeleteStatCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\Punishment.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\discordbot\commands\OnlineCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\StaffOnlineCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\JDAPingerCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\from\FindFrom.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\SavableGuild.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\messaging\ReplyCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\listeners\ProxyPingListener.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\scripts\ScriptAs.java
@@ -107,6 +117,7 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\exceptions\OfflinePlayerException.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\enums\NetworkState.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\spy\SSPYCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\Votes.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\PingCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\messaging\BungeeMassMessage.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\punishments\BanCommand.java
@@ -117,6 +128,7 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\PlaytimeTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\savable\users\SavableUser.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\punishments\MuteCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\from\From_1_0_14_5.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\messaging\DiscordMessage.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\JDAPingerUtils.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\config\from\From_1_0_14_2.java

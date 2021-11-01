@@ -38,7 +38,7 @@ public class KickCommand extends SLCommand {
                 return;
             }
 
-            if (PlayerUtils.hasOfflinePermission(ConfigUtils.punKicksBypass, other.uuid)) {
+            if (PlayerUtils.hasOfflinePermission(ConfigUtils.punKicksBypass(), other.uuid)) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.kickCannot());
                 return;
             }
@@ -54,7 +54,7 @@ public class KickCommand extends SLCommand {
             );
 
             if (ConfigUtils.moduleDEnabled()) {
-                if (ConfigUtils.punKicksDiscord) {
+                if (ConfigUtils.punKicksDiscord()) {
                     MessagingUtils.sendDiscordEBMessage(
                             new DiscordMessage(
                                     sender,
@@ -63,7 +63,7 @@ public class KickCommand extends SLCommand {
                                             .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                             .replace("%reason%", reason)
                                     ,
-                                    DiscordBotConfUtils.textChannelKicks
+                                    DiscordBotConfUtils.textChannelKicks()
                             )
                     );
                 }

@@ -32,7 +32,7 @@ public class ChatListener {
     private static String prefix = ConfigUtils.moduleStaffChatPrefix();
 
     @Subscribe(order = PostOrder.FIRST)
-    public static void onPlayerChat(PlayerChatEvent e){
+    public void onPlayerChat(PlayerChatEvent e){
         if (! e.getResult().isAllowed()) return;
         boolean isStaffMessage = false;
 

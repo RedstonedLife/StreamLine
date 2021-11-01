@@ -16,7 +16,7 @@ import java.time.OffsetDateTime;
 public class BoostListener implements EventListener {
     @Override
     public void onEvent(GenericEvent event) {
-        if (ConfigUtils.boostsEnabled) {
+        if (ConfigUtils.boostsEnabled()) {
             if (event instanceof GuildMemberUpdateBoostTimeEvent) {
                 GuildMemberUpdateBoostTimeEvent e = ((GuildMemberUpdateBoostTimeEvent) event);
 

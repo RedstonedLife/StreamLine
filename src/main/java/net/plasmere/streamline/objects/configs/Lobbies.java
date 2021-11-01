@@ -24,7 +24,7 @@ public class Lobbies {
     }
 
     private void construct(boolean createNew){
-        this.file = new File(filePrePath + ConfigUtils.lobbiesFile);
+        this.file = new File(filePrePath + ConfigUtils.lobbiesFile());
 
         if (createNew || ! file.exists()) {
             try {

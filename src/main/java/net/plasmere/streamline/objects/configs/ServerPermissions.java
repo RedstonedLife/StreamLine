@@ -22,7 +22,7 @@ public class ServerPermissions {
     }
 
     private void construct(boolean createNew){
-        this.file = new File(filePrePath + ConfigUtils.vbServerFile);
+        this.file = new File(filePrePath + ConfigUtils.vbServerFile());
 
         if (createNew || ! file.exists()) {
             try {

@@ -240,9 +240,9 @@ public class SettingsEditCommand extends SLCommand {
                         String theEmote = args[2];
                         String toEPerm = TextUtils.argsToStringMinus(args, 0, 1, 2);
 
-                        StreamLine.serverConfig.setEmotePermission(theEmote, toEPerm());
+                        StreamLine.serverConfig.setEmotePermission(theEmote, toEPerm);
 
-                        sendSetMessageEmote(sender, MessageConfUtils.settingsSetEmotePermissions(), theEmote, toEPerm());
+                        sendSetMessageEmote(sender, MessageConfUtils.settingsSetEmotePermissions(), theEmote, toEPerm);
                         break;
                     case "maintenance-mode-enabled":
                         String enabledMM = TextUtils.argsToStringMinus(args, 0, 1);

@@ -91,7 +91,7 @@ public class NetworkPointsCommand extends SLCommand {
                         }
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
-                        if (ConfigUtils.errSendToConsole) e.printStackTrace();
+                        if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;
                 case "add":
@@ -117,7 +117,7 @@ public class NetworkPointsCommand extends SLCommand {
                         }
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
-                        if (ConfigUtils.errSendToConsole) e.printStackTrace();
+                        if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;
                 case "set":
@@ -144,7 +144,7 @@ public class NetworkPointsCommand extends SLCommand {
                         }
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
-                        if (ConfigUtils.errSendToConsole) e.printStackTrace();
+                        if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;
             }
