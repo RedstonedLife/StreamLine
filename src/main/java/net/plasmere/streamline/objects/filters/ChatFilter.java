@@ -21,9 +21,9 @@ public class ChatFilter {
 
     public String applyFilter(String toFilter) {
         Random RNG = new Random();
-        int replaceWith = RNG.nextInt(this.replacements.size() - 1);
+        int replaceWith = RNG.nextInt(this.replacements.size());
 
-        return toFilter.replaceAll(this.regex, this.replacements.get(replaceWith));
+        return toFilter.replaceAll(this.regex, this.replacements.get(replaceWith - 1));
     }
 
     public boolean toggleEnabled() {
