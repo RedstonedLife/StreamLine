@@ -1,17 +1,17 @@
 urls:
   enabled: true
-  regex: "^((http[s]?|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$"
+  regex: "^((http[s]?|ftp):\\/)?\\/?([^:\\/\\s]+)((\\/\\w+)*\\/)([\\w\\-\\.]+[^#?\\s]+)(.*)?(#[\\w\\-]+)?$"
   replace-with:
     - "https://store.server.net"
 bad-words:
   enabled: true
-  regex: "\bass|\barse|\bnigger"
+  regex: "\\bass|\\barse|\\bnigger"
   replace-with:
     - "baby hippo"
     - "bad word"
 you-can-create-your-own-filters-in-this-file:
   enabled: false
-  regex: "\badd|\bregex|\bhere"
+  regex: "\\badd|\\bregex|\\bhere"
   replace-with:
     - "add phrases you want to replace them with here"
     - "it will pick a random phrase to replace it with"
