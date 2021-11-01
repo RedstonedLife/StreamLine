@@ -335,6 +335,11 @@ public class GuildCommand extends SLCommand {
                 e.printStackTrace();
             }
         } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildWarpAliases())) {
+            if (! sender.hasPermission(CommandsConfUtils.comBGuildWarpPermission())) {
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                return;
+            }
+            
             try {
                 GuildUtils.warpGuild(stat);
             } catch (Throwable e) {
