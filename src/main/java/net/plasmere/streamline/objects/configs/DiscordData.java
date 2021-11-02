@@ -657,7 +657,7 @@ public class DiscordData {
                 }
 
                 if (ConfigUtils.debug()) MessagingUtils.logInfo("New name = " + newName);
-                g.modifyNickname(member, newName);
+                g.modifyNickname(member, newName).complete();
             }
         } catch (HierarchyException e) {
             MessagingUtils.logSevere("Tried to modify a user with higher permissions than me (on Discord)!");
@@ -679,7 +679,7 @@ public class DiscordData {
 
                 if (ConfigUtils.debug()) MessagingUtils.logInfo("Role Name : " + role.getName());
 
-                g.addRoleToMember(user.getIdLong(), role);
+                g.addRoleToMember(user.getIdLong(), role).complete();
             }
 
             if (ConfigUtils.debug()) MessagingUtils.logInfo("Roles as String : " + ConfigUtils.moduleDPCOnVerifyRemove());
@@ -691,7 +691,7 @@ public class DiscordData {
                     continue;
                 }
 
-                g.removeRoleFromMember(user.getIdLong(), role);
+                g.removeRoleFromMember(user.getIdLong(), role).complete();
             }
         } catch (HierarchyException e) {
             MessagingUtils.logSevere("Tried to modify a user with higher permissions than me (on Discord)!");
