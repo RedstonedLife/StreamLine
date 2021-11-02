@@ -6,6 +6,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.config.from.FindFrom;
+import net.plasmere.streamline.discordbot.BoostListener;
 import net.plasmere.streamline.discordbot.MessageListener;
 import net.plasmere.streamline.discordbot.ReadyListener;
 import net.plasmere.streamline.events.Event;
@@ -119,7 +120,8 @@ public class StreamLine extends Plugin {
 					.setActivity(Activity.playing(DiscordBotConfUtils.botStatusMessage()));
 			jdaBuilder.addEventListeners(
 					new MessageListener(),
-					new ReadyListener()
+					new ReadyListener(),
+					new BoostListener()
 			);
 			jda = jdaBuilder.build().awaitReady();
 		} catch (Exception e) {

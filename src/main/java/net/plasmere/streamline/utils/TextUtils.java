@@ -524,7 +524,7 @@ public class TextUtils {
         }
 
         if (StreamLine.discordData.isVerified(dID)) {
-            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(dID));
+            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(dID));
 
             if (user == null) return of;
 
@@ -631,7 +631,7 @@ public class TextUtils {
         }
 
         if (StreamLine.discordData.isVerified(dID)) {
-            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(dID));
+            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(dID));
 
             if (user == null) return of;
 
@@ -741,7 +741,7 @@ public class TextUtils {
         if (u == null) return of;
 
         if (StreamLine.discordData.isVerified(dID)) {
-            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(dID));
+            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(dID));
 
             return of
                     .replace("%sender_uuid%", user.uuid)

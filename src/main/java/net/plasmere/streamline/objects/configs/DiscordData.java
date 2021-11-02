@@ -392,7 +392,7 @@ public class DiscordData {
                 PartyUtils.sendChatFromDiscord(user.getName(), party, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             }
         } else {
-            SavablePlayer player = PlayerUtils.getOrGetPlayerStatByUUID(StreamLine.discordData.getVerified(userID));
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStatByUUID(StreamLine.discordData.getUUIDOfVerified(userID));
 
             if (player == null) {
                 MessagingUtils.logWarning("Could not send bungee message for " + userID);
@@ -481,7 +481,7 @@ public class DiscordData {
         reloadConfig();
     }
 
-    public String getVerified(long discordID) {
+    public String getUUIDOfVerified(long discordID) {
         reloadConfig();
 
         return conf.getString("verified." + discordID);
@@ -727,5 +727,46 @@ public class DiscordData {
     public TreeList<String> getBoostQueue() {
         reloadConfig();
         return new TreeList<>(conf.getStringList("boosters.queue"));
+    }
+
+    public String setRolesPriority(String priority) {
+        reloadConfig();
+        conf.set("roles.priority", priority);
+        saveConfig();
+        reloadConfig();
+        return priority;
+    }
+
+    public String getRolesPriority() {
+        reloadConfig();
+        if (conf.getString("roles.priority") == null) return setRolesPriority("discord");
+        if (conf.getString("roles.priority").equals("")) return setRolesPriority("discord");
+
+        return conf.getString("roles.priority");
+    }
+
+    public TreeMap<String, SingleSet<Long, String>> getSyncedRoles() {
+        reloadConfig();
+
+        TreeMap<String, SingleSet<Long, String>> toReturn = new TreeMap<>();
+
+        if (conf.getSection("roles.synced") == null) {
+            conf.set("roles.synced.default.role", 894583534017196105L);
+            conf.set("roles.synced.default.group", "default");
+        }
+
+        for (String key : conf.getSection("roles.synced").getKeys()) {
+            try {
+                Configuration section = conf.getSection("roles.synced." + key);
+                long role = section.getLong("role");
+                String group = section.getString("group");
+
+                toReturn.put(key, new SingleSet<>(role, group));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return toReturn;
     }
 }

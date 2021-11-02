@@ -4,12 +4,10 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.PlayerUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.OffsetDateTime;
 
@@ -35,7 +33,7 @@ public class BoostListener implements EventListener {
                 Member member = e.getMember();
 
                 if (StreamLine.discordData.isVerified(member.getIdLong())) {
-                    SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(member.getIdLong()));
+                    SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(member.getIdLong()));
                     if (user == null) return;
 
                     StreamLine.discordData.addToBoostQueue(user);
