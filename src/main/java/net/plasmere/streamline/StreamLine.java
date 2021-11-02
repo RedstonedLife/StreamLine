@@ -16,8 +16,8 @@ import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.configs.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
+import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.timers.*;
-import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
 import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
@@ -68,6 +68,7 @@ public class StreamLine extends Plugin {
 
 	private final File plDir = new File(getDataFolder() + File.separator + "players" + File.separator);
 	private final File gDir = new File(getDataFolder() + File.separator + "guilds" + File.separator);
+	private final File pDir = new File(getDataFolder() + File.separator + "parties" + File.separator);
 	private final File confDir = new File(getDataFolder() + File.separator + "configs" + File.separator);
 	private final File chatHistoryDir = new File(getDataFolder() + File.separator + "chat-history" + File.separator);
 	private final File scriptsDir = new File(getDataFolder() + File.separator + "scripts" + File.separator);
@@ -96,6 +97,9 @@ public class StreamLine extends Plugin {
 	}
 	public File getGDir() {
 		return gDir;
+	}
+	public File getPDir() {
+		return pDir;
 	}
 	public File getEDir() { return eventsDir; }
 	public File getConfDir() { return confDir; }
@@ -497,8 +501,8 @@ public class StreamLine extends Plugin {
 		// Timers.
 		loadTimers();
 
-		// Set up ConsolePlayer.
-		ConsolePlayer console = PlayerUtils.applyConsole();
+		// Set up SavableConsole.
+		SavableConsole console = PlayerUtils.applyConsole();
 		if (GuildUtils.existsByUUID(console.guild)) {
 			try {
 				GuildUtils.addGuild(new SavableGuild(console.guild, false));

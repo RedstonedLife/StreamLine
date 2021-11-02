@@ -2,23 +2,24 @@ package net.plasmere.streamline.objects;
 
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
+import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
-import net.plasmere.streamline.utils.GuildUtils;
-import net.plasmere.streamline.utils.PlayerUtils;
-import net.plasmere.streamline.utils.TextUtils;
-import net.plasmere.streamline.utils.UUIDUtils;
+import net.plasmere.streamline.utils.*;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class SavableGuild {
+public class SavableParty {
     private TreeMap<String, String> info = new TreeMap<>();
-    private final String filePrePath = StreamLine.getInstance().getGDir() + File.separator;
+    private final String filePrePath = StreamLine.getInstance().getDataFolder() + File.separator + "parties" + File.separator;
 
+    public List<String> savedKeys;
+
+    public int maxSize;
     public File file;
-    public String name;
+    public SavableUser leader;
     public String leaderUUID;
     public List<SavableUser> moderators = new ArrayList<>();
     public List<String> modsByUUID= new ArrayList<>();
@@ -30,12 +31,6 @@ public class SavableGuild {
     public List<String> invitesByUUID = new ArrayList<>();
     public boolean isMuted;
     public boolean isPublic;
-    public int totalXP;
-    public int currentXP;
-    public int lvl;
-    public int maxSize = ConfigUtils.guildMax();
-
-    public List<String> savedKeys;
 
     public enum Level {
         MEMBER,
@@ -43,9 +38,9 @@ public class SavableGuild {
         LEADER
     }
 
-    public SavableGuild(String creatorUUID, String name) throws IOException {
+    public SavableParty(String creatorUUID, int maxSize) throws IOException {
         this.leaderUUID = creatorUUID;
-        this.name = name;
+        this.maxSize = maxSize;
         this.totalMembersByUUID.add(creatorUUID);
         this.totalMembers.add(PlayerUtils.getOrCreateSUByUUID(creatorUUID));
         try {
@@ -56,7 +51,7 @@ public class SavableGuild {
         construct(leaderUUID, true);
     }
 
-    public SavableGuild(String uuid, boolean create) throws IOException {
+    public SavableParty(String uuid, boolean create) throws IOException {
         construct(uuid, create);
     }
 
@@ -71,7 +66,7 @@ public class SavableGuild {
     private void construct(String uuid, boolean createNew) throws IOException {
         if (uuid == null) return;
 
-        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getGDir(), uuid);
+        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getPDir(), uuid);
 
         if (createNew) {
             try {
@@ -267,17 +262,14 @@ public class SavableGuild {
 
     public TreeSet<String> propertiesDefaults() {
         TreeSet<String> defaults = new TreeSet<>();
-        defaults.add("name=" + name);
         defaults.add("leader=" + leaderUUID);
+        defaults.add("max-size=" + maxSize);
         defaults.add("mods=" + "");
         defaults.add("members=" + "");
         defaults.add("total-members=" + leaderUUID);
         defaults.add("invites=" + "");
         defaults.add("muted=false");
         defaults.add("public=false");
-        defaults.add("total-xp=0");
-        defaults.add("current-xp=0");
-        defaults.add("lvl=1");
         //defaults.add("");
         return defaults;
     }
@@ -286,16 +278,17 @@ public class SavableGuild {
         if (getFromKey("leader") == null) return;
         if (getFromKey("leader").equals("")) return;
 
-        this.name = getFromKey("name");
         try {
             this.leaderUUID = getFromKey("leader");
         } catch (Exception e) {
             return;
         }
 
+        this.leader = PlayerUtils.getOrGetSavableUser(leaderUUID);
+
         if (this.leaderUUID == null) {
 //            try {
-//                throw new Exception("Improper use of the SavableGuild's class! Report this to the owner of the StreamLine plugin...");
+//                throw new Exception("Improper use of the SavableParty's class! Report this to the owner of the StreamLine plugin...");
 //            } catch (Exception e) {
 //                e.printStackTrace();
 //            }
@@ -303,7 +296,7 @@ public class SavableGuild {
         }
         if (this.leaderUUID.equals("null") || this.leaderUUID.equals("")) {
 //            try {
-//                throw new Exception("Improper use of the SavableGuild's class! Report this to the owner of the StreamLine plugin...");
+//                throw new Exception("Improper use of the SavableParty's class! Report this to the owner of the StreamLine plugin...");
 //            } catch (Exception e) {
 //                e.printStackTrace();
 //            }
@@ -316,9 +309,7 @@ public class SavableGuild {
         this.invitesByUUID = loadInvites();
         this.isMuted = Boolean.parseBoolean(getFromKey("muted"));
         this.isPublic = Boolean.parseBoolean(getFromKey("public"));
-        this.totalXP = Integer.parseInt(getFromKey("total-xp"));
-        this.currentXP = getCurrentXP();
-        this.lvl = Integer.parseInt(getFromKey("lvl"));
+        this.maxSize = Integer.parseInt(getFromKey("max-size"));
 
         try {
             loadAllMembers();
@@ -497,53 +488,6 @@ public class SavableGuild {
         return uuids;
     }
 
-    /*
-   Experience required =
-   2 × current_level + 7 (for levels 0–15)
-   5 × current_level – 38 (for levels 16–30)
-   9 × current_level – 158 (for levels 31+)
-    */
-    public int getNeededXp(int fromLevel){
-        int needed = 0;
-
-        needed = 2500 + (2500 * fromLevel);
-
-        return needed;
-    }
-
-    public int xpUntilNextLevel(){
-        return getNeededXp(this.lvl + 1) - this.totalXP;
-    }
-
-    public void addTotalXP(int amount){
-        setTotalXP(amount + this.totalXP);
-    }
-
-    public void setTotalXP(int amount){
-        this.totalXP = amount;
-
-        while (xpUntilNextLevel() <= 0) {
-            int setLevel = this.lvl + 1;
-            updateKey("lvl", setLevel);
-        }
-
-        updateKey("total-xp", amount);
-        updateKey("current-xp", getCurrentXP());
-    }
-
-    public int getCurrentLevelXP(){
-        int xpTill = 0;
-        for (int i = 0; i <= this.lvl; i++) {
-            xpTill += getNeededXp(i);
-        }
-
-        return xpTill;
-    }
-
-    public int getCurrentXP(){
-        return this.totalXP - getCurrentLevelXP();
-    }
-
     private String getInvitesAsStringed(){
         StringBuilder builder = new StringBuilder();
 
@@ -631,7 +575,7 @@ public class SavableGuild {
 
     public boolean hasUUIDMember(SavableUser stat){
         try {
-          return hasMember(stat.uuid);
+            return hasMember(stat.uuid);
         } catch (Exception e){
             return false;
         }
@@ -730,7 +674,7 @@ public class SavableGuild {
             }
         }
 
-        GuildUtils.removeInvite(GuildUtils.getGuild(from), stat);
+        PartyUtils.removeInvite(PartyUtils.getParty(from), stat);
 
         updateKey("invites", builder.toString());
 
@@ -817,7 +761,7 @@ public class SavableGuild {
         updateKey("total-members", addToTMembers(stat));
         updateKey("members", addToMembers(stat));
 
-        stat.updateKey("guild", leaderUUID.toString());
+        stat.updateKey("party", leaderUUID.toString());
 
         try {
             saveInfo();
@@ -826,7 +770,7 @@ public class SavableGuild {
         }
     }
 
-    public void removeMemberFromGuild(SavableUser stat){
+    public void removeMemberFromParty(SavableUser stat){
         Random RNG = new Random();
 
         if (leaderUUID.equals(stat.uuid)){
@@ -878,15 +822,15 @@ public class SavableGuild {
         updateKey("public", bool);
     }
 
-    public Level getLevel(SavableUser member){
+    public SavableParty.Level getLevel(SavableUser member){
         if (this.membersByUUID.contains(member.uuid))
-            return Level.MEMBER;
+            return SavableParty.Level.MEMBER;
         else if (this.modsByUUID.contains(member.uuid))
-            return Level.MODERATOR;
+            return SavableParty.Level.MODERATOR;
         else if (this.leaderUUID.equals(member.uuid))
-            return Level.LEADER;
+            return SavableParty.Level.LEADER;
         else
-            return Level.MEMBER;
+            return SavableParty.Level.MEMBER;
     }
 
     public void setModerator(SavableUser stat){
@@ -1016,12 +960,12 @@ public class SavableGuild {
 
         loadMods();
 
-        GuildUtils.removeGuild(Objects.requireNonNull(GuildUtils.getGuild(stat)));
+        PartyUtils.removeParty(Objects.requireNonNull(PartyUtils.getParty(stat)));
 
         file.delete();
 
 //        if (! file.renameTo(new File(filePrePath + leaderUUID.toString() + ".properties"))){
-//            MessagingUtils.logInfo("Could not rename a guild file for " + leaderUUID + "...");
+//            MessagingUtils.logInfo("Could not rename a party file for " + leaderUUID + "...");
 //        }
 
         file = null;
@@ -1029,7 +973,7 @@ public class SavableGuild {
 
         try {
             for (SavableUser p : totalMembers) {
-                p.updateKey("guild", leaderUUID.toString());
+                p.updateKey("party", leaderUUID.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1041,7 +985,45 @@ public class SavableGuild {
             e.printStackTrace();
         }
 
-        GuildUtils.addGuild(this);
+        PartyUtils.addParty(this);
+    }
+
+    public void setMaxSize(int size){
+        if (size < getMaxSize(this.leader))
+            this.maxSize = size;
+    }
+
+    public boolean hasGroupedSize(String group) {
+        for (String key : ConfigUtils.getGroupSizeConfig().getKeys()) {
+            if (group.equals(key)) return true;
+        }
+
+        return false;
+    }
+
+    public int getMaxSize(SavableUser leader){
+        if (! StreamLine.lpHolder.enabled || leader instanceof SavableConsole) return ConfigUtils.partyMax();
+
+        try {
+            String group = StreamLine.lpHolder.api.getUserManager().getUser(leader.latestName).getPrimaryGroup();
+
+            if (group.equals("")){
+                group = "default";
+            }
+
+            int max = 0;
+
+            if (! hasGroupedSize(group) && ! group.equals("default")) {
+                group = "default";
+            } else if (! hasGroupedSize(group) && group.equals("default")){
+                return 1;
+            }
+
+            return ConfigUtils.getGroupedSize(group);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ConfigUtils.partyMax();
+        }
     }
 
     public void dispose() throws Throwable {
@@ -1053,10 +1035,10 @@ public class SavableGuild {
         for (String uuid : totalMembersByUUID){
             SavableUser stat = PlayerUtils.getOrCreateSUByUUID(uuid);
 
-            stat.updateKey("guild", "");
+            stat.updateKey("party", "");
         }
 
-        GuildUtils.removeGuild(this);
+        PartyUtils.removeParty(this);
 
         file.delete();
 

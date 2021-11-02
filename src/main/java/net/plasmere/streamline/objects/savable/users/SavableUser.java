@@ -18,7 +18,7 @@ import java.util.*;
 
 public abstract class SavableUser {
     private TreeMap<String, String> info = new TreeMap<>();
-    private final String filePrePath = StreamLine.getInstance().getDataFolder() + File.separator + "players" + File.separator;
+    private final String filePrePath = StreamLine.getInstance().getPlDir() + File.separator;
     private SavableUser savableUser;
 
     public File file;
@@ -26,6 +26,7 @@ public abstract class SavableUser {
     public String latestName;
     public String displayName;
     public String guild;
+    public String party;
     public String tags;
     public List<String> tagList;
     public int points;
@@ -323,6 +324,7 @@ public abstract class SavableUser {
         defaults.add("display-name=" + ((displayName == null) ? latestName : displayName));
         defaults.add("latest-version=" + latestVersion);
         defaults.add("guild=");
+        defaults.add("party=");
         defaults.add("tags=" + defaultTags());
         defaults.add("points=" + (this.uuid.equals("%") ? ConfigUtils.consoleDefaultPoints() : ConfigUtils.pointsDefault()));
         defaults.add("last-from=");
@@ -379,6 +381,7 @@ public abstract class SavableUser {
         this.latestName = getFromKey("latest-name");
         this.displayName = getFromKey("display-name");
         this.guild = getFromKey("guild");
+        this.party = getFromKey("party");
         this.tagList = loadTags();
         this.points = Integer.parseInt(getFromKey("points") == null ? "0" : getFromKey("points"));
         this.lastFromUUID = getFromKey("last-from");

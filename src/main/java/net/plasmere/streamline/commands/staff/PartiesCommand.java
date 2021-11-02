@@ -1,12 +1,12 @@
 package net.plasmere.streamline.commands.staff;
 
 import net.md_5.bungee.api.CommandSender;
+import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.command.SLCommand;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.Party;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PartyUtils;
 
@@ -21,7 +21,7 @@ public class PartiesCommand extends SLCommand {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.partiesNone());
             return;
         }
-        for (Party party : PartyUtils.getParties()){
+        for (SavableParty party : PartyUtils.getParties()){
             MessagingUtils.sendBPUserMessage(party, sender, sender, MessageConfUtils.partiesMessage());
         }
     }

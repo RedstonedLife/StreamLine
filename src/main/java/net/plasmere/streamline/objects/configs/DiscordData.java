@@ -15,7 +15,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.DataChannel;
 import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.Party;
+import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
@@ -185,7 +185,7 @@ public class DiscordData {
             }
 
             if (type.equals(ChatsHandler.getChannel("party"))) {
-                Party party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(sender).uuid);
+                SavableParty party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(sender).uuid);
 
                 if (party == null) return;
 
@@ -257,7 +257,7 @@ public class DiscordData {
             }
 
             if (chatChannel.equals(ChatsHandler.getChannel("party"))) {
-                Party party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
+                SavableParty party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
 
                 if (party == null) return;
 
@@ -328,7 +328,7 @@ public class DiscordData {
             }
 
             if (type.equals(ChatsHandler.getChannel("party"))) {
-                Party party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
+                SavableParty party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
 
                 if (party == null) return;
 
@@ -385,7 +385,7 @@ public class DiscordData {
             }
 
             if (channelData.chatChannel.equals(ChatsHandler.getChannel("party"))) {
-                Party party = PartyUtils.getParty(channelData.identifier);
+                SavableParty party = PartyUtils.getParty(channelData.identifier);
 
                 if (party == null) return;
 
@@ -432,7 +432,7 @@ public class DiscordData {
             }
 
             if (channelData.chatChannel.equals(ChatsHandler.getChannel("party"))) {
-                Party party = PartyUtils.getParty(channelData.identifier);
+                SavableParty party = PartyUtils.getParty(channelData.identifier);
 
                 if (party == null) return;
 

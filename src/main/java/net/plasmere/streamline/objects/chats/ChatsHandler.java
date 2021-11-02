@@ -6,7 +6,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.Party;
+import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -204,7 +204,7 @@ public class ChatsHandler {
                 break;
             case "party":
                 if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                    for (Party party : PartyUtils.getParties()) {
+                    for (SavableParty party : PartyUtils.getParties()) {
                         thing.add(party.leaderUUID);
                     }
                 }
@@ -247,7 +247,7 @@ public class ChatsHandler {
                     break;
                 case "party":
                     if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                        for (Party party : PartyUtils.getParties()) {
+                        for (SavableParty party : PartyUtils.getParties()) {
                             thing.add(party.leaderUUID);
                         }
                     }

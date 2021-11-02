@@ -8,7 +8,7 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
-import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
+import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -538,7 +538,7 @@ public class GuildUtils {
             return;
         }
 
-        if (sender instanceof ConsolePlayer) {
+        if (sender instanceof SavableConsole) {
             MessagingUtils.sendBUserMessage(sender.findSender(), MessageConfUtils.onlyPlayers());
             return;
         }

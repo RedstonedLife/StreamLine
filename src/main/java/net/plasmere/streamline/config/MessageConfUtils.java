@@ -435,7 +435,7 @@ public class MessageConfUtils {
         return StreamLine.config.mess.getString("stream.hover-prefix");
     }
 
-    // Party.
+    // SavableParty.
     public static String partyConnect() {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("party.connect");

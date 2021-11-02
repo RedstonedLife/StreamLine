@@ -6,7 +6,7 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.events.enums.Condition;
 import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.Party;
+import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -104,10 +104,10 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_PARTY_MEMBERS:
-                    Party party = PartyUtils.getParty(player);
+                    SavableParty party = PartyUtils.getParty(player);
                     if (party == null) continue;
 
-                    for (SavablePlayer user : party.totalMembers) {
+                    for (SavableUser user : party.totalMembers) {
                         if (user.online) {
                             MessagingUtils.sendEventUserMessage(player, user, event.actions.get(i).value);
                         }
@@ -214,10 +214,10 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_PARTY_MEMBERS:
-                    Party party = PartyUtils.getParty(player);
+                    SavableParty party = PartyUtils.getParty(player);
                     if (party == null) continue;
 
-                    for (SavablePlayer person : party.totalMembers) {
+                    for (SavableUser person : party.totalMembers) {
                         if (person.online) {
                             MessagingUtils.sendBUserMessage(person.findSender(), event.actions.get(i).value);
                         }

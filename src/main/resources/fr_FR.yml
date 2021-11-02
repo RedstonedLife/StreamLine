@@ -393,7 +393,7 @@ party:
     members: "&b%sender_formatted% &ea promu &b%player_formatted% &eau niveau &c%level%&e dans le groupe!"
     # User being promoted.
     user: "&eVous venez d'être promu au niveau &c%level% &edans le groupe!"
-    # Party leader.
+    # SavableParty leader.
     leader: "&eVous venez de promouvoir &b%player_formatted% au niveau &c%level%&e!"
     # If failed.
     failure: "&cDéjà au niveau maximum."
@@ -419,7 +419,7 @@ party:
     members: "&b%sender_formatted% &eviens de rétrograder &b%player_formatted% &eau niveau &c%level%&e dans le groupe."
     # User being demoted.
     user: "&eVous venez d'être rétrograder au niveau &c%level% &edans le groupe."
-    # Party leader.
+    # SavableParty leader.
     leader: "&eVous venez de rétrograder &b%player_formatted% au niveau &c%level%&e."
     # If failed.
     failure: "&cDéjà au niveau minimum."
@@ -1341,7 +1341,7 @@ stats:
   points-name: "&6Or de Réseau"
   # SavablePlayer bulk message.
   player: "&9----- &d%player_formatted% &7Informations du réseau &9-----%newline%&eUUID&8: &b%uuid%%newline%&eVersion de Minecraft&8: &c%version%%newline%&eEXP&8: &6%total_xp%%newline%&eNiveau&8: &6%level%%newline%&eEXP Requise&8: &6%xplevel% &0(&6%xpneeded% &etotal needed&0)%newline%&eTemps de jeu&8: &6%playtime% &ehours%newline%&e%points_name%&8: &6%points%%newline%&eTags&8: &c%tags%%newline%&eNom Affiché&8: &d%player_formatted%%newline%&eTout les noms&8: &c%names%%newline%&2Guilde&8: &r%guild%%newline%&2Membres de guilde&8: &6%guild_members%%newline%&2EXP de guilde&7/&2Niveau&8: &6%guild_xp_total%&7/&6%guild_lvl%%newline%&2Chef de guilde&8: &d%guild_leader% &0(&b%guild_uuid%&0)%newline%&eEspionnage sociale &0(%sspy%&0) &eEspionnage de guilde &0(%gspy%&0) &eEspionnage de groupe &0(%pspy%&0) &eConnectés &0(%online%&0)"
-  # ConsolePlayer bulk message.
+  # SavableConsole bulk message.
   console-player: "&9----- &7Informations réseau de &d%player_formatted% &9-----%newline%&eUUID&8: &b%uuid%%newline%&eVersion de Minecraft&8: &c%version%%newline%&e%points_name%&8: &6%points%%newline%&eTags&8: &c%tags%%newline%&eNom Affiché&8: &d%player_formatted%%newline%&2Guilde&8: &r%guild%%newline%&2Membres de guilde&8: &6%guild_members%%newline%&2EXP de guilde&7/&2Niveau&8: &6%guild_xp_total%&7/&6%guild_lvl%%newline%&2Guild Chef&8: &d%guild_leader% &0(&b%guild_uuid%&0)"
   # Tags.
   tags:
@@ -1373,7 +1373,7 @@ stats:
     true: "&aACTIVÉ"
     # If last.
     false: "&cDÉSACTIVÉ"
-  # Party Spy.
+  # SavableParty Spy.
   pspy:
     # If not last in list.
     true: "&aACTIVÉ"
@@ -1443,7 +1443,7 @@ sspyvs:
     # If toggled off.
     false: "&cDÉSACTIVÉ"
 
-# Party SPY view-self command.
+# SavableParty SPY view-self command.
 pspyvs:
   # Message.
   message: "&eChangement de &bPSPY &evue personnelle en %toggle%&e!"

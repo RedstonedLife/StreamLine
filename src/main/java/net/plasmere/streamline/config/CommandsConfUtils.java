@@ -200,7 +200,7 @@ public class CommandsConfUtils {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.stats.view-others.permission");
      }
-    // ... Party.
+    // ... SavableParty.
     //
     public static boolean comBParty() {
         StreamLine.config.reloadCommands();

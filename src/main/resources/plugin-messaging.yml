@@ -1,0 +1,24 @@
+send:
+  guild:
+    channel: "proxy.guild"
+    type:
+      identifier: "FILE"
+      source: "%player_guild_file%"
+    upon:
+      type: "JOIN_ANY"
+      identifer: ""
+    then:
+      - ""
+read:
+  displayname:
+    channel: "spigot.displayname"
+    type:
+      identifier: "DISPLAY_NAME"
+    then:
+      - ""
+  script:
+    channel: "spigot.script"
+    type:
+      identifier: "RUN_SCRIPT"
+    then:
+      - ""

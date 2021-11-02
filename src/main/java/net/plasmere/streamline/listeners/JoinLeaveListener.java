@@ -13,13 +13,14 @@ import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.enums.Condition;
 import net.plasmere.streamline.objects.GeyserFile;
-import net.plasmere.streamline.objects.Party;
+import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
+import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.*;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
@@ -127,7 +128,7 @@ public class JoinLeaveListener implements Listener {
                         case "party":
                             if (!ConfigUtils.partySendJoins()) continue;
 
-                            Party party = PartyUtils.getParty(other);
+                            SavableParty party = PartyUtils.getParty(other);
                             if (party == null) continue;
 
                             if (party.hasMember(stat)) {
@@ -190,7 +191,7 @@ public class JoinLeaveListener implements Listener {
             StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("guild"), stat.guild);
         }
 
-        Party party = PartyUtils.getParty(stat.uuid);
+        SavableParty party = PartyUtils.getParty(stat.uuid);
 
         if (party != null) {
             SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.leaderUUID);
@@ -319,6 +320,30 @@ public class JoinLeaveListener implements Listener {
             StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("local"), server.getName());
         }
 
+        if (ConfigUtils.guildPMEnabled()) {
+            if (GuildUtils.hasGuild(stat)) {
+                SavableGuild guild = GuildUtils.getOrGetGuild(stat.guild);
+
+                MessagingUtils.sendGuildPluginMessageRequest(stat.player, guild);
+
+                for (SavableUser user : guild.totalMembers) {
+                    MessagingUtils.sendSavableUserPluginMessageRequest(stat.player, user, (user instanceof SavablePlayer ? "player" : "console"));
+                }
+            }
+        }
+
+        if (ConfigUtils.partyPMEnabled()) {
+            if (PartyUtils.hasParty(stat)) {
+                SavableParty party = PartyUtils.getOrGetParty(stat.party);
+
+                MessagingUtils.sendPartyPluginMessageRequest(stat.player, party);
+
+                for (SavableUser user : party.totalMembers) {
+                    MessagingUtils.sendSavableUserPluginMessageRequest(stat.player, user, (user instanceof SavablePlayer ? "player" : "console"));
+                }
+            }
+        }
+
         if (ConfigUtils.events()) {
             for (Event event : EventsHandler.getEvents()) {
                 if (!EventsHandler.checkTags(event, stat)) continue;
@@ -419,7 +444,7 @@ public class JoinLeaveListener implements Listener {
                         case "party":
                             if (! ConfigUtils.partySendLeaves()) continue;
 
-                            Party party = PartyUtils.getParty(other);
+                            SavableParty party = PartyUtils.getParty(other);
                             if (party == null) continue;
 
                             if (party.hasMember(stat)) {
@@ -483,7 +508,7 @@ public class JoinLeaveListener implements Listener {
             StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("guild"), stat.guild);
         }
 
-        Party party = PartyUtils.getParty(stat.uuid);
+        SavableParty party = PartyUtils.getParty(stat.uuid);
 
         if (party != null) {
             SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.leaderUUID);

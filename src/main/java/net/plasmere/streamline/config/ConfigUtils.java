@@ -434,6 +434,10 @@ public class ConfigUtils {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfBoolean("modules.bungee.parties.send.leave");
     }
+    public static boolean partyPMEnabled() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.bungee.parties.plugin-messaging.enabled");
+    }
     // ... Guilds.
     public static boolean guildToDiscord() {
         StreamLine.config.reloadConfig();
@@ -534,6 +538,10 @@ public class ConfigUtils {
     public static boolean guildSendLeaves() {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfBoolean("modules.bungee.guilds.send.leave");
+    }
+    public static boolean guildPMEnabled() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.bungee.guilds.plugin-messaging.enabled");
     }
     // ... Sudo.
     public static String noSudoPerm() {
