@@ -223,6 +223,8 @@ public class ChatsHandler {
             }
         }
 
+        thing.add("network");
+
         return thing;
     }
 

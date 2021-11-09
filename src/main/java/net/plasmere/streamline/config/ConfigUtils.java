@@ -2,6 +2,7 @@ package net.plasmere.streamline.config;
 
 import net.md_5.bungee.config.Configuration;
 import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.objects.chats.ChatChannel;
 
 import java.util.List;
 
@@ -160,6 +161,10 @@ public class ConfigUtils {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfString("modules.discord.proxy-chat.display-names.verifying.change.type");
     }
+    public static boolean moduleDPCChangeOnVerifyUnchangeable() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.discord.proxy-chat.display-names.verifying.change.unchangeable");
+    }
     public static List<String> moduleDPCOnVerifyAdd() {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfStringList("modules.discord.proxy-chat.display-names.verifying.add-roles");
@@ -252,6 +257,27 @@ public class ConfigUtils {
     public static boolean moduleDPCDDPartyUseAvatar() {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfBoolean("modules.discord.proxy-chat.discord-data.channels.party.use-avatar");
+    }
+    // Other.
+    public static String moduleDPCDDOtherTitle(ChatChannel other) {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfString("modules.discord.proxy-chat.discord-data.channels." + other.name + ".title");
+    }
+    public static String moduleDPCDDOtherMessage(ChatChannel other) {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfString("modules.discord.proxy-chat.discord-data.channels." + other.name + ".message");
+    }
+    public static String moduleDPCDDOtherJoins(ChatChannel other) {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfString("modules.discord.proxy-chat.discord-data.channels." + other.name + ".joins");
+    }
+    public static String moduleDPCDDOtherLeaves(ChatChannel other) {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfString("modules.discord.proxy-chat.discord-data.channels." + other.name + ".leaves");
+    }
+    public static boolean moduleDPCDDOtherUseAvatar(ChatChannel other) {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.discord.proxy-chat.discord-data.channels." + other.name + ".use-avatar");
     }
     // Console.
     public static String moduleDPCConsoleTitle() {
@@ -843,6 +869,15 @@ public class ConfigUtils {
     public static String moduleBRanksUses() {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfString("modules.bungee.ranks.points.uses");
+    }
+    // Votifier.
+    public static boolean moduleBVotifierEnabled() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.bungee.votifier.enabled");
+    }
+    public static String moduleBVotifierRun() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfString("modules.bungee.votifier.on-vote.run");
     }
     // Chat Filters.
     public static boolean moduleBChatFiltersEnabled() {

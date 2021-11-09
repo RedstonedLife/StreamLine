@@ -4,40 +4,44 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
+import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.OffsetDateTime;
 
-public class BoostListener implements EventListener {
-    @Override
-    public void onEvent(GenericEvent event) {
-        if (ConfigUtils.boostsEnabled()) {
-            if (event instanceof GuildMemberUpdateBoostTimeEvent) {
-                GuildMemberUpdateBoostTimeEvent e = ((GuildMemberUpdateBoostTimeEvent) event);
+public class BoostListener extends ListenerAdapter {
+    public BoostListener() {
+        if (! ConfigUtils.moduleDEnabled()) return;
+        MessagingUtils.logInfo("Boost listener registered!");
+    }
 
-                OffsetDateTime old = e.getOldTimeBoosted();
-                OffsetDateTime newTime = e.getNewTimeBoosted();
-                if (old != null) {
-                    if (newTime != null) {
-                        if (newTime.isBefore(old)) {
-                            return;
-                        }
-                    } else {
+    @Override
+    public void onGuildMemberUpdateBoostTime(@NotNull GuildMemberUpdateBoostTimeEvent event) {
+        if (ConfigUtils.boostsEnabled()) {
+            OffsetDateTime old = event.getOldTimeBoosted();
+            OffsetDateTime newTime = event.getNewTimeBoosted();
+            if (old != null) {
+                if (newTime != null) {
+                    if (newTime.isBefore(old)) {
                         return;
                     }
+                } else {
+                    return;
                 }
+            }
 
-                Member member = e.getMember();
+            Member member = event.getMember();
 
-                if (StreamLine.discordData.isVerified(member.getIdLong())) {
-                    SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(member.getIdLong()));
-                    if (user == null) return;
+            if (StreamLine.discordData.isVerified(member.getIdLong())) {
+                SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(member.getIdLong()));
+                if (user == null) return;
 
-                    StreamLine.discordData.addToBoostQueue(user);
-                }
+                StreamLine.discordData.addToBoostQueue(user);
             }
         }
     }

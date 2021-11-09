@@ -139,7 +139,7 @@ public class ChatListener implements Listener {
         }
 
 
-        if (! isStaffMessage) {
+        if (! isStaffMessage && ConfigUtils.customChats()) {
             if (StreamLine.serverConfig.getProxyChatEnabled()) {
                 if (ConfigUtils.moduleDEnabled()) {
                     if (ConfigUtils.moduleDPC()) if (ConfigUtils.moduleDPCConsole()) {
@@ -302,28 +302,6 @@ public class ChatListener implements Listener {
                             }
                         }
                     }
-
-//                    if (stat.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
-//                        if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("guild"), )) {
-//                            TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("guild"), sender.getServer().getInfo().getName());
-//                            for (Long l : ifHas.keySet()) {
-//                                if (!ifHas.get(l)) continue;
-//
-//                                StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("guild"), sender.getServer().getInfo().getName(), msg);
-//                            }
-//                        }
-//                    }
-//
-//                    if (stat.chatChannel.equals(ChatsHandler.getChannel("party"))) {
-//                        if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("party"), sender.getServer().getInfo().getName())) {
-//                            TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("party"), sender.getServer().getInfo().getName());
-//                            for (Long l : ifHas.keySet()) {
-//                                if (!ifHas.get(l)) continue;
-//
-//                                StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("party"), sender.getServer().getInfo().getName(), msg);
-//                            }
-//                        }
-//                    }
                 }
             }
 
@@ -347,7 +325,7 @@ public class ChatListener implements Listener {
                     }
 
                     if (ConfigUtils.moduleDPC()) {
-                        StreamLine.discordData.sendDiscordChannel(sender, stat.chatChannel, sender.getServer().getInfo().getName(), msg);
+                        StreamLine.discordData.sendDiscordChannel(sender, stat.chatChannel, stat.chatIdentifier, msg);
                     }
 
                     e.setCancelled(true);

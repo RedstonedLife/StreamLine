@@ -58,6 +58,8 @@ public class Script {
     }
 
     public void execute(CommandSender sender, SavableUser player) {
+        if (player == null) return;
+
         for (Integer i : toExecute.keySet()) {
             switch (toExecute.get(i).key) {
                 case CONSOLE:

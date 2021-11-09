@@ -126,7 +126,7 @@ public class SavablePlayer extends SavableUser {
         defaults.add("playtime=0");
         defaults.add("muted=false");
         defaults.add("muted-till=");
-        defaults.add("chat-level=LOCAL");
+        defaults.add("chat-channel=local");
         defaults.add("chat-identifier=network");
         defaults.add("discord-id=");
         //defaults.add("");

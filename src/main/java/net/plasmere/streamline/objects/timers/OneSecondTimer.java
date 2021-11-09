@@ -1,5 +1,9 @@
 package net.plasmere.streamline.objects.timers;
 
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
@@ -8,6 +12,7 @@ import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.RanksUtils;
+import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.*;
 
@@ -56,7 +61,9 @@ public class OneSecondTimer implements Runnable {
             PlayerUtils.tickTeleport();
 
             if (ConfigUtils.moduleDEnabled()) {
-                PlayerUtils.tickBoosts();
+                if (ConfigUtils.boostsEnabled()) {
+                    PlayerUtils.tickBoosts();
+                }
             }
 
             if (ConfigUtils.moduleBRanksEnabled()) {
@@ -84,6 +91,45 @@ public class OneSecondTimer implements Runnable {
             }
         } catch (ConcurrentModificationException e) {
             if (ConfigUtils.debug()) e.printStackTrace();
+        }
+
+        tickGuilds();
+    }
+
+    public void tickGuilds() {
+        if (StreamLine.getJda() == null) return;
+
+        if (ConfigUtils.moduleDPCChangeOnVerifyUnchangeable()) {
+            for (long k : StreamLine.discordData.getVerified().keySet()) {
+                String uuid = StreamLine.discordData.getUUIDOfVerified(k);
+                if (uuid == null) continue;
+                if (uuid.equals("")) continue;
+
+                SavableUser user = PlayerUtils.getOrGetSavableUser(uuid);
+
+                try {
+                    for (Guild guild : StreamLine.getJda().getGuilds()) {
+                        Member member = guild.getMemberById(k);
+
+                        if (member == null) {
+//                            MessagingUtils.logInfo("Cannot find member by uuid: " + k);
+                            continue;
+                        }
+
+                        if (ConfigUtils.moduleDPCChangeOnVerifyType().equals("discord")) {
+                            member.modifyNickname(TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCChangeOnVerifyTo(), user)).complete();
+                        } else if (ConfigUtils.moduleDPCChangeOnVerifyType().equals("bungee")) {
+                            member.modifyNickname(TextUtils.replaceAllPlayerBungee(ConfigUtils.moduleDPCChangeOnVerifyTo(), user)).complete();
+                        }
+                    }
+//                } catch (HierarchyException e) {
+//                    // do nothing.
+//                } catch (ErrorResponseException e) {
+//                    // do nothing.
+                } catch (Exception e) {
+                    // do nothing.
+                }
+            }
         }
     }
 }

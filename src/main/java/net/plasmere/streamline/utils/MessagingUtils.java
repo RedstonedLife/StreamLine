@@ -155,6 +155,28 @@ public class MessagingUtils {
         }
     }
 
+    public static void sendRoomMessageFromDiscord(String nameUsed, String userID, Chat room, String format, String message) {
+        for (SavablePlayer p : PlayerUtils.getRoomedPlayers(room)) {
+            p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, userID)
+                    .replace("%sender_servered%", nameUsed)
+                    .replace("%message%", message)
+                    .replace("%server%", ConfigUtils.consoleServer())
+                    .replace("%room%", room.identifier)
+            ));
+        }
+    }
+
+    public static void sendRoomMessageFromDiscord(SavableUser user, Chat room, String format, String message) {
+        for (SavablePlayer p : PlayerUtils.getRoomedPlayers(room)) {
+            p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, user)
+                    .replace("%sender_servered%", user.latestName)
+                    .replace("%message%", message)
+                    .replace("%server%", ConfigUtils.consoleServer())
+                    .replace("%room%", room.identifier)
+            ));
+        }
+    }
+
     public static void sendServerMessageOtherServerSelf(ProxiedPlayer player, Server serverFrom, String format, String message) {
         player.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                 .replace("%sender_servered%", getPlayerDisplayName(player))

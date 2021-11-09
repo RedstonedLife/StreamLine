@@ -1,5 +1,6 @@
 package net.plasmere.streamline;
 
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.plasmere.streamline.config.ConfigHandler;
 import net.plasmere.streamline.config.ConfigUtils;
@@ -9,10 +10,12 @@ import net.plasmere.streamline.config.from.FindFrom;
 import net.plasmere.streamline.discordbot.BoostListener;
 import net.plasmere.streamline.discordbot.MessageListener;
 import net.plasmere.streamline.discordbot.ReadyListener;
+import net.plasmere.streamline.discordbot.MemberListener;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.EventsReader;
 import net.plasmere.streamline.libs.Metrics;
+import net.plasmere.streamline.listeners.LPListener;
 import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.configs.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
@@ -31,6 +34,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.plasmere.streamline.utils.holders.VoteHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -53,6 +57,7 @@ public class StreamLine extends Plugin {
 	public static Lobbies lobbies;
 	public static ViaHolder viaHolder;
 	public static GeyserHolder geyserHolder;
+	public static VoteHolder voteHolder;
 	public static LPHolder lpHolder;
 	public static ServerConfig serverConfig;
 	public static DiscordData discordData;
@@ -116,12 +121,19 @@ public class StreamLine extends Plugin {
 		if (jda != null) try { jda.shutdownNow(); jda = null; } catch (Exception e) { e.printStackTrace(); }
 
 		try {
-			JDABuilder jdaBuilder = JDABuilder.createDefault(DiscordBotConfUtils.botToken())
+			JDABuilder jdaBuilder = JDABuilder.create(DiscordBotConfUtils.botToken(),
+							GatewayIntent.GUILD_MESSAGES,
+							GatewayIntent.GUILD_MEMBERS,
+							GatewayIntent.GUILD_PRESENCES,
+							GatewayIntent.GUILD_VOICE_STATES,
+							GatewayIntent.GUILD_EMOJIS
+					)
 					.setActivity(Activity.playing(DiscordBotConfUtils.botStatusMessage()));
 			jdaBuilder.addEventListeners(
 					new MessageListener(),
 					new ReadyListener(),
-					new BoostListener()
+					new BoostListener(),
+					new MemberListener()
 			);
 			jda = jdaBuilder.build().awaitReady();
 		} catch (Exception e) {
@@ -140,6 +152,16 @@ public class StreamLine extends Plugin {
 		if (! gDir.exists()) {
 			try {
 				gDir.mkdirs();
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void loadParties(){
+		if (! pDir.exists()) {
+			try {
+				pDir.mkdirs();
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -379,7 +401,7 @@ public class StreamLine extends Plugin {
 		}
 
 		// Discord Data.
-		if (ConfigUtils.moduleDPC()) {
+		if (ConfigUtils.moduleDPC() || ConfigUtils.boostsEnabled()) {
 			discordData = new DiscordData();
 		}
 
@@ -390,6 +412,14 @@ public class StreamLine extends Plugin {
 
 		if (ConfigUtils.moduleBChatFiltersEnabled()) {
 			chatFilters = new ChatFilters();
+		}
+
+		if (ConfigUtils.moduleDEnabled()) {
+			if (ConfigUtils.moduleDPC()) {
+				if (lpHolder.enabled) {
+					LPListener lpListener = new LPListener(lpHolder.api);
+				}
+			}
 		}
 	}
 
@@ -438,6 +468,15 @@ public class StreamLine extends Plugin {
 
 		instance = this;
 
+		// LP Support.
+		lpHolder = new LPHolder();
+
+		// Via Support.
+		viaHolder = new ViaHolder();
+
+		// Geyser Support.
+		geyserHolder = new GeyserHolder();
+
 		getProxy().registerChannel(customChannel);
 
 		MessagingUtils.logInfo("Package: " + getClass().getPackage().getName());
@@ -448,14 +487,10 @@ public class StreamLine extends Plugin {
 		// Configs...
 		loadConfigs();
 
-		// LP Support.
-		lpHolder = new LPHolder();
-
-		// Via Support.
-		viaHolder = new ViaHolder();
-
-		// Geyser Support.
-		geyserHolder = new GeyserHolder();
+		// NuVotifier Support.
+		if (ConfigUtils.moduleBVotifierEnabled()) {
+			voteHolder = new VoteHolder();
+		}
 
 		// Bans.
 		if (ConfigUtils.punBans()) {
@@ -483,6 +518,9 @@ public class StreamLine extends Plugin {
 
 		// Guilds.
 		loadGuilds();
+
+		// Parties.
+		loadParties();
 
 		// Events.
 		loadEvents();

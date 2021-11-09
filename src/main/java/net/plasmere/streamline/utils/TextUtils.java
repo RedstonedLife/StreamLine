@@ -499,7 +499,7 @@ public class TextUtils {
                 .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
                 .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
                 .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
-                .replace("%player_votes%", (user instanceof SavablePlayer ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
+                .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -556,7 +556,7 @@ public class TextUtils {
                     .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
                     .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
                     .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
-                    .replace("%player_votes%", (user instanceof SavablePlayer ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
+                    .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                     ;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
@@ -606,7 +606,7 @@ public class TextUtils {
                 .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
                 .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
                 .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
-                .replace("%user_votes%", (user instanceof SavablePlayer ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
+                .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -663,7 +663,7 @@ public class TextUtils {
                     .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
                     .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
                     .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
-                    .replace("%user_votes%", (user instanceof SavablePlayer ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
+                    .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                     ;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
@@ -713,7 +713,7 @@ public class TextUtils {
                 .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
                 .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
                 .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
-                .replace("%sender_votes%", (user instanceof SavablePlayer ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
+                .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -733,7 +733,7 @@ public class TextUtils {
         try {
             dID = Long.parseLong(discordID);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             return of;
         }
 
@@ -771,7 +771,7 @@ public class TextUtils {
                     .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
                     .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
                     .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
-                    .replace("%sender_votes%", (user instanceof SavablePlayer ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
+                    .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                     ;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
@@ -821,7 +821,7 @@ public class TextUtils {
                 .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
                 .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
                 .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
-                .replace("%player_votes%", (user instanceof SavablePlayer ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
+                .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -864,7 +864,7 @@ public class TextUtils {
                 .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
                 .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
                 .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
-                .replace("%user_votes%", (user instanceof SavablePlayer ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
+                .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -907,7 +907,7 @@ public class TextUtils {
                 .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
                 .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
                 .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
-                .replace("%sender_votes%", (user instanceof SavablePlayer ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
+                .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 

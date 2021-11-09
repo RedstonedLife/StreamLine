@@ -193,23 +193,16 @@ public class SavableParty {
     }
 
     public boolean needUpdate() {
-        if (info.size() != propertiesDefaults().size()) return true;
-
-        int i = 0;
-        for (String p : getInfoAsPropertyList()) {
-            if (! startsWithForKeys(p)) return true;
-            i++;
+        for (String p : propertiesDefaults()) {
+            String[] things = p.split("=", 2);
+            if (! infoContainsKey(things[0])) return true;
         }
 
         return false;
     }
 
-    public boolean startsWithForKeys(String string){
-        for (String p : propertiesDefaults()) {
-            if (tryUpdateFormat(string.split("=", 2)[0]).equals(p.split("=", 2)[0])) return true;
-        }
-
-        return false;
+    public boolean infoContainsKey(String string){
+        return info.containsKey(string);
     }
 
     public void updateWithNewDefaults() throws IOException {

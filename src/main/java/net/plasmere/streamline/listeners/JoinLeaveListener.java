@@ -205,6 +205,12 @@ public class JoinLeaveListener implements Listener {
             StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("global"), "");
         }
 
+        if (! TextUtils.equalsAny(stat.chatChannel.name, List.of("global", "party", "guild", "local"))) {
+            if (ChatsHandler.chatExists(stat.chatChannel, stat.chatIdentifier)) {
+                StreamLine.discordData.sendDiscordJoinChannel(player, stat.chatChannel, stat.chatIdentifier);
+            }
+        }
+
         if (ConfigUtils.events()) {
             for (Event event : EventsHandler.getEvents()) {
                 if (! EventsHandler.checkTags(event, stat)) continue;
@@ -514,6 +520,12 @@ public class JoinLeaveListener implements Listener {
             SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.leaderUUID);
             if (get2.key) {
                 StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("party"), party.leaderUUID);
+            }
+        }
+
+        if (! TextUtils.equalsAny(stat.chatChannel.name, List.of("global", "party", "guild", "local"))) {
+            if (ChatsHandler.chatExists(stat.chatChannel, stat.chatIdentifier)) {
+                StreamLine.discordData.sendDiscordLeaveChannel(player, stat.chatChannel, stat.chatIdentifier);
             }
         }
 

@@ -39,5 +39,5 @@ roles:
   priority: "discord"
   synced:
     default:
-      role: '894583534017196105'
+      role: 894583534017196105
       group: "default"

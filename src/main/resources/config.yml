@@ -123,12 +123,14 @@ modules:
             # %player_uuid% = The player's uuid.
             # %guild_uuid% = The player's guild's uuid. Will be empty if none is found.
             # %guild_name% = The player's guild's uuid. Will be empty if none is found.
-            to: "%player_formatted%"
+            to: "%player_absolute%"
             # What type it should be.
             # Options:
             # discord = formatted like on discord.
             # bungee = formatted like on bungee.
             type: "discord"
+            # Should they not be allowed to change their name?
+            unchangeable: true
           # Give people roles upon verifying?
           add-roles:
             - 'put_id_here'
@@ -526,6 +528,10 @@ modules:
       enable: true
       points:
         uses: "%player_votes%"
+    votifier:
+      enabled: true
+      on-vote:
+        run: "on-vote.sl"
     chat-filters:
       enabled: true
   bstats:

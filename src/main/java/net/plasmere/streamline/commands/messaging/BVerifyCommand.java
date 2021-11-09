@@ -33,19 +33,6 @@ public class BVerifyCommand extends SLCommand {
 
     @Override
     public Collection<String> tabComplete(CommandSender sender, String[] args) {
-        TreeSet<String> options = new TreeSet<>();
-
-        options.add("local");
-        options.add("global");
-        options.add("guild");
-        options.add("party");
-        options.add("g-officer");
-        options.add("p-officer");
-
-        if (args.length <= 1) {
-            return TextUtils.getCompletion(options, args[0]);
-        } else {
-            return new ArrayList<>();
-        }
+        return new ArrayList<>();
     }
 }

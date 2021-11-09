@@ -16,7 +16,10 @@ import net.dv8tion.jda.api.JDA;
 import javax.annotation.Nonnull;
 
 public class ReadyListener implements EventListener {
-    private static final EmbedBuilder eb = new EmbedBuilder();
+    public ReadyListener() {
+        if (! ConfigUtils.moduleDEnabled()) return;
+        MessagingUtils.logInfo("Ready listener registered!");
+    }
 
     @Override
     public void onEvent(@Nonnull GenericEvent event) {

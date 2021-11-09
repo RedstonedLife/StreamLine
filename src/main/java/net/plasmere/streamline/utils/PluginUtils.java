@@ -98,7 +98,7 @@ public class PluginUtils {
         if (CommandsConfUtils.comBLang()) {
             registerCommand(plugin, new LanguageCommand(CommandsConfUtils.comBLangBase(), CommandsConfUtils.comBLangPerm(), stringListToArray(CommandsConfUtils.comBLangAliases())));
         }
-        if (CommandsConfUtils.comBVotes()) {
+        if (CommandsConfUtils.comBVotes() && ConfigUtils.moduleBRanksEnabled()) {
             registerCommand(plugin, new VotesCommand(CommandsConfUtils.comBVotesBase(), CommandsConfUtils.comBVotesPerm(), stringListToArray(CommandsConfUtils.comBVotesAliases())));
         }
         if (CommandsConfUtils.comBTeleport()) {
