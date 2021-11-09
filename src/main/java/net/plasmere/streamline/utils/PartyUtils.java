@@ -1,5 +1,6 @@
 package net.plasmere.streamline.utils;
 
+import net.dv8tion.jda.api.entities.Category;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.PermissionNode;
@@ -12,6 +13,7 @@ import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.SavableParty;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
+import net.plasmere.streamline.objects.enums.CategoryType;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
@@ -1413,6 +1415,38 @@ public class PartyUtils {
         }
     }
 
+    public static void onSync(SavableUser sender) {
+        SavableParty party = getParty(sender);
+
+        if (! isParty(party) || party == null) {
+            MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
+            return;
+        }
+
+        if (! party.hasModPerms(sender)) {
+            MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(), noPermission);
+            return;
+        }
+
+        List<SavablePlayer> players = new ArrayList<>();
+
+        for (SavableUser user : party.totalMembers) {
+            if (user instanceof SavablePlayer) players.add((SavablePlayer) user);
+        }
+
+        VoiceUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
+
+        Category category = VoiceUtils.getCategory(CategoryType.PARTIES);
+        if (category == null) {
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+            return;
+        }
+
+        MessagingUtils.sendBUserMessage(sender, syncSender
+                .replace("%category%", category.getName())
+        );
+    }
+
     public static void sendChatFromDiscord(String nameUsed, SavableParty party, String format, String msg) {
         if (! ConfigUtils.moduleDEnabled()) return;
 
@@ -1662,4 +1696,6 @@ public class PartyUtils {
     public static final String warpTitle = StreamLine.config.getMessString("party.warp.title");
     // Info.
     public static final String info = StreamLine.config.getMessString("party.info");
+    // Sync.
+    public static final String syncSender = StreamLine.config.getMessString("party.sync.sender");
 }

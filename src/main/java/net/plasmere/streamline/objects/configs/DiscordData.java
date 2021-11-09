@@ -832,4 +832,57 @@ public class DiscordData {
 
         return toReturn;
     }
+
+    public long addToVoice(long userID, long voiceID) {
+        reloadConfig();
+        List<Long> linked = conf.getLongList("linked-voice." + userID);
+
+        if (linked.contains(voiceID)) return voiceID;
+
+        linked.add(voiceID);
+        conf.set("linked-voice." + userID, linked);
+
+        saveConfig();
+        reloadConfig();
+
+        return voiceID;
+    }
+
+    public long removeFromVoice(long userID, long voiceID) {
+        reloadConfig();
+        List<Long> linked = conf.getLongList("linked-voice." + userID);
+
+        if (! linked.contains(voiceID)) return voiceID;
+
+        linked.remove(voiceID);
+        conf.set("linked-voice." + userID, linked);
+
+        saveConfig();
+        reloadConfig();
+
+        return voiceID;
+    }
+
+    public List<Long> getVoiceFrom(long userID) {
+        reloadConfig();
+        return conf.getLongList("linked-voice." + userID);
+    }
+
+    public List<Long> idsForVoice(long voiceID) {
+        List<Long> toReturn = new ArrayList<>();
+
+        for (String key : conf.getSection("linked-voice").getKeys()) {
+            try {
+                long id = Long.parseLong(key);
+
+                for (long l : getVoiceFrom(id)) {
+                    if (l == voiceID) toReturn.add(id);
+                }
+            } catch (Exception e) {
+                // do nothing.
+            }
+        }
+
+        return toReturn;
+    }
 }

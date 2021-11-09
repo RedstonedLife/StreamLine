@@ -235,6 +235,9 @@ commands:
           - "wa"
           - "summon"
           - "warp"
+        sync:
+          - "sync"
+          - "s"
       # All permissions for the command.
       permissions:
         # Join subcommand.
@@ -269,6 +272,7 @@ commands:
         mute: "streamline.command.party.mute"
         # Warp subcommand.
         warp: "streamline.command.party.warp"
+        sync: "streamline.command.party.sync"
     # The guild command.
     guild:
       # Enables / disables the use of the "guild" bungee command.
@@ -374,6 +378,9 @@ commands:
           - "rename"
           - "ren"
           - "rn"
+        sync:
+          - "sync"
+          - "s"
       # All permissions for the command.
       permissions:
         # Join subcommand.
@@ -410,6 +417,7 @@ commands:
         warp: "streamline.command.guild.warp"
         info: "streamline.command.guild.info"
         rename: "streamline.command.guild.rename"
+        sync: "streamline.command.guild.sync"
     # Stats command.
     stats:
       # Enables / disables the use of the "stats" bungee command.
@@ -899,7 +907,7 @@ commands:
         aliases:
           - "chat"
           - "ch"
-      # The chat level command.
+      # The bungee verify command.
       bverify:
         # Enables / disables the use of the command.
         enabled: true
@@ -911,6 +919,18 @@ commands:
         aliases:
           - "bv"
           - "bver"
+      # The voice command.
+      voice:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "voice"
+        # Custom permission.
+        permission: "streamline.command.voice"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "call"
+          - "vce"
     # Debugging commands.
     debug:
       # The delete stat command.

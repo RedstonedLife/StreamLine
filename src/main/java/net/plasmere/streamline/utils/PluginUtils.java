@@ -210,6 +210,9 @@ public class PluginUtils {
         if (CommandsConfUtils.comBVerify()) {
             registerCommand(plugin, new BVerifyCommand(CommandsConfUtils.comBVerifyBase(), CommandsConfUtils.comBVerifyPerm(), stringListToArray(CommandsConfUtils.comBVerifyAliases())));
         }
+        if (CommandsConfUtils.comBVoice()) {
+            registerCommand(plugin, new VoiceCommand(CommandsConfUtils.comBVoiceBase(), CommandsConfUtils.comBVoicePerm(), stringListToArray(CommandsConfUtils.comBVoiceAliases())));
+        }
 
         // Servers.
         if (CommandsConfUtils.comBLobby()) {

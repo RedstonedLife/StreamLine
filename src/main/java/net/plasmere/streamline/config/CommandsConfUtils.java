@@ -366,6 +366,15 @@ public class CommandsConfUtils {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.party.permissions.warp");
     }
+    // Sync.
+    public static List<String> comBParSyncAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.sync");
+    }
+    public static String comBParSyncPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.party.permissions.sync");
+    }
     // ... SavableGuild.
     //
     public static boolean comBGuild() {
@@ -549,6 +558,15 @@ public class CommandsConfUtils {
     public static String comBGuildRenamePermission() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.guild.permissions.rename");
+    }
+    // Sync.
+    public static List<String> comBGuildSyncAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.sync");
+    }
+    public static String comBGuildSyncPermission() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.sync");
     }
     // ... Servers.
     // Lobby.
@@ -1199,19 +1217,36 @@ public class CommandsConfUtils {
     public static boolean comBVerify() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandBoolean("commands.bungee.messaging.bverify.enabled");
-     }
+    }
     public static String comBVerifyBase() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.messaging.bverify.base");
-     }
+    }
     public static List<String> comBVerifyAliases() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandStringList("commands.bungee.messaging.bverify.aliases");
-     }
+    }
     public static String comBVerifyPerm() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.messaging.bverify.permission");
-     }
+    }
+    // Voice.
+    public static boolean comBVoice() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.messaging.voice.enabled");
+    }
+    public static String comBVoiceBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.voice.base");
+    }
+    public static List<String> comBVoiceAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.messaging.voice.aliases");
+    }
+    public static String comBVoicePerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.voice.permission");
+    }
     // // Debug.
     // Delete Stat.
     public static boolean comBDeleteStat() {

@@ -1,12 +1,15 @@
 package net.plasmere.streamline.utils;
 
+import net.dv8tion.jda.api.entities.Category;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
+import net.plasmere.streamline.objects.enums.CategoryType;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
@@ -1476,6 +1479,38 @@ public class GuildUtils {
         }
     }
 
+    public static void onSync(SavableUser sender) {
+        SavableGuild guild = getGuild(sender);
+
+        if (! isGuild(guild) || guild == null) {
+            MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
+            return;
+        }
+
+        if (! guild.hasModPerms(sender)) {
+            MessagingUtils.sendBGUserMessage(guild, sender.findSender(), sender.findSender(), noPermission);
+            return;
+        }
+
+        List<SavablePlayer> players = new ArrayList<>();
+
+        for (SavableUser user : guild.totalMembers) {
+            if (user instanceof SavablePlayer) players.add((SavablePlayer) user);
+        }
+
+        VoiceUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
+
+        Category category = VoiceUtils.getCategory(CategoryType.GUILDS);
+        if (category == null) {
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+            return;
+        }
+
+        MessagingUtils.sendBUserMessage(sender, syncSender
+                .replace("%category%", category.getName())
+        );
+    }
+
     // MESSAGES...
     // Text.
     public static final String textLeader = StreamLine.config.getMessString("guild.text.leader");
@@ -1622,4 +1657,6 @@ public class GuildUtils {
     public static final String renameNonEmpty = StreamLine.config.getMessString("guild.rename.non-empty");
     public static final String renameConsole = StreamLine.config.getMessString("guild.rename.console");
     public static final String renameTitle = StreamLine.config.getMessString("guild.rename.title");
+    // Sync.
+    public static final String syncSender = StreamLine.config.getMessString("party.sync.sender");
 }

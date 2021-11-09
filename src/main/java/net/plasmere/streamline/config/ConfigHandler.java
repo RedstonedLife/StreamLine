@@ -324,6 +324,11 @@ public class ConfigHandler {
         return discordBot.getString(path);
     }
 
+    public long getDisBotLong(String path) {
+        reloadDiscordBot();
+        return discordBot.getLong(path);
+    }
+
     public boolean getDisBotBoolean(String path) {
         reloadDiscordBot();
         return discordBot.getBoolean(path);

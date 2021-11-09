@@ -308,6 +308,18 @@ public class PartyCommand extends SLCommand {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParSyncAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParSyncPermission())) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+                    return;
+                }
+
+                try {
+                    PartyUtils.onSync(player);
+                } catch (Throwable e) {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    e.printStackTrace();
+                }
             } else {
                 try {
                     SavablePlayer p = PlayerUtils.getOrGetPlayerStat(args[0]);
@@ -357,43 +369,44 @@ public class PartyCommand extends SLCommand {
             tabArgs1.add("invite");
             tabArgs1.add("mute");
             tabArgs1.add("warp");
+            tabArgs1.add("sync");
 
             return TextUtils.getCompletion(tabArgs1, args[0]);
         }
         if (args.length == 2) {
-            if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildJoinAliases())) {
+            if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParJoinAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildLeaveAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParLeaveAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCreateAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCreateAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildPromoteAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParPromoteAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDemoteAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDemoteAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildChatAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParChatAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildListAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParListAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildOpenAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParOpenAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCloseAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCloseAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDisbandAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDisbandAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildAcceptAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParAcceptAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDenyAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDenyAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInvAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParInvAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[1]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildKickAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParKickAliases())) {
                 return TextUtils.getCompletion(strPlayers, args[0]);
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildMuteAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParMuteAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildWarpAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParWarpAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases())) {
+            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParSyncAliases())) {
                 return new ArrayList<>();
             } else {
                 return TextUtils.getCompletion(strPlayers, args[1]);
