@@ -43,6 +43,7 @@ net\plasmere\streamline\commands\staff\settings\SettingsEditCommand.class
 net\plasmere\streamline\config\from\FindFrom.class
 net\plasmere\streamline\objects\SavableGuild$Level.class
 net\plasmere\streamline\utils\JDAPingerUtils.class
+net\plasmere\streamline\objects\enums\CategoryType.class
 net\plasmere\streamline\listeners\LPListener.class
 net\plasmere\streamline\libs\Metrics$DrilldownPie.class
 net\plasmere\streamline\commands\servers\GoToServerVanillaCommand.class
@@ -74,11 +75,13 @@ net\plasmere\streamline\objects\SavableParty$Level.class
 net\plasmere\streamline\commands\staff\punishments\IPBanCommand.class
 net\plasmere\streamline\config\from\From_1_0_13_3.class
 net\plasmere\streamline\utils\PartyUtils.class
+net\plasmere\streamline\config\from\From_1_0_14_8.class
 net\plasmere\streamline\scripts\Script.class
 net\plasmere\streamline\utils\PluginUtils.class
 net\plasmere\streamline\commands\staff\ChatFilterCommand.class
 net\plasmere\streamline\objects\configs\Lobbies.class
 net\plasmere\streamline\objects\configs\ChatFilters.class
+net\plasmere\streamline\utils\VoiceUtils.class
 net\plasmere\streamline\StreamLine$2.class
 net\plasmere\streamline\commands\staff\SudoCommand.class
 net\plasmere\streamline\discordbot\commands\CommandsCommand.class
@@ -105,6 +108,7 @@ net\plasmere\streamline\utils\GuildUtils$1.class
 net\plasmere\streamline\listeners\ChatListener.class
 net\plasmere\streamline\libs\Metrics.class
 net\plasmere\streamline\objects\enums\MessageServerType.class
+net\plasmere\streamline\commands\VoiceCommand.class
 net\plasmere\streamline\scripts\Script$1.class
 net\plasmere\streamline\events\EventsReader.class
 net\plasmere\streamline\config\from\From_1_0_14_5.class

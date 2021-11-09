@@ -5,7 +5,6 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.enums.CategoryType;
@@ -13,7 +12,7 @@ import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import net.plasmere.streamline.utils.VoiceUtils;
+import net.plasmere.streamline.utils.DiscordUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,7 +57,7 @@ public class VoiceCommand extends SLCommand {
                         return;
                     }
 
-                    List<VoiceChannel> channels = VoiceUtils.createVoice(args[1], CategoryType.VOICE, player);
+                    List<VoiceChannel> channels = DiscordUtils.createVoice(args[1], CategoryType.VOICE, player);
 
                     for (VoiceChannel channel : channels) {
                         MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(MessageConfUtils.voiceCreate()
@@ -87,7 +86,7 @@ public class VoiceCommand extends SLCommand {
                         return;
                     }
 
-                    List<VoiceChannel> voiceChannels = VoiceUtils.getVoiceChannelsByPlayer(player);
+                    List<VoiceChannel> voiceChannels = DiscordUtils.getVoiceChannelsByPlayer(player);
 
                     for (VoiceChannel channel : voiceChannels) {
                         if (! channel.getName().equals(args[1])) continue;
@@ -104,7 +103,7 @@ public class VoiceCommand extends SLCommand {
                             }
                         }
 
-                        VoiceUtils.deleteVoice(channel.getIdLong(), CategoryType.VOICE);
+                        DiscordUtils.deleteVoice(channel.getIdLong(), CategoryType.VOICE);
                     }
                 }
                 case "add" -> {
@@ -139,8 +138,8 @@ public class VoiceCommand extends SLCommand {
                         return;
                     }
 
-                    for (VoiceChannel c : VoiceUtils.getVoice(player, args[1])) {
-                        for (VoiceChannel channel : VoiceUtils.addToVoice(c.getIdLong(), other)) {
+                    for (VoiceChannel c : DiscordUtils.getVoice(player, args[1])) {
+                        for (VoiceChannel channel : DiscordUtils.addToVoice(c.getIdLong(), other)) {
                             MessagingUtils.sendBUserMessage(other, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceAddOther()
                                             .replace("%name%", channel.getName())
                                     , other), sender));
@@ -182,8 +181,8 @@ public class VoiceCommand extends SLCommand {
                         return;
                     }
 
-                    for (VoiceChannel c : VoiceUtils.getVoice(player, args[1])) {
-                        for (VoiceChannel channel : VoiceUtils.removeFromVoice(c.getIdLong(), other)) {
+                    for (VoiceChannel c : DiscordUtils.getVoice(player, args[1])) {
+                        for (VoiceChannel channel : DiscordUtils.removeFromVoice(c.getIdLong(), other)) {
                             MessagingUtils.sendBUserMessage(other, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceRemoveOther()
                                             .replace("%name%", channel.getName())
                                     , other), sender));
@@ -203,7 +202,7 @@ public class VoiceCommand extends SLCommand {
     }
 
     public boolean hasVoice(SavablePlayer player, String name) {
-        List<VoiceChannel> currents = VoiceUtils.getVoiceChannelsByPlayer(player);
+        List<VoiceChannel> currents = DiscordUtils.getVoiceChannelsByPlayer(player);
 
         for (VoiceChannel channel : currents) {
             if (channel.getName().equals(name)) return true;
@@ -231,7 +230,7 @@ public class VoiceCommand extends SLCommand {
         }
         if (args.length == 2 && (args[0].equals("add") || args[0].equals("delete") || args[0].equals("remove"))) {
             List<String> voiceCalls = new ArrayList<>();
-            for (VoiceChannel voiceChannel : VoiceUtils.getVoiceChannelsByPlayer(player)) {
+            for (VoiceChannel voiceChannel : DiscordUtils.getVoiceChannelsByPlayer(player)) {
                 voiceCalls.add(voiceChannel.getName());
             }
 

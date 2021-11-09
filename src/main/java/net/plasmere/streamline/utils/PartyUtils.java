@@ -1,15 +1,10 @@
 package net.plasmere.streamline.utils;
 
 import net.dv8tion.jda.api.entities.Category;
-import net.luckperms.api.model.group.Group;
-import net.luckperms.api.node.NodeType;
-import net.luckperms.api.node.types.PermissionNode;
-import net.luckperms.api.query.QueryOptions;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.SavableParty;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
@@ -19,7 +14,6 @@ import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
-import net.plasmere.streamline.objects.savable.users.SavableUser;
 
 import java.io.File;
 import java.io.IOException;
@@ -1434,9 +1428,9 @@ public class PartyUtils {
             if (user instanceof SavablePlayer) players.add((SavablePlayer) user);
         }
 
-        VoiceUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
+        DiscordUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
 
-        Category category = VoiceUtils.getCategory(CategoryType.PARTIES);
+        Category category = DiscordUtils.getCategory(CategoryType.PARTIES);
         if (category == null) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
             return;

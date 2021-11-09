@@ -12,7 +12,7 @@ import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VoiceUtils {
+public class DiscordUtils {
     public static List<VoiceChannel> createVoice(String name, CategoryType type, SavablePlayer... players) {
         JDA jda = StreamLine.getJda();
 
@@ -42,7 +42,7 @@ public class VoiceUtils {
                 voiceChannel.createPermissionOverride(member).setAllow(
                         Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
                         Permission.VOICE_STREAM, Permission.VOICE_USE_VAD,
-                        Permission.VOICE_START_ACTIVITIES
+                        Permission.VOICE_START_ACTIVITIES, Permission.VIEW_CHANNEL
                 ).complete();
 
                 StreamLine.discordData.addToVoice(l, voiceChannel.getIdLong());

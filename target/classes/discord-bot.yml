@@ -9,6 +9,11 @@ bot:
 
 ### DISCORD SETTINGS ###
 discord:
+  ## Categories ##
+  categories:
+    guilds: 'put_id_here'
+    parties: 'put_id_here'
+    voice: 'put_id_here'
   ## Text Channels ##
   text-channels:
     # Report channel ID. "report-to-channel" must be set "true".

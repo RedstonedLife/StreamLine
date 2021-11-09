@@ -7,7 +7,6 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.CategoryType;
 import net.plasmere.streamline.objects.enums.MessageServerType;
@@ -1498,9 +1497,9 @@ public class GuildUtils {
             if (user instanceof SavablePlayer) players.add((SavablePlayer) user);
         }
 
-        VoiceUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
+        DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
 
-        Category category = VoiceUtils.getCategory(CategoryType.GUILDS);
+        Category category = DiscordUtils.getCategory(CategoryType.GUILDS);
         if (category == null) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
             return;
