@@ -2,7 +2,7 @@ package net.plasmere.streamline.commands.staff;
 
 import com.velocitypowered.api.command.CommandSource;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.Party;
+import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PartyUtils;
@@ -21,7 +21,7 @@ public class PartiesCommand extends SLCommand {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.partiesNone());
             return;
         }
-        for (Party party : PartyUtils.getParties()){
+        for (SavableParty party : PartyUtils.getParties()){
             MessagingUtils.sendBPUserMessage(party, sender, sender, MessageConfUtils.partiesMessage());
         }
     }

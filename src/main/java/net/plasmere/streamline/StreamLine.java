@@ -13,23 +13,27 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.scheduler.Scheduler;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.plasmere.streamline.config.ConfigHandler;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.config.from.FindFrom;
+import net.plasmere.streamline.discordbot.BoostListener;
+import net.plasmere.streamline.discordbot.MemberListener;
 import net.plasmere.streamline.discordbot.MessageListener;
 import net.plasmere.streamline.discordbot.ReadyListener;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.EventsReader;
 import net.plasmere.streamline.libs.Metrics;
+import net.plasmere.streamline.listeners.LPListener;
 import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.configs.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
+import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.timers.*;
-import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
 import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
@@ -42,6 +46,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 //import org.bstats.bukkit.Metrics;
+import net.plasmere.streamline.utils.holders.VoteHolder;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -79,6 +84,7 @@ public class StreamLine {
 	public static Lobbies lobbies;
 	public static ViaHolder viaHolder;
 	public static GeyserHolder geyserHolder;
+	public static VoteHolder voteHolder;
 	public static LPHolder lpHolder;
 	public static ServerConfig serverConfig;
 	public static DiscordData discordData;
@@ -97,6 +103,7 @@ public class StreamLine {
 
 	private File plDir() { return new File(getDataFolder() + File.separator + "players" + File.separator); }
 	private File gDir() { return new File(getDataFolder() + File.separator + "guilds" + File.separator); }
+	private File pDir() { return new File(getDataFolder() + File.separator + "parties" + File.separator); }
 	private File confDir() { return new File(getDataFolder() + File.separator + "configs" + File.separator); }
 	private File chatHistoryDir() { return new File(getDataFolder() + File.separator + "chat-history" + File.separator); }
 	private File scriptsDir() { return new File(getDataFolder() + File.separator + "scripts" + File.separator); }
@@ -131,6 +138,9 @@ public class StreamLine {
 	public File getGDir() {
 		return gDir();
 	}
+	public File getPDir() {
+		return pDir();
+	}
 	public File getEDir() { return eventsDir; }
 	public File getConfDir() { return confDir(); }
 	public File getChatHistoryDir() { return chatHistoryDir(); }
@@ -145,11 +155,19 @@ public class StreamLine {
 		if (jda != null) try { jda.shutdownNow(); jda = null; } catch (Exception e) { e.printStackTrace(); }
 
 		try {
-			JDABuilder jdaBuilder = JDABuilder.createDefault(DiscordBotConfUtils.botToken())
+			JDABuilder jdaBuilder = JDABuilder.create(DiscordBotConfUtils.botToken(),
+							GatewayIntent.GUILD_MESSAGES,
+							GatewayIntent.GUILD_MEMBERS,
+							GatewayIntent.GUILD_PRESENCES,
+							GatewayIntent.GUILD_VOICE_STATES,
+							GatewayIntent.GUILD_EMOJIS
+					)
 					.setActivity(Activity.playing(DiscordBotConfUtils.botStatusMessage()));
 			jdaBuilder.addEventListeners(
 					new MessageListener(),
-					new ReadyListener()
+					new ReadyListener(),
+					new BoostListener(),
+					new MemberListener()
 			);
 			jda = jdaBuilder.build().awaitReady();
 		} catch (Exception e) {
@@ -168,6 +186,16 @@ public class StreamLine {
 		if (! gDir().exists()) {
 			try {
 				gDir().mkdirs();
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void loadParties(){
+		if (! pDir().exists()) {
+			try {
+				pDir().mkdirs();
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -407,7 +435,7 @@ public class StreamLine {
 		}
 
 		// Discord Data.
-		if (ConfigUtils.moduleDPC()) {
+		if (ConfigUtils.moduleDPC() || ConfigUtils.boostsEnabled()) {
 			discordData = new DiscordData();
 		}
 
@@ -418,6 +446,14 @@ public class StreamLine {
 
 		if (ConfigUtils.moduleBChatFiltersEnabled()) {
 			chatFilters = new ChatFilters();
+		}
+
+		if (ConfigUtils.moduleDEnabled()) {
+			if (ConfigUtils.moduleDPC()) {
+				if (lpHolder.enabled) {
+					LPListener lpListener = new LPListener(lpHolder.api);
+				}
+			}
 		}
 	}
 
@@ -466,6 +502,15 @@ public class StreamLine {
 
 		instance = this;
 
+		// LP Support.
+		lpHolder = new LPHolder();
+
+		// Via Support.
+		viaHolder = new ViaHolder();
+
+		// Geyser Support.
+		geyserHolder = new GeyserHolder();
+
 		getProxy().getChannelRegistrar().register(customIdentifier);
 
 		// Teller.
@@ -473,6 +518,11 @@ public class StreamLine {
 
 		// Configs...
 		loadConfigs();
+
+		// NuVotifier Support.
+		if (ConfigUtils.moduleBVotifierEnabled()) {
+			voteHolder = new VoteHolder();
+		}
 
 		// LP Support.
 		lpHolder = new LPHolder();
@@ -529,8 +579,8 @@ public class StreamLine {
 		// Timers.
 		loadTimers();
 
-		// Set up ConsolePlayer.
-		ConsolePlayer console = PlayerUtils.applyConsole();
+		// Set up SavableConsole.
+		SavableConsole console = PlayerUtils.applyConsole();
 		if (GuildUtils.existsByUUID(console.guild)) {
 			try {
 				GuildUtils.addGuild(new SavableGuild(console.guild, false));

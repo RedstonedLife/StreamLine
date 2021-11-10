@@ -3,6 +3,7 @@ package net.plasmere.streamline.utils;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.dv8tion.jda.api.entities.User;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
@@ -45,6 +46,8 @@ public class TextUtils {
     }
 
     public static String truncate(String text, int digits) {
+        if (! text.contains(".")) return text;
+
         try {
             digits = getDigits(text.indexOf(".") + digits + 1, text.length());
             return text.substring(0, digits);
@@ -477,8 +480,8 @@ public class TextUtils {
 
                 .replace("%player_points%", String.valueOf(user.points))
 
-                .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -491,10 +494,11 @@ public class TextUtils {
                 .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%player_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%player_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%player_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%player_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%player_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
+                .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -519,7 +523,7 @@ public class TextUtils {
         }
 
         if (StreamLine.discordData.isVerified(dID)) {
-            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(dID));
+            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(dID));
 
             if (user == null) return of;
 
@@ -533,8 +537,8 @@ public class TextUtils {
 
                     .replace("%player_points%", String.valueOf(user.points))
 
-                    .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                    .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                    .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                    .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                     .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
                     .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -547,10 +551,11 @@ public class TextUtils {
                     .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                     .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                     .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                    .replace("%player_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                    .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                    .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                    .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                    .replace("%player_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                    .replace("%player_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                    .replace("%player_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                    .replace("%player_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
+                    .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                     ;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
@@ -582,8 +587,8 @@ public class TextUtils {
 
                 .replace("%user_points%", String.valueOf(user.points))
 
-                .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -596,10 +601,11 @@ public class TextUtils {
                 .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%user_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%user_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%user_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%user_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%user_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
+                .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -624,7 +630,7 @@ public class TextUtils {
         }
 
         if (StreamLine.discordData.isVerified(dID)) {
-            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(dID));
+            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(dID));
 
             if (user == null) return of;
 
@@ -638,8 +644,8 @@ public class TextUtils {
 
                     .replace("%user_points%", String.valueOf(user.points))
 
-                    .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                    .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                    .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                    .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                     .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
                     .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -652,10 +658,11 @@ public class TextUtils {
                     .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                     .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                     .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                    .replace("%user_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                    .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                    .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                    .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                    .replace("%user_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                    .replace("%user_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                    .replace("%user_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                    .replace("%user_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
+                    .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                     ;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
@@ -687,8 +694,8 @@ public class TextUtils {
 
                 .replace("%sender_points%", String.valueOf(user.points))
 
-                .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -701,10 +708,11 @@ public class TextUtils {
                 .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%sender_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%sender_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
+                .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -724,14 +732,15 @@ public class TextUtils {
         try {
             dID = Long.parseLong(discordID);
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             return of;
         }
 
-        if (StreamLine.discordData.isVerified(dID)) {
-            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getVerified(dID));
+        User u = StreamLine.getJda().getUserById(dID);
+        if (u == null) return of;
 
-            if (user == null) return of;
+        if (StreamLine.discordData.isVerified(dID)) {
+            SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(dID));
 
             return of
                     .replace("%sender_uuid%", user.uuid)
@@ -743,8 +752,8 @@ public class TextUtils {
 
                     .replace("%sender_points%", String.valueOf(user.points))
 
-                    .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                    .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                    .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                    .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                     .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
                     .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -757,10 +766,11 @@ public class TextUtils {
                     .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                     .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                     .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                    .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                    .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                    .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                    .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                    .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                    .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                    .replace("%sender_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                    .replace("%sender_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
+                    .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                     ;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
@@ -792,8 +802,8 @@ public class TextUtils {
 
                 .replace("%player_points%", String.valueOf(user.points))
 
-                .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -806,10 +816,11 @@ public class TextUtils {
                 .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%player_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%player_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%player_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%player_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%player_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
+                .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -834,8 +845,8 @@ public class TextUtils {
 
                 .replace("%user_points%", String.valueOf(user.points))
 
-                .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -848,10 +859,11 @@ public class TextUtils {
                 .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%user_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%user_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%user_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%user_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%user_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
+                .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -876,8 +888,8 @@ public class TextUtils {
 
                 .replace("%sender_points%", String.valueOf(user.points))
 
-                .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -890,10 +902,11 @@ public class TextUtils {
                 .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%sender_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%sender_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
+                .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
 
@@ -903,6 +916,10 @@ public class TextUtils {
 
     public static String replaceAllSenderDiscord(String of, CommandSource sender) {
         return replaceAllSenderDiscord(of, PlayerUtils.getOrGetSavableUser(sender));
+    }
+
+    public static Collection<RegisteredServer> getServers() {
+        return StreamLine.getInstance().getProxy().getAllServers();
     }
 
     public static int replaceAllPlayerRanks(SavablePlayer player) {
@@ -926,10 +943,6 @@ public class TextUtils {
         }
 
         return toReturn;
-    }
-
-    public static Collection<RegisteredServer> getServers() {
-        return StreamLine.getInstance().getProxy().getAllServers();
     }
 
     public static boolean equalsAnyServer(String servername) {

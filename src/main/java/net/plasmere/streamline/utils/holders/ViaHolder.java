@@ -34,7 +34,7 @@ public class ViaHolder {
         return ProtocolVersion.getProtocol(version);
     }
 
-    public ProtocolVersion getProtocal(UUID uuid){
+    public ProtocolVersion getProtocol(UUID uuid){
         return ProtocolVersion.getProtocol(via.getPlayerVersion(uuid));
     }
 }

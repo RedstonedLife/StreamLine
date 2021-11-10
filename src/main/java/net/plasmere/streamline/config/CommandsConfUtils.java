@@ -201,7 +201,7 @@ public class CommandsConfUtils {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.stats.view-others.permission");
     }
-    // ... Party.
+    // ... SavableParty.
     //
     public static boolean comBParty() {
         StreamLine.config.reloadCommands();
@@ -1212,6 +1212,23 @@ public class CommandsConfUtils {
     public static String comBVerifyPerm() {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.messaging.bverify.permission");
+    }
+    // Voice.
+    public static boolean comBVoice() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.messaging.voice.enabled");
+    }
+    public static String comBVoiceBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.voice.base");
+    }
+    public static List<String> comBVoiceAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.messaging.voice.aliases");
+    }
+    public static String comBVoicePerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.voice.permission");
     }
     // // Debug.
     // Delete Stat.

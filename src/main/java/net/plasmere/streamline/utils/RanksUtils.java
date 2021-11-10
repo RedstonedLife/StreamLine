@@ -75,12 +75,12 @@ public class RanksUtils {
 
             if (! canChange(user)) return OTHER;
 
-            api.getUserManager().modifyUser(player.getUniqueId(), (User u) -> {
+            api.getUserManager().modifyUser(user.getUniqueId(), (User u) -> {
                 // Remove all other inherited groups the user had before.
                 u.data().clear(NodeType.INHERITANCE::matches);
 
                 // Create a node to add to the player.
-                Node node = InheritanceNode.builder(group).build();
+                Node node = InheritanceNode.builder().group(group).build();
 
                 // Add the node to the user.
                 u.data().add(node);

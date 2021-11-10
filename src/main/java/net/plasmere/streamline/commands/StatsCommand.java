@@ -72,7 +72,7 @@ public class StatsCommand extends SLCommand {
 }
 
 //                if (args[0].equals("%")) {
-//                    ConsolePlayer person = PlayerUtils.getConsoleStat();
+//                    SavableConsole person = PlayerUtils.getConsoleStat();
 //
 //                    if (person == null) {
 //                        MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);

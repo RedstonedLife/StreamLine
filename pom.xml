@@ -6,7 +6,7 @@
 
     <groupId>net.plasmere</groupId>
     <artifactId>StreamLine-Velocity</artifactId>
-    <version>1.0.14.6</version>
+    <version>1.0.14.9</version>
     <packaging>jar</packaging>
 
     <name>StreamLine</name>
@@ -24,8 +24,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>14</source>
+                    <target>14</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -107,6 +107,10 @@
             <id>viaversion-repo</id>
             <url>https://repo.viaversion.com</url>
         </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -181,5 +185,13 @@
 <!--            <version>2.2.1</version>-->
 <!--            <scope>compile</scope>-->
 <!--        </dependency>-->
+        <!--https://github.com/NuVotifier/NuVotifier/wiki/Developer-Documentation#maven-->
+        <dependency>
+            <groupId>com.vexsoftware</groupId>
+            <artifactId>nuvotifier-universal</artifactId>
+            <version>2.6.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/nuvotifier.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>

@@ -20,10 +20,11 @@ import net.plasmere.streamline.objects.filters.ChatFilter;
 import net.plasmere.streamline.objects.messaging.BungeeMassMessage;
 import net.plasmere.streamline.objects.messaging.BungeeMessage;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
-import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
+import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 
+import java.io.File;
 import java.util.*;
 
 public class MessagingUtils {
@@ -153,6 +154,28 @@ public class MessagingUtils {
         }
     }
 
+    public static void sendRoomMessageFromDiscord(String nameUsed, String userID, Chat room, String format, String message) {
+        for (SavablePlayer p : PlayerUtils.getRoomedPlayers(room)) {
+            p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, userID)
+                    .replace("%sender_servered%", nameUsed)
+                    .replace("%message%", message)
+                    .replace("%server%", ConfigUtils.consoleServer())
+                    .replace("%room%", room.identifier)
+            ));
+        }
+    }
+
+    public static void sendRoomMessageFromDiscord(SavableUser user, Chat room, String format, String message) {
+        for (SavablePlayer p : PlayerUtils.getRoomedPlayers(room)) {
+            p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, user)
+                    .replace("%sender_servered%", user.latestName)
+                    .replace("%message%", message)
+                    .replace("%server%", ConfigUtils.consoleServer())
+                    .replace("%room%", room.identifier)
+            ));
+        }
+    }
+
     public static void sendServerMessageOtherServerSelf(Player player, ServerConnection serverFrom, String format, String message) {
         player.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                 .replace("%sender_servered%", getPlayerDisplayName(player))
@@ -252,6 +275,86 @@ public class MessagingUtils {
         player.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
     }
 
+    public static void sendGuildPluginMessageRequest(Player to, SavableGuild guild) {
+        if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("proxy.send.guild"); // the channel could be whatever you want
+        try {
+            File file = guild.file;
+            Scanner reader = new Scanner(file);
+
+            while (reader.hasNextLine()) {
+                String line = reader.nextLine();
+                if (line.startsWith("#")) continue;
+
+                out.writeUTF(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // we send the data to the server
+        // using ServerInfo the packet is being queued if there are no players in the server
+        // using only the server to send data the packet will be lost if no players are in it
+        to.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
+    }
+
+    public static void sendPartyPluginMessageRequest(Player to, SavableParty party) {
+        if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("proxy.send.party"); // the channel could be whatever you want
+        try {
+            File file = party.file;
+            Scanner reader = new Scanner(file);
+
+            while (reader.hasNextLine()) {
+                String line = reader.nextLine();
+                if (line.startsWith("#")) continue;
+
+                out.writeUTF(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // we send the data to the server
+        // using ServerInfo the packet is being queued if there are no players in the server
+        // using only the server to send data the packet will be lost if no players are in it
+        to.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
+    }
+
+    public static void sendSavableUserPluginMessageRequest(Player to, SavableUser user, String type) {
+        if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("proxy.send.user"); // the channel could be whatever you want
+        out.writeUTF(type);
+
+        try {
+            File file = user.file;
+            Scanner reader = new Scanner(file);
+
+            while (reader.hasNextLine()) {
+                String line = reader.nextLine();
+                if (line.startsWith("#")) continue;
+
+                out.writeUTF(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // we send the data to the server
+        // using ServerInfo the packet is being queued if there are no players in the server
+        // using only the server to send data the packet will be lost if no players are in it
+        to.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
+    }
+    
     public static void sendTeleportPluginMessageRequest(Player sender, Player to) {
         if (PlayerUtils.getServeredPPlayers(sender.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
 
@@ -621,7 +724,7 @@ public class MessagingUtils {
         ).queue();
     }
 
-    public static void sendBPUserMessage(Party party, CommandSource sender, CommandSource to, String msg){
+    public static void sendBPUserMessage(SavableParty party, CommandSource sender, CommandSource to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.leaderUUID)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
@@ -645,7 +748,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendBPUserMessageFromDiscord(Party party, String nameUsed, CommandSource to, String msg){
+    public static void sendBPUserMessageFromDiscord(SavableParty party, String nameUsed, CommandSource to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, party.leaderUUID)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
@@ -672,7 +775,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendBPUserMessageFromDiscord(Party party, SavableUser sender, CommandSource to, String msg){
+    public static void sendBPUserMessageFromDiscord(SavableParty party, SavableUser sender, CommandSource to, String msg){
         to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.leaderUUID)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
@@ -696,7 +799,7 @@ public class MessagingUtils {
         ));
     }
 
-    public static void sendDiscordPEBMessage(Party party, DiscordMessage message){
+    public static void sendDiscordPEBMessage(SavableParty party, DiscordMessage message){
         if (! ConfigUtils.moduleDEnabled()) {
             return;
         }
@@ -929,8 +1032,8 @@ public class MessagingUtils {
     public static void sendStatUserMessage(SavableUser user, CommandSource sender, String msg){
         SavableGuild guild = GuildUtils.getGuild(user);
 
-        if (user instanceof ConsolePlayer) {
-            ConsolePlayer player = PlayerUtils.getConsoleStat();
+        if (user instanceof SavableConsole) {
+            SavableConsole player = PlayerUtils.getConsoleStat();
 
             if (player == null) {
                 sendBUserMessage(sender, MessageConfUtils.noPlayer());
@@ -1066,8 +1169,8 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendBUserMessage(SavablePlayer sender, String msg){
-        if (sender instanceof Player) {
+    public static void sendBUserMessage(SavableUser sender, String msg){
+        if (sender instanceof SavablePlayer) {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
                     .replace("%version%", Objects.requireNonNull(sender).latestVersion)
             ));
@@ -1147,11 +1250,11 @@ public class MessagingUtils {
         StreamLine.getInstance().getLogger().error(TextUtils.newLined(msg));
     }
 
-    public static String mods(Party party){
+    public static String mods(SavableParty party){
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (SavablePlayer m : party.moderators){
+        for (SavableUser m : party.moderators){
             if (i < party.moderators.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesModsNLast(), m)
                         .replace("%version%", Objects.requireNonNull(m).latestVersion)
@@ -1168,11 +1271,11 @@ public class MessagingUtils {
         return msg.toString();
     }
 
-    public static String members(Party party){
+    public static String members(SavableParty party){
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (SavablePlayer m : party.members){
+        for (SavableUser m : party.members){
             if (i < party.members.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesMemsNLast(), m)
                         .replace("%version%", Objects.requireNonNull(m).latestVersion)
@@ -1189,11 +1292,11 @@ public class MessagingUtils {
         return msg.toString();
     }
 
-    public static String membersT(Party party){
+    public static String membersT(SavableParty party){
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (SavablePlayer m : party.totalMembers){
+        for (SavableUser m : party.totalMembers){
             if (i != party.totalMembers.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesTMemsNLast(), m)
                         .replace("%version%", Objects.requireNonNull(m).latestVersion)
@@ -1210,11 +1313,11 @@ public class MessagingUtils {
         return msg.toString();
     }
 
-    public static String invites(Party party){
+    public static String invites(SavableParty party){
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (SavablePlayer m : party.invites){
+        for (SavableUser m : party.invites){
 
             if (i < party.invites.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.partiesInvsNLast(), m)
@@ -1232,11 +1335,11 @@ public class MessagingUtils {
         return msg.toString();
     }
 
-    public static String getIsPublic(Party party){
+    public static String getIsPublic(SavableParty party){
         return party.isPublic ? MessageConfUtils.partiesIsPublicTrue() : MessageConfUtils.partiesIsPublicFalse();
     }
 
-    public static String getIsMuted(Party party){
+    public static String getIsMuted(SavableParty party){
         return party.isMuted ? MessageConfUtils.partiesIsMutedTrue() : MessageConfUtils.partiesIsMutedFalse();
     }
 

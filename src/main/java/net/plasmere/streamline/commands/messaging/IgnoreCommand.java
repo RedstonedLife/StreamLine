@@ -5,7 +5,7 @@ import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
-import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
+import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -78,7 +78,7 @@ public class IgnoreCommand extends SLCommand {
                     stat.tryAddNewIgnored(other.uuid);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.ignoreAddSelf(), sender)
                     );
-                    if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof ConsolePlayer) {
+                    if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof SavableConsole) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.ignoreAddIgnored(), sender)
                         );
                     }
@@ -98,7 +98,7 @@ public class IgnoreCommand extends SLCommand {
                     stat.tryRemIgnored(other.uuid);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.ignoreRemSelf(), sender)
                     );
-                    if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof ConsolePlayer) {
+                    if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof SavableConsole) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.ignoreRemIgnored(), sender)
                         );
                     }

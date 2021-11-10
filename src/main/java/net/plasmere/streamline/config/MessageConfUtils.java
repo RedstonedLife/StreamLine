@@ -435,7 +435,7 @@ public class MessageConfUtils {
         return StreamLine.config.mess.getString("stream.hover-prefix");
     }
 
-    // Party.
+    // SavableParty.
     public static String partyConnect() {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("party.connect");
@@ -1630,5 +1630,46 @@ public class MessageConfUtils {
     public static String filtersCommandCreate() {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("filters.command.create.message");
+    }
+
+    public static String voiceCreate() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.create");
+    }
+    public static String voiceDeleteSender() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.delete.sender");
+    }
+    public static String voiceDeleteOther() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.delete.other");
+    }
+    public static String voiceAddSender() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.add.sender");
+    }
+    public static String voiceAddOther() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.add.other");
+    }
+    public static String voiceRemoveSender() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.remove.sender");
+    }
+    public static String voiceRemoveOther() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.remove.other");
+    }
+    public static String voiceNotVerified() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.not-verified");
+    }
+    public static String voiceNoVoice() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.no-voice");
+    }
+    public static String voiceAlreadyVoice() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.already-voice");
     }
 }

@@ -6,16 +6,16 @@ import net.plasmere.streamline.config.ConfigUtils;
 
 import java.util.*;
 
-public class ConsolePlayer extends SavableUser {
+public class SavableConsole extends SavableUser {
     public ProxyServer server;
 
     public List<String> savedKeys = new ArrayList<>();
 
-    public ConsolePlayer() {
+    public SavableConsole() {
         super("%");
     }
 
-    public ConsolePlayer(boolean create){
+    public SavableConsole(boolean create){
         super("%", create);
     }
 

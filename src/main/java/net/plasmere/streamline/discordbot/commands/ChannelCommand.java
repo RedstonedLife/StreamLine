@@ -10,7 +10,7 @@ import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 
 public class ChannelCommand {
-    public static String usage = "Usage: channel <set | remove> <global | local | guild | party> <identifier> <bypass: true or false> <joins: true or false> <leaves: true or false>";
+    public static String usage = "Usage: channel <set | remove> <channel name> <identifier> <bypass: true or false> <joins: true or false> <leaves: true or false>";
 
     public static void sendMessage(String command, MessageReceivedEvent event){
         EmbedBuilder eb = new EmbedBuilder();
@@ -62,22 +62,18 @@ public class ChannelCommand {
                     return "Must specify if leaves are enabled!\n" + usage;
                 }
 
-                switch (args[2]) {
-                    case "global":
-                        StreamLine.discordData.addChannel(channelID, ChatsHandler.getChannel("global").toString(), args[3], bypass, joins, leaves);
-                        return "Successfully added channel ``" + channelID + "`` to your set channels as: < GLOBAL , " + args[3] + "," + bypass + " >!";
-                    case "local":
-                        StreamLine.discordData.addChannel(channelID, ChatsHandler.getChannel("local").toString(), args[3], bypass, joins, leaves);
-                        return "Successfully added channel ``" + channelID + "`` to your set channels as: < LOCAL , " + args[3] + "," + bypass + " >!";
-                    case "guild":
-                        StreamLine.discordData.addChannel(channelID, ChatsHandler.getChannel("guild").toString(), args[3], bypass, joins, leaves);
-                        return "Successfully added channel ``" + channelID + "`` to your set channels as: < GUILD , " + args[3] + "," + bypass + " >!";
-                    case "party":
-                        StreamLine.discordData.addChannel(channelID, ChatsHandler.getChannel("party").toString(), args[3], bypass, joins, leaves);
-                        return "Successfully added channel ``" + channelID + "`` to your set channels as: < PARTY , " + args[3] + "," + bypass + " >!";
-                    default:
-                        return "Improper syntax!\n" + usage;
-                }
+                ChatChannel chatChannel = ChatsHandler.getChannel(args[2]);
+                if (chatChannel == null)
+                    return "The specified channel could not be found...";
+
+                StreamLine.discordData.addChannel(channelID, chatChannel.toString(), args[3], bypass, joins, leaves);
+                return "Successfully added channel ``" + channelID + "`` to your set channels!" +
+                        "\n``---`` Set As ``---``" +
+                        "\nChannel: " + chatChannel +
+                        "\nIdentifier: " + args[3] +
+                        "\nBypasses proxy chat: " + bypass +
+                        "\nSends join messages: " + joins +
+                        "\nSends leaves messages: " + leaves;
             case "remove":
                 StreamLine.discordData.remChannel(channelID);
                 return "Successfully removed channel ``" + channelID + "`` from your set channels!";

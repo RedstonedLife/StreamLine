@@ -1,6 +1,9 @@
 package net.plasmere.streamline.config;
 
 import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.objects.enums.CategoryType;
+
+import java.util.Locale;
 
 public class DiscordBotConfUtils {
     // Bot Stuff.
@@ -15,6 +18,11 @@ public class DiscordBotConfUtils {
     public static String botStatusMessage() {
         StreamLine.config.reloadDiscordBot();
         return StreamLine.config.getDisBotString("bot.server-ip");
+    }
+    // Categories.
+    public static long categoryGet(CategoryType type) {
+        StreamLine.config.reloadDiscordBot();
+        return StreamLine.config.getDisBotLong("discord.categories." + type.name().toLowerCase(Locale.ROOT));
     }
     // ... Discord.
     // Text Channels.

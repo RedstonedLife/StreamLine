@@ -13,12 +13,10 @@ import net.kyori.adventure.title.Title;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
-import net.plasmere.streamline.utils.PluginUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.net.InetSocketAddress;
@@ -102,7 +100,7 @@ public class SavablePlayer extends SavableUser {
             if (StreamLine.geyserHolder.enabled && StreamLine.geyserHolder.file.hasProperty(this.uuid)) {
                 toLatestVersion = "GEYSER";
             } else {
-                toLatestVersion = StreamLine.viaHolder.getProtocal(UUID.fromString(this.uuid)).getName();
+                toLatestVersion = StreamLine.viaHolder.getProtocol(UUID.fromString(this.uuid)).getName();
             }
         } else {
             toLatestVersion = "Not Enabled";
@@ -130,7 +128,7 @@ public class SavablePlayer extends SavableUser {
         defaults.add("playtime=0");
         defaults.add("muted=false");
         defaults.add("muted-till=");
-        defaults.add("chat-level=LOCAL");
+        defaults.add("chat-channel=local");
         defaults.add("chat-identifier=network");
         defaults.add("discord-id=");
         //defaults.add("");
@@ -301,16 +299,32 @@ public class SavablePlayer extends SavableUser {
         updateKey("playtime", amount);
     }
 
-    public double getPlayDays(){
-        return playSeconds / (60.0d * 60.0d * 24.0d);
+    public double getPlayMinutes(){
+        return playSeconds / (60.0d);
     }
 
     public double getPlayHours(){
         return playSeconds / (60.0d * 60.0d);
     }
 
-    public double getPlayMinutes(){
-        return playSeconds / (60.0d);
+    public double getPlayDays(){
+        return playSeconds / (60.0d * 60.0d * 24.0d);
+    }
+
+    public String getPlaySecondsAsString(){
+        return TextUtils.truncate(String.valueOf(this.playSeconds), 2);
+    }
+
+    public String getPlayMinutesAsString(){
+        return TextUtils.truncate(String.valueOf(getPlayMinutes()), 2);
+    }
+
+    public String getPlayHoursAsString(){
+        return TextUtils.truncate(String.valueOf(getPlayHours()), 2);
+    }
+
+    public String getPlayDaysAsString(){
+        return TextUtils.truncate(String.valueOf(getPlayDays()), 2);
     }
 
     public List<String> loadIPs(){

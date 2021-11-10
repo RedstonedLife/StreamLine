@@ -34,3 +34,10 @@ channels:
     bypass: true
     joins: true
     leaves: true
+
+roles:
+  priority: "discord"
+  synced:
+    default:
+      role: 894583534017196105
+      group: "default"

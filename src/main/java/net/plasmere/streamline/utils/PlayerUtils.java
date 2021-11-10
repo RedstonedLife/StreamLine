@@ -1,5 +1,7 @@
 package net.plasmere.streamline.utils;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
@@ -22,7 +24,7 @@ import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.savable.history.HistorySave;
-import net.plasmere.streamline.objects.savable.users.ConsolePlayer;
+import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.objects.lists.SingleSet;
@@ -33,6 +35,7 @@ import org.apache.commons.collections4.list.TreeList;
 import java.io.File;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 public class PlayerUtils {
@@ -52,15 +55,18 @@ public class PlayerUtils {
     private static HashMap<SavablePlayer, SingleSet<Integer, Integer>> connections = new HashMap<>();
     private static List<SavableUser> toSave = new ArrayList<>();
 
-    public static ConsolePlayer applyConsole(){
+    private static Cache<SavablePlayer, String> cachedPrefixes = Caffeine.newBuilder().expireAfterAccess(30L, TimeUnit.MINUTES).build();
+    private static Cache<SavablePlayer, String> cachedSuffixes = Caffeine.newBuilder().expireAfterAccess(30L, TimeUnit.MINUTES).build();
+
+    public static SavableConsole applyConsole(){
         if (exists("%")) {
-            return applyConsole(new ConsolePlayer(false));
+            return applyConsole(new SavableConsole(false));
         } else {
-            return applyConsole(new ConsolePlayer(true));
+            return applyConsole(new SavableConsole(true));
         }
     }
 
-    public static ConsolePlayer applyConsole(ConsolePlayer console){
+    public static SavableConsole applyConsole(SavableConsole console){
         addStat(console);
 
         return console;
@@ -190,7 +196,7 @@ public class PlayerUtils {
         return player;
     }
 
-    public static void addStat(ConsolePlayer stat){
+    public static void addStat(SavableConsole stat){
         if (isInStatsList(stat)) return;
 
         stats.add(stat);
@@ -210,8 +216,8 @@ public class PlayerUtils {
         return false;
     }
 
-    public static boolean isInStatsList(ConsolePlayer stat) {
-        for (ConsolePlayer player : getJustProxies()) {
+    public static boolean isInStatsList(SavableConsole stat) {
+        for (SavableConsole player : getJustProxies()) {
             if (stat.equals(player)) return true;
             if (player.latestName == null) {
                 stats.remove(player);
@@ -598,12 +604,12 @@ public class PlayerUtils {
         return false;
     }
 
-    public static List<ConsolePlayer> getJustProxies(){
-        List<ConsolePlayer> proxies = new ArrayList<>();
+    public static List<SavableConsole> getJustProxies(){
+        List<SavableConsole> proxies = new ArrayList<>();
 
         for (SavableUser user : stats) {
-            if (user instanceof ConsolePlayer) {
-                proxies.add((ConsolePlayer) user);
+            if (user instanceof SavableConsole) {
+                proxies.add((SavableConsole) user);
             }
         }
 
@@ -726,13 +732,13 @@ public class PlayerUtils {
 
     // ConsolePlayers.
 
-    public static ConsolePlayer getConsoleStat() {
+    public static SavableConsole getConsoleStat() {
         return getConsoleStat(StreamLine.getInstance().getProxy().getConsoleCommandSource());
     }
 
-    public static ConsolePlayer getConsoleStat(CommandSource sender) {
+    public static SavableConsole getConsoleStat(CommandSource sender) {
         try {
-            for (ConsolePlayer stat : getJustProxies()) {
+            for (SavableConsole stat : getJustProxies()) {
                 if (stat.uuid.equals("%")) return stat;
             }
         } catch (Exception e) {
@@ -1006,7 +1012,7 @@ public class PlayerUtils {
             MessagingUtils.sendBUserMessage(sender, noPermission);
         }
 
-        if (of instanceof ConsolePlayer) {
+        if (of instanceof SavableConsole) {
             MessagingUtils.sendStatUserMessage(of, sender, consolePlayerInfo);
         } else if (of instanceof SavablePlayer) {
             MessagingUtils.sendStatUserMessage(of, sender, info);
@@ -1410,7 +1416,7 @@ public class PlayerUtils {
             return MessageConfUtils.nullB();
         }
 
-        if (stat instanceof ConsolePlayer) {
+        if (stat instanceof SavableConsole) {
             return ConfigUtils.consoleDisplayName();
         }
 
@@ -1430,7 +1436,7 @@ public class PlayerUtils {
             return MessageConfUtils.nullB();
         }
 
-        if (stat instanceof ConsolePlayer) {
+        if (stat instanceof SavableConsole) {
             return ConfigUtils.consoleName();
         }
 
@@ -1450,7 +1456,7 @@ public class PlayerUtils {
             return MessageConfUtils.nullB();
         }
 
-        if (stat instanceof ConsolePlayer) {
+        if (stat instanceof SavableConsole) {
             return ConfigUtils.consoleDisplayName();
         }
 
@@ -1466,7 +1472,7 @@ public class PlayerUtils {
             return MessageConfUtils.nullB();
         }
 
-        if (stat instanceof ConsolePlayer) {
+        if (stat instanceof SavableConsole) {
             return "%";
         }
 
@@ -1477,7 +1483,9 @@ public class PlayerUtils {
         return MessageConfUtils.nullB();
     }
 
-    public static String getLuckPermsPrefix(String username){
+    public static String getLuckPermsPrefix(String username, boolean fromCache){
+        if (fromCache) return cachedPrefixes.get(getOrGetPlayerStat(username), (u) -> getLuckPermsPrefix(username, false));
+
         if (! StreamLine.lpHolder.isPresent()) return "";
 
         User user = StreamLine.lpHolder.api.getUserManager().getUser(username);
@@ -1527,10 +1535,13 @@ public class PlayerUtils {
             prefix = "";
         }
 
+        cachedPrefixes.put(getOrGetPlayerStat(username), prefix);
         return prefix;
     }
 
-    public static String getLuckPermsSuffix(String username){
+    public static String getLuckPermsSuffix(String username, boolean fromCache){
+        if (fromCache) return cachedSuffixes.get(getOrGetPlayerStat(username), (u) -> getLuckPermsSuffix(username, false));
+
         if (! StreamLine.lpHolder.isPresent()) return "";
 
         User user = StreamLine.lpHolder.api.getUserManager().getUser(username);
@@ -1572,6 +1583,7 @@ public class PlayerUtils {
 
         if (suffix == null) suffix = "";
 
+        cachedSuffixes.put(getOrGetPlayerStat(username), suffix);
         return suffix;
     }
 
@@ -1657,7 +1669,7 @@ public class PlayerUtils {
             return MessageConfUtils.nullD();
         }
 
-        if (stat instanceof ConsolePlayer) {
+        if (stat instanceof SavableConsole) {
             return TextUtils.stripColor(ConfigUtils.consoleDisplayName());
         }
 
@@ -1677,7 +1689,7 @@ public class PlayerUtils {
             return MessageConfUtils.nullD();
         }
 
-        if (stat instanceof ConsolePlayer) {
+        if (stat instanceof SavableConsole) {
             return ConfigUtils.consoleName();
         }
 
@@ -1697,7 +1709,7 @@ public class PlayerUtils {
             return MessageConfUtils.nullD();
         }
 
-        if (stat instanceof ConsolePlayer) {
+        if (stat instanceof SavableConsole) {
             return TextUtils.stripColor(ConfigUtils.consoleDisplayName());
         }
 
@@ -1713,7 +1725,7 @@ public class PlayerUtils {
             return MessageConfUtils.nullD();
         }
 
-        if (stat instanceof ConsolePlayer) {
+        if (stat instanceof SavableConsole) {
             return TextUtils.stripColor(ConfigUtils.consoleName());
         }
 

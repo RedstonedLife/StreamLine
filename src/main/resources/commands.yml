@@ -899,7 +899,7 @@ commands:
         aliases:
           - "chat"
           - "ch"
-      # The chat level command.
+      # The bungee verify command.
       bverify:
         # Enables / disables the use of the command.
         enabled: true
@@ -911,6 +911,18 @@ commands:
         aliases:
           - "bv"
           - "bver"
+      # The voice command.
+      voice:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "voice"
+        # Custom permission.
+        permission: "streamline.command.voice"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "call"
+          - "vce"
     # Debugging commands.
     debug:
       # The delete stat command.

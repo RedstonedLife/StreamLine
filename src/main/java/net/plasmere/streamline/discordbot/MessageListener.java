@@ -19,6 +19,11 @@ import java.util.Objects;
 public class MessageListener extends ListenerAdapter {
     private static EmbedBuilder eb = new EmbedBuilder();
 
+    public MessageListener() {
+        if (! ConfigUtils.moduleDEnabled()) return;
+        MessagingUtils.logInfo("Message listener registered!");
+    }
+
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
         if (! ConfigUtils.moduleDEnabled()) return;

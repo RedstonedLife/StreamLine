@@ -99,7 +99,7 @@ public class PluginUtils {
         if (CommandsConfUtils.comBLang()) {
             registerCommand(new LanguageCommand(CommandsConfUtils.comBLangBase(), CommandsConfUtils.comBLangPerm(), stringListToArray(CommandsConfUtils.comBLangAliases())));
         }
-        if (CommandsConfUtils.comBVotes()) {
+        if (CommandsConfUtils.comBVotes() && ConfigUtils.moduleBRanksEnabled()) {
             registerCommand(new VotesCommand(CommandsConfUtils.comBVotesBase(), CommandsConfUtils.comBVotesPerm(), stringListToArray(CommandsConfUtils.comBVotesAliases())));
         }
         if (CommandsConfUtils.comBTeleport()) {
@@ -198,6 +198,9 @@ public class PluginUtils {
         }
         if (CommandsConfUtils.comBVerify()) {
             registerCommand(new BVerifyCommand(CommandsConfUtils.comBVerifyBase(), CommandsConfUtils.comBVerifyPerm(), stringListToArray(CommandsConfUtils.comBVerifyAliases())));
+        }
+        if (CommandsConfUtils.comBVoice()) {
+            registerCommand(new VoiceCommand(CommandsConfUtils.comBVoiceBase(), CommandsConfUtils.comBVoicePerm(), stringListToArray(CommandsConfUtils.comBVoiceAliases())));
         }
 
         // Servers.
