@@ -240,6 +240,6 @@ public class VoiceCommand extends SLCommand {
             return TextUtils.getCompletion(PlayerUtils.getPlayerNamesForAllOnline(), args[2]);
         }
 
-        return options;
+        return new ArrayList<>();
     }
 }

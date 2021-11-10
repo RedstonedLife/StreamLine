@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
+import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.enums.CategoryType;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 
@@ -130,7 +131,7 @@ public class DiscordUtils {
                     MessagingUtils.logWarning("Member with id " + l + " returned null!");
                     continue;
                 }
-                channel.createPermissionOverride(member).reset().complete();
+                channel.putPermissionOverride(member).resetAllow().complete();
 
                 StreamLine.discordData.removeFromVoice(l, channel.getIdLong());
                 channels.add(channel);
@@ -143,13 +144,22 @@ public class DiscordUtils {
     public static List<VoiceChannel> getVoiceChannelsByPlayer(SavablePlayer player) {
         List<VoiceChannel> channels = new ArrayList<>();
 
-        if (! StreamLine.discordData.isVerified(player.uuid)) return channels;
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("Trying on player: " + player.latestName);
 
-        for (long l : StreamLine.discordData.getVoiceFrom(player.discordID)) {
+        if (! StreamLine.discordData.isVerified(player.uuid)) {
+            if (ConfigUtils.debug()) MessagingUtils.logInfo(player.latestName + " is not verified...");
+            return channels;
+        }
+
+        for (long l : StreamLine.discordData.getVoiceFrom(StreamLine.discordData.getIDOfVerified(player.uuid))) {
+            if (ConfigUtils.debug()) MessagingUtils.logInfo("Found channel id: " + l);
+
             for (Guild guild : StreamLine.getJda().getGuilds()) {
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Trying on guild with id: " + guild.getId());
                 VoiceChannel channel = guild.getVoiceChannelById(l);
                 if (channel == null) continue;
                 channels.add(channel);
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("Added channel with name: " + channel.getName());
             }
         }
 

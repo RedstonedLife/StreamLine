@@ -81,7 +81,6 @@ net\plasmere\streamline\utils\PluginUtils.class
 net\plasmere\streamline\commands\staff\ChatFilterCommand.class
 net\plasmere\streamline\objects\configs\Lobbies.class
 net\plasmere\streamline\objects\configs\ChatFilters.class
-net\plasmere\streamline\utils\VoiceUtils.class
 net\plasmere\streamline\StreamLine$2.class
 net\plasmere\streamline\commands\staff\SudoCommand.class
 net\plasmere\streamline\discordbot\commands\CommandsCommand.class
@@ -117,6 +116,7 @@ net\plasmere\streamline\objects\chats\Chat.class
 net\plasmere\streamline\libs\Metrics$SimplePie.class
 net\plasmere\streamline\utils\PlayerUtils.class
 net\plasmere\streamline\objects\chats\ChatChannel.class
+net\plasmere\streamline\utils\DiscordUtils.class
 net\plasmere\streamline\objects\filters\ChatFilter.class
 net\plasmere\streamline\commands\staff\ChatHistoryCommand.class
 net\plasmere\streamline\config\DiscordBotConfUtils.class

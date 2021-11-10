@@ -1409,37 +1409,37 @@ public class PartyUtils {
         }
     }
 
-    public static void onSync(SavableUser sender) {
-        SavableParty party = getParty(sender);
-
-        if (! isParty(party) || party == null) {
-            MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
-            return;
-        }
-
-        if (! party.hasModPerms(sender)) {
-            MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(), noPermission);
-            return;
-        }
-
-        List<SavablePlayer> players = new ArrayList<>();
-
-        for (SavableUser user : party.totalMembers) {
-            if (user instanceof SavablePlayer) players.add((SavablePlayer) user);
-        }
-
-        DiscordUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
-
-        Category category = DiscordUtils.getCategory(CategoryType.PARTIES);
-        if (category == null) {
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
-            return;
-        }
-
-        MessagingUtils.sendBUserMessage(sender, syncSender
-                .replace("%category%", category.getName())
-        );
-    }
+//    public static void onSync(SavableUser sender) {
+//        SavableParty party = getParty(sender);
+//
+//        if (! isParty(party) || party == null) {
+//            MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
+//            return;
+//        }
+//
+//        if (! party.hasModPerms(sender)) {
+//            MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(), noPermission);
+//            return;
+//        }
+//
+//        List<SavablePlayer> players = new ArrayList<>();
+//
+//        for (SavableUser user : party.totalMembers) {
+//            if (user instanceof SavablePlayer) players.add((SavablePlayer) user);
+//        }
+//
+//        DiscordUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
+//
+//        Category category = DiscordUtils.getCategory(CategoryType.PARTIES);
+//        if (category == null) {
+//            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+//            return;
+//        }
+//
+//        MessagingUtils.sendBUserMessage(sender, syncSender
+//                .replace("%category%", category.getName())
+//        );
+//    }
 
     public static void sendChatFromDiscord(String nameUsed, SavableParty party, String format, String msg) {
         if (! ConfigUtils.moduleDEnabled()) return;
@@ -1691,5 +1691,5 @@ public class PartyUtils {
     // Info.
     public static final String info = StreamLine.config.getMessString("party.info");
     // Sync.
-    public static final String syncSender = StreamLine.config.getMessString("party.sync.sender");
+//    public static final String syncSender = StreamLine.config.getMessString("party.sync.sender");
 }

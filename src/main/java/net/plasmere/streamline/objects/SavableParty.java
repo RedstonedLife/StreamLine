@@ -31,6 +31,7 @@ public class SavableParty {
     public List<String> invitesByUUID = new ArrayList<>();
     public boolean isMuted;
     public boolean isPublic;
+    public long voiceID;
 
     public enum Level {
         MEMBER,
@@ -263,6 +264,7 @@ public class SavableParty {
         defaults.add("invites=" + "");
         defaults.add("muted=false");
         defaults.add("public=false");
+        defaults.add("voice=");
         //defaults.add("");
         return defaults;
     }
@@ -303,6 +305,12 @@ public class SavableParty {
         this.isMuted = Boolean.parseBoolean(getFromKey("muted"));
         this.isPublic = Boolean.parseBoolean(getFromKey("public"));
         this.maxSize = Integer.parseInt(getFromKey("max-size"));
+
+        try {
+            this.voiceID = Long.parseLong(getFromKey("voice"));
+        } catch (Exception e) {
+            this.voiceID = 0L;
+        }
 
         try {
             loadAllMembers();

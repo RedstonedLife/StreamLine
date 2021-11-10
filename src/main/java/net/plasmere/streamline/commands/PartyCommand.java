@@ -308,18 +308,18 @@ public class PartyCommand extends SLCommand {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
                     e.printStackTrace();
                 }
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParSyncAliases())) {
-                if (! sender.hasPermission(CommandsConfUtils.comBParSyncPermission())) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
-                    return;
-                }
-
-                try {
-                    PartyUtils.onSync(player);
-                } catch (Throwable e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
-                    e.printStackTrace();
-                }
+//            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParSyncAliases())) {
+//                if (! sender.hasPermission(CommandsConfUtils.comBParSyncPermission())) {
+//                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+//                    return;
+//                }
+//
+//                try {
+//                    PartyUtils.onSync(player);
+//                } catch (Throwable e) {
+//                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+//                    e.printStackTrace();
+//                }
             } else {
                 try {
                     SavablePlayer p = PlayerUtils.getOrGetPlayerStat(args[0]);
@@ -406,8 +406,8 @@ public class PartyCommand extends SLCommand {
                 return new ArrayList<>();
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParWarpAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParSyncAliases())) {
-                return new ArrayList<>();
+//            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParSyncAliases())) {
+//                return new ArrayList<>();
             } else {
                 return TextUtils.getCompletion(strPlayers, args[1]);
             }

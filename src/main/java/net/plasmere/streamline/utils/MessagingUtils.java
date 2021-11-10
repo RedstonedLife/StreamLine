@@ -1171,7 +1171,7 @@ public class MessagingUtils {
     }
 
     public static void sendBUserMessage(SavableUser sender, String msg){
-        if (sender instanceof ProxiedPlayer) {
+        if (sender instanceof SavablePlayer) {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
                     .replace("%version%", Objects.requireNonNull(sender).latestVersion)
             ));

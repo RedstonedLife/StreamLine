@@ -379,18 +379,18 @@ public class GuildCommand extends SLCommand {
                     e.printStackTrace();
                 }
             }
-        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildSyncAliases())) {
-            if (! sender.hasPermission(CommandsConfUtils.comBGuildSyncPermission())) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
-                return;
-            }
-
-            try {
-                PartyUtils.onSync(stat);
-            } catch (Throwable e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
-                e.printStackTrace();
-            }
+//        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildSyncAliases())) {
+//            if (! sender.hasPermission(CommandsConfUtils.comBGuildSyncPermission())) {
+//                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
+//                return;
+//            }
+//
+//            try {
+//                GuildUtils.onSync(stat);
+//            } catch (Throwable e) {
+//                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+//                e.printStackTrace();
+//            }
         } else {
             try {
                 SavableUser user = PlayerUtils.getOrGetSavableUser(args[0]);
@@ -447,7 +447,7 @@ public class GuildCommand extends SLCommand {
             tabArgs1.add("mute");
             tabArgs1.add("warp");
             tabArgs1.add("rename");
-            tabArgs1.add("sync");
+//            tabArgs1.add("sync");
 
             return TextUtils.getCompletion(tabArgs1, args[0]);
         }
@@ -493,8 +493,8 @@ public class GuildCommand extends SLCommand {
                 return new ArrayList<>();
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases())) {
                 return new ArrayList<>();
-            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildSyncAliases())) {
-                return new ArrayList<>();
+//            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildSyncAliases())) {
+//                return new ArrayList<>();
             } else {
                 return TextUtils.getCompletion(strPlayers, args[1]);
             }

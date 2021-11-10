@@ -34,6 +34,7 @@ public class SavableGuild {
     public int currentXP;
     public int lvl;
     public int maxSize = ConfigUtils.guildMax();
+    public long voiceID;
 
     public List<String> savedKeys;
 
@@ -271,6 +272,7 @@ public class SavableGuild {
         defaults.add("total-xp=0");
         defaults.add("current-xp=0");
         defaults.add("lvl=1");
+        defaults.add("voice=");
         //defaults.add("");
         return defaults;
     }
@@ -312,6 +314,12 @@ public class SavableGuild {
         this.totalXP = Integer.parseInt(getFromKey("total-xp"));
         this.currentXP = getCurrentXP();
         this.lvl = Integer.parseInt(getFromKey("lvl"));
+
+        try {
+            this.voiceID = Long.parseLong(getFromKey("voice"));
+        } catch (Exception e) {
+            this.voiceID = 0L;
+        }
 
         try {
             loadAllMembers();

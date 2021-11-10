@@ -301,6 +301,16 @@ public class ConfigUtils {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfString("modules.discord.boosts.upon-boosts.run");
     }
+    // Guilds.
+    public static boolean guildsSync() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.discord.guilds.sync");
+    }
+    // Parties.
+    public static boolean partiesSync() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.discord.parties.sync");
+    }
     // ... Bungee.
     // Reports.
     public static boolean moduleReportsBConfirmation() {

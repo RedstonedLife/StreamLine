@@ -2,17 +2,18 @@ package net.plasmere.streamline.objects.timers;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
+import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.enums.CategoryType;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
-import net.plasmere.streamline.utils.MessagingUtils;
-import net.plasmere.streamline.utils.PlayerUtils;
-import net.plasmere.streamline.utils.RanksUtils;
-import net.plasmere.streamline.utils.TextUtils;
+import net.plasmere.streamline.utils.*;
 
 import java.util.*;
 
@@ -94,6 +95,8 @@ public class OneSecondTimer implements Runnable {
         }
 
         tickGuilds();
+        tickGuildSync();
+        tickPartySync();
     }
 
     public void tickGuilds() {
@@ -129,6 +132,46 @@ public class OneSecondTimer implements Runnable {
                 } catch (Exception e) {
                     // do nothing.
                 }
+            }
+        }
+    }
+
+    public void tickGuildSync() {
+        if (! ConfigUtils.moduleDEnabled()) return;
+        if (! ConfigUtils.guildsSync()) return;
+
+        for (SavableGuild guild : new ArrayList<>(GuildUtils.getGuilds())) {
+            List<SavablePlayer> players = new ArrayList<>();
+
+            for (SavableUser user : guild.totalMembers) {
+                if (user instanceof SavablePlayer) players.add((SavablePlayer) user);
+            }
+
+            if (guild.voiceID == 0L) {
+                VoiceChannel channel = DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0])).get(0);
+                guild.updateKey("voice", channel.getIdLong());
+            } else {
+                DiscordUtils.addToVoice(guild.voiceID, players.toArray(new SavablePlayer[0]));
+            }
+        }
+    }
+
+    public void tickPartySync() {
+        if (! ConfigUtils.moduleDEnabled()) return;
+        if (! ConfigUtils.partiesSync()) return;
+
+        for (SavableParty party : new ArrayList<>(PartyUtils.getParties())) {
+            List<SavablePlayer> players = new ArrayList<>();
+
+            for (SavableUser user : party.totalMembers) {
+                if (user instanceof SavablePlayer) players.add((SavablePlayer) user);
+            }
+
+            if (party.voiceID == 0L) {
+                VoiceChannel channel = DiscordUtils.createVoice(party.leader.latestName, CategoryType.GUILDS, players.toArray(new SavablePlayer[0])).get(0);
+                party.updateKey("voice", channel.getIdLong());
+            } else {
+                DiscordUtils.addToVoice(party.voiceID, players.toArray(new SavablePlayer[0]));
             }
         }
     }

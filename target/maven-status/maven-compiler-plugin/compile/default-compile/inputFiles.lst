@@ -14,6 +14,7 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\ChatConfig.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\timers\OneSecondTimer.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\TeleportCommand.java
+C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\DiscordUtils.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\scripts\ScriptReloadCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\scripts\ScriptCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\StaffChatCommand.java
@@ -120,7 +121,6 @@ C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\punishments\IPBanCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\listeners\PluginMessagingListener.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\exceptions\OfflinePlayerException.java
-C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\utils\VoiceUtils.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\enums\NetworkState.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\commands\staff\spy\SSPYCommand.java
 C:\Users\nitra\Documents\GitHub\StreamLine\src\main\java\net\plasmere\streamline\objects\configs\Votes.java

@@ -367,14 +367,14 @@ public class CommandsConfUtils {
         return StreamLine.config.getCommandString("commands.bungee.party.permissions.warp");
     }
     // Sync.
-    public static List<String> comBParSyncAliases() {
-        StreamLine.config.reloadCommands();
-        return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.sync");
-    }
-    public static String comBParSyncPermission() {
-        StreamLine.config.reloadCommands();
-        return StreamLine.config.getCommandString("commands.bungee.party.permissions.sync");
-    }
+//    public static List<String> comBParSyncAliases() {
+//        StreamLine.config.reloadCommands();
+//        return StreamLine.config.getCommandStringList("commands.bungee.party.aliases.sync");
+//    }
+//    public static String comBParSyncPermission() {
+//        StreamLine.config.reloadCommands();
+//        return StreamLine.config.getCommandString("commands.bungee.party.permissions.sync");
+//    }
     // ... SavableGuild.
     //
     public static boolean comBGuild() {
@@ -560,14 +560,14 @@ public class CommandsConfUtils {
         return StreamLine.config.getCommandString("commands.bungee.guild.permissions.rename");
     }
     // Sync.
-    public static List<String> comBGuildSyncAliases() {
-        StreamLine.config.reloadCommands();
-        return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.sync");
-    }
-    public static String comBGuildSyncPermission() {
-        StreamLine.config.reloadCommands();
-        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.sync");
-    }
+//    public static List<String> comBGuildSyncAliases() {
+//        StreamLine.config.reloadCommands();
+//        return StreamLine.config.getCommandStringList("commands.bungee.guild.aliases.sync");
+//    }
+//    public static String comBGuildSyncPermission() {
+//        StreamLine.config.reloadCommands();
+//        return StreamLine.config.getCommandString("commands.bungee.guild.permissions.sync");
+//    }
     // ... Servers.
     // Lobby.
     public static boolean comBLobby() {
