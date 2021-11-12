@@ -44,6 +44,8 @@ public class TextUtils {
     }
 
     public static String truncate(String text, int digits) {
+        if (! text.contains(".")) return text;
+
         try {
             digits = getDigits(text.indexOf(".") + digits + 1, text.length());
             return text.substring(0, digits);
@@ -495,10 +497,10 @@ public class TextUtils {
                 .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%player_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%player_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%player_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%player_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%player_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
@@ -552,10 +554,10 @@ public class TextUtils {
                     .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                     .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                     .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                    .replace("%player_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                    .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                    .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                    .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                    .replace("%player_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                    .replace("%player_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                    .replace("%player_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                    .replace("%player_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                     .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                     ;
         } else {
@@ -602,10 +604,10 @@ public class TextUtils {
                 .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%user_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%user_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%user_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%user_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%user_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
@@ -659,10 +661,10 @@ public class TextUtils {
                     .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                     .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                     .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                    .replace("%user_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                    .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                    .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                    .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                    .replace("%user_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                    .replace("%user_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                    .replace("%user_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                    .replace("%user_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                     .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                     ;
         } else {
@@ -709,10 +711,10 @@ public class TextUtils {
                 .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%sender_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%sender_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
@@ -767,10 +769,10 @@ public class TextUtils {
                     .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                     .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                     .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                    .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                    .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                    .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                    .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                    .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                    .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                    .replace("%sender_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                    .replace("%sender_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                     .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                     ;
         } else {
@@ -817,10 +819,10 @@ public class TextUtils {
                 .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%player_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%player_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%player_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%player_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%player_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%player_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%player_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%player_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
@@ -860,10 +862,10 @@ public class TextUtils {
                 .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%user_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%user_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%user_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%user_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%user_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%user_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%user_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%user_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }
@@ -903,10 +905,10 @@ public class TextUtils {
                 .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
                 .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
-                .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).playSeconds) : ""))
-                .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayMinutes()) : ""))
-                .replace("%sender_play_hours%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayHours()) : ""))
-                .replace("%sender_play_days%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).getPlayDays()) : ""))
+                .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
+                .replace("%sender_play_minutes%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayMinutesAsString() : ""))
+                .replace("%sender_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
+                .replace("%sender_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
                 ;
     }

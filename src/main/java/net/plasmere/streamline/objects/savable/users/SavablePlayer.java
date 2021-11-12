@@ -16,6 +16,7 @@ import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
+import net.plasmere.streamline.utils.TextUtils;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -297,16 +298,32 @@ public class SavablePlayer extends SavableUser {
         updateKey("playtime", amount);
     }
 
-    public double getPlayDays(){
-        return playSeconds / (60.0d * 60.0d * 24.0d);
+    public double getPlayMinutes() {
+        return playSeconds / (60.0d);
     }
 
     public double getPlayHours(){
         return playSeconds / (60.0d * 60.0d);
     }
 
-    public double getPlayMinutes(){
-        return playSeconds / (60.0d);
+    public double getPlayDays(){
+        return playSeconds / (60.0d * 60.0d * 24.0d);
+    }
+
+    public String getPlaySecondsAsString(){
+        return TextUtils.truncate(String.valueOf(this.playSeconds), 2);
+    }
+
+    public String getPlayMinutesAsString(){
+        return TextUtils.truncate(String.valueOf(getPlayMinutes()), 2);
+    }
+
+    public String getPlayHoursAsString(){
+        return TextUtils.truncate(String.valueOf(getPlayHours()), 2);
+    }
+
+    public String getPlayDaysAsString(){
+        return TextUtils.truncate(String.valueOf(getPlayDays()), 2);
     }
 
     public List<String> loadIPs(){

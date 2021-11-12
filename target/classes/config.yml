@@ -183,6 +183,10 @@ modules:
       # When someone boosts your discord server.
       upon-boosts:
         run: boost.sl
+    guilds:
+      sync: true
+    parties:
+      sync: true
 
   # Bungee modules...
   bungee:
