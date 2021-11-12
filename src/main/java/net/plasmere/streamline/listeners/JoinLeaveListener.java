@@ -246,29 +246,9 @@ public class JoinLeaveListener {
             StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("local"), server.getName());
         }
 
-        if (ConfigUtils.guildPMEnabled()) {
-            if (GuildUtils.hasGuild(stat)) {
-                SavableGuild guild = GuildUtils.getOrGetGuild(stat.guild);
+        guildPM(stat);
 
-                MessagingUtils.sendGuildPluginMessageRequest(stat.player, guild);
-
-                for (SavableUser user : guild.totalMembers) {
-                    MessagingUtils.sendSavableUserPluginMessageRequest(stat.player, user, (user instanceof SavablePlayer ? "player" : "console"));
-                }
-            }
-        }
-
-        if (ConfigUtils.partyPMEnabled()) {
-            if (PartyUtils.hasParty(stat)) {
-                SavableParty party = PartyUtils.getOrGetParty(stat.party);
-
-                MessagingUtils.sendPartyPluginMessageRequest(stat.player, party);
-
-                for (SavableUser user : party.totalMembers) {
-                    MessagingUtils.sendSavableUserPluginMessageRequest(stat.player, user, (user instanceof SavablePlayer ? "player" : "console"));
-                }
-            }
-        }
+        partyPM(stat);
 
         try {
             if (ConfigUtils.events()) {
@@ -294,6 +274,38 @@ public class JoinLeaveListener {
             }
         } catch (Exception e) {
             // do nothing
+        }
+    }
+
+    public void guildPM(SavablePlayer stat) {
+        if (ConfigUtils.guildPMEnabled()) {
+            if (GuildUtils.hasGuild(stat)) {
+                SavableGuild guild = GuildUtils.getOrGetGuild(stat.guild);
+
+                if (guild == null) return;
+
+                MessagingUtils.sendGuildPluginMessageRequest(stat.player, guild);
+
+                for (SavableUser user : guild.totalMembers) {
+                    MessagingUtils.sendSavableUserPluginMessageRequest(stat.player, user, (user instanceof SavablePlayer ? "player" : "console"));
+                }
+            }
+        }
+    }
+
+    public void partyPM(SavablePlayer stat) {
+        if (ConfigUtils.partyPMEnabled()) {
+            if (PartyUtils.hasParty(stat)) {
+                SavableParty party = PartyUtils.getOrGetParty(stat.party);
+
+                if (party == null) return;
+
+                MessagingUtils.sendPartyPluginMessageRequest(stat.player, party);
+
+                for (SavableUser user : party.totalMembers) {
+                    MessagingUtils.sendSavableUserPluginMessageRequest(stat.player, user, (user instanceof SavablePlayer ? "player" : "console"));
+                }
+            }
         }
     }
 
