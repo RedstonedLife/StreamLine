@@ -36,15 +36,15 @@ public class OneSecondTimer implements Runnable {
     }
 
     public void done(){
-        thirty --;
-        if (thirty == 0) {
-            thirty = 30;
-
-            for (Player player : PlayerUtils.getOnlinePPlayers()) {
-                PlayerUtils.getLuckPermsPrefix(player.getUsername(), false);
-                PlayerUtils.getLuckPermsSuffix(player.getUsername(), false);
-            }
-        }
+//        thirty --;
+//        if (thirty == 0) {
+//            thirty = 30;
+//
+//            for (Player player : PlayerUtils.getOnlinePPlayers()) {
+//                PlayerUtils.getLuckPermsPrefix(player.getUsername(), false);
+//                PlayerUtils.getLuckPermsSuffix(player.getUsername(), false);
+//            }
+//        }
 
         try {
             countdown = reset;

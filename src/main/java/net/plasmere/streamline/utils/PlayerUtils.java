@@ -1484,7 +1484,7 @@ public class PlayerUtils {
     }
 
     public static String getLuckPermsPrefix(String username, boolean fromCache){
-        if (fromCache) return cachedPrefixes.get(getOrGetPlayerStat(username), (u) -> getLuckPermsPrefix(username, false));
+//        if (fromCache) return cachedPrefixes.get(getOrGetPlayerStat(username), (u) -> getLuckPermsPrefix(username, false));
 
         if (! StreamLine.lpHolder.isPresent()) return "";
 
@@ -1535,12 +1535,12 @@ public class PlayerUtils {
             prefix = "";
         }
 
-        cachedPrefixes.put(getOrGetPlayerStat(username), prefix);
+//        cachedPrefixes.put(getOrGetPlayerStat(username), prefix);
         return prefix;
     }
 
     public static String getLuckPermsSuffix(String username, boolean fromCache){
-        if (fromCache) return cachedSuffixes.get(getOrGetPlayerStat(username), (u) -> getLuckPermsSuffix(username, false));
+//        if (fromCache) return cachedSuffixes.get(getOrGetPlayerStat(username), (u) -> getLuckPermsSuffix(username, false));
 
         if (! StreamLine.lpHolder.isPresent()) return "";
 
@@ -1583,7 +1583,7 @@ public class PlayerUtils {
 
         if (suffix == null) suffix = "";
 
-        cachedSuffixes.put(getOrGetPlayerStat(username), suffix);
+//        cachedSuffixes.put(getOrGetPlayerStat(username), suffix);
         return suffix;
     }
 
