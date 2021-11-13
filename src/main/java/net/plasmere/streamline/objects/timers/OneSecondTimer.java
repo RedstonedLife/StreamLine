@@ -148,8 +148,9 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (guild.voiceID == 0L) {
-                VoiceChannel channel = DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0])).get(0);
-                guild.updateKey("voice", channel.getIdLong());
+                List<VoiceChannel> channel = DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
+                if (channel.size() <= 0) continue;
+                guild.updateKey("voice", channel.get(0).getIdLong());
             } else {
                 DiscordUtils.addToVoice(guild.voiceID, players.toArray(new SavablePlayer[0]));
             }
@@ -168,8 +169,9 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (party.voiceID == 0L) {
-                VoiceChannel channel = DiscordUtils.createVoice(party.leader.latestName, CategoryType.GUILDS, players.toArray(new SavablePlayer[0])).get(0);
-                party.updateKey("voice", channel.getIdLong());
+                List<VoiceChannel> channel = DiscordUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
+                if (channel.size() <= 0) continue;
+                party.updateKey("voice", channel.get(0).getIdLong());
             } else {
                 DiscordUtils.addToVoice(party.voiceID, players.toArray(new SavablePlayer[0]));
             }
