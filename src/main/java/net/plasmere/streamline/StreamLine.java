@@ -12,6 +12,7 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import com.velocitypowered.api.scheduler.ScheduledTask;
 import com.velocitypowered.api.scheduler.Scheduler;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.plasmere.streamline.config.ConfigHandler;
@@ -112,13 +113,13 @@ public class StreamLine {
 	public File versionFile() { return new File(getDataFolder(), "version.txt"); }
 	public File languageFile() { return new File(getDataFolder(), "language.txt"); }
 
-	public Scheduler.TaskBuilder guilds;
-	public Scheduler.TaskBuilder players;
-	public Scheduler.TaskBuilder clearCachedPlayers;
-	public Scheduler.TaskBuilder saveCachedPlayers;
-	public Scheduler.TaskBuilder playtime;
-	public Scheduler.TaskBuilder oneSecTimer;
-	public Scheduler.TaskBuilder motdUpdater;
+	public ScheduledTask guilds;
+	public ScheduledTask players;
+	public ScheduledTask clearCachedPlayers;
+	public ScheduledTask saveCachedPlayers;
+	public ScheduledTask playtime;
+	public ScheduledTask oneSecTimer;
+	public ScheduledTask motdUpdater;
 
 	private String currentMOTD;
 	private int motdPage;
@@ -254,13 +255,13 @@ public class StreamLine {
 
 	public void loadTimers(){
 		try {
-			guilds = server.getScheduler().buildTask(this, new GuildXPTimer(ConfigUtils.timePerGiveG())).repeat(1, TimeUnit.SECONDS);
-			players = server.getScheduler().buildTask(this, new PlayerXPTimer(ConfigUtils.timePerGiveP())).repeat(1, TimeUnit.SECONDS);
-			clearCachedPlayers = server.getScheduler().buildTask(this, new PlayerClearTimer(ConfigUtils.cachedPClear())).repeat(1, TimeUnit.SECONDS);
-			saveCachedPlayers = server.getScheduler().buildTask(this, new PlayerSaveTimer(ConfigUtils.cachedPSave())).repeat(1, TimeUnit.SECONDS);
-			playtime = server.getScheduler().buildTask(this, new PlaytimeTimer(1)).repeat(1, TimeUnit.SECONDS);
-			oneSecTimer = server.getScheduler().buildTask(this, new OneSecondTimer()).repeat(1, TimeUnit.SECONDS);
-			motdUpdater = server.getScheduler().buildTask(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime())).repeat(1, TimeUnit.SECONDS);
+			guilds = server.getScheduler().buildTask(this, new GuildXPTimer(ConfigUtils.timePerGiveG())).repeat(1, TimeUnit.SECONDS).schedule();
+			players = server.getScheduler().buildTask(this, new PlayerXPTimer(ConfigUtils.timePerGiveP())).repeat(1, TimeUnit.SECONDS).schedule();
+			clearCachedPlayers = server.getScheduler().buildTask(this, new PlayerClearTimer(ConfigUtils.cachedPClear())).repeat(1, TimeUnit.SECONDS).schedule();
+			saveCachedPlayers = server.getScheduler().buildTask(this, new PlayerSaveTimer(ConfigUtils.cachedPSave())).repeat(1, TimeUnit.SECONDS).schedule();
+			playtime = server.getScheduler().buildTask(this, new PlaytimeTimer(1)).repeat(1, TimeUnit.SECONDS).schedule();
+			oneSecTimer = server.getScheduler().buildTask(this, new OneSecondTimer()).repeat(1, TimeUnit.SECONDS).schedule();
+			motdUpdater = server.getScheduler().buildTask(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime())).repeat(1, TimeUnit.SECONDS).schedule();
 
 			// DO NOT FORGET TO UPDATE AMOUNT BELOW! :/
 			getLogger().info("Loaded 7 runnable(s) into memory...!");
@@ -524,15 +525,6 @@ public class StreamLine {
 			voteHolder = new VoteHolder();
 		}
 
-		// LP Support.
-		lpHolder = new LPHolder();
-
-		// Via Support.
-		viaHolder = new ViaHolder();
-
-		// Geyser Support.
-		geyserHolder = new GeyserHolder();
-
 		// Bans.
 		if (ConfigUtils.punBans()) {
 			bans = new Bans();
@@ -668,13 +660,13 @@ public class StreamLine {
 			serverConfig.saveConfig();
 		}
 
-		guilds.clearRepeat();
-		players.clearRepeat();
-		playtime.clearRepeat();
-		clearCachedPlayers.clearRepeat();
-		saveCachedPlayers.clearRepeat();
-		oneSecTimer.clearRepeat();
-		motdUpdater.clearRepeat();
+		guilds.cancel();
+		players.cancel();
+		playtime.cancel();
+		clearCachedPlayers.cancel();
+		saveCachedPlayers.cancel();
+		oneSecTimer.cancel();
+		motdUpdater.cancel();
 
 		try {
 			if (ConfigUtils.moduleDEnabled()) {

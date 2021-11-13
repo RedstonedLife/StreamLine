@@ -1358,7 +1358,11 @@ public class PlayerUtils {
         if (! ConfigUtils.updateDisplayNames()) return;
         if (! StreamLine.lpHolder.enabled) return;
 
-        player.setDisplayName(getDisplayName(player));
+        String newDisplayName = getDisplayName(player);
+
+//        if (ConfigUtils.debug()) MessagingUtils.logInfo("Updating " + player.latestName + "'s display name to '" + newDisplayName + "'");
+
+        player.setDisplayName(newDisplayName);
     }
 
     public static String getDisplayName(SavablePlayer player) {
@@ -1366,7 +1370,10 @@ public class PlayerUtils {
     }
 
     public static String getDisplayName(String username) {
-        if (! StreamLine.lpHolder.enabled) return username;
+        if (! StreamLine.lpHolder.enabled) {
+            MessagingUtils.logSevere("Could not get display name of player " + username + " because LuckPerms is disabled!");
+            return username;
+        }
 
         User user = StreamLine.lpHolder.api.getUserManager().getUser(username);
         if (user == null) return username;

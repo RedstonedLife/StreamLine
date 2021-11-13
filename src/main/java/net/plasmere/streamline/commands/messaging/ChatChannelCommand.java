@@ -50,8 +50,8 @@ public class ChatChannelCommand extends SLCommand {
                 return;
             }
 
-            if (args.length < 2) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
+            if (args.length == 1){
+                player.setChat(args[0], "network");
                 return;
             }
 
