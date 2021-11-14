@@ -45,7 +45,7 @@ public class SavableParty {
         this.totalMembersByUUID.add(creatorUUID);
         this.totalMembers.add(PlayerUtils.getOrCreateSUByUUID(creatorUUID));
         try {
-            PlayerUtils.getOrCreateSUByUUID(creatorUUID).updateKey("guild", creatorUUID);
+            PlayerUtils.getOrCreateSUByUUID(creatorUUID).updateKey("party", creatorUUID);
         } catch (Exception e){
             // do nothing
         }
@@ -67,7 +67,7 @@ public class SavableParty {
     private void construct(String uuid, boolean createNew) throws IOException {
         if (uuid == null) return;
 
-        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getPDir(), uuid);
+        this.file = UUIDUtils.getCachedPartyFile(uuid);
 
         if (createNew) {
             try {
@@ -207,7 +207,7 @@ public class SavableParty {
     }
 
     public void updateWithNewDefaults() throws IOException {
-        file.delete();
+        if (file.exists()) file.delete();
 
         file.createNewFile();
 

@@ -31,6 +31,7 @@ import net.plasmere.streamline.listeners.PluginMessagingListener;
 import net.plasmere.streamline.listeners.ProxyPingListener;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.enums.NetworkState;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 
 import java.util.*;
 
@@ -304,5 +305,20 @@ public class PluginUtils {
 
     public static boolean isFreshInstall() {
         return ! StreamLine.getInstance().getPlDir().exists() && ! StreamLine.getInstance().getChatHistoryDir().exists() && ! StreamLine.getInstance().getGDir().exists();
+    }
+
+    public static Map.Entry<Integer, String> findHighestNumberWithBasePermission(SavablePlayer player, String basePermission) {
+        String permission = "";
+
+        TreeMap<Integer, String> hasPerm = new TreeMap<>();
+
+        hasPerm.put(1, basePermission + 1);
+
+        for (int i = 2; i <= 100; i ++){
+            permission = basePermission + i;
+            if (player.hasPermission(permission)) hasPerm.put(i, permission);
+        }
+
+        return hasPerm.lastEntry();
     }
 }

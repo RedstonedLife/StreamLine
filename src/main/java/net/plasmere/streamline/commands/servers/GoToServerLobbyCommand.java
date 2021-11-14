@@ -39,7 +39,7 @@ public class GoToServerLobbyCommand extends SLCommand {
                     RegisteredServer vanServer = proxy.getServer(CommandsConfUtils.comBLobbyEnd()).get();
 
                     MessagingUtils.sendBUserMessage(sender, "&aConnecting now...");
-                    player.createConnectionRequest(vanServer);
+                    player.createConnectionRequest(vanServer).connect();
                 } else {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                 }
@@ -56,7 +56,7 @@ public class GoToServerLobbyCommand extends SLCommand {
             RegisteredServer server = proxy.getServer(args[0]).get();
 
             MessagingUtils.sendBUserMessage(sender, "&aConnecting now...");
-            player.createConnectionRequest(server);
+            player.createConnectionRequest(server).connect();
         }
     }
 

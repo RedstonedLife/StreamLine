@@ -1237,17 +1237,17 @@ public class MessagingUtils {
 
     public static void logInfo(String msg){
         if (msg == null) msg = "";
-        StreamLine.getInstance().getLogger().info(TextUtils.newLined(msg));
+        StreamLine.getLogger().info(TextUtils.newLined(msg));
     }
 
     public static void logWarning(String msg){
         if (msg == null) msg = "";
-        StreamLine.getInstance().getLogger().warn(TextUtils.newLined(msg));
+        StreamLine.getLogger().warn(TextUtils.newLined(msg));
     }
 
     public static void logSevere(String msg){
         if (msg == null) msg = "";
-        StreamLine.getInstance().getLogger().error(TextUtils.newLined(msg));
+        StreamLine.getLogger().error(TextUtils.newLined(msg));
     }
 
     public static String mods(SavableParty party){

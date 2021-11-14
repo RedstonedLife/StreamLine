@@ -30,7 +30,7 @@ public class GoToServerVanillaCommand extends SLCommand {
                 RegisteredServer vanServer = proxy.getServer(CommandsConfUtils.comBFabricEnd()).get();
 
                 MessagingUtils.sendBUserMessage(sender, "&aConnecting now...");
-                player.createConnectionRequest(vanServer);
+                player.createConnectionRequest(vanServer).connect();
             } else {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
             }

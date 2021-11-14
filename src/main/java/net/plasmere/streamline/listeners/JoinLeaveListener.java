@@ -63,6 +63,8 @@ public class JoinLeaveListener {
     public void onJoin(PostLoginEvent ev) {
         Player player = ev.getPlayer();
 
+        boolean firstJoin = PlayerUtils.existsByUUID(player.getUniqueId().toString());
+
         if (ConfigUtils.offlineMode()) {
             StreamLine.offlineStats.addStat(player.getUniqueId().toString(), PlayerUtils.getSourceName(player));
         }
@@ -73,8 +75,22 @@ public class JoinLeaveListener {
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
+        if (ConfigUtils.updateDisplayNames()) {
+            for (SavablePlayer p : PlayerUtils.getJustPlayers()) {
+                PlayerUtils.updateDisplayName(p);
+            }
+        }
+
         stat.tryAddNewName(PlayerUtils.getSourceName(player));
         stat.tryAddNewIP(player);
+
+        if (StreamLine.chatConfig.getDefaultOnFirstJoin()) {
+            if (firstJoin) {
+                stat.setChat(StreamLine.chatConfig.getDefaultChannel(), StreamLine.chatConfig.getDefaultIdentifier());
+            }
+        } else {
+            stat.setChat(StreamLine.chatConfig.getDefaultChannel(), StreamLine.chatConfig.getDefaultIdentifier());
+        }
 
         try {
             if (stat.guild != null) {
@@ -84,6 +100,22 @@ public class JoinLeaveListener {
                     } else {
                         if (! GuildUtils.hasOnlineMemberAlready(stat)) {
                             GuildUtils.addGuild(new SavableGuild(stat.guild, false));
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            if (stat.party != null) {
+                if (! stat.party.equals("")) {
+                    if (! PartyUtils.existsByUUID(stat.party)) {
+                        stat.updateKey("party", "");
+                    } else {
+                        if (! PartyUtils.hasOnlineMemberAlready(stat)) {
+                            PartyUtils.addParty(new SavableParty(stat.party, false));
                         }
                     }
                 }

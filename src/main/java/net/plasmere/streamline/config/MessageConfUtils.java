@@ -1672,4 +1672,8 @@ public class MessageConfUtils {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("voice.already-voice");
     }
+    public static String voiceTooMany() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.too-many");
+    }
 }

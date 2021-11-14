@@ -2063,3 +2063,4 @@ voice:
   not-verified: "%player_formatted% &cis not verified with the discord!"
   no-voice: "&cCould not locate that voice channel!"
   already-voice: "&cYou already made that voice channel!"
+  too-many: "&cYou cannot create any more voice channels!"

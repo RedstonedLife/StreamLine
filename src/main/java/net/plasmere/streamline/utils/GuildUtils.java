@@ -557,7 +557,7 @@ public class GuildUtils {private static final List<SavableGuild> guilds = new Ar
                 for (SavableUser player : new ArrayList<>(guild.totalMembers)) {
                     SavablePlayer p = (SavablePlayer) player;
                     if (! p.online) continue;
-                    p.player.createConnectionRequest(StreamLine.getProxy().getServer(((SavablePlayer) sender).getServer().getServerInfo().getName()).get());
+                    p.player.createConnectionRequest(StreamLine.getProxy().getServer(((SavablePlayer) sender).getServer().getServerInfo().getName()).get()).connect();
                 }
             } catch (ConcurrentModificationException e) {
                 e.printStackTrace();

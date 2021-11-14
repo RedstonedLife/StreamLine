@@ -18,6 +18,7 @@ public class UUIDUtils {
     public static Cache<String, String> cachedNames = Caffeine.newBuilder().build();
     public static Cache<String, File> cachedPlayerFiles = Caffeine.newBuilder().build();
     public static Cache<String, File> cachedGuildFiles = Caffeine.newBuilder().build();
+    public static Cache<String, File> cachedPartyFiles = Caffeine.newBuilder().build();
     public static Cache<String, File> cachedOtherFiles = Caffeine.newBuilder().build();
 
     public static String getCachedUUID(String username) {
@@ -215,8 +216,22 @@ public class UUIDUtils {
         return null;
     }
 
+    public static File getCachedPartyFile(String thing) {
+        try {
+            return cachedPartyFiles.get(swapToUUID(thing), (u) -> getPartyFile(swapToUUID(thing)));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static File getGuildFile(String uuid){
         return new File(StreamLine.getInstance().getGDir(), uuid + ".properties");
+    }
+
+    public static File getPartyFile(String uuid){
+        return new File(StreamLine.getInstance().getPDir(), uuid + ".properties");
     }
 
     public static File getCachedFile(String pathTo, String thing) {
@@ -232,9 +247,10 @@ public class UUIDUtils {
         try {
             if (path.equals(StreamLine.getInstance().getPlDir())) {
                 return cachedPlayerFiles.get(swapToUUID(thing), (u) -> getPlayerFile(swapToUUID(thing)));
-            }
-            if (path.equals(StreamLine.getInstance().getGDir())) {
+            } else if (path.equals(StreamLine.getInstance().getGDir())) {
                 return cachedGuildFiles.get(swapToUUID(thing), (u) -> getGuildFile(swapToUUID(thing)));
+            } else if (path.equals(StreamLine.getInstance().getPDir())) {
+                return cachedPartyFiles.get(swapToUUID(thing), (u) -> getPartyFile(swapToUUID(thing)));
             } else {
                 return cachedOtherFiles.get(thing, (u) -> new File(path, thing));
             }

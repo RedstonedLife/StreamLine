@@ -128,8 +128,10 @@ public class SavablePlayer extends SavableUser {
         defaults.add("playtime=0");
         defaults.add("muted=false");
         defaults.add("muted-till=");
-        defaults.add("chat-channel=local");
-        defaults.add("chat-identifier=network");
+        if (ConfigUtils.customChats()) {
+            defaults.add("chat-channel=" + StreamLine.chatConfig.getDefaultChannel());
+            defaults.add("chat-identifier=" + StreamLine.chatConfig.getDefaultIdentifier());
+        }
         defaults.add("discord-id=");
         //defaults.add("");
         return defaults;
@@ -162,8 +164,11 @@ public class SavablePlayer extends SavableUser {
         this.totalXP = Integer.parseInt(getFromKey("total-xp"));
         this.currentXP = Integer.parseInt(getFromKey("current-xp"));
 
-        this.chatChannel = parseChatLevel(getFromKey("chat-channel"));
-        this.chatIdentifier = getFromKey("chat-identifier");
+
+        if (ConfigUtils.customChats()) {
+            this.chatChannel = parseChatLevel(getFromKey("chat-channel"));
+            this.chatIdentifier = getFromKey("chat-identifier");
+        }
 
         try {
             this.discordID = Long.parseLong(getFromKey("discord-id"));
@@ -474,13 +479,13 @@ public class SavablePlayer extends SavableUser {
 
     public void connect(ServerInfo target) {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).createConnectionRequest(StreamLine.getProxy().getServer(target.getName()).get());
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).createConnectionRequest(StreamLine.getProxy().getServer(target.getName()).get()).connect();
         }
     }
 
     public void connect(RegisteredServer target) {
         if (online) {
-            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).createConnectionRequest(target);
+            Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).createConnectionRequest(target).connect();
         }
     }
 

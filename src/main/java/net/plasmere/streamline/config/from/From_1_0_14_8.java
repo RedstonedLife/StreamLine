@@ -26,6 +26,9 @@ public class From_1_0_14_8 extends From{
 
         addUpdatedConfigEntry("modules.discord.guilds.sync", true);
         addUpdatedConfigEntry("modules.discord.parties.sync", true);
+
+        addUpdatedConfigEntry("modules.bungee.voice.max.default", 1);
+        addUpdatedConfigEntry("modules.bungee.voice.max.base-permission", "streamline.voice.limit.");
     }
 
     @Override
@@ -40,6 +43,7 @@ public class From_1_0_14_8 extends From{
         addUpdatedLocalesEntry("voice.not-verified", "%player_formatted% &cis not verified with the discord!", "en_US");
         addUpdatedLocalesEntry("voice.no-voice", "&cCould not locate that voice channel!", "en_US");
         addUpdatedLocalesEntry("voice.already-voice", "&cYou already made that voice channel!", "en_US");
+        addUpdatedLocalesEntry("voice.too-many", "&cYou cannot create any more voice channels!", "en_US");
 
         addUpdatedLocalesEntry("voice.create", "&eYou have created a voice channel named &c%name%&e!", "fr_FR");
         addUpdatedLocalesEntry("voice.delete.sender", "&eYou have deleted your voice channel named &c%name%&e!", "fr_FR");
@@ -51,6 +55,7 @@ public class From_1_0_14_8 extends From{
         addUpdatedLocalesEntry("voice.not-verified", "%player_formatted% &cis not verified with the discord!", "fr_FR");
         addUpdatedLocalesEntry("voice.no-voice", "&cCould not locate that voice channel!", "fr_FR");
         addUpdatedLocalesEntry("voice.already-voice", "&cYou already made that voice channel!", "fr_FR");
+        addUpdatedLocalesEntry("voice.too-many", "&cYou cannot create any more voice channels!", "fr_FR");
     }
 
     @Override
@@ -63,6 +68,8 @@ public class From_1_0_14_8 extends From{
         addUpdatedDiscordBotEntry("discord.categories.guilds", "put_id_here");
         addUpdatedDiscordBotEntry("discord.categories.parties", "put_id_here");
         addUpdatedDiscordBotEntry("discord.categories.voice", "put_id_here");
+
+        addUpdatedDiscordBotEntry("discord.guild-id", "put_id_here");
     }
 
     @Override
@@ -75,6 +82,6 @@ public class From_1_0_14_8 extends From{
 
     @Override
     public void setupChatsFix() {
-
+        addUpdatedChatsEntry("chats.default-just-first-join", true);
     }
 }

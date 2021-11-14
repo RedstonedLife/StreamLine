@@ -35,8 +35,9 @@ public class ConfigUtils {
     }
     // Offline Mode.
     public static boolean offlineMode() {
-        StreamLine.config.reloadConfig();
-        return StreamLine.config.getConfBoolean("modules.offline-mode");
+        return true;
+//        StreamLine.config.reloadConfig();
+//        return StreamLine.config.getConfBoolean("modules.offline-mode");
     }
     //    public static String linkSuff() {
 //        StreamLine.config.reloadConfig();
@@ -893,5 +894,14 @@ public class ConfigUtils {
     public static boolean moduleBChatFiltersEnabled() {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfBoolean("modules.bungee.chat-filters.enabled");
+    }
+    // Voice.
+    public static int moduleBVoiceMaxDefault() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfInteger("modules.bungee.voice.max.default");
+    }
+    public static String moduleBVoiceMaxBasePerm() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfString("modules.bungee.voice.max.base-permission");
     }
 }

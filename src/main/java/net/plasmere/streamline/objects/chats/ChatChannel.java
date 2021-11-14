@@ -4,8 +4,9 @@ import java.util.Locale;
 
 public class ChatChannel {
     public String name;
+    public String permission;
 
-    public ChatChannel(String name) {
+    public ChatChannel(String name, String permission) {
         this.name = name.toLowerCase(Locale.ROOT);
     }
 

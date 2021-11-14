@@ -652,7 +652,7 @@ public class PartyUtils {
                         MessagingUtils.sendBPUserMessage(party, player.findSender(), m, warpMembers);
                     }
 
-                    m.createConnectionRequest(((SavablePlayer) sender).getServer().getServer());
+                    m.createConnectionRequest(((SavablePlayer) sender).getServer().getServer()).connect();
                 }
             } catch (ConcurrentModificationException e) {
                 e.printStackTrace();

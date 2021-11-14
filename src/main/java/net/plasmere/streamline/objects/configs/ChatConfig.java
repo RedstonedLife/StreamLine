@@ -6,7 +6,6 @@ import net.plasmere.streamline.config.backend.ConfigurationProvider;
 import net.plasmere.streamline.config.backend.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.DataChannel;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
@@ -85,14 +84,19 @@ public class ChatConfig {
     public void createChannels() {
         for (String key : conf.getSection("chats").getKeys()){
             if (key.equals("base-permission")) continue;
+            if (key.equals("default-just-first-join")) continue;
+            if (key.equals("default-channel")) continue;
+            if (key.equals("default-identifier")) continue;
 
-            ChatsHandler.createChatChannel(key);
+            ChatsHandler.createChatChannel(key, conf.getString("chats." + key + ".permission"));
         }
     }
 
     public void createChats() {
         for (ChatChannel chatChannel : ChatsHandler.createdChannels) {
             for (String chatName : conf.getSection("chats." + chatChannel.name).getKeys()) {
+                if (chatName.equals("permission")) continue;
+
                 String identifier = conf.getString("chats." + chatChannel.name + "." + chatName + ".identifier");
                 TreeMap<Integer, String> bungee = getFormatsFromSection(getFormatConfig(chatChannel, chatName, MessageServerType.BUNGEE));
                 TreeMap<Integer, String> discord = getFormatsFromSection(getFormatConfig(chatChannel, chatName, MessageServerType.DISCORD));
@@ -130,6 +134,54 @@ public class ChatConfig {
     public String getChatBasePerm() {
         reloadConfig();
         return conf.getString("chats.base-permission");
+    }
+
+    public void setDefaultChannel(String set) {
+        conf.set("chats.default-channel", set);
+        saveConfig();
+        reloadConfig();
+    }
+
+    public String getDefaultChannel() {
+        reloadConfig();
+
+        if (! conf.getSection("chats").contains("default-channel")) {
+            setDefaultChannel("local");
+        }
+
+        return conf.getString("chats.default-channel");
+    }
+
+    public void setDefaultIdentifier(String set) {
+        conf.set("chats.default-identifier", set);
+        saveConfig();
+        reloadConfig();
+    }
+
+    public String getDefaultIdentifier() {
+        reloadConfig();
+
+        if (! conf.getSection("chats").contains("default-identifier")) {
+            setDefaultIdentifier("network");
+        }
+
+        return conf.getString("chats.default-identifier");
+    }
+
+    public void setDefaultOnFirstJoin(boolean set) {
+        conf.set("chats.default-just-first-join", set);
+        saveConfig();
+        reloadConfig();
+    }
+
+    public boolean getDefaultOnFirstJoin() {
+        reloadConfig();
+
+        if (! conf.getSection("chats").contains("default-just-first-join")) {
+            setDefaultOnFirstJoin(true);
+        }
+
+        return conf.getBoolean("chats.default-just-first-join");
     }
 
     public TreeMap<Integer, String> getFormatsFromSection(Configuration section) {

@@ -31,7 +31,7 @@ public class TeleportCommand extends SLCommand {
 
             Player s = (Player) sender;
 
-            s.createConnectionRequest(serverInfo.getServer());
+            s.createConnectionRequest(serverInfo.getServer()).connect();
 
 //            MessagingUtils.sendTeleportPluginMessageRequest(s, player);
             PlayerUtils.addTeleport(s, player);

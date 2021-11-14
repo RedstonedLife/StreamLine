@@ -3,6 +3,7 @@ package net.plasmere.streamline.commands.messaging;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.objects.chats.Chat;
@@ -11,6 +12,7 @@ import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.filters.ChatFilter;
 import net.plasmere.streamline.objects.filters.FilterHandler;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
+import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
@@ -37,7 +39,7 @@ public class ChatFilterCommand extends SLCommand {
 
         switch (args[0]) {
             case "create":
-                if (args.length < 5) {
+                if (args.length < 7) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                     return;
                 }
@@ -45,10 +47,13 @@ public class ChatFilterCommand extends SLCommand {
                 try {
                     String name = args[1];
                     boolean enabled = Boolean.parseBoolean(args[2]);
-                    String regex = args[3];
-                    List<String> replacements = List.of(TextUtils.argsMinus(args, 0, 1, 2, 3));
+                    String scriptName = args[3];
+                    String bypassPermission = args[4];
+                    boolean blocked = Boolean.parseBoolean(args[5]);
+                    String regex = args[6];
+                    List<String> replacements = List.of(TextUtils.argsMinus(args, 0, 1, 2, 3, 4, 5, 6));
 
-                    ChatFilter filter = FilterHandler.addFilter(new ChatFilter(name, enabled, regex, replacements));
+                    ChatFilter filter = FilterHandler.addFilter(new ChatFilter(name, enabled, scriptName, bypassPermission, blocked, regex, replacements));
                     MessagingUtils.sendChatFilterMessage(sender, filter, TextUtils.replaceAllSenderBungee(MessageConfUtils.filtersCommandCreate(), sender));
                 } catch (Exception e) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
@@ -84,6 +89,12 @@ public class ChatFilterCommand extends SLCommand {
         if (args.length == 2) {
             if (args[0].equals("toggle")) {
                 return TextUtils.getCompletion(FilterHandler.getAllFiltersByName(), args[1]);
+            }
+        }
+
+        if (args.length == 4) {
+            if (ConfigUtils.scriptsEnabled()) {
+                return TextUtils.getCompletion(ScriptsHandler.getScriptNames(), args[3]);
             }
         }
 

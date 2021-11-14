@@ -2,6 +2,7 @@ package net.plasmere.streamline.scripts;
 
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
+import org.apache.commons.collections4.list.TreeList;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,5 +46,15 @@ public class ScriptsHandler {
 
     public static void unloadScripts() {
         scripts = new ArrayList<>();
+    }
+
+    public static TreeList<String> getScriptNames() {
+        TreeList<String> toReturn = new TreeList<>();
+
+        for (Script s : scripts) {
+            toReturn.add(s.name);
+        }
+
+        return toReturn;
     }
 }

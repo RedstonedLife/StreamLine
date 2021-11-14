@@ -30,6 +30,8 @@ public class OneSecondTimer implements Runnable {
     public void run() {
         if (countdown == 0) {
             done();
+
+            countdown = reset;
         }
 
         countdown--;
@@ -47,8 +49,6 @@ public class OneSecondTimer implements Runnable {
 //        }
 
         try {
-            countdown = reset;
-
             if (PlayerUtils.getToSave().size() > 0) {
                 for (SavableUser user : new ArrayList<>(PlayerUtils.getToSave())) {
                     PlayerUtils.doSave(user);
@@ -58,11 +58,21 @@ public class OneSecondTimer implements Runnable {
             PlayerUtils.tickConn();
 
             if (StreamLine.lpHolder.enabled) {
-                for (SavablePlayer player : PlayerUtils.getJustPlayersOnline()) {
-                    if (player.latestName == null) continue;
-                    if (player.latestName.equals("")) continue;
-                    PlayerUtils.updateDisplayName(player);
+                for (Player player : PlayerUtils.getOnlinePPlayers()) {
+//                    if (player.latestName == null) continue;
+//                    if (player.latestName.equals("")) continue;
+                    SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(player.getUniqueId().toString());
+                    if (p == null) {
+                        if (ConfigUtils.debug()) MessagingUtils.logSevere("SavablePlayer for " + player.getUsername() + " is null!");
+                        continue;
+                    }
+                    PlayerUtils.updateDisplayName(p);
+//                    if (player.latestName == null) continue;
+//                    if (player.latestName.equals("")) continue;
+//                    PlayerUtils.updateDisplayName(player);
                 }
+            } else {
+                MessagingUtils.logSevere("Luckperms not found! Please install luckperms!");
             }
 
             for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
@@ -156,7 +166,8 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (guild.voiceID == 0L) {
-                VoiceChannel channel = DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0])).get(0);
+                VoiceChannel channel = DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
+                if (channel == null) continue;
                 guild.updateKey("voice", channel.getIdLong());
             } else {
                 DiscordUtils.addToVoice(guild.voiceID, players.toArray(new SavablePlayer[0]));
@@ -176,7 +187,8 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (party.voiceID == 0L) {
-                VoiceChannel channel = DiscordUtils.createVoice(party.leader.latestName, CategoryType.GUILDS, players.toArray(new SavablePlayer[0])).get(0);
+                VoiceChannel channel = DiscordUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
+                if (channel == null) continue;
                 party.updateKey("voice", channel.getIdLong());
             } else {
                 DiscordUtils.addToVoice(party.voiceID, players.toArray(new SavablePlayer[0]));

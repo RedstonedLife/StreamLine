@@ -538,6 +538,10 @@ modules:
         run: "on-vote.sl"
     chat-filters:
       enabled: true
+    voice:
+      max:
+        default: 1
+        base-permission: "streamline.voice.limit."
   bstats:
     make-server-discoverable: true
     discoverable-ip: "my.server.net"

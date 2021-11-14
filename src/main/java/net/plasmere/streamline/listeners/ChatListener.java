@@ -29,8 +29,6 @@ import java.util.Objects;
 import java.util.TreeMap;
 
 public class ChatListener {
-    private static String prefix = ConfigUtils.moduleStaffChatPrefix();
-
     @Subscribe(order = PostOrder.FIRST)
     public void onPlayerChat(PlayerChatEvent e){
         if (! e.getResult().isAllowed()) return;
@@ -43,9 +41,20 @@ public class ChatListener {
         if (ConfigUtils.moduleBChatFiltersEnabled()) {
             FilterHandler.reloadAllFilters();
 
+            boolean needsBlocking = false;
+
             for (ChatFilter filter : FilterHandler.filters) {
                 if (! filter.enabled) continue;
-                msg = filter.applyFilter(msg);
+
+                SingleSet<Boolean, String> filtered = filter.applyFilter(msg, sender);
+
+                if (! needsBlocking) needsBlocking = filtered.key;
+                msg = filtered.value;
+            }
+
+            if (needsBlocking) {
+                e.setResult(PlayerChatEvent.ChatResult.denied());
+                return;
             }
         }
 
@@ -109,25 +118,25 @@ public class ChatListener {
                 }
                 isStaffMessage = true;
             } else if (ConfigUtils.moduleStaffChatDoPrefix()) {
-                if (msg.startsWith(prefix) && ! prefix.equals("/")) {
+                if (msg.startsWith(ConfigUtils.moduleStaffChatPrefix()) && ! ConfigUtils.moduleStaffChatPrefix().equals("/")) {
                     if (! sender.hasPermission(ConfigUtils.staffPerm())) {
                         return;
                     }
 
-                    if (msg.equals(prefix)) {
+                    if (msg.equals(ConfigUtils.moduleStaffChatPrefix())) {
                         sender.sendMessage(TextUtils.codedText(MessageConfUtils.staffChatJustPrefix().replace("%newline%", "\n")));
                         e.setResult(PlayerChatEvent.ChatResult.denied());
                         return;
                     }
 
                     e.setResult(PlayerChatEvent.ChatResult.denied());
-                    MessagingUtils.sendStaffMessage(sender, MessageConfUtils.bungeeStaffChatFrom(), msg.substring(prefix.length()));
+                    MessagingUtils.sendStaffMessage(sender, MessageConfUtils.bungeeStaffChatFrom(), msg.substring(ConfigUtils.moduleStaffChatPrefix().length()));
                     if (ConfigUtils.moduleDEnabled()) {
                         if (ConfigUtils.moduleStaffChatMToDiscord()) {
                             MessagingUtils.sendDiscordEBMessage(new DiscordMessage(sender,
                                     MessageConfUtils.staffChatEmbedTitle(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.discordStaffChatMessage(), sender)
-                                            .replace("%message%", msg.substring(prefix.length())),
+                                            .replace("%message%", msg.substring(ConfigUtils.moduleStaffChatPrefix().length())),
                                     DiscordBotConfUtils.textChannelStaffChat()));
                         }
                     }

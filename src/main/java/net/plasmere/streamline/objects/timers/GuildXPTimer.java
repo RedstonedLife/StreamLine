@@ -37,6 +37,7 @@ public class GuildXPTimer implements Runnable {
                 if (user.guild.equals("")) continue;
 
                 SavableGuild guild = GuildUtils.getOrGetGuild(user.guild);
+                if (guild == null) continue;
 
                 guild.addTotalXP(ConfigUtils.xpPerGiveG());
             }

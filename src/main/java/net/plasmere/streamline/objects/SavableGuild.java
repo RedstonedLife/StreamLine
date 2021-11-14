@@ -72,7 +72,7 @@ public class SavableGuild {
     private void construct(String uuid, boolean createNew) throws IOException {
         if (uuid == null) return;
 
-        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getGDir(), uuid);
+        this.file = new File(StreamLine.getInstance().getGDir(), uuid + ".properties");
 
         if (createNew) {
             try {
@@ -212,7 +212,7 @@ public class SavableGuild {
     }
 
     public void updateWithNewDefaults() throws IOException {
-        file.delete();
+        if (file.exists()) file.delete();
 
         file.createNewFile();
 

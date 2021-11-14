@@ -45,10 +45,13 @@ public class FilterHandler {
             try {
                 Configuration section = configuration.getSection(key);
                 boolean enabled = section.getBoolean("enabled");
+                String scriptName = section.getString("runs-script");
+                String bypassPermission = section.getString("bypass-permission");
+                boolean blocked = section.getBoolean("blocked");
                 String regex = section.getString("regex");
                 List<String> replacements = section.getStringList("replace-with");
 
-                ChatFilter filter = new ChatFilter(key, enabled, regex, replacements);
+                ChatFilter filter = new ChatFilter(key, enabled, scriptName, bypassPermission, blocked, regex, replacements);
                 addFilter(filter);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -14,7 +14,7 @@ public class LPHolder {
     }
 
     public boolean isPresent(){
-        if (! StreamLine.getProxy().getPluginManager().getPlugin("LuckPerms").isPresent() && ! StreamLine.getProxy().getPluginManager().getPlugin("luckperms").isPresent()) {
+        if (StreamLine.getProxy().getPluginManager().getPlugin("luckperms").isEmpty()) {
             return false;
         }
 

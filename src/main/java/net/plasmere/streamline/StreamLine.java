@@ -63,7 +63,7 @@ import java.util.Scanner;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
-@Plugin(id = "streamline", name = "StreamLine", version = "${project.version}",
+@Plugin(id = "streamline", name = "StreamLine", version = "1.0.14.9",
 		url = "https://github.com/xnitrate/streamline/tree/velocity", description = "An Essentials plugin for Velocity!",
 		authors = { "Nitrate" }, dependencies = {
 		@Dependency(id = "LuckPerms", optional = true),
@@ -446,7 +446,11 @@ public class StreamLine {
 		}
 
 		if (ConfigUtils.moduleBChatFiltersEnabled()) {
-			chatFilters = new ChatFilters();
+			if (ConfigUtils.scriptsEnabled()) {
+				chatFilters = new ChatFilters();
+			} else {
+				MessagingUtils.logSevere("Could not enable chat filters because scripts are not enabled!");
+			}
 		}
 
 		if (ConfigUtils.moduleDEnabled()) {
@@ -551,6 +555,9 @@ public class StreamLine {
 
 		// Guilds.
 		loadGuilds();
+
+		// Parties.
+		loadParties();
 
 		// Events.
 		loadEvents();

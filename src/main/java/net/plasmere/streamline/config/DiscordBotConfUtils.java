@@ -25,6 +25,11 @@ public class DiscordBotConfUtils {
         return StreamLine.config.getDisBotLong("discord.categories." + type.name().toLowerCase(Locale.ROOT));
     }
     // ... Discord.
+    // Guild.
+    public static long guildID() {
+        StreamLine.config.reloadDiscordBot();
+        return StreamLine.config.getDisBotLong("discord.guild-id");
+    }
     // Text Channels.
     public static String textChannelReports() {
         StreamLine.config.reloadDiscordBot();
