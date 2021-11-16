@@ -367,7 +367,7 @@ public class StreamLine {
 				}
 
 				FileWriter writer = new FileWriter(versionFile());
-				writer.write(getDescription().getVersion().get());
+				writer.write(getVersion());
 				writer.close();
 
 				if (versionFile().exists()) {
@@ -518,7 +518,7 @@ public class StreamLine {
 		getProxy().getChannelRegistrar().register(customIdentifier);
 
 		// Teller.
-		getLogger().info("Loading version [v" + getDescription().getVersion() + "]...");
+		getLogger().info("Loading version [v" + getVersion() + "]...");
 
 		// Configs...
 		loadConfigs();
@@ -749,7 +749,10 @@ public class StreamLine {
 		return getClass().getClassLoader().getResourceAsStream(filename);
 	}
 
-	public PluginDescription getDescription() {
+	public static PluginDescription getDescription() {
 		return getProxy().getPluginManager().getPlugin("streamline").get().getDescription();
+	}
+	public static String getVersion() {
+		return "${project.version}";
 	}
 }

@@ -8,25 +8,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LPPlaceHolders {
-    private static final Pattern pattern = Pattern.compile("%luckperms_\\S+%");
-    private static final String META = "%luckperms_meta";
-    private static final String PREFIX_ELEMENT = "%luckperms_prefix_element";
-    private static final String SUFFIX_ELEMENT = "%luckperms_suffix_element";
+    private static final Pattern pattern = Pattern.compile("%luckperms_[^\\s%]+%");
 
     public static String parse(Player player, String string) {
+        StringBuilder builder = new StringBuilder();
         Matcher matcher = pattern.matcher(string);
-        while(matcher.find()) {
-            //matcher.group
-        }
+        UUID uuid = player.getUniqueId();
 
-        return null;
+        while(matcher.find()) {
+            matcher.appendReplacement(builder, parseArguments(uuid, matcher.group().split("_")));
+        }
+        matcher.appendTail(builder);
+
+        return builder.toString();
     }
 
     private static String parseArguments(UUID uuid, String[] args) {
         String result = "";
 
-        if(args.length > 0) {
-            switch(args[0]) {
+        if(args.length > 1) {
+            switch(args[1].replace("%", "")) {
                 case "prefix" -> {
                     result = LuckPermsService.getPrefix(uuid).join();
                 }
@@ -43,7 +44,12 @@ public class LPPlaceHolders {
                 case "meta" -> {
 
                 }
+                default -> {
+                    result = String.join("_", args);
+                }
             }
+        } else {
+            result = String.join("_", args);
         }
 
         return result;

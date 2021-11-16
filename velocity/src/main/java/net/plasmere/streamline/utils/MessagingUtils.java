@@ -1475,7 +1475,7 @@ public class MessagingUtils {
     public static void sendInfo(CommandSource sender) {
         sender.sendMessage(TextUtils.codedText(MessageConfUtils.info()
                 .replace("%name%", StreamLine.getInstance().getDescription().getName().get())
-                .replace("%version%", StreamLine.getInstance().getDescription().getVersion().get())
+                .replace("%version%", StreamLine.getVersion())
                 .replace("%author%", StreamLine.getInstance().getDescription().getAuthors().get(0))
                 .replace("%num_commands%", String.valueOf(PluginUtils.commandsAmount))
                 .replace("%num_listeners%", String.valueOf(PluginUtils.listenerAmount))

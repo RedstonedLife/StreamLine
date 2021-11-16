@@ -67,7 +67,7 @@ public class FindFrom {
             }
 
             FileWriter writer = new FileWriter(StreamLine.getInstance().versionFile());
-            writer.write(StreamLine.getInstance().getDescription().getVersion().get());
+            writer.write(StreamLine.getVersion());
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
