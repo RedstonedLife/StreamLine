@@ -752,6 +752,7 @@ public class StreamLine {
 	public static PluginDescription getDescription() {
 		return getProxy().getPluginManager().getPlugin("streamline").get().getDescription();
 	}
+
 	public static String getVersion() {
 		return "${project.version}";
 	}
