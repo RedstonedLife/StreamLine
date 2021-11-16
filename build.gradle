@@ -7,17 +7,15 @@ buildscript {
     }
 }
 
-plugins {
-    id 'java-library'
-}
-
+apply plugin: 'java-library'
 jar.enabled = false
+
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'com.github.johnrengelman.shadow'
 
-    group 'net.plasmere'
-    version '1.0.14.9'
+    group = 'net.plasmere'
+    version = '1.0.14.9'
 
     ext {
         caffeineVersion = '3.0.4'
