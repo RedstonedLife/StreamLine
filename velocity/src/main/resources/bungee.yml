@@ -1,9 +1,0 @@
-name: StreamLine
-version: ${project.version}
-main: net.plasmere.streamline.StreamLine
-author: Nitrate
-depends: []
-softdepends:
-  - ViaVersion
-  - LuckPerms
-  - Geyser-BungeeCord

@@ -24,3 +24,9 @@ dependencies {
     implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
     implementation files('../libs/nuvotifier.jar')
 }
+
+processResources {
+    filesMatching('bungee.yml') {
+        expand project.properties
+    }
+}

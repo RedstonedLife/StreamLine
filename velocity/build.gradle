@@ -1,3 +1,7 @@
+plugins {
+    id "net.kyori.blossom" version "1.2.0" //For replacing version in Streamline.java
+}
+
 project.ext {
     lombokVersion = '1.18.22'
     minimessageVersion = '4.1.0-SNAPSHOT'
@@ -27,4 +31,8 @@ dependencies {
     implementation "com.viaversion:viaversion-api:${viaApiVersion}"
     implementation "org.projectlombok:lombok:${lombokVersion}"
     implementation files('../libs/nuvotifier.jar')
+}
+
+blossom {
+    replaceToken '${project.version}', project.version, 'src/main/java/net/plasmere/streamline/StreamLine.java'
 }

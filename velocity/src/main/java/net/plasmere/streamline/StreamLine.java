@@ -62,7 +62,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-@Plugin(id = "streamline", name = "StreamLine", version = "1.0.14.9",
+@Plugin(id = "streamline", name = "StreamLine", version = "${project.version}",
 		url = "https://github.com/xnitrate/streamline/tree/velocity", description = "An Essentials plugin for Velocity!",
 		authors = { "Nitrate" }, dependencies = {
 		@Dependency(id = "LuckPerms", optional = true),
