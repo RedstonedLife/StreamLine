@@ -21,7 +21,7 @@ dependencies {
     implementation "org.xerial:sqlite-jdbc:${sqlLiteVersion}"
     implementation "net.kyori:adventure-text-serializer-legacy:${adventureVersion}"
     implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
-    implementation files('libs/nuvotifier.jar')
+    implementation files('../libs/nuvotifier.jar')
 }
 
 shadowJar {

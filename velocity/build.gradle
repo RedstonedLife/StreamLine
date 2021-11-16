@@ -24,7 +24,7 @@ dependencies {
     implementation "org.geysermc:connector:${geysermcVersion}"
     implementation "org.projectlombok:lombok:${lombokVersion}"
     implementation "com.viaversion:viaversion-api:${viaApiVersion}"
-    implementation files('libs/nuvotifier.jar')
+    implementation files('../libs/nuvotifier.jar')
 }
 
 shadowJar {
