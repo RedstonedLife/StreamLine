@@ -1,0 +1,39 @@
+jar.enabled = false // we only want shadowJar
+
+project.ext {
+    adventureVersion = '4.9.2'
+    bungeeVersion = '1.17-R0.1-SNAPSHOT'
+}
+
+repositories {
+    //BungeeCord
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+}
+
+dependencies {
+    //implementation "net.md-5:bungeecord-api:${bungeeVersion}"
+    implementation "net.dv8tion:JDA:${dv8tionVersion}"
+    compileOnly "net.luckperms:api:${luckpermsVersion}"
+    implementation "org.testng:testng:${testngVersion}"
+    implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
+    implementation "com.viaversion:viaversion-api:${viaApiVersion}"
+    implementation "org.geysermc:connector:${geysermcVersion}"
+    implementation "org.xerial:sqlite-jdbc:${sqlLiteVersion}"
+    implementation "net.kyori:adventure-text-serializer-legacy:${adventureVersion}"
+    implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
+    implementation files('libs/nuvotifier.jar')
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    manifest {
+        attributes(
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version
+        )
+    }
+}
+
+artifacts {
+    archives shadowJar
+}

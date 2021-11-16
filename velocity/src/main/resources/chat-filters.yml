@@ -1,0 +1,26 @@
+urls:
+  enabled: true
+  bypass-permission: "streamline.staff"
+  regex: ^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
+  replace-with:
+    - https://store.server.net
+  runs-script: "urls.sl"
+  blocked: false
+bad-words:
+  enabled: true
+  bypass-permission: "streamline.staff"
+  regex: \bass\b|\barse\b|\bnigger
+  replace-with:
+    - baby hippo
+    - bad word
+  runs-script: "bad-words.sl"
+  blocked: true
+you-can-create-your-own-filters-in-this-file:
+  enabled: false
+  bypass-permission: "streamline.your.custom.bypass.permission"
+  regex: \badd\b|\bregex\b|\bhere
+  replace-with:
+    - add phrases you want to replace them with here
+    - it will pick a random phrase to replace it with
+  runs-script: "you-can-make-custom-scripts-to-run-commands.sl"
+  blocked: true

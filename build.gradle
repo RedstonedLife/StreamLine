@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.0"
+    }
+}
+
+plugins {
+    id 'java-library'
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    group 'net.plasmere'
+    version '1.0.14.9'
+
+    ext {
+        caffeineVersion = '3.0.4'
+        dv8tionVersion = '4.3.0_339'
+        geysermcVersion = '1.4.2-SNAPSHOT'
+        luckpermsVersion = '5.3'
+        nuvotifierVersion = '2.6.0'
+        simplixStorageVersion = '3.2.3'
+        sqlLiteVersion = '3.36.0.2'
+        testngVersion = '7.4.0'
+        viaApiVersion = '4.0.1'
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_14
+        targetCompatibility = JavaVersion.VERSION_14
+    }
+
+    repositories {
+        mavenCentral()
+        //Dv8tion (Discord)
+        maven { url 'https://m2.dv8tion.net/releases' }
+        //OpenCollab
+        maven { url 'https://repo.opencollab.dev/maven-snapshots/' }
+        maven { url 'https://repo.opencollab.dev/maven-releases/'}
+        //ViaVersion
+        maven { url 'https://repo.viaversion.com' }
+        //JitPack
+        maven { url 'https://jitpack.io' }
+    }
+}

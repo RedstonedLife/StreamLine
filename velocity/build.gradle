@@ -1,0 +1,42 @@
+jar.enabled = false // we only want shadowJar
+
+project.ext {
+    lombokVersion = '1.18.22'
+    velocityVersion = '3.0.1'
+}
+
+repositories {
+    //Velocity
+    maven { url 'https://nexus.velocitypowered.com/repository/maven-public/' }
+}
+
+dependencies {
+    compileOnly "com.velocitypowered:velocity-api:${velocityVersion}"
+    annotationProcessor "com.velocitypowered:velocity-api:${velocityVersion}"
+
+    compileOnly "net.luckperms:api:${luckpermsVersion}"
+
+    implementation "net.dv8tion:JDA:${dv8tionVersion}"
+    shadow "net.dv8tion:JDA:${dv8tionVersion}"
+    implementation "org.xerial:sqlite-jdbc:${sqlLiteVersion}"
+    implementation "org.testng:testng:${testngVersion}"
+    implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
+    implementation "org.geysermc:connector:${geysermcVersion}"
+    implementation "org.projectlombok:lombok:${lombokVersion}"
+    implementation "com.viaversion:viaversion-api:${viaApiVersion}"
+    implementation files('libs/nuvotifier.jar')
+}
+
+shadowJar {
+    archiveClassifier.set('')
+    manifest {
+        attributes(
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version
+        )
+    }
+}
+
+artifacts {
+    archives shadowJar
+}

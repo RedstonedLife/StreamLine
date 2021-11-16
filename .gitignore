@@ -33,6 +33,10 @@ pom2.xml
 *.tar.gz
 *.rar
 
+# Gradle
+.gradle
+**/build/
+
 # Others
 bin
 bin/

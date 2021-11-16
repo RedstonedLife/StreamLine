@@ -1,0 +1,95 @@
+package net.plasmere.streamline.utils.holders;
+
+import com.velocitypowered.api.proxy.Player;
+import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.objects.GeyserFile;
+import net.plasmere.streamline.utils.MessagingUtils;
+import net.plasmere.streamline.utils.PlayerUtils;
+import org.geysermc.connector.GeyserConnector;
+import org.geysermc.connector.network.session.GeyserSession;
+
+import java.io.File;
+
+public class GeyserHolder {
+    public File playerPath = new File(StreamLine.getInstance().getPlDir(), "geyser" + File.separator);
+    public GeyserConnector connector;
+    public boolean enabled;
+    public GeyserFile file;
+
+    public GeyserHolder(){
+        enabled = isPresent();
+
+        if (enabled) {
+            setUpPath();
+            file = new GeyserFile(false);
+        }
+    }
+
+    public boolean isPresent(){
+        if (! StreamLine.getProxy().getPluginManager().getPlugin("Geyser-Velocity").isPresent() && ! StreamLine.getProxy().getPluginManager().getPlugin("geyser-velocity").isPresent()) {
+            return false;
+        }
+
+        try {
+            this.connector = GeyserConnector.getInstance();
+            MessagingUtils.logInfo("Geyser is installed... Using Geyser support...");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void setUpPath(){
+        if (! playerPath.exists()) {
+            if (! playerPath.mkdirs()) {
+                MessagingUtils.logSevere("Error setting up the Geyser player path...");
+            }
+        }
+    }
+
+    public void checkConnector(){
+        if (connector == null) this.connector = GeyserConnector.getInstance();
+    }
+
+    public boolean isGeyserPlayer(Player player) {
+        checkConnector();
+
+        for (GeyserSession session : connector.getPlayers()) {
+            if (session.getName().equals(PlayerUtils.getSourceName(player))) return true;
+        }
+
+        return false;
+    }
+
+    public boolean isGeyserPlayer(String player) {
+        checkConnector();
+
+        for (GeyserSession session : connector.getPlayers()) {
+            if (session.getName().equals(player)) return true;
+        }
+
+        return false;
+    }
+
+    public String getGeyserUUID(String player) {
+        checkConnector();
+
+        for (GeyserSession session : connector.getPlayers()) {
+            if (session.getName().equals(player)) {
+                return session.getAuthData().getXboxUUID();
+            }
+        }
+
+        return null;
+    }
+
+    public Player getPPlayerByUUID(String uuid){
+        checkConnector();
+
+        for (GeyserSession session : connector.getPlayers()) {
+            if (session.getAuthData().getXboxUUID().equals(uuid)) StreamLine.getInstance().getProxy().getPlayer(session.getName());
+        }
+
+        return null;
+    }
+}

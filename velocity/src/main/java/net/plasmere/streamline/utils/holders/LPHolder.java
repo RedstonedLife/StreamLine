@@ -1,0 +1,29 @@
+package net.plasmere.streamline.utils.holders;
+
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.utils.MessagingUtils;
+
+public class LPHolder {
+    public LuckPerms api;
+    public boolean enabled;
+
+    public LPHolder(){
+        enabled = isPresent();
+    }
+
+    public boolean isPresent(){
+        if (StreamLine.getProxy().getPluginManager().getPlugin("luckperms").isEmpty()) {
+            return false;
+        }
+
+        try {
+            api = LuckPermsProvider.get();
+            return true;
+        } catch (Exception e) {
+            MessagingUtils.logSevere("LuckPerms not loaded... Disabling LuckPerms support...");
+        }
+        return false;
+    }
+}
