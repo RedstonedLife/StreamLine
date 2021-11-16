@@ -1,7 +1,6 @@
-jar.enabled = false // we only want shadowJar
-
 project.ext {
     lombokVersion = '1.18.22'
+    minimessageVersion = '4.1.0-SNAPSHOT'
     velocityVersion = '3.0.1'
 }
 
@@ -11,32 +10,22 @@ repositories {
 }
 
 dependencies {
+    //Velocity
     compileOnly "com.velocitypowered:velocity-api:${velocityVersion}"
     annotationProcessor "com.velocitypowered:velocity-api:${velocityVersion}"
-
+    //LuckPerms
     compileOnly "net.luckperms:api:${luckpermsVersion}"
-
+    //JDA
     implementation "net.dv8tion:JDA:${dv8tionVersion}"
     shadow "net.dv8tion:JDA:${dv8tionVersion}"
+    //Adventure Mini-Message
+    implementation "net.kyori:adventure-text-minimessage:${minimessageVersion}"
+    shadow "net.kyori:adventure-text-minimessage:${minimessageVersion}"
+
     implementation "org.xerial:sqlite-jdbc:${sqlLiteVersion}"
-    implementation "org.testng:testng:${testngVersion}"
     implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
     implementation "org.geysermc:connector:${geysermcVersion}"
-    implementation "org.projectlombok:lombok:${lombokVersion}"
     implementation "com.viaversion:viaversion-api:${viaApiVersion}"
+    implementation "org.projectlombok:lombok:${lombokVersion}"
     implementation files('../libs/nuvotifier.jar')
-}
-
-shadowJar {
-    archiveClassifier.set('')
-    manifest {
-        attributes(
-            'Implementation-Title': project.name,
-            'Implementation-Version': project.version
-        )
-    }
-}
-
-artifacts {
-    archives shadowJar
 }

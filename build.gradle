@@ -10,10 +10,12 @@ buildscript {
 plugins {
     id 'java-library'
 }
+jar.enabled = false
 
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'com.github.johnrengelman.shadow'
+    jar.enabled = false
 
     group 'net.plasmere'
     version '1.0.14.9'
@@ -26,7 +28,6 @@ subprojects {
         nuvotifierVersion = '2.6.0'
         simplixStorageVersion = '3.2.3'
         sqlLiteVersion = '3.36.0.2'
-        testngVersion = '7.4.0'
         viaApiVersion = '4.0.1'
     }
 
@@ -46,5 +47,20 @@ subprojects {
         maven { url 'https://repo.viaversion.com' }
         //JitPack
         maven { url 'https://jitpack.io' }
+    }
+
+    shadowJar {
+        destinationDirectory  = file("$rootDir/build/libs")
+        archiveClassifier.set('')
+        manifest {
+            attributes(
+                    'Implementation-Title': project.name,
+                    'Implementation-Version': project.version
+            )
+        }
+    }
+
+    artifacts {
+        archives shadowJar
     }
 }

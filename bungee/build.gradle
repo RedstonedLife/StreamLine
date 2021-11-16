@@ -1,5 +1,3 @@
-jar.enabled = false // we only want shadowJar
-
 project.ext {
     adventureVersion = '4.9.2'
     bungeeVersion = '1.17-R0.1-SNAPSHOT'
@@ -11,29 +9,19 @@ repositories {
 }
 
 dependencies {
-    //implementation "net.md-5:bungeecord-api:${bungeeVersion}"
-    implementation "net.dv8tion:JDA:${dv8tionVersion}"
+    //BungeeCord
+    implementation "net.md-5:bungeecord-api:${bungeeVersion}"
+    //LuckPerms
     compileOnly "net.luckperms:api:${luckpermsVersion}"
-    implementation "org.testng:testng:${testngVersion}"
-    implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
-    implementation "com.viaversion:viaversion-api:${viaApiVersion}"
-    implementation "org.geysermc:connector:${geysermcVersion}"
+    //JDA
+    implementation "net.dv8tion:JDA:${dv8tionVersion}"
+    shadow "net.dv8tion:JDA:${dv8tionVersion}"
+
     implementation "org.xerial:sqlite-jdbc:${sqlLiteVersion}"
+    implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
+    implementation "org.geysermc:connector:${geysermcVersion}"
+    implementation "com.viaversion:viaversion-api:${viaApiVersion}"
     implementation "net.kyori:adventure-text-serializer-legacy:${adventureVersion}"
     implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
     implementation files('../libs/nuvotifier.jar')
-}
-
-shadowJar {
-    archiveClassifier.set('')
-    manifest {
-        attributes(
-            'Implementation-Title': project.name,
-            'Implementation-Version': project.version
-        )
-    }
-}
-
-artifacts {
-    archives shadowJar
 }
