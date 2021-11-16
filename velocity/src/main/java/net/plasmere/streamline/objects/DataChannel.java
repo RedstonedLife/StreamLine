@@ -1,6 +1,5 @@
 package net.plasmere.streamline.objects;
 
-import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 

@@ -1,16 +1,14 @@
 package net.plasmere.streamline.commands;
 
-import net.plasmere.streamline.StreamLine;
+import com.velocitypowered.api.command.CommandSource;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import com.velocitypowered.api.command.CommandSource;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collection;
 
 public class ReportCommand extends SLCommand {

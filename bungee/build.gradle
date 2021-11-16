@@ -17,7 +17,6 @@ dependencies {
     implementation "net.dv8tion:JDA:${dv8tionVersion}"
     shadow "net.dv8tion:JDA:${dv8tionVersion}"
 
-    implementation "org.xerial:sqlite-jdbc:${sqlLiteVersion}"
     implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
     implementation "org.geysermc:connector:${geysermcVersion}"
     implementation "com.viaversion:viaversion-api:${viaApiVersion}"

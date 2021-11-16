@@ -1,6 +1,7 @@
 package net.plasmere.streamline.utils;
 
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.commands.*;
@@ -26,11 +27,8 @@ import net.plasmere.streamline.commands.staff.spy.SCViewCommand;
 import net.plasmere.streamline.commands.staff.spy.SSPYCommand;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.listeners.JoinLeaveListener;
 import net.plasmere.streamline.listeners.ChatListener;
-import net.plasmere.streamline.objects.command.SLCommand;
-import java.util.Collection;
-import net.md_5.bungee.api.plugin.Listener;
+import net.plasmere.streamline.listeners.JoinLeaveListener;
 import net.plasmere.streamline.listeners.PluginMessagingListener;
 import net.plasmere.streamline.listeners.ProxyPingListener;
 import net.plasmere.streamline.objects.enums.NetworkState;

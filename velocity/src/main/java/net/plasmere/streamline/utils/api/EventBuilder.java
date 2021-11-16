@@ -1,9 +1,9 @@
 package net.plasmere.streamline.utils.api;
 
+import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.config.backend.ConfigurationProvider;
 import net.plasmere.streamline.config.backend.YamlConfiguration;
-import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.enums.Action;

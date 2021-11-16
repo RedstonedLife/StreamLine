@@ -1,6 +1,5 @@
 package net.plasmere.streamline.config.from;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class From_1_0_14_2 extends From{

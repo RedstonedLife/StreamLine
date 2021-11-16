@@ -1,12 +1,10 @@
 package net.plasmere.streamline.discordbot.commands;
 
-import net.plasmere.streamline.StreamLine;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class ReportCommand {
     public static void sendMessage(String command, MessageReceivedEvent event){

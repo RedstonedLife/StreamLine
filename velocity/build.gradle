@@ -22,7 +22,6 @@ dependencies {
     implementation "net.kyori:adventure-text-minimessage:${minimessageVersion}"
     shadow "net.kyori:adventure-text-minimessage:${minimessageVersion}"
 
-    implementation "org.xerial:sqlite-jdbc:${sqlLiteVersion}"
     implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
     implementation "org.geysermc:connector:${geysermcVersion}"
     implementation "com.viaversion:viaversion-api:${viaApiVersion}"

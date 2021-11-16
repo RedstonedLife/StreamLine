@@ -1,8 +1,8 @@
 package net.plasmere.streamline.commands.staff;
 
 import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ServerConnection;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;

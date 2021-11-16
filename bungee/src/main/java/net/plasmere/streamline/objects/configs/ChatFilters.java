@@ -5,7 +5,6 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.DataChannel;
 import net.plasmere.streamline.objects.filters.ChatFilter;
 import net.plasmere.streamline.objects.filters.FilterHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -14,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.TreeMap;
 
 public class ChatFilters {
     private Configuration conf;

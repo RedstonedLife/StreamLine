@@ -1,13 +1,10 @@
 package net.plasmere.streamline.objects.filters;
 
 
-
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.objects.configs.ChatFilters;
 import org.apache.commons.collections4.list.TreeList;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

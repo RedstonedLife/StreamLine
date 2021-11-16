@@ -1,12 +1,12 @@
 package net.plasmere.streamline.commands;
 
 import net.md_5.bungee.api.CommandSender;
+import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.command.SLCommand;
+import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.utils.TextUtils;
 
 public class PCQuickCommand extends SLCommand {
     public PCQuickCommand(String base, String perm, String[] aliases){

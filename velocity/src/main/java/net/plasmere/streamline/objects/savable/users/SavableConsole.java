@@ -4,7 +4,10 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class SavableConsole extends SavableUser {
     public ProxyServer server;

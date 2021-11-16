@@ -2,11 +2,11 @@ package net.plasmere.streamline.commands.staff.punishments;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -14,7 +14,6 @@ import net.plasmere.streamline.utils.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;

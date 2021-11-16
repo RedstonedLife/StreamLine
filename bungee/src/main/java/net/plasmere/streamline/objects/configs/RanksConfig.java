@@ -1,23 +1,16 @@
 package net.plasmere.streamline.objects.configs;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.chats.Chat;
-import net.plasmere.streamline.objects.chats.ChatChannel;
-import net.plasmere.streamline.objects.chats.ChatsHandler;
-import net.plasmere.streamline.objects.enums.MessageServerType;
-import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Locale;
 import java.util.TreeMap;
 
 public class RanksConfig {

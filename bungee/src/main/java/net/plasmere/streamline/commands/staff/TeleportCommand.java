@@ -3,15 +3,14 @@ package net.plasmere.streamline.commands.staff;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.plasmere.streamline.objects.command.SLCommand;
-import java.util.Collection;
-import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class TeleportCommand extends SLCommand {
 

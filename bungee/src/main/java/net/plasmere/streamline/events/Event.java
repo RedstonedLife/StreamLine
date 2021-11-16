@@ -5,7 +5,6 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.events.enums.Action;
 import net.plasmere.streamline.events.enums.Condition;
 import net.plasmere.streamline.objects.lists.SingleSet;

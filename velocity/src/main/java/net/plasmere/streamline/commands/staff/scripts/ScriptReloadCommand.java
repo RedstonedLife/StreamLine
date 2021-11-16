@@ -4,7 +4,6 @@ import com.velocitypowered.api.command.CommandSource;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;

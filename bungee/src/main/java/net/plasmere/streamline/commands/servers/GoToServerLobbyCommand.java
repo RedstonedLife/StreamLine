@@ -1,13 +1,5 @@
 package net.plasmere.streamline.commands.servers;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.CommandsConfUtils;
-import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.utils.MessagingUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -15,14 +7,17 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.config.CommandsConfUtils;
+import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
-import java.util.Collection;
-import net.md_5.bungee.api.plugin.TabExecutor;
+import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeSet;
 
 public class GoToServerLobbyCommand extends SLCommand {
     public GoToServerLobbyCommand(String base, String perm, String[] aliases) {

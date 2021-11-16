@@ -1,10 +1,13 @@
 package net.plasmere.streamline.objects.savable.users;
 
-import net.md_5.bungee.api.*;
+import net.md_5.bungee.api.ProxyServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class SavableConsole extends SavableUser {
     public ProxyServer server;

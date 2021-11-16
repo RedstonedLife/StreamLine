@@ -1,17 +1,16 @@
 package net.plasmere.streamline.commands.staff;
 
-import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.utils.MessagingUtils;
-import net.plasmere.streamline.utils.PlayerUtils;
-import net.plasmere.streamline.utils.TextUtils;
 import net.luckperms.api.model.group.Group;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
+import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
-import java.util.Collection;
+import net.plasmere.streamline.utils.MessagingUtils;
+import net.plasmere.streamline.utils.PlayerUtils;
+import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.*;
 

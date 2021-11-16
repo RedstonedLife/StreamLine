@@ -1,18 +1,11 @@
 package net.plasmere.streamline.discordbot.commands;
 
-import net.plasmere.streamline.StreamLine;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
-import net.plasmere.streamline.utils.TextUtils;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 public class StaffChatCommand {
     private static final EmbedBuilder eb = new EmbedBuilder();

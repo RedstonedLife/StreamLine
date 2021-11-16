@@ -1,5 +1,8 @@
 package net.plasmere.streamline.commands.staff;
 
+import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
+import net.dv8tion.jda.api.JDA;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -8,10 +11,6 @@ import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.JDAPingerUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.proxy.Player;
-
-import net.dv8tion.jda.api.JDA;
 
 import java.util.ArrayList;
 import java.util.Collection;

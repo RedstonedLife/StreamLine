@@ -1,9 +1,9 @@
 package net.plasmere.streamline.utils;
 
-import net.plasmere.streamline.StreamLine;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.plasmere.streamline.StreamLine;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

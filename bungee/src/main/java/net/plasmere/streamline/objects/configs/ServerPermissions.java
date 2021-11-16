@@ -7,7 +7,10 @@ import net.plasmere.streamline.config.ConfigUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 public class ServerPermissions {
     private HashMap<String, String> info = new HashMap<>();

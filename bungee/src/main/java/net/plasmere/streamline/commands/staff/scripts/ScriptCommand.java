@@ -1,11 +1,9 @@
 package net.plasmere.streamline.commands.staff.scripts;
 
 import net.md_5.bungee.api.CommandSender;
-import net.plasmere.streamline.objects.command.SLCommand;
-import java.util.Collection;
-import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.scripts.Script;
 import net.plasmere.streamline.scripts.ScriptsHandler;
@@ -16,6 +14,7 @@ import org.apache.commons.collections4.list.TreeList;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ScriptCommand extends SLCommand {
     public ScriptCommand(String base, String perm, String[] aliases){

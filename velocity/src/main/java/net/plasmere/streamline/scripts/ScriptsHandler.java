@@ -6,7 +6,6 @@ import org.apache.commons.collections4.list.TreeList;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class ScriptsHandler {

@@ -2,7 +2,6 @@ package net.plasmere.streamline.objects.filters;
 
 import com.velocitypowered.api.command.CommandSource;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.objects.configs.ChatFilters;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.scripts.Script;
 import net.plasmere.streamline.scripts.ScriptsHandler;

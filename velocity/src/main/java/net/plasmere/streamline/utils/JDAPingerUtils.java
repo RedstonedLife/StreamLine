@@ -1,15 +1,14 @@
 package net.plasmere.streamline.utils;
 
-import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-import net.plasmere.streamline.StreamLine;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.plasmere.streamline.StreamLine;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
-import java.util.*;
+import java.util.Collection;
 
 public class JDAPingerUtils {
     private static final EmbedBuilder eb = new EmbedBuilder();

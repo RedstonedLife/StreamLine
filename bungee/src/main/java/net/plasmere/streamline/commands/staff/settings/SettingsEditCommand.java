@@ -1,19 +1,18 @@
 package net.plasmere.streamline.commands.staff.settings;
 
 import net.md_5.bungee.api.CommandSender;
-import net.plasmere.streamline.objects.command.SLCommand;
-import java.util.Collection;
-import net.md_5.bungee.api.plugin.TabExecutor;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.chats.ChatChannel;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class SettingsEditCommand extends SLCommand {

@@ -4,7 +4,10 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
-import net.plasmere.streamline.utils.*;
+import net.plasmere.streamline.utils.PartyUtils;
+import net.plasmere.streamline.utils.PlayerUtils;
+import net.plasmere.streamline.utils.TextUtils;
+import net.plasmere.streamline.utils.UUIDUtils;
 
 import java.io.File;
 import java.io.FileWriter;

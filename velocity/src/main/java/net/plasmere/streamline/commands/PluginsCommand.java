@@ -1,15 +1,13 @@
 package net.plasmere.streamline.commands;
 
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.plugin.PluginContainer;
 import net.plasmere.streamline.StreamLine;
-import com.velocitypowered.api.command.CommandSource;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collection;
 import java.util.Collection;
 
 public class PluginsCommand extends SLCommand {

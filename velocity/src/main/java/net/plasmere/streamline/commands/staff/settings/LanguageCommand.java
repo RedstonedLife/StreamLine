@@ -1,16 +1,15 @@
 package net.plasmere.streamline.commands.staff.settings;
 
 import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigHandler;
-import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.TreeSet;
 
 public class LanguageCommand extends SLCommand {
     public LanguageCommand(String base, String perm, String[] aliases){

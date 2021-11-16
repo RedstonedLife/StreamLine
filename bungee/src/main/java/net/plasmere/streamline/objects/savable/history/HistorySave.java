@@ -8,10 +8,9 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import org.apache.commons.collections4.list.TreeList;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.File;
+import java.io.IOException;
 import java.time.Instant;
-import java.util.Date;
 import java.util.TreeMap;
 
 public class HistorySave {

@@ -1,10 +1,10 @@
 package net.plasmere.streamline.commands.staff;
 
+import net.md_5.bungee.api.CommandSender;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.utils.*;
-import net.md_5.bungee.api.CommandSender;
 import net.plasmere.streamline.objects.command.SLCommand;
+import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;

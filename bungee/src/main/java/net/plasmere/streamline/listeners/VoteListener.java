@@ -11,9 +11,6 @@ import net.plasmere.streamline.scripts.Script;
 import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
-import net.plasmere.streamline.utils.UUIDUtils;
-
-import java.util.UUID;
 
 public class VoteListener implements Listener {
     public VoteListener() {

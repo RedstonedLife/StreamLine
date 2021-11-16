@@ -13,7 +13,9 @@ import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.plasmere.streamline.utils.UUIDUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class IgnoreCommand extends SLCommand {
     public IgnoreCommand(String base, String perm, String[] aliases){

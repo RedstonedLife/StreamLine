@@ -3,7 +3,6 @@ package net.plasmere.streamline.commands.staff.events;
 import com.velocitypowered.api.command.CommandSource;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
-import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.objects.command.SLCommand;

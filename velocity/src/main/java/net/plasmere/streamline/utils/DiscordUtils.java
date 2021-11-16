@@ -4,15 +4,14 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.commands.VoiceCommand;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
-import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.enums.CategoryType;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
-import org.apache.commons.collections4.list.TreeList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class DiscordUtils {
     public static VoiceChannel createVoice(String name, CategoryType type, SavablePlayer... players) {

@@ -1,15 +1,10 @@
 package net.plasmere.streamline.commands;
 
-import net.md_5.bungee.api.plugin.TabExecutor;
-import net.plasmere.streamline.StreamLine;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.plasmere.streamline.objects.command.SLCommand;
-import java.util.Collection;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 

@@ -1,19 +1,17 @@
 package net.plasmere.streamline.utils;
 
-import net.dv8tion.jda.api.entities.Category;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.SavableParty;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
-import net.plasmere.streamline.objects.enums.CategoryType;
 import net.plasmere.streamline.objects.enums.MessageServerType;
+import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
-import net.plasmere.streamline.objects.messaging.DiscordMessage;
 
 import java.io.File;
 import java.io.IOException;

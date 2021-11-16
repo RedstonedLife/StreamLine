@@ -14,7 +14,6 @@ import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collection;
 import java.util.List;
 
 public class NetworkPointsCommand extends SLCommand {

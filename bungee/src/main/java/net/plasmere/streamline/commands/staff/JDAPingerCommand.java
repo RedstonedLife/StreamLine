@@ -1,21 +1,19 @@
 package net.plasmere.streamline.commands.staff;
 
+import net.dv8tion.jda.api.JDA;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.JDAPingerUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.plasmere.streamline.objects.command.SLCommand;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
-import net.dv8tion.jda.api.JDA;
-
 import java.util.Objects;
 
 public class JDAPingerCommand extends SLCommand {

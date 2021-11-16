@@ -1,6 +1,5 @@
 package net.plasmere.streamline.objects.timers;
 
-import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 
 public class PlayerClearTimer implements Runnable {

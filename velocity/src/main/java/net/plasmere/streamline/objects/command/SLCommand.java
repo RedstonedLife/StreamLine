@@ -1,12 +1,9 @@
 package net.plasmere.streamline.objects.command;
 
-import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.SimpleCommand;
-import net.plasmere.streamline.StreamLine;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

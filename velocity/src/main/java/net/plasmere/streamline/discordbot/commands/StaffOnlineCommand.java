@@ -1,13 +1,11 @@
 package net.plasmere.streamline.discordbot.commands;
 
+import com.velocitypowered.api.proxy.Player;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import com.velocitypowered.api.proxy.Player;
-import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.Collection;

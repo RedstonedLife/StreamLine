@@ -7,7 +7,6 @@ import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collection;
 
 public class PCQuickCommand extends SLCommand {
     public PCQuickCommand(String base, String perm, String[] aliases){

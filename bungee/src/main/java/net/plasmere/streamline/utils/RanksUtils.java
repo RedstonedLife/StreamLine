@@ -1,18 +1,14 @@
 package net.plasmere.streamline.utils;
 
 import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.InheritanceNode;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
-import net.plasmere.streamline.utils.holders.LPHolder;
 
-import java.util.TreeMap;
 import java.util.UUID;
 
 public class RanksUtils {

@@ -6,7 +6,9 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.Scanner;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class GeyserFile {
     private TreeMap<String, String> info = new TreeMap<>();

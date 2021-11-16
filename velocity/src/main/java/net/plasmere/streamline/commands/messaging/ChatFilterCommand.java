@@ -1,26 +1,17 @@
 package net.plasmere.streamline.commands.messaging;
 
 import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.proxy.Player;
-import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.objects.chats.Chat;
-import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.filters.ChatFilter;
 import net.plasmere.streamline.objects.filters.FilterHandler;
-import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
-import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import net.plasmere.streamline.utils.UUIDUtils;
 import org.apache.commons.collections4.list.TreeList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 

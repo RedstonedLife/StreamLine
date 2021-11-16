@@ -1,17 +1,15 @@
 package net.plasmere.streamline.discordbot;
 
-import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.ConfigUtils;
-import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
+import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.utils.MessagingUtils;
-
-import net.dv8tion.jda.api.JDA;
 
 import javax.annotation.Nonnull;
 

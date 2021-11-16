@@ -6,7 +6,6 @@ import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collection;
 
 public class InfoCommand extends SLCommand {
 
