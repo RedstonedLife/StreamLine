@@ -203,6 +203,12 @@ public class PluginUtils {
         if (CommandsConfUtils.comBVoice()) {
             registerCommand(new VoiceCommand(CommandsConfUtils.comBVoiceBase(), CommandsConfUtils.comBVoicePerm(), stringListToArray(CommandsConfUtils.comBVoiceAliases())));
         }
+        if (CommandsConfUtils.comBBroadcast()) {
+            registerCommand(new BroadcastCommand(CommandsConfUtils.comBBroadcastBase(), CommandsConfUtils.comBBroadcastPerm(), stringListToArray(CommandsConfUtils.comBBroadcastAliases())));
+        }
+        if (CommandsConfUtils.comBBypass()) {
+            registerCommand(new BypassPCCommand(CommandsConfUtils.comBBypassBase(), CommandsConfUtils.comBBypassPerm(), stringListToArray(CommandsConfUtils.comBBypassAliases())));
+        }
 
         // Servers.
         if (CommandsConfUtils.comBLobby()) {

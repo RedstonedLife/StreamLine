@@ -1214,7 +1214,7 @@ public class MessagingUtils {
 
     public static void sendBBroadcast(CommandSource sender, String msg){
         for (Player player : PlayerUtils.getOnlinePPlayers()) {
-            player.sendMessage(TextUtils.codedText(msg));
+            sendBUserMessage(player, TextUtils.replaceAllSenderBungee(msg, sender));
         }
     }
 

@@ -65,9 +65,10 @@ import java.util.stream.Collectors;
 @Plugin(id = "streamline", name = "StreamLine", version = "${project.version}",
 		url = "https://github.com/xnitrate/streamline/tree/velocity", description = "An Essentials plugin for Velocity!",
 		authors = { "Nitrate" }, dependencies = {
-		@Dependency(id = "LuckPerms", optional = true),
-		@Dependency(id = "Geyser-Velocity", optional = true),
-		@Dependency(id = "ViaVersion", optional = true)
+		@Dependency(id = "luckperms", optional = true),
+		@Dependency(id = "geyser", optional = true),
+		@Dependency(id = "viaversion", optional = true),
+		@Dependency(id = "nuvotifier", optional = true)
 	}
 )
 public class StreamLine {

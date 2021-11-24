@@ -36,9 +36,13 @@ public class ChatListener {
 
         Player sender = e.getPlayer();
 
+        SavablePlayer stat = PlayerUtils.addPlayerStat(sender);
+
         String msg = e.getMessage();
 
-        if (ConfigUtils.moduleBChatFiltersEnabled()) {
+        boolean bypass = stat.bypassFor > 0;
+
+        if (ConfigUtils.moduleBChatFiltersEnabled() && ! bypass) {
             FilterHandler.reloadAllFilters();
 
             boolean needsBlocking = false;
@@ -57,8 +61,6 @@ public class ChatListener {
                 return;
             }
         }
-
-        SavablePlayer stat = PlayerUtils.addPlayerStat(sender);
 
         stat.updateLastMessage(msg);
 
@@ -146,7 +148,7 @@ public class ChatListener {
         }
 
 
-        if (! isStaffMessage && ConfigUtils.customChats()) {
+        if (! isStaffMessage && ConfigUtils.customChats() && ! bypass) {
             if (StreamLine.serverConfig.getProxyChatEnabled()) {
                 if (ConfigUtils.moduleDEnabled()) {
                     if (ConfigUtils.moduleDPC()) if (ConfigUtils.moduleDPCConsole()) {
@@ -342,6 +344,10 @@ public class ChatListener {
 
         if (ConfigUtils.chatHistoryEnabled()) {
             PlayerUtils.addLineToChatHistory(stat.uuid, sender.getCurrentServer().get().getServerInfo().getName(), msg);
+        }
+
+        if (bypass) {
+            stat.tickBypassFor();
         }
 
         if (ConfigUtils.events()) {

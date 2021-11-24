@@ -1230,6 +1230,40 @@ public class CommandsConfUtils {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.messaging.voice.permission");
     }
+    // Broadcast.
+    public static boolean comBBroadcast() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.messaging.broadcast.enabled");
+    }
+    public static String comBBroadcastBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.broadcast.base");
+    }
+    public static List<String> comBBroadcastAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.messaging.broadcast.aliases");
+    }
+    public static String comBBroadcastPerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.broadcast.permission");
+    }
+    // Bypass.
+    public static boolean comBBypass() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.messaging.bypass.enabled");
+    }
+    public static String comBBypassBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.bypass.base");
+    }
+    public static List<String> comBBypassAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.messaging.bypass.aliases");
+    }
+    public static String comBBypassPerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.bypass.permission");
+    }
     // // Debug.
     // Delete Stat.
     public static boolean comBDeleteStat() {

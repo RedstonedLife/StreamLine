@@ -16,6 +16,7 @@ import net.plasmere.streamline.utils.*;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.TreeMap;
 
 public class OneSecondTimer implements Runnable {
     public int countdown;
@@ -49,6 +50,17 @@ public class OneSecondTimer implements Runnable {
 //                PlayerUtils.getLuckPermsSuffix(player.getUsername(), false);
 //            }
 //        }
+
+        try {
+            UUIDUtils.cachedNames = new TreeMap<>();
+            UUIDUtils.cachedUUIDs = new TreeMap<>();
+            UUIDUtils.cachedPartyFiles = new TreeMap<>();
+            UUIDUtils.cachedGuildFiles = new TreeMap<>();
+            UUIDUtils.cachedPlayerFiles = new TreeMap<>();
+            UUIDUtils.cachedOtherFiles = new TreeMap<>();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             if (PlayerUtils.getToSave().size() > 0) {

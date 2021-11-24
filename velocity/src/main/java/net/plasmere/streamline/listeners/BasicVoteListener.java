@@ -18,7 +18,12 @@ public class BasicVoteListener {
 
     @Subscribe(order = PostOrder.FIRST)
     public void onVotifierEvent(VotifierEvent event) {
-        if (! ConfigUtils.moduleBVotifierEnabled()) return;
+        if (ConfigUtils.debug()) MessagingUtils.logWarning("Got vote!");
+
+        if (! ConfigUtils.moduleBVotifierEnabled()) {
+            if (ConfigUtils.debug()) MessagingUtils.logWarning("Could not handle vote as votifier was disabled in my config!");
+            return;
+        }
 
         Vote vote = event.getVote();
 

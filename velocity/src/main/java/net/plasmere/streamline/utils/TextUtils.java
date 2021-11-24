@@ -957,4 +957,9 @@ public class TextUtils {
 
         return List.of(strings);
     }
+
+    public static boolean isNullOrLessThanEqualTo(Object[] thingArray, int lessThanOrEqualTo) {
+        if (thingArray == null) return true;
+        return thingArray.length <= lessThanOrEqualTo;
+    }
 }

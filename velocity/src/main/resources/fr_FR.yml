@@ -2054,3 +2054,13 @@ voice:
   no-voice: "&cCould not locate that voice channel!"
   already-voice: "&cYou already made that voice channel!"
   too-many: "&cYou cannot create any more voice channels!"
+
+broadcast:
+  message:
+    with-prefix: "%prefix% &e%message%"
+    without-prefix: "&e%message%"
+  prefix: "&c&lBROADCAST &7&l>>"
+
+bypass-proxychat:
+  message: "&eYou will now bypass proxychat for &a%messages% &emessages!"
+  done: "&eNo longer bypassing proxychat."

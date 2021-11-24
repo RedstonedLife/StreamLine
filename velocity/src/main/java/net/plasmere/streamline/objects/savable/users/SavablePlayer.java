@@ -39,6 +39,7 @@ public class SavablePlayer extends SavableUser {
     public ChatChannel chatChannel;
     public String chatIdentifier;
     public long discordID;
+    public int bypassFor;
 
     public int defaultLevel = 1;
 
@@ -133,6 +134,7 @@ public class SavablePlayer extends SavableUser {
             defaults.add("chat-identifier=" + StreamLine.chatConfig.getDefaultIdentifier());
         }
         defaults.add("discord-id=");
+        defaults.add("bypass-for=0");
         //defaults.add("");
         return defaults;
     }
@@ -175,6 +177,12 @@ public class SavablePlayer extends SavableUser {
         } catch (Exception e) {
             this.discordID = 0L;
         }
+
+        try {
+            this.bypassFor = Integer.parseInt(getFromKey("bypass-for"));
+        } catch (Exception e) {
+            this.bypassFor = 0;
+        }
     }
 
     public static ChatChannel parseChatLevel(String string) {
@@ -214,6 +222,24 @@ public class SavablePlayer extends SavableUser {
 
         setChatChannel(channel);
         setChatIdentifier(identifier);
+    }
+
+    public int setBypassFor(int set) {
+        this.bypassFor = set;
+        updateKey("bypass-for", this.bypassFor);
+
+        if (this.online) {
+            MessagingUtils.sendBUserMessage(this.player, MessageConfUtils.bypassPCMessage().replace("%messages%", String.valueOf(this.bypassFor)));
+        }
+
+        return this.bypassFor;
+    }
+
+    public int tickBypassFor() {
+        this.bypassFor --;
+        updateKey("bypass-for", this.bypassFor);
+
+        return this.bypassFor;
     }
 
     public String setChatIdentifier(String newIdentifier) {

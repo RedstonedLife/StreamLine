@@ -17,27 +17,37 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class UUIDUtils {
-    public static Cache<String, String> cachedUUIDs = Caffeine.newBuilder().build();
-    public static Cache<String, String> cachedNames = Caffeine.newBuilder().build();
-    public static Cache<String, File> cachedPlayerFiles = Caffeine.newBuilder().build();
-    public static Cache<String, File> cachedGuildFiles = Caffeine.newBuilder().build();
-    public static Cache<String, File> cachedPartyFiles = Caffeine.newBuilder().build();
-    public static Cache<String, File> cachedOtherFiles = Caffeine.newBuilder().build();
+    public static TreeMap<String, String> cachedUUIDs = new TreeMap<>();
+    public static TreeMap<String, String> cachedNames = new TreeMap<>();
+    public static TreeMap<String, File> cachedPlayerFiles = new TreeMap<>();
+    public static TreeMap<String, File> cachedGuildFiles = new TreeMap<>();
+    public static TreeMap<String, File> cachedPartyFiles = new TreeMap<>();
+    public static TreeMap<String, File> cachedOtherFiles = new TreeMap<>();
 
     public static String getCachedUUID(String username) {
         if (username.equals("%")) return username;
         if (username.contains("-")) return username;
 
         if (ConfigUtils.offlineMode()) {
-            return StreamLine.offlineStats.getUUID(username);
+            String u = StreamLine.offlineStats.getUUID(username);
+            if (u != null && u.contains("-")) {
+                cachedUUIDs.put(username, u);
+                if (ConfigUtils.debug()) MessagingUtils.logInfo("$getCachedUUID = " + u);
+                return u;
+            }
         }
 
         try {
             String finalUsername = username.replace("\"", "").toLowerCase(Locale.ROOT);
-            return cachedUUIDs.get(username, (u) -> fetch(finalUsername));
+            String uuid = cachedUUIDs.get(finalUsername);
+            if (uuid != null && uuid.contains("-")) return uuid;
+            cachedUUIDs.put(finalUsername, fetch(finalUsername));
+            return cachedUUIDs.get(finalUsername);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,11 +60,18 @@ public class UUIDUtils {
         if (! uuid.contains("-")) return uuid;
 
         if (ConfigUtils.offlineMode()) {
-            return StreamLine.offlineStats.getPlayerName(uuid);
+            String n = StreamLine.offlineStats.getPlayerName(uuid);
+            if (n != null && n.length() > 0) {
+                cachedNames.put(uuid, n);
+                return n;
+            }
         }
 
         try {
-            return Objects.requireNonNull(cachedNames.get(uuid, (u) -> getName(uuid))).replace("\"", "");
+            String name = cachedNames.get(uuid);
+            if (name != null && name.length() > 0) return name;
+            cachedNames.put(uuid, getName(uuid));
+            return cachedUUIDs.get(uuid);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -200,7 +217,7 @@ public class UUIDUtils {
 
     public static File getCachedPlayerFile(String thing) {
         try {
-            return cachedPlayerFiles.get(swapToUUID(thing), (u) -> getPlayerFile(swapToUUID(thing)));
+            return cachedPlayerFiles.get(swapToUUID(thing));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -214,7 +231,7 @@ public class UUIDUtils {
 
     public static File getCachedGuildFile(String thing) {
         try {
-            return cachedGuildFiles.get(swapToUUID(thing), (u) -> getGuildFile(swapToUUID(thing)));
+            return cachedGuildFiles.get(swapToUUID(thing));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -224,7 +241,7 @@ public class UUIDUtils {
 
     public static File getCachedPartyFile(String thing) {
         try {
-            return cachedPartyFiles.get(swapToUUID(thing), (u) -> getPartyFile(swapToUUID(thing)));
+            return cachedPartyFiles.get(swapToUUID(thing));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -252,13 +269,13 @@ public class UUIDUtils {
 
         try {
             if (path.equals(StreamLine.getInstance().getPlDir())) {
-                return cachedPlayerFiles.get(swapToUUID(thing), (u) -> getPlayerFile(swapToUUID(thing)));
+                return cachedPlayerFiles.get(swapToUUID(thing));
             } else if (path.equals(StreamLine.getInstance().getGDir())) {
-                return cachedGuildFiles.get(swapToUUID(thing), (u) -> getGuildFile(swapToUUID(thing)));
+                return cachedGuildFiles.get(swapToUUID(thing));
             } else if (path.equals(StreamLine.getInstance().getPDir())) {
-                return cachedPartyFiles.get(swapToUUID(thing), (u) -> getPartyFile(swapToUUID(thing)));
+                return cachedPartyFiles.get(swapToUUID(thing));
             } else {
-                return cachedOtherFiles.get(thing, (u) -> new File(path, thing));
+                return cachedOtherFiles.get(thing);
             }
         } catch (Exception e){
             e.printStackTrace();
