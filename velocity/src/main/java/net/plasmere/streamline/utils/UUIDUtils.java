@@ -1,7 +1,5 @@
 package net.plasmere.streamline.utils;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,10 +14,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class UUIDUtils {
     public static TreeMap<String, String> cachedUUIDs = new TreeMap<>();
@@ -47,7 +43,7 @@ public class UUIDUtils {
             String uuid = cachedUUIDs.get(finalUsername);
             if (uuid != null && uuid.contains("-")) return uuid;
             cachedUUIDs.put(finalUsername, fetch(finalUsername));
-            return cachedUUIDs.get(finalUsername);
+            return makeDashedUUID(cachedUUIDs.get(finalUsername));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,7 +111,7 @@ public class UUIDUtils {
 
             String id = jo.get("id").getAsString();
 
-            String uuid = formatToUUID(id);
+            String uuid = makeDashedUUID(id);
 
             return uuid;
             //return UUID.fromString(id);
@@ -168,7 +164,9 @@ public class UUIDUtils {
         return "error";
     }
 
-    public static String formatToUUID(String unformatted){
+    public static String makeDashedUUID(String unformatted){
+        if (unformatted.contains("-")) return unformatted;
+
         StringBuilder formatted = new StringBuilder();
         int i = 1;
         for (Character character : unformatted.toCharArray()){
@@ -185,10 +183,14 @@ public class UUIDUtils {
 
     public static String swapUUID(String uuid){
         if (uuid.contains("-")){
-            return uuid.replace("-", "");
+            return stripUUID(uuid);
         } else {
-            return formatToUUID(uuid);
+            return makeDashedUUID(uuid);
         }
+    }
+
+    public static String stripUUID(String uuid) {
+        return uuid.replace("-", "");
     }
 
     public static String swapToUUID(String thingThatMightBeAName){

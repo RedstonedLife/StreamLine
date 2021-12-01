@@ -1,6 +1,5 @@
 package net.plasmere.streamline.listeners;
 
-import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.velocity.event.VotifierEvent;
@@ -16,7 +15,7 @@ public class BasicVoteListener {
         MessagingUtils.logInfo("Vote listener registered!");
     }
 
-    @Subscribe(order = PostOrder.FIRST)
+    @Subscribe
     public void onVotifierEvent(VotifierEvent event) {
         if (ConfigUtils.debug()) MessagingUtils.logWarning("Got vote!");
 

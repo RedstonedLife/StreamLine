@@ -67,7 +67,7 @@ public class OneSecondTimer implements Runnable {
                 }
             }
 
-            if (ConfigUtils.moduleBRanksEnabled()) {
+            if (ConfigUtils.moduleBRanksEnabled() && StreamLine.ranksConfig != null) {
                 int success = 0;
                 int failed = 0;
                 int other = 0;

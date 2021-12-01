@@ -30,6 +30,13 @@ dependencies {
     implementation "org.geysermc:connector:${geysermcVersion}"
     implementation "com.viaversion:viaversion-api:${viaApiVersion}"
     implementation "org.projectlombok:lombok:${lombokVersion}"
+
+    implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
+
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation 'mysql:mysql-connector-java:5.1.6'
+    shadow 'mysql:mysql-connector-java:5.1.6'
+
     implementation files('../libs/nuvotifier.jar')
 }
 

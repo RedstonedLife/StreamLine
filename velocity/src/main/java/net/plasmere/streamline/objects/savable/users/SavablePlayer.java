@@ -125,7 +125,7 @@ public class SavablePlayer extends SavableUser {
         defaults.add("latest-ip=" + latestIP);
         defaults.add("lvl=" + defaultLevel);
         defaults.add("total-xp=0");
-        defaults.add("currentXP=0");
+        defaults.add("current-xp=0");
         defaults.add("playtime=0");
         defaults.add("muted=false");
         defaults.add("muted-till=");

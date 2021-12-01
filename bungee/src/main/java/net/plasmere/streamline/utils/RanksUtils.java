@@ -63,6 +63,8 @@ public class RanksUtils {
     }
 
     public static int checkAndChange(SavablePlayer player){
+        if (player == null) return FAILED;
+
         if (! StreamLine.lpHolder.enabled) return FAILED;
 
         LuckPerms api = StreamLine.lpHolder.api;

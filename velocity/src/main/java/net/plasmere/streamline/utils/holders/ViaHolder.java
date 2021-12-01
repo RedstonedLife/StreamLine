@@ -9,25 +9,27 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import java.util.UUID;
 
 public class ViaHolder {
-    public ViaAPI via;
     public boolean enabled;
-
     public ViaHolder(){
         enabled = isPresent();
     }
 
-    public boolean isPresent(){
-        if (StreamLine.getProxy().getPluginManager().getPlugin("viaversion").isEmpty() && StreamLine.getProxy().getPluginManager().getPlugin("ViaVersion").isEmpty()) {
-            return false;
+    public boolean isPresent() {
+//        return StreamLine.getProxy().getPluginManager().getPlugin("viaversion").isPresent() || StreamLine.getProxy().getPluginManager().getPlugin("ViaVersion").isPresent();
+        return false;
+    }
+
+    public ViaAPI via() {
+        try {
+            if (isPresent()) {
+                return Via.getAPI();
+            }
+        } catch (Exception e) {
+            MessagingUtils.logInfo("Could not process viaversion get due to an error:");
+            e.printStackTrace();
         }
 
-        try {
-            via = Via.getAPI();
-            return true;
-        } catch (Exception e) {
-            MessagingUtils.logSevere("ViaVersion not loaded... Disabling ViaVersion support...");
-        }
-        return false;
+        return null;
     }
 
     public ProtocolVersion getVersion(int version){
@@ -35,6 +37,6 @@ public class ViaHolder {
     }
 
     public ProtocolVersion getProtocol(UUID uuid){
-        return ProtocolVersion.getProtocol(via.getPlayerVersion(uuid));
+        return ProtocolVersion.getProtocol(via().getPlayerVersion(uuid));
     }
 }

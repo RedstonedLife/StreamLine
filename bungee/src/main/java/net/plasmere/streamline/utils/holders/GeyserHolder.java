@@ -26,7 +26,7 @@ public class GeyserHolder {
     }
 
     public boolean isPresent(){
-        if (ProxyServer.getInstance().getPluginManager().getPlugin("Geyser-BungeeCord") == null) {
+        if (ProxyServer.getInstance().getPluginManager().getPlugin("Geyser") == null) {
             return false;
         }
 

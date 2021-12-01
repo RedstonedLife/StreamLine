@@ -234,7 +234,7 @@ public class MessagingUtils {
 
     public static void sendServerMessageFromDiscord(SavableUser user, ServerInfo server, String format, String message) {
         for (Player p : PlayerUtils.getServeredPPlayers(server.getName())) {
-            p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, user)
+            p.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(format, user), user)
                     .replace("%message%", message)
                     .replace("%server%", server.getName())
             ));

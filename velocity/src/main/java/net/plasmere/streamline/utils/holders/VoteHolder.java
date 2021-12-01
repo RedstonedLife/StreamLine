@@ -13,12 +13,12 @@ public class VoteHolder {
     }
 
     public boolean isPresent(){
-        if (! StreamLine.getProxy().getPluginManager().getPlugin("nuvotifier").isPresent()) {
+        if (StreamLine.getProxy().getPluginManager().getPlugin("nuvotifier").isEmpty()) {
             return false;
         }
 
         try {
-            PluginUtils.registerListener(StreamLine.getInstance(), new BasicVoteListener());
+//            PluginUtils.registerListener(StreamLine.getInstance(), new BasicVoteListener());
             return true;
         } catch (Exception e) {
             MessagingUtils.logSevere("Votifier not loaded... Disabling Votifier support...");

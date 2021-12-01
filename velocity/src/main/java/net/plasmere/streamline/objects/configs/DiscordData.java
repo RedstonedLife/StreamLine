@@ -386,6 +386,13 @@ public class DiscordData {
                 } else {
                     MessagingUtils.sendPermissionedMessage(channelData.identifier, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD)
                             .replace("%sender_display%", user.getName())
+                            .replace("%sender_formatted%", user.getName())
+                            .replace("%sender_normal%", user.getName())
+                            .replace("%player_absolute%", user.getName())
+                            .replace("%player_display%", user.getName())
+                            .replace("%player_formatted%", user.getName())
+                            .replace("%player_normal%", user.getName())
+                            .replace("%player_absolute%", user.getName())
                             .replace("%message%", message));
                 }
             } else if (channelData.chatChannel.equals(ChatsHandler.getChannel("local"))) {
@@ -422,9 +429,9 @@ public class DiscordData {
                     MessagingUtils.sendGlobalMessageFromDiscord(player
                             , StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
                 } else {
-                    MessagingUtils.sendPermissionedMessage(channelData.identifier, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD)
-                            .replace("%sender_display%", PlayerUtils.getJustDisplayBungee(player))
-                            .replace("%message%", message));
+                    MessagingUtils.sendPermissionedMessage(channelData.identifier,
+                            TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD)
+                            .replace("%message%", message), user.getId()), user.getId()));
                 }
             } else if (channelData.chatChannel.equals(ChatsHandler.getChannel("local"))) {
                 ServerInfo server = StreamLine.getInstance().getProxy().getServer(channelData.identifier).get().getServerInfo();

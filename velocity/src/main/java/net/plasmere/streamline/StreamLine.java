@@ -53,6 +53,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -74,8 +75,8 @@ import java.util.stream.Collectors;
 public class StreamLine {
 	private static ProxyServer server;
 	private static Logger logger;
-	private static Path dataDirectory;
 	private static Metrics.Factory metricsFactory;
+	private static Path dataFolder;
 
 	private static StreamLine instance = null;
 
@@ -94,6 +95,7 @@ public class StreamLine {
 	public static Votes votes;
 	public static RanksConfig ranksConfig;
 	public static ChatFilters chatFilters;
+	public static DatabaseInfo databaseInfo;
 
 	public final static String customChannel = "streamline:channel";
 	public final static String[] identifer = customChannel.split(":", 2);
@@ -125,10 +127,10 @@ public class StreamLine {
 	private int motdPage;
 
 	@Inject
-	public StreamLine(ProxyServer serverThing, Logger loggerThing, @DataDirectory Path dataDirectoryThing, Metrics.Factory metricsFactoryThing){
+	public StreamLine(ProxyServer serverThing, Logger loggerThing, @DataDirectory Path dataFolderThing, Metrics.Factory metricsFactoryThing){
 		server = serverThing;
 		logger = loggerThing;
-		dataDirectory = dataDirectoryThing;
+		dataFolder = dataFolderThing;
 		instance = this;
 		metricsFactory = metricsFactoryThing;
 	}
@@ -453,6 +455,8 @@ public class StreamLine {
 			}
 		}
 
+		databaseInfo = new DatabaseInfo();
+
 		if (ConfigUtils.moduleDEnabled()) {
 			if (ConfigUtils.moduleDPC()) {
 				if (lpHolder.enabled) {
@@ -743,7 +747,8 @@ public class StreamLine {
 	}
 
 	public static File getDataFolder() {
-		return dataDirectory.toFile();
+//		return FileSystems.getDefault().getPath("streamline").toFile();
+		return dataFolder.toFile();
 	}
 
 	public InputStream getResourceAsStream(String filename) {
@@ -757,4 +762,9 @@ public class StreamLine {
 	public static String getVersion() {
 		return "${project.version}";
 	}
+
+	// Utils Getters.
+//	public static DiscordUtils getDiscordUtils() {
+//		return ;
+//	}
 }

@@ -25,10 +25,7 @@ import net.plasmere.streamline.commands.staff.spy.SCViewCommand;
 import net.plasmere.streamline.commands.staff.spy.SSPYCommand;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.listeners.ChatListener;
-import net.plasmere.streamline.listeners.JoinLeaveListener;
-import net.plasmere.streamline.listeners.PluginMessagingListener;
-import net.plasmere.streamline.listeners.ProxyPingListener;
+import net.plasmere.streamline.listeners.*;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.enums.NetworkState;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
@@ -287,6 +284,9 @@ public class PluginUtils {
         registerListener(plugin, new JoinLeaveListener());
         registerListener(plugin, new ProxyPingListener());
         registerListener(plugin, new PluginMessagingListener());
+        if (StreamLine.voteHolder.isPresent()) {
+            PluginUtils.registerListener(plugin, new BasicVoteListener());
+        }
 
         plugin.getLogger().info("Loaded " + listenerAmount + " listener(s) into memory...!");
     }

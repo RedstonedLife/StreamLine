@@ -23,19 +23,37 @@ import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
+import net.plasmere.streamline.objects.enums.SavableType;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
+import net.plasmere.streamline.utils.sql.Driver;
 
 import java.util.List;
 import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
 
 public class JoinLeaveListener {
     private final GeyserFile file = StreamLine.geyserHolder.file;
     private final GeyserHolder holder = StreamLine.geyserHolder;
+
+    public boolean updatePlayerOnDB(SavablePlayer player) {
+        if (! StreamLine.databaseInfo.getHost().equals("")) {
+            if (player.onlineCheck()) {
+                Driver.update(SavableType.PLAYER, UUIDUtils.stripUUID(player.uuid));
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public CompletableFuture<Boolean> completeUpdatePlayerOnDB(SavablePlayer player) {
+        return CompletableFuture.supplyAsync(() -> updatePlayerOnDB(player));
+    }
 
     @Subscribe(order = PostOrder.FIRST)
     public void preJoin(PreLoginEvent ev) {
@@ -75,6 +93,12 @@ public class JoinLeaveListener {
         }
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
+
+        try {
+//            completeUpdatePlayerOnDB(stat).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (ConfigUtils.updateDisplayNames()) {
             for (SavablePlayer p : PlayerUtils.getJustPlayers()) {
@@ -374,6 +398,12 @@ public class JoinLeaveListener {
         Player player = ev.getPlayer();
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
+
+        try {
+//            completeUpdatePlayerOnDB(stat).get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         String leavesOrder = ConfigUtils.moduleBPlayerLeaves();
 

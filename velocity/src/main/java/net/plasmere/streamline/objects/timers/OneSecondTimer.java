@@ -9,9 +9,11 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.enums.CategoryType;
+import net.plasmere.streamline.objects.enums.SavableType;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.*;
+import net.plasmere.streamline.utils.sql.Driver;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -40,7 +42,7 @@ public class OneSecondTimer implements Runnable {
         countdown--;
     }
 
-    public void done(){
+    public void done() {
 //        thirty --;
 //        if (thirty == 0) {
 //            thirty = 30;
@@ -77,7 +79,8 @@ public class OneSecondTimer implements Runnable {
 //                    if (player.latestName.equals("")) continue;
                     SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(player.getUniqueId().toString());
                     if (p == null) {
-                        if (ConfigUtils.debug()) MessagingUtils.logSevere("SavablePlayer for " + player.getUsername() + " is null!");
+                        if (ConfigUtils.debug())
+                            MessagingUtils.logSevere("SavablePlayer for " + player.getUsername() + " is null!");
                         continue;
                     }
                     PlayerUtils.updateDisplayName(p);
@@ -100,27 +103,29 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (ConfigUtils.moduleBRanksEnabled()) {
-                int success = 0;
-                int failed = 0;
-                int other = 0;
+                if (StreamLine.ranksConfig.checkedGroups().size() > 0) {
+                    int success = 0;
+                    int failed = 0;
+                    int other = 0;
 
-                for (Player player : PlayerUtils.getOnlinePPlayers()) {
-                    try {
-                        int result = RanksUtils.checkAndChange(PlayerUtils.getPlayerStat(player));
+                    for (Player player : PlayerUtils.getOnlinePPlayers()) {
+                        try {
+                            int result = RanksUtils.checkAndChange(PlayerUtils.getPlayerStat(player));
 
-                        if (result == 1) success ++;
-                        if (result == 0) other ++;
-                        if (result == -1) failed ++;
-                    } catch (Exception e) {
-                        failed ++;
-                        e.printStackTrace();
+                            if (result == 1) success++;
+                            if (result == 0) other++;
+                            if (result == -1) failed++;
+                        } catch (Exception e) {
+                            failed++;
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-                if (StreamLine.votes.getConsole()) MessagingUtils.logInfo(
-                        "Success: " + success + " Failed: " + failed + " Other: " + other + " Total: (" +
-                                (success + failed + other) + " | " + PlayerUtils.getOnlinePPlayers().size() + ")"
-                );
+                    if (StreamLine.votes.getConsole()) MessagingUtils.logInfo(
+                            "Success: " + success + " Failed: " + failed + " Other: " + other + " Total: (" +
+                                    (success + failed + other) + " | " + PlayerUtils.getOnlinePPlayers().size() + ")"
+                    );
+                }
             }
         } catch (ConcurrentModificationException e) {
             if (ConfigUtils.debug()) e.printStackTrace();
@@ -129,6 +134,16 @@ public class OneSecondTimer implements Runnable {
         tickGuilds();
         tickGuildSync();
         tickPartySync();
+
+//        if (! StreamLine.databaseInfo.getHost().equals("")) {
+//            for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
+//                if (player.onlineCheck()) {
+//                    for (String key : new TreeMap<>(player.getInfo()).keySet()) {
+//                        Driver.update(SavableType.PLAYER, UUIDUtils.stripUUID(player.uuid), key.replace('-', '_'), player.getInfo().get(key));
+//                    }
+//                }
+//            }
+//        }
     }
 
     public void tickGuilds() {
