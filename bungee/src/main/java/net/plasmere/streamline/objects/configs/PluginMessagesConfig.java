@@ -34,7 +34,7 @@ public class PluginMessagesConfig {
 
         conf = loadConfig();
 
-        createChannels();
+//        createChannels();
         createChats();
 
         MessagingUtils.logInfo("Loaded chats settings!");
@@ -81,13 +81,13 @@ public class PluginMessagesConfig {
         }
     }
 
-    public void createChannels() {
-        for (String key : conf.getSection("chats").getKeys()){
-            if (key.equals("base-permission")) continue;
-
-            ChatsHandler.createChatChannel(key);
-        }
-    }
+//    public void createChannels() {
+//        for (String key : conf.getSection("chats").getKeys()){
+//            if (key.equals("base-permission")) continue;
+//
+//            ChatsHandler.createChatChannel(key);
+//        }
+//    }
 
     public void createChats() {
         for (ChatChannel chatChannel : ChatsHandler.createdChannels) {

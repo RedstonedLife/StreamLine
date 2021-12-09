@@ -28,6 +28,7 @@ import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
+import net.plasmere.streamline.objects.timers.ProcessDBUpdateRunnable;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
 import net.plasmere.streamline.utils.sql.Driver;
@@ -40,28 +41,13 @@ public class JoinLeaveListener {
     private final GeyserFile file = StreamLine.geyserHolder.file;
     private final GeyserHolder holder = StreamLine.geyserHolder;
 
-    public boolean updatePlayerOnDB(SavablePlayer player) {
-        if (! StreamLine.databaseInfo.getHost().equals("")) {
-            if (player.onlineCheck()) {
-                Driver.update(SavableType.PLAYER, UUIDUtils.stripUUID(player.uuid));
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public CompletableFuture<Boolean> completeUpdatePlayerOnDB(SavablePlayer player) {
-        return CompletableFuture.supplyAsync(() -> updatePlayerOnDB(player));
-    }
-
     @Subscribe(order = PostOrder.FIRST)
     public void preJoin(PreLoginEvent ev) {
         if (! ev.getResult().isAllowed()) return;
 
         String ip = ev.getConnection().getRemoteAddress().toString().replace("/", "").split(":")[0];
 
-        String uuid = UUIDUtils.fetch(ev.getUsername());
+        String uuid = UUIDUtils.getCachedUUID(ev.getUsername());
 
         if (ConfigUtils.punBans()) {
             String reason = PlayerUtils.checkIfBanned(uuid);
@@ -95,7 +81,12 @@ public class JoinLeaveListener {
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
         try {
-//            completeUpdatePlayerOnDB(stat).get();
+            Thread initThread = new Thread(new ProcessDBUpdateRunnable(stat), "Streamline - Database Sync - Join");
+            initThread.setUncaughtExceptionHandler((t, e) -> {
+//                e.printStackTrace();
+                MessagingUtils.logSevere("Streamline failed to start thread properly properly: " + e.getMessage() + ".");
+            });
+            initThread.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -400,7 +391,12 @@ public class JoinLeaveListener {
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
         try {
-//            completeUpdatePlayerOnDB(stat).get();
+            Thread initThread = new Thread(new ProcessDBUpdateRunnable(stat), "Streamline - Database Sync - Leave");
+            initThread.setUncaughtExceptionHandler((t, e) -> {
+//                e.printStackTrace();
+                MessagingUtils.logSevere("Streamline failed to start thread properly properly: " + e.getMessage() + ".");
+            });
+            initThread.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -568,7 +564,7 @@ public class JoinLeaveListener {
         if (! ev.getResult().isAllowed()) return;
 
         try {
-            if (StreamLine.getInstance().getProxy().getPlayer(ev.getPlayer().getUniqueId()) == null) return;
+            if (StreamLine.getProxy().getPlayer(ev.getPlayer().getUniqueId()).isEmpty()) return;
         } catch (Exception e) {
             return;
         }
@@ -609,7 +605,7 @@ public class JoinLeaveListener {
                     if (conn == null) return;
                 }
 
-                ev.setResult(KickedFromServerEvent.RedirectPlayer.create(StreamLine.getInstance().getProxy().getServer(lobbies[conn.value]).get()));
+                ev.setResult(KickedFromServerEvent.RedirectPlayer.create(StreamLine.getProxy().getServer(lobbies[conn.value]).get()));
 
                 PlayerUtils.addOneToConn(stat);
             }

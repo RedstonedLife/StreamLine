@@ -2043,3 +2043,29 @@ filters:
       message: "&eJust toggled chat filter &b\"&c%name%&b\" &eto %toggle%"
     create:
       message: "&eJust created a new chat filter as &0(%toggle%&8, &eregex&8: &c%regex%&8, &ereplacements&8: &0(%replacements%&0) &0)"
+
+voice:
+  create: "&eYou have created a voice channel named &c%name%&e!"
+  delete:
+    sender: "&eYou have deleted your voice channel named &c%name%&e!"
+    other: "%sender_formatted% &ehas deleted their voice channel named &c%name% &ethat you were added to!"
+  add:
+    sender: "&eYou have added %player_formatted% &eto your voice channel called &c%name%&e!"
+    other: "&eYou have been added to %sender_formatted%&e's &evoice channel called &c%name%&e!"
+  remove:
+    sender: "&eYou have removed %player_formatted% &efrom your voice channel called &c%name%&e!"
+    other: "&eYou have been removed from %sender_formatted%&e's &evoice channel called &c%name%&e!"
+  not-verified: "%player_formatted% &cis not verified with the discord!"
+  no-voice: "&cCould not locate that voice channel!"
+  already-voice: "&cYou already made that voice channel!"
+  too-many: "&cYou cannot create any more voice channels!"
+
+broadcast:
+  message:
+    with-prefix: "%prefix% &e%message%"
+    without-prefix: "&e%message%"
+  prefix: "&c&lBROADCAST &7&l>>"
+
+bypass-proxychat:
+  message: "&eYou will now bypass proxychat for &a%messages% &emessages!"
+  done: "&eNo longer bypassing proxychat."

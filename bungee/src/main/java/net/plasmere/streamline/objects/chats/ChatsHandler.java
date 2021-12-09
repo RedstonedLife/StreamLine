@@ -21,14 +21,14 @@ public class ChatsHandler {
     public static List<ChatChannel> createdChannels = new ArrayList<>();
     public static List<Chat> activeChats = new ArrayList<>();
 
-    public static ChatChannel createChatChannel(String name) {
+    public static ChatChannel createChatChannel(String name, String permission) {
         name = name.toLowerCase(Locale.ROOT);
-        ChatChannel chatChannel = new ChatChannel(name);
+        ChatChannel chatChannel = new ChatChannel(name, permission);
         if (! channelExists(name)) {
             createdChannels.add(chatChannel);
         }
 
-        if (ConfigUtils.debug()) MessagingUtils.logInfo("ChatChannel: " + chatChannel.name);
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("ChatChannel: < " + chatChannel.name + " , " + chatChannel.permission + " >");
 
         return chatChannel;
     }
@@ -156,18 +156,28 @@ public class ChatsHandler {
 
         return chats;
     }
-    
+
     public static TreeSet<String> getOddPermissions(String chatChannel) {
         return getOddPermissions(getChannel(chatChannel));
     }
-    
+
     public static TreeSet<String> getOddPermissions(ChatChannel chatChannel) {
         TreeSet<String> strings = new TreeSet<>();
-        
+
         for (Chat chat : getChatsByChannel(chatChannel)) {
             if (! chat.bypassPermission.equals(StreamLine.chatConfig.getDefaultPerm(chatChannel))) strings.add(chat.bypassPermission);
         }
-        
+
+        return strings;
+    }
+
+    public static TreeSet<String> getChatPermissions(ChatChannel chatChannel) {
+        TreeSet<String> strings = new TreeSet<>();
+
+        for (Chat chat : getChatsByChannel(chatChannel)) {
+            strings.add(chat.bypassPermission);
+        }
+
         return strings;
     }
 
@@ -193,6 +203,7 @@ public class ChatsHandler {
                     for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getServers().values()) {
                         thing.add(serverInfo.getName());
                     }
+                    thing.add("network");
                 }
                 break;
             case "guild":
@@ -213,7 +224,7 @@ public class ChatsHandler {
 
         for (Chat ch : getChatsByChannel(chatChannel)) {
             if (hasOtherPermission(ch)) {
-                for (String perm : getOddPermissions(chatChannel)) {
+                for (String perm : getChatPermissions(chatChannel)) {
                     if (user.hasPermission(perm)) {
                         for (Chat chat : chatsByPermission(perm)) {
                             thing.add(chat.identifier);
@@ -222,8 +233,6 @@ public class ChatsHandler {
                 }
             }
         }
-
-        thing.add("network");
 
         return thing;
     }
@@ -268,6 +277,8 @@ public class ChatsHandler {
                 }
             }
         }
+
+        thing.add("network");
 
         return thing;
     }

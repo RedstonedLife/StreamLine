@@ -13,7 +13,7 @@ import java.sql.*;
 public class Driver {
     public static Connection connect() throws SQLException {
         try {
-            Class.forName("com.mysql.jdbc.Driver").getDeclaredConstructor().newInstance();
+//            Class.forName("com.mysql.cj.jdbc.Driver");
 
             String connectionURL = "jdbc:mysql://%host%:%port%"
                     .replace("%host%", StreamLine.databaseInfo.getHost())

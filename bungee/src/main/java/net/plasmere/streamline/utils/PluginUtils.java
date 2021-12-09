@@ -27,11 +27,9 @@ import net.plasmere.streamline.commands.staff.spy.SCViewCommand;
 import net.plasmere.streamline.commands.staff.spy.SSPYCommand;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.listeners.ChatListener;
-import net.plasmere.streamline.listeners.JoinLeaveListener;
-import net.plasmere.streamline.listeners.PluginMessagingListener;
-import net.plasmere.streamline.listeners.ProxyPingListener;
+import net.plasmere.streamline.listeners.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 
 import java.util.*;
 
@@ -211,6 +209,12 @@ public class PluginUtils {
         if (CommandsConfUtils.comBVoice()) {
             registerCommand(plugin, new VoiceCommand(CommandsConfUtils.comBVoiceBase(), CommandsConfUtils.comBVoicePerm(), stringListToArray(CommandsConfUtils.comBVoiceAliases())));
         }
+        if (CommandsConfUtils.comBBroadcast()) {
+            registerCommand(plugin, new BroadcastCommand(CommandsConfUtils.comBBroadcastBase(), CommandsConfUtils.comBBroadcastPerm(), stringListToArray(CommandsConfUtils.comBBroadcastAliases())));
+        }
+        if (CommandsConfUtils.comBBypass()) {
+            registerCommand(plugin, new BypassPCCommand(CommandsConfUtils.comBBypassBase(), CommandsConfUtils.comBBypassPerm(), stringListToArray(CommandsConfUtils.comBBypassAliases())));
+        }
 
         // Servers.
         if (CommandsConfUtils.comBLobby()) {
@@ -289,6 +293,9 @@ public class PluginUtils {
         registerListener(plugin, new JoinLeaveListener());
         registerListener(plugin, new ProxyPingListener());
         registerListener(plugin, new PluginMessagingListener());
+        if (StreamLine.voteHolder.isPresent()) {
+            registerListener(plugin, new VoteListener());
+        }
 
         plugin.getLogger().info("Loaded " + listenerAmount + " listener(s) into memory...!");
     }
@@ -313,5 +320,20 @@ public class PluginUtils {
 
     public static boolean isFreshInstall() {
         return ! StreamLine.getInstance().getPlDir().exists() && ! StreamLine.getInstance().getChatHistoryDir().exists() && ! StreamLine.getInstance().getGDir().exists();
+    }
+
+    public static Map.Entry<Integer, String> findHighestNumberWithBasePermission(SavablePlayer player, String basePermission) {
+        String permission = "";
+
+        TreeMap<Integer, String> hasPerm = new TreeMap<>();
+
+        hasPerm.put(1, basePermission + 1);
+
+        for (int i = 2; i <= 100; i ++){
+            permission = basePermission + i;
+            if (player.hasPermission(permission)) hasPerm.put(i, permission);
+        }
+
+        return hasPerm.lastEntry();
     }
 }

@@ -904,4 +904,14 @@ public class ConfigUtils {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfString("modules.bungee.voice.max.base-permission");
     }
+
+    public static boolean moduleDBUse() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.database.use");
+    }
+
+    public static String moduleDDisDataNonEmbeddedMessage() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfString("modules.discord.proxy-chat.discord-data.non-embedded.message");
+    }
 }

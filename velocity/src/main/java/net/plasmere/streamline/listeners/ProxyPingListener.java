@@ -58,9 +58,11 @@ public class ProxyPingListener {
             ServerPing.SamplePlayer[] sample = new ServerPing.SamplePlayer[sampleString.length];
 
             for (int i = 0; i < sampleString.length; i++) {
-                sample[i] = new ServerPing.SamplePlayer(sampleString[i]
-                        .replace("%online%", String.valueOf(onlinePlayers))
-                        .replace("%max%", String.valueOf(maxPlayers))
+                sample[i] = new ServerPing.SamplePlayer(
+                        TextUtils.codedString(sampleString[i]
+                                .replace("%online%", String.valueOf(onlinePlayers))
+                                .replace("%max%", String.valueOf(maxPlayers))
+                        )
                         , fake);
             }
 

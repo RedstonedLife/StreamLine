@@ -12,6 +12,9 @@ modules:
   custom-chats: true
   # Toggles offline / online UUID things...
   offline-mode: false
+  # Enables / disables the database.
+  database:
+    use: true
   # Permission that you will give to all of your staff.
   # (Used for staff chats and other staff determined staff modules...)
   staff-permission: "streamline.staff"
@@ -146,6 +149,9 @@ modules:
         use: "stat"
       # When going to discord.
       discord-data:
+        # When using non-embeded (non webhook as well) messages:
+        non-embeded:
+          message: "%sender_absolute% >> %message%"
         channels:
           local:
             title: "LOCAL CHAT FOR <to_upper>%server%"

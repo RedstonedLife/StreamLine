@@ -6,9 +6,9 @@ public class DiscordMessage {
     public CommandSource sender;
     public String title;
     public String message;
-    public String channel;
+    public long channel;
 
-    public DiscordMessage(CommandSource sender, String title, String message, String channel){
+    public DiscordMessage(CommandSource sender, String title, String message, long channel){
         this.sender = sender;
         this.title = title;
         this.message = message;

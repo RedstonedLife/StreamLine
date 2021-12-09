@@ -455,7 +455,9 @@ public class StreamLine {
 			}
 		}
 
-		databaseInfo = new DatabaseInfo();
+		if (ConfigUtils.moduleDBUse()) {
+			databaseInfo = new DatabaseInfo();
+		}
 
 		if (ConfigUtils.moduleDEnabled()) {
 			if (ConfigUtils.moduleDPC()) {

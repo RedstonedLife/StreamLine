@@ -962,4 +962,8 @@ public class TextUtils {
         if (thingArray == null) return true;
         return thingArray.length <= lessThanOrEqualTo;
     }
+
+    public static String codedString(String replace) {
+        return replace.replace("&", "§");
+    }
 }

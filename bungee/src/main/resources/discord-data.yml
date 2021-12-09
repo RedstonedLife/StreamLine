@@ -10,30 +10,35 @@ channels:
     bypass: true
     joins: true
     leaves: true
+    message-type: "normal"
   'put_id_here2':
     type: "GLOBAL"
     identifier: "streamline.channels.taco"
     bypass: true
     joins: true
     leaves: true
+    message-type: "normal"
   'put_id_here3':
     type: "GUILD"
     identifier: "c4c95a91-3bbb-49e3-9b79-6abe892e39a9"
     bypass: true
     joins: true
     leaves: true
+    message-type: "normal"
   'put_id_here4':
     type: "PARTY"
     identifier: "c4c95a91-3bbb-49e3-9b79-6abe892e39a9"
     bypass: true
     joins: true
     leaves: true
+    message-type: "normal"
   'put_id_here5':
     type: "LOCAL"
     identifier: "lobby"
     bypass: true
     joins: true
     leaves: true
+    message-type: "normal"
 
 roles:
   priority: "discord"

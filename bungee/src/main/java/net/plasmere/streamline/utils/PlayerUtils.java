@@ -977,7 +977,12 @@ public class PlayerUtils {
         try {
             if (existsByUUID(uuid)){
                 if (isInStatsListByUUID(uuid)) {
-                    return getPlayerStatByUUID(uuid);
+                    SavablePlayer player = getPlayerStatByUUID(uuid);
+                    if (player == null) {
+                        return getOrGetPlayerStat(UUIDUtils.getCachedName(uuid));
+                    } else {
+                        return player;
+                    }
                 } else {
                     return new SavablePlayer(uuid, false);
                 }

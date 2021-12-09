@@ -21,16 +21,20 @@ public class VerifyCommand {
         String[] args = event.getMessage().getContentRaw().toLowerCase().substring(DiscordBotConfUtils.botPrefix().length()).split(" ");
 
         try {
+            if (ConfigUtils.debug()) MessagingUtils.logInfo(args[1]);
+
             String uuid = UUIDUtils.getCachedUUID(args[1]);
 
-            int verifyNumber = StreamLine.discordData.getVerification(uuid);
+            if (ConfigUtils.debug()) MessagingUtils.logInfo("Gotten UUID = " + uuid);
+
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStat(args[1]);
+            if (player == null) return "We could not find that player!";
+
+            int verifyNumber = StreamLine.discordData.getVerification(player.uuid);
             int trying = Integer.parseInt(args[2]);
 
 //            Member member = StreamLine.getJda().getGuildById(event.getGuild().getIdLong()).getMemberById(event.getMessage().getAuthor().getIdLong());
 //            if (member == null) return "We could not find you as a member!";
-
-            SavablePlayer player = PlayerUtils.getOrGetPlayerStatByUUID(uuid);
-            if (player == null) return "We could not find that player!";
 
             if (verifyNumber == trying) {
                 StreamLine.discordData.doVerify(uuid, event.getMessage().getAuthor(), event.getGuild());

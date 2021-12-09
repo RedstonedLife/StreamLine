@@ -38,6 +38,7 @@ public class SavablePlayer extends SavableUser {
     public ChatChannel chatChannel;
     public String chatIdentifier;
     public long discordID;
+    public int bypassFor;
 
     public int defaultLevel = 1;
 
@@ -123,13 +124,14 @@ public class SavablePlayer extends SavableUser {
         defaults.add("latest-ip=" + latestIP);
         defaults.add("lvl=" + defaultLevel);
         defaults.add("total-xp=0");
-        defaults.add("currentXP=0");
+        defaults.add("current-xp=0");
         defaults.add("playtime=0");
         defaults.add("muted=false");
         defaults.add("muted-till=");
         defaults.add("chat-channel=local");
         defaults.add("chat-identifier=network");
         defaults.add("discord-id=");
+        defaults.add("bypass-for=0");
         //defaults.add("");
         return defaults;
     }
@@ -169,6 +171,12 @@ public class SavablePlayer extends SavableUser {
         } catch (Exception e) {
             this.discordID = 0L;
         }
+
+        try {
+            this.bypassFor = Integer.parseInt(getFromKey("bypass-for"));
+        } catch (Exception e) {
+            this.bypassFor = 0;
+        }
     }
 
     public static ChatChannel parseChatLevel(String string) {
@@ -196,6 +204,24 @@ public class SavablePlayer extends SavableUser {
                 .replace("%new_channel%", newLevel.name)
                 .replace("%old_channel%", oldLevel.name)
         );
+    }
+
+    public int setBypassFor(int set) {
+        this.bypassFor = set;
+        updateKey("bypass-for", this.bypassFor);
+
+        if (this.online) {
+            MessagingUtils.sendBUserMessage(this.player, MessageConfUtils.bypassPCMessage().replace("%messages%", String.valueOf(this.bypassFor)));
+        }
+
+        return this.bypassFor;
+    }
+
+    public int tickBypassFor() {
+        this.bypassFor --;
+        updateKey("bypass-for", this.bypassFor);
+
+        return this.bypassFor;
     }
 
     public void setChat(String channel, String identifier) {

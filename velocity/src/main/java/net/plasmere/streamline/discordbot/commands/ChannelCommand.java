@@ -8,9 +8,13 @@ import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
+import net.plasmere.streamline.utils.TextUtils;
+
+import java.util.List;
+import java.util.Optional;
 
 public class ChannelCommand {
-    public static String usage = "Usage: channel <set | remove> <channel name> <identifier> <bypass: true or false> <joins: true or false> <leaves: true or false>";
+    public static String usage = "Usage: channel <set | remove> <channel name> <identifier> <bypass: true or false> <joins: true or false> <leaves: true or false> <message-type: normal or embedded>";
 
     public static void sendMessage(String command, MessageReceivedEvent event){
         EmbedBuilder eb = new EmbedBuilder();
@@ -62,18 +66,24 @@ public class ChannelCommand {
                     return "Must specify if leaves are enabled!\n" + usage;
                 }
 
+                String messageType = args[7];
+                if (! TextUtils.equalsAny(messageType, List.of("normal", "embedded"))) {
+                    return "``message-type`` must be either ``normal`` or ``embedded``";
+                }
+
                 ChatChannel chatChannel = ChatsHandler.getChannel(args[2]);
                 if (chatChannel == null)
                     return "The specified channel could not be found...";
 
-                StreamLine.discordData.addChannel(channelID, chatChannel.toString(), args[3], bypass, joins, leaves);
+                StreamLine.discordData.addChannel(channelID, chatChannel.name, args[3], bypass, joins, leaves, messageType);
                 return "Successfully added channel ``" + channelID + "`` to your set channels!" +
                         "\n``---`` Set As ``---``" +
                         "\nChannel: " + chatChannel +
                         "\nIdentifier: " + args[3] +
                         "\nBypasses proxy chat: " + bypass +
                         "\nSends join messages: " + joins +
-                        "\nSends leaves messages: " + leaves;
+                        "\nSends leaves messages: " + leaves +
+                        "\nMessage type: " + messageType;
             case "remove":
                 StreamLine.discordData.remChannel(channelID);
                 return "Successfully removed channel ``" + channelID + "`` from your set channels!";

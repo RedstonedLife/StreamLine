@@ -397,7 +397,7 @@ public class SettingsEditCommand extends SLCommand {
 
     public void sendGetMessageNumberedPC(CommandSender sender, String[] args, ChatChannel chatChannel, MessageServerType messageServerType) {
         sendGetMessageNumbered(sender, MessageConfUtils.settingsGetPCChats()
-                        .replace("%channel%", chatChannel.toString())
+                        .replace("%channel%", chatChannel.name)
                         .replace("%server_type%", messageServerType.toString())
                 , StreamLine.serverConfig.getProxyChatChatsAt(getInt(sender, args), chatChannel, messageServerType), args);
     }
@@ -411,7 +411,7 @@ public class SettingsEditCommand extends SLCommand {
 
     public void sendSetMessageNumberedPC(CommandSender sender, String set, Object from, ChatChannel chatChannel, MessageServerType messageServerType) {
         sendSetMessageNumbered(sender, MessageConfUtils.settingsSetPCChats()
-                    .replace("%channel%", chatChannel.toString())
+                    .replace("%channel%", chatChannel.name)
                     .replace("%server_type%", messageServerType.toString())
                 , set, from);
     }

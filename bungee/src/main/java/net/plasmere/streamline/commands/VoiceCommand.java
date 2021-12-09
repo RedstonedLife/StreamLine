@@ -47,8 +47,13 @@ public class VoiceCommand extends SLCommand {
                         return;
                     }
 
-                    if (! StreamLine.discordData.isVerified(player.uuid)) {
+                    if (!StreamLine.discordData.isVerified(player.uuid)) {
                         MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceNotVerified(), player), sender));
+                        return;
+                    }
+
+                    if (!DiscordUtils.canCreateMoreVoice(player)) {
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceTooMany(), player), sender));
                         return;
                     }
 
@@ -57,13 +62,11 @@ public class VoiceCommand extends SLCommand {
                         return;
                     }
 
-                    List<VoiceChannel> channels = DiscordUtils.createVoice(args[1], CategoryType.VOICE, player);
+                    VoiceChannel channel = DiscordUtils.createVoice(args[1], CategoryType.VOICE, player);
 
-                    for (VoiceChannel channel : channels) {
-                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(MessageConfUtils.voiceCreate()
-                                .replace("%name%", channel.getName()), sender
-                        ));
-                    }
+                    MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(MessageConfUtils.voiceCreate()
+                            .replace("%name%", channel.getName()), sender
+                    ));
                 }
                 case "delete" -> {
                     if (args.length < 2) {
@@ -139,14 +142,14 @@ public class VoiceCommand extends SLCommand {
                     }
 
                     for (VoiceChannel c : DiscordUtils.getVoice(player, args[1])) {
-                        for (VoiceChannel channel : DiscordUtils.addToVoice(c.getIdLong(), other)) {
-                            MessagingUtils.sendBUserMessage(other, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceAddOther()
-                                            .replace("%name%", channel.getName())
-                                    , other), sender));
-                            MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceAddSender()
-                                            .replace("%name%", channel.getName())
-                                    , other), sender));
-                        }
+                        VoiceChannel channel = DiscordUtils.addToVoice(c.getIdLong(), other);
+                        MessagingUtils.sendBUserMessage(other, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceAddOther()
+                                        .replace("%name%", channel.getName())
+                                , other), sender));
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceAddSender()
+                                        .replace("%name%", channel.getName())
+                                , other), sender));
+
                     }
                 }
                 case "remove" -> {
@@ -182,19 +185,23 @@ public class VoiceCommand extends SLCommand {
                     }
 
                     for (VoiceChannel c : DiscordUtils.getVoice(player, args[1])) {
-                        for (VoiceChannel channel : DiscordUtils.removeFromVoice(c.getIdLong(), other)) {
-                            MessagingUtils.sendBUserMessage(other, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceRemoveOther()
-                                            .replace("%name%", channel.getName())
-                                    , other), sender));
-                            MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceRemoveSender()
-                                            .replace("%name%", channel.getName())
-                                    , other), sender));
-                        }
+                        VoiceChannel channel = DiscordUtils.removeFromVoice(c.getIdLong(), other);
+                        MessagingUtils.sendBUserMessage(other, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceRemoveOther()
+                                        .replace("%name%", channel.getName())
+                                , other), sender));
+                        MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(MessageConfUtils.voiceRemoveSender()
+                                        .replace("%name%", channel.getName())
+                                , other), sender));
+
                     }
                 }
 //                case "check" -> {
 //
 //                }
+                default -> {
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
+                    return;
+                }
             }
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());

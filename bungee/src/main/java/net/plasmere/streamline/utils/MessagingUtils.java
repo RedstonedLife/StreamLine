@@ -580,6 +580,23 @@ public class MessagingUtils {
         }
     }
 
+    public static void sendDiscordNonEBMessage(DiscordMessage message) {
+        sendDiscordNonEBMessage(StreamLine.getJda(), message);
+    }
+
+    public static void sendDiscordNonEBMessage(JDA jda, DiscordMessage message) {
+        if (! ConfigUtils.moduleDEnabled()) return;
+
+        try {
+            Objects.requireNonNull(jda.getTextChannelById(message.channel))
+                    .sendMessage(TextUtils.replaceAllPlayerDiscord(TextUtils.replaceAllSenderDiscord(ConfigUtils.moduleDDisDataNonEmbeddedMessage(), message.sender), message.sender)
+                            .replace("%message%", message.message)
+                    ).complete();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public static void sendDiscordEBMessage(DiscordMessage message, boolean useAvatar){
         if (! ConfigUtils.moduleDEnabled()) {
             return;
@@ -1214,8 +1231,8 @@ public class MessagingUtils {
     }
 
     public static void sendBBroadcast(CommandSender sender, String msg){
-        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
-            player.sendMessage(TextUtils.codedText(msg));
+        for (SavableUser user : PlayerUtils.getStatsOnline()) {
+            sendBUserMessage(user.findSender(), TextUtils.replaceAllSenderBungee(msg, sender));
         }
     }
 
@@ -1233,7 +1250,7 @@ public class MessagingUtils {
         return false;
     }
 
-    public static void sendDiscordPingRoleMessage(String channelId, String roleId){
+    public static void sendDiscordPingRoleMessage(long channelId, long roleId){
         Objects.requireNonNull(StreamLine.getJda().getTextChannelById(channelId)).sendMessage(Objects.requireNonNull(StreamLine.getJda().getRoleById(roleId)).getAsMention()).queue();
     }
 

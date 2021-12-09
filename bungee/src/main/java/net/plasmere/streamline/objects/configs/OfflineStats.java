@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Locale;
 import java.util.TreeMap;
 
 public class OfflineStats {
@@ -76,10 +77,13 @@ public class OfflineStats {
     }
 
    public void addStat(String uuid, String playername) {
-        reloadConfig();
-        conf.set(uuid, playername);
-        conf.set(playername, uuid);
-        saveConfig();
+       reloadConfig();
+
+       playername = playername.replace(".", "*").toLowerCase(Locale.ROOT);
+
+       conf.set(uuid, playername);
+       conf.set(playername, uuid);
+       saveConfig();
    }
 
     public void remStat(String uuid, String playername) {
@@ -91,10 +95,11 @@ public class OfflineStats {
 
     public String getPlayerName(String uuid) {
         reloadConfig();
-        return conf.getString(uuid);
+        return conf.getString(uuid).replace("*", ".");
     }
 
     public String getUUID(String playername) {
+        playername = playername.replace(".", "*");
         reloadConfig();
         return conf.getString(playername);
     }

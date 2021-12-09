@@ -338,11 +338,11 @@ public class ServerConfig {
 
     public String getProxyChatChatsAt(int integer, ChatChannel chatChannel, MessageServerType messageServerType) {
         reloadConfig();
-        return serverConfig.getString("proxy-chat.chats." + chatChannel.toString().toLowerCase(Locale.ROOT) + "." + messageServerType.toString().toLowerCase(Locale.ROOT) + "." + integer);
+        return serverConfig.getString("proxy-chat.chats." + chatChannel.name.toLowerCase(Locale.ROOT) + "." + messageServerType.toString().toLowerCase(Locale.ROOT) + "." + integer);
     }
 
     public void setProxyChatChatsAt(int integer, ChatChannel chatChannel, MessageServerType messageServerType, String set) {
-        serverConfig.set("proxy-chat.chats." + chatChannel.toString().toLowerCase(Locale.ROOT) + "." + messageServerType.toString().toLowerCase(Locale.ROOT) + "." + integer, set);
+        serverConfig.set("proxy-chat.chats." + chatChannel.name.toLowerCase(Locale.ROOT) + "." + messageServerType.toString().toLowerCase(Locale.ROOT) + "." + integer, set);
         saveConfig();
         reloadConfig();
     }

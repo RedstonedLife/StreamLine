@@ -200,9 +200,10 @@ public class ChatsHandler {
         switch (chatChannel.name) {
             case "local":
                 if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
-                    for (RegisteredServer serverInfo : StreamLine.getInstance().getProxy().getAllServers()) {
+                    for (RegisteredServer serverInfo : StreamLine.getProxy().getAllServers()) {
                         thing.add(serverInfo.getServerInfo().getName());
                     }
+                    thing.add("network");
                 }
                 break;
             case "guild":

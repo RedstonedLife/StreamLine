@@ -931,6 +931,30 @@ commands:
         aliases:
           - "call"
           - "vce"
+      # The broadcast command.
+      broadcast:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "proxybroadcast"
+        # Custom permission.
+        permission: "streamline.command.broadcast"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "pb"
+          - "pbroadcast"
+      # The proxychat bypass command.
+      bypass:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "bypass-proxychat"
+        # Custom permission.
+        permission: "streamline.command.bypass-proxychat"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "bppc"
+          - "bpc"
     # Debugging commands.
     debug:
       # The delete stat command.

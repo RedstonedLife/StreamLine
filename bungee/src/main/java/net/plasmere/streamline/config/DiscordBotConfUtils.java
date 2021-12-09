@@ -19,76 +19,81 @@ public class DiscordBotConfUtils {
         StreamLine.config.reloadDiscordBot();
         return StreamLine.config.getDisBotString("bot.server-ip");
     }
-    // ... Discord.
     // Categories.
     public static long categoryGet(CategoryType type) {
         StreamLine.config.reloadDiscordBot();
         return StreamLine.config.getDisBotLong("discord.categories." + type.name().toLowerCase(Locale.ROOT));
     }
+    // ... Discord.
+    // Guild.
+    public static long guildID() {
+        StreamLine.config.reloadDiscordBot();
+        return StreamLine.config.getDisBotLong("discord.guild-id");
+    }
     // Text Channels.
-    public static String textChannelReports() {
+    public static long textChannelReports() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.reports");
+        return StreamLine.config.getDisBotLong("discord.text-channels.reports");
     }
-    public static String textChannelStaffChat() {
+    public static long textChannelStaffChat() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.staffchat");
+        return StreamLine.config.getDisBotLong("discord.text-channels.staffchat");
     }
-    public static String textChannelOfflineOnline() {
+    public static long textChannelOfflineOnline() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.offline-online");
+        return StreamLine.config.getDisBotLong("discord.text-channels.offline-online");
     }
-    public static String textChannelBJoins() {
+    public static long textChannelBJoins() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.bungee-joins");
+        return StreamLine.config.getDisBotLong("discord.text-channels.bungee-joins");
     }
-    public static String textChannelBLeaves() {
+    public static long textChannelBLeaves() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.bungee-leaves");
+        return StreamLine.config.getDisBotLong("discord.text-channels.bungee-leaves");
     }
-    public static String textChannelBConsole() {
+    public static long textChannelBConsole() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.console");
+        return StreamLine.config.getDisBotLong("discord.text-channels.console");
     }
-    public static String textChannelGuilds() {
+    public static long textChannelGuilds() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.guilds");
+        return StreamLine.config.getDisBotLong("discord.text-channels.guilds");
     }
-    public static String textChannelParties() {
+    public static long textChannelParties() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.parties");
+        return StreamLine.config.getDisBotLong("discord.text-channels.parties");
     }
-    public static String textChannelMutes() {
+    public static long textChannelMutes() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.mutes");
+        return StreamLine.config.getDisBotLong("discord.text-channels.mutes");
     }
-    public static String textChannelKicks() {
+    public static long textChannelKicks() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.kicks");
+        return StreamLine.config.getDisBotLong("discord.text-channels.kicks");
     }
-    public static String textChannelBans() {
+    public static long textChannelBans() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.bans");
+        return StreamLine.config.getDisBotLong("discord.text-channels.bans");
     }
-    public static String textChannelIPBans() {
+    public static long textChannelIPBans() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.ipbans");
+        return StreamLine.config.getDisBotLong("discord.text-channels.ipbans");
     }
-    public static String textChannelProxyChat() {
+    public static long textChannelProxyChat() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.text-channels.proxy-chat");
+        return StreamLine.config.getDisBotLong("discord.text-channels.proxy-chat");
     }
     // Roles.
-    public static String roleReports() {
+    public static long roleReports() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.roles.reports");
+        return StreamLine.config.getDisBotLong("discord.roles.reports");
     }
-    public static String roleStaff() {
+    public static long roleStaff() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.roles.staff");
+        return StreamLine.config.getDisBotLong("discord.roles.staff");
     }
-    public static String roleChat() {
+    public static long roleChat() {
         StreamLine.config.reloadDiscordBot();
-        return StreamLine.config.getDisBotString("discord.roles.chat");
+        return StreamLine.config.getDisBotLong("discord.roles.chat");
     }
 }

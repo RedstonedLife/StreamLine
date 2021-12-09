@@ -1,5 +1,7 @@
 package net.plasmere.streamline.utils;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -43,7 +46,7 @@ public class UUIDUtils {
             String uuid = cachedUUIDs.get(finalUsername);
             if (uuid != null && uuid.contains("-")) return uuid;
             cachedUUIDs.put(finalUsername, fetch(finalUsername));
-            return makeDashedUUID(cachedUUIDs.get(finalUsername));
+            return cachedUUIDs.get(finalUsername);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -165,8 +168,6 @@ public class UUIDUtils {
     }
 
     public static String makeDashedUUID(String unformatted){
-        if (unformatted.contains("-")) return unformatted;
-
         StringBuilder formatted = new StringBuilder();
         int i = 1;
         for (Character character : unformatted.toCharArray()){
@@ -219,7 +220,11 @@ public class UUIDUtils {
 
     public static File getCachedPlayerFile(String thing) {
         try {
-            return cachedPlayerFiles.get(swapToUUID(thing));
+            File file = cachedPlayerFiles.get(swapToUUID(thing));
+
+            if (file == null) return getPlayerFile(swapToUUID(thing));
+
+            return file;
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -228,22 +233,18 @@ public class UUIDUtils {
     }
 
     public static File getPlayerFile(String uuid){
-        return new File(StreamLine.getInstance().getPlDir(), uuid + ".properties");
+        File file = new File(StreamLine.getInstance().getPlDir(), uuid + ".properties");
+        cachedPlayerFiles.put(uuid, file);
+        return file;
     }
 
     public static File getCachedGuildFile(String thing) {
         try {
-            return cachedGuildFiles.get(swapToUUID(thing));
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+            File file = cachedGuildFiles.get(swapToUUID(thing));
 
-        return null;
-    }
+            if (file == null) return getGuildFile(swapToUUID(thing));
 
-    public static File getCachedPartyFile(String thing) {
-        try {
-            return cachedPartyFiles.get(swapToUUID(thing));
+            return file;
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -252,11 +253,49 @@ public class UUIDUtils {
     }
 
     public static File getGuildFile(String uuid){
-        return new File(StreamLine.getInstance().getGDir(), uuid + ".properties");
+        File file = new File(StreamLine.getInstance().getGDir(), uuid + ".properties");
+        cachedGuildFiles.put(uuid, file);
+        return file;
+    }
+
+    public static File getCachedPartyFile(String thing) {
+        try {
+            File file = cachedPartyFiles.get(swapToUUID(thing));
+
+            if (file == null) return getPartyFile(swapToUUID(thing));
+
+            return file;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static File getPartyFile(String uuid){
-        return new File(StreamLine.getInstance().getPDir(), uuid + ".properties");
+        File file = new File(StreamLine.getInstance().getPDir(), uuid + ".properties");
+        cachedPartyFiles.put(uuid, file);
+        return file;
+    }
+
+    public static File getCachedOtherFile(String thing) {
+        try {
+            File file = cachedOtherFiles.get(thing);
+
+            if (file == null) return getOtherFile(thing);
+
+            return file;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static File getOtherFile(String thing){
+        File file = new File(StreamLine.getInstance().getPDir(), thing);
+        cachedOtherFiles.put(thing, file);
+        return file;
     }
 
     public static File getCachedFile(String pathTo, String thing) {
@@ -271,13 +310,13 @@ public class UUIDUtils {
 
         try {
             if (path.equals(StreamLine.getInstance().getPlDir())) {
-                return cachedPlayerFiles.get(swapToUUID(thing));
+                return getCachedPlayerFile(thing);
             } else if (path.equals(StreamLine.getInstance().getGDir())) {
-                return cachedGuildFiles.get(swapToUUID(thing));
+                return getCachedGuildFile(thing);
             } else if (path.equals(StreamLine.getInstance().getPDir())) {
-                return cachedPartyFiles.get(swapToUUID(thing));
+                return getCachedPartyFile(thing);
             } else {
-                return cachedOtherFiles.get(thing);
+                return getCachedOtherFile(thing);
             }
         } catch (Exception e){
             e.printStackTrace();

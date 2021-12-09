@@ -9,16 +9,22 @@ public class DataChannel {
     public boolean bypass;
     public boolean joins;
     public boolean leaves;
+    public String messageType;
 
-    public DataChannel(ChatChannel chatChannel, String identifier, boolean bypass, boolean joins, boolean leaves) {
+    public DataChannel(ChatChannel chatChannel, String identifier, boolean bypass, boolean joins, boolean leaves, String messageType) {
         this.chatChannel = chatChannel;
         this.identifier = identifier;
         this.bypass = bypass;
         this.joins = joins;
         this.leaves = leaves;
+        this.messageType = messageType;
     }
 
     public DataChannel(String chatChannel, String identifier, boolean bypass, boolean joins, boolean leaves) {
-        this(ChatsHandler.getChannel(chatChannel), identifier, bypass, joins, leaves);
+        this(ChatsHandler.getChannel(chatChannel), identifier, bypass, joins, leaves, "normal");
+    }
+
+    public DataChannel(String chatChannel, String identifier, boolean bypass, boolean joins, boolean leaves, String messageType) {
+        this(ChatsHandler.getChannel(chatChannel), identifier, bypass, joins, leaves, messageType);
     }
 }

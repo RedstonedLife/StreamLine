@@ -90,6 +90,8 @@ public class ChatConfig {
 
             ChatsHandler.createChatChannel(key, conf.getString("chats." + key + ".permission"));
         }
+
+        ChatsHandler.createChatChannel("off", "");
     }
 
     public void createChats() {

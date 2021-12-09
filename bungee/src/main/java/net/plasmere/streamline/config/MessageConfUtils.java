@@ -2,6 +2,8 @@ package net.plasmere.streamline.config;
 
 import net.plasmere.streamline.StreamLine;
 
+import java.util.List;
+
 public class MessageConfUtils {
     // Messages:
     public static String prefix() {
@@ -1671,5 +1673,31 @@ public class MessageConfUtils {
     public static String voiceAlreadyVoice() {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("voice.already-voice");
+    }
+    public static String voiceTooMany() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("voice.too-many");
+    }
+
+    public static String broadcastMessageWith() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("broadcast.message.with-prefix");
+    }
+    public static String broadcastMessageWithout() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("broadcast.message.without-prefix");
+    }
+    public static String broadcastPrefix() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("broadcast.prefix");
+    }
+
+    public static String bypassPCMessage() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("bypass-proxychat.message");
+    }
+    public static String bypassPCDone() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("bypass-proxychat.done");
     }
 }

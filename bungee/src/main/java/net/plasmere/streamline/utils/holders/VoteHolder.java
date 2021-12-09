@@ -18,12 +18,13 @@ public class VoteHolder {
             return false;
         }
 
-        try {
-            PluginUtils.registerListener(StreamLine.getInstance(), new VoteListener());
-            return true;
-        } catch (Exception e) {
-            MessagingUtils.logSevere("Votifier not loaded... Disabling Votifier support...");
-        }
-        return false;
+//        try {
+//            PluginUtils.registerListener(StreamLine.getInstance(), new VoteListener());
+//            return true;
+//        } catch (Exception e) {
+//            MessagingUtils.logSevere("Votifier not loaded... Disabling Votifier support...");
+//        }
+//        return false;
+        return true;
     }
 }

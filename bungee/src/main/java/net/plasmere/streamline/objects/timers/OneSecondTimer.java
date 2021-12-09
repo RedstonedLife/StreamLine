@@ -16,6 +16,7 @@ import net.plasmere.streamline.utils.*;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.TreeMap;
 
 public class OneSecondTimer implements Runnable {
     public int countdown;
@@ -36,6 +37,17 @@ public class OneSecondTimer implements Runnable {
     }
 
     public void done(){
+        try {
+            UUIDUtils.cachedNames = new TreeMap<>();
+            UUIDUtils.cachedUUIDs = new TreeMap<>();
+            UUIDUtils.cachedPartyFiles = new TreeMap<>();
+            UUIDUtils.cachedGuildFiles = new TreeMap<>();
+            UUIDUtils.cachedPlayerFiles = new TreeMap<>();
+            UUIDUtils.cachedOtherFiles = new TreeMap<>();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         try {
             countdown = reset;
 
@@ -67,28 +79,30 @@ public class OneSecondTimer implements Runnable {
                 }
             }
 
-            if (ConfigUtils.moduleBRanksEnabled() && StreamLine.ranksConfig != null) {
-                int success = 0;
-                int failed = 0;
-                int other = 0;
+            if (ConfigUtils.moduleBRanksEnabled()) {
+                if (StreamLine.ranksConfig.checkedGroups().size() > 0) {
+                    int success = 0;
+                    int failed = 0;
+                    int other = 0;
 
-                for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()) {
-                    try {
-                        int result = RanksUtils.checkAndChange(PlayerUtils.getPlayerStat(player));
+                    for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()) {
+                        try {
+                            int result = RanksUtils.checkAndChange(PlayerUtils.getPlayerStat(player));
 
-                        if (result == 1) success ++;
-                        if (result == 0) other ++;
-                        if (result == -1) failed ++;
-                    } catch (Exception e) {
-                        failed ++;
-                        e.printStackTrace();
+                            if (result == 1) success++;
+                            if (result == 0) other++;
+                            if (result == -1) failed++;
+                        } catch (Exception e) {
+                            failed++;
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-                if (StreamLine.votes.getConsole()) MessagingUtils.logInfo(
-                        "Success: " + success + " Failed: " + failed + " Other: " + other + " Total: (" +
-                                (success + failed + other) + " | " + PlayerUtils.getOnlinePPlayers().size() + ")"
-                );
+                    if (StreamLine.votes.getConsole()) MessagingUtils.logInfo(
+                            "Success: " + success + " Failed: " + failed + " Other: " + other + " Total: (" +
+                                    (success + failed + other) + " | " + PlayerUtils.getOnlinePPlayers().size() + ")"
+                    );
+                }
             }
         } catch (ConcurrentModificationException e) {
             if (ConfigUtils.debug()) e.printStackTrace();
@@ -97,6 +111,16 @@ public class OneSecondTimer implements Runnable {
         tickGuilds();
         tickGuildSync();
         tickPartySync();
+
+//        if (! StreamLine.databaseInfo.getHost().equals("")) {
+//            for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
+//                if (player.onlineCheck()) {
+//                    for (String key : new TreeMap<>(player.getInfo()).keySet()) {
+//                        Driver.update(SavableType.PLAYER, UUIDUtils.stripUUID(player.uuid), key.replace('-', '_'), player.getInfo().get(key));
+//                    }
+//                }
+//            }
+//        }
     }
 
     public void tickGuilds() {
@@ -148,9 +172,8 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (guild.voiceID == 0L) {
-                List<VoiceChannel> channel = DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
-                if (channel.size() <= 0) continue;
-                guild.updateKey("voice", channel.get(0).getIdLong());
+                VoiceChannel channel = DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
+                guild.updateKey("voice", channel.getIdLong());
             } else {
                 DiscordUtils.addToVoice(guild.voiceID, players.toArray(new SavablePlayer[0]));
             }
@@ -169,9 +192,8 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (party.voiceID == 0L) {
-                List<VoiceChannel> channel = DiscordUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
-                if (channel.size() <= 0) continue;
-                party.updateKey("voice", channel.get(0).getIdLong());
+                VoiceChannel channel = DiscordUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
+                party.updateKey("voice", channel.getIdLong());
             } else {
                 DiscordUtils.addToVoice(party.voiceID, players.toArray(new SavablePlayer[0]));
             }

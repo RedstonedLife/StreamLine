@@ -1876,6 +1876,11 @@ public class PlayerUtils {
 
             teleports.replace(player, new SingleSet<>(teleports.get(player).key - 1, teleports.get(player).value));
         }
+
+        // EXPERIMENTAL:
+//        for (Player player : new ArrayList<>(teleports.keySet())) {
+//            player.
+//        }
     }
 
     public static void addTeleport(Player sender, Player to) {

@@ -15,7 +15,7 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'net.plasmere'
-    version = '1.0.14.9'
+    version = '1.0.15.0'
 
     ext {
         caffeineVersion = '3.0.4'

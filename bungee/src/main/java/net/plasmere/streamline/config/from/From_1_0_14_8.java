@@ -39,6 +39,13 @@ public class From_1_0_14_8 extends From{
         addUpdatedLocalesEntry("voice.no-voice", "&cCould not locate that voice channel!", "en_US");
         addUpdatedLocalesEntry("voice.already-voice", "&cYou already made that voice channel!", "en_US");
 
+        addUpdatedLocalesEntry("broadcast.message.with-prefix", "%prefix% &e%message%", "en_US");
+        addUpdatedLocalesEntry("broadcast.message.without-prefix", "&e%message%", "en_US");
+        addUpdatedLocalesEntry("broadcast.prefix", "&c&lBROADCAST &7&l>>", "en_US");
+
+        addUpdatedLocalesEntry("bypass-proxychat.message", "&eYou will now bypass proxychat for &a%messages% &emessages!", "en_US");
+        addUpdatedLocalesEntry("bypass-proxychat.done", "&eNo longer bypassing proxychat.", "en_US");
+
 //        addUpdatedLocalesEntry("party.sync.sender", "&eSynced your party with discord! You should be able to find a voice channel for your party in the category \"%category%\"!", "fr_FR");
 //        addUpdatedLocalesEntry("guild.sync.sender", "&eSynced your guild with discord! You should be able to find a voice channel for your guild in the category \"%category%\"!", "fr_FR");
 
@@ -52,6 +59,13 @@ public class From_1_0_14_8 extends From{
         addUpdatedLocalesEntry("voice.not-verified", "%player_formatted% &cis not verified with the discord!", "fr_FR");
         addUpdatedLocalesEntry("voice.no-voice", "&cCould not locate that voice channel!", "fr_FR");
         addUpdatedLocalesEntry("voice.already-voice", "&cYou already made that voice channel!", "fr_FR");
+
+        addUpdatedLocalesEntry("broadcast.message.with-prefix", "%prefix% &e%message%", "fr_FR");
+        addUpdatedLocalesEntry("broadcast.message.without-prefix", "&e%message%", "fr_FR");
+        addUpdatedLocalesEntry("broadcast.prefix", "&c&lBROADCAST &7&l>>", "fr_FR");
+
+        addUpdatedLocalesEntry("bypass-proxychat.message", "&eYou will now bypass proxychat for &a%messages% &emessages!", "fr_FR");
+        addUpdatedLocalesEntry("bypass-proxychat.done", "&eNo longer bypassing proxychat.", "fr_FR");
     }
 
     @Override

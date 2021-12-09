@@ -5,6 +5,7 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigHandler;
+import net.plasmere.streamline.objects.enums.FileEntryRefactorType;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.utils.MessagingUtils;
 
@@ -257,6 +258,18 @@ public abstract class From {
     public abstract void setupDiscordBotFix();
     public abstract void setupCommandsFix();
     public abstract void setupChatsFix();
+
+//    public void refactorClass(FileType of, String pathTo, FileEntryRefactorType type) {
+//        switch (of) {
+//            case CHATS -> {
+//                switch (type) {
+//                    case INT -> {
+//                        addUpdatedChatsEntry(pathTo, Integer.valueOf(ch.get));
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     public void addUpdatedConfigEntry(String path, Object object) {
         int putInt = 0;

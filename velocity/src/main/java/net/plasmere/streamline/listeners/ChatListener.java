@@ -4,6 +4,8 @@ import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -40,7 +42,7 @@ public class ChatListener {
 
         String msg = e.getMessage();
 
-        boolean bypass = stat.bypassFor > 0;
+        boolean bypass = (stat.bypassFor > 0) || (stat.chatChannel.name.equals("off"));
 
         if (ConfigUtils.moduleBChatFiltersEnabled() && ! bypass) {
             FilterHandler.reloadAllFilters();
@@ -188,7 +190,8 @@ public class ChatListener {
                                 MessagingUtils.sendGlobalMessageFromUser(sender, sender.getCurrentServer().get(), format, withEmotes);
 
                                 for (Player player : msgWithTagged.value) {
-                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
+//                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
+                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
                                 }
 
                                 if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -208,7 +211,8 @@ public class ChatListener {
                                     MessagingUtils.sendPermissionedGlobalMessageFromUser(chat.identifier, sender, sender.getCurrentServer().get(), format, withEmotes);
 
                                     for (Player player : msgWithTagged.value) {
-                                        MessagingUtils.sendTagPingPluginMessageRequest(player);
+//                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
+                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
                                     }
 
                                     if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -232,7 +236,9 @@ public class ChatListener {
                                 MessagingUtils.sendPermissionedGlobalMessageFromUser(ch.identifier, sender, sender.getCurrentServer().get(), format, withEmotes);
 
                                 for (Player player : msgWithTagged.value) {
-                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
+                                    
+//                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
+                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
                                 }
 
                                 if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -264,7 +270,8 @@ public class ChatListener {
                         }
 
                         for (Player player : msgWithTagged.value) {
-                            MessagingUtils.sendTagPingPluginMessageRequest(player);
+//                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
+                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
                         }
 
                         if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -326,7 +333,8 @@ public class ChatListener {
                     MessagingUtils.sendRoomMessageFromUser(sender, sender.getCurrentServer().get(), chat, format, withEmotes);
 
                     for (Player player : msgWithTagged.value) {
-                        MessagingUtils.sendTagPingPluginMessageRequest(player);
+//                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
+                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
                     }
 
                     if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {

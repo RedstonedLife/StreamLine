@@ -40,9 +40,13 @@ public class ChatListener implements Listener {
 
         ProxiedPlayer sender = (ProxiedPlayer) e.getSender();
 
+        SavablePlayer stat = PlayerUtils.addPlayerStat(sender);
+
         String msg = e.getMessage();
 
-        if (ConfigUtils.moduleBChatFiltersEnabled()) {
+        boolean bypass = (stat.bypassFor > 0) || (stat.chatChannel.name.equals("off"));
+
+        if (ConfigUtils.moduleBChatFiltersEnabled() && ! bypass) {
             FilterHandler.reloadAllFilters();
 
             for (ChatFilter filter : FilterHandler.filters) {
@@ -50,8 +54,6 @@ public class ChatListener implements Listener {
                 msg = filter.applyFilter(msg);
             }
         }
-
-        SavablePlayer stat = PlayerUtils.addPlayerStat(sender);
 
         stat.updateLastMessage(msg);
 
@@ -139,7 +141,7 @@ public class ChatListener implements Listener {
         }
 
 
-        if (! isStaffMessage && ConfigUtils.customChats()) {
+        if (! isStaffMessage && ConfigUtils.customChats() && ! bypass) {
             if (StreamLine.serverConfig.getProxyChatEnabled()) {
                 if (ConfigUtils.moduleDEnabled()) {
                     if (ConfigUtils.moduleDPC()) if (ConfigUtils.moduleDPCConsole()) {
@@ -335,6 +337,10 @@ public class ChatListener implements Listener {
 
         if (ConfigUtils.chatHistoryEnabled()) {
             PlayerUtils.addLineToChatHistory(stat.uuid, sender.getServer().getInfo().getName(), msg);
+        }
+
+        if (bypass) {
+            stat.tickBypassFor();
         }
 
         if (ConfigUtils.events()) {

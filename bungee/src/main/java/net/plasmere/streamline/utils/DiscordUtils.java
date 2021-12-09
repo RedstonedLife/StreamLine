@@ -11,133 +11,145 @@ import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class DiscordUtils {
-    public static List<VoiceChannel> createVoice(String name, CategoryType type, SavablePlayer... players) {
+    public static VoiceChannel createVoice(String name, CategoryType type, SavablePlayer... players) {
         JDA jda = StreamLine.getJda();
+
+        if (DiscordUtils.vcNameAlreadyExists(name, type)) return null;
 
         List<Long> discordIDs = new ArrayList<>();
         for (SavablePlayer player : players) {
             discordIDs.add(StreamLine.discordData.getIDOfVerified(player.uuid));
         }
 
-        List<VoiceChannel> channels = new ArrayList<>();
+        Guild guild = jda.getGuildById(DiscordBotConfUtils.guildID());
 
-        for (Guild guild : jda.getGuilds()) {
-            if (!discordGuildHasPlayers(players)) continue;
-            Category category = guild.getCategoryById(DiscordBotConfUtils.categoryGet(type));
-            if (category == null) continue;
-            VoiceChannel voiceChannel = guild.createVoiceChannel(name, category).complete();
+        if (! discordGuildHasPlayers(players)) return null;
+        Category category = guild.getCategoryById(DiscordBotConfUtils.categoryGet(type));
+        if (category == null) return null;
+        VoiceChannel voiceChannel = guild.createVoiceChannel(name, category).complete();
 
-            if (ConfigUtils.debug()) MessagingUtils.logInfo("Created voice channel " + voiceChannel.getName() + " (" + voiceChannel.getId() + ")");
+        if (ConfigUtils.debug())
+            MessagingUtils.logInfo("Created voice channel " + voiceChannel.getName() + " (" + voiceChannel.getId() + ")");
 
-            for (long l : discordIDs) {
-                User user = jda.getUserById(l);
-                if (user == null) continue;
-                Member member = guild.getMember(user);
-                if (member == null) {
-                    MessagingUtils.logWarning("Member with id " + l + " returned null!");
-                    continue;
-                }
-                voiceChannel.createPermissionOverride(member).setAllow(
-                        Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
-                        Permission.VOICE_STREAM, Permission.VOICE_USE_VAD,
-                        Permission.VOICE_START_ACTIVITIES, Permission.VIEW_CHANNEL
-                ).complete();
-
-                StreamLine.discordData.addToVoice(l, voiceChannel.getIdLong());
-                if (ConfigUtils.debug()) MessagingUtils.logInfo("Added " + l + " to voice channel " + voiceChannel.getName() + " (" + voiceChannel.getId() + ")!");
+        for (long l : discordIDs) {
+            User user = jda.getUserById(l);
+            if (user == null) continue;
+            Member member = guild.getMember(user);
+            if (member == null) {
+                MessagingUtils.logWarning("Member with id " + l + " returned null!");
+                continue;
             }
+            voiceChannel.createPermissionOverride(member).setAllow(
+                    Permission.VIEW_CHANNEL,
+                    Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
+                    Permission.VOICE_STREAM, Permission.VOICE_USE_VAD,
+                    Permission.VOICE_START_ACTIVITIES, Permission.VIEW_CHANNEL
+            ).complete();
+            voiceChannel.upsertPermissionOverride(guild.getPublicRole()).setDeny(
+                    Permission.VIEW_CHANNEL,
+                    Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
+                    Permission.VOICE_STREAM, Permission.VOICE_USE_VAD,
+                    Permission.VOICE_START_ACTIVITIES, Permission.VIEW_CHANNEL
+            );
 
-            channels.add(voiceChannel);
+            StreamLine.discordData.addToVoice(l, voiceChannel.getIdLong());
+            if (ConfigUtils.debug())
+                MessagingUtils.logInfo("Added " + l + " to voice channel " + voiceChannel.getName() + " (" + voiceChannel.getId() + ")!");
         }
 
-        return channels;
+        return voiceChannel;
     }
 
-    public static List<String> deleteVoice(long voiceID, CategoryType type) {
+    public static String deleteVoice(long voiceID, CategoryType type) {
         JDA jda = StreamLine.getJda();
 
-        List<String> channels = new ArrayList<>();
+        Guild guild = jda.getGuildById(DiscordBotConfUtils.guildID());
+        VoiceChannel channel = guild.getVoiceChannelById(voiceID);
+        if (channel == null) return null;
 
-        for (Guild guild : jda.getGuilds()) {
-            VoiceChannel channel = guild.getVoiceChannelById(voiceID);
+        for (long id : StreamLine.discordData.idsForVoice(channel.getIdLong())) {
+            StreamLine.discordData.removeFromVoice(id, channel.getIdLong());
+        }
+
+        String name = channel.getName();
+
+        channel.delete().complete();
+        return name;
+    }
+
+    public static VoiceChannel addToVoice(long voiceID, SavablePlayer... players) {
+        VoiceChannel channel = null;
+
+        for (SavablePlayer player : players) {
+            if (! StreamLine.discordData.isVerified(player.uuid)) continue;
+
+            JDA jda = StreamLine.getJda();
+            long l = StreamLine.discordData.getIDOfVerified(player.uuid);
+
+            Guild guild = jda.getGuildById(DiscordBotConfUtils.guildID());
+            channel = guild.getVoiceChannelById(voiceID);
             if (channel == null) continue;
 
-            channels.add(channel.getName());
-
-            for (long id : StreamLine.discordData.idsForVoice(channel.getIdLong())) {
-                StreamLine.discordData.removeFromVoice(id, channel.getIdLong());
+            User user = jda.getUserById(l);
+            if (user == null) continue;
+            Member member = guild.getMember(user);
+            if (member == null) {
+                MessagingUtils.logWarning("Member with id " + l + " returned null!");
+                continue;
             }
 
-            channel.delete().complete();
-        }
+            if (isInPermissionOverride(member, channel)) continue;
 
-        return channels;
+            channel.createPermissionOverride(member).setAllow(
+                    Permission.VIEW_CHANNEL,
+                    Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
+                    Permission.VOICE_STREAM, Permission.VOICE_USE_VAD,
+                    Permission.VOICE_START_ACTIVITIES, Permission.VIEW_CHANNEL
+            ).complete();
+
+            StreamLine.discordData.addToVoice(l, channel.getIdLong());
+        }
+        return channel;
     }
 
-    public static List<VoiceChannel> addToVoice(long voiceID, SavablePlayer... players) {
-        List<VoiceChannel> channels = new ArrayList<>();
+    public static boolean isInPermissionOverride(Member member, VoiceChannel channel) {
+        for (PermissionOverride p : channel.getMemberPermissionOverrides()) {
+            if (Objects.equals(p.getMember(), member)) return true;
+        }
+
+        return false;
+    }
+
+    public static VoiceChannel removeFromVoice(long voiceID, SavablePlayer... players) {
+        VoiceChannel channel = null;
 
         for (SavablePlayer player : players) {
-            if (! StreamLine.discordData.isVerified(player.uuid)) continue;
+            if (!StreamLine.discordData.isVerified(player.uuid)) continue;
 
             JDA jda = StreamLine.getJda();
             long l = StreamLine.discordData.getIDOfVerified(player.uuid);
 
-            for (Guild guild : jda.getGuilds()) {
-                VoiceChannel channel = guild.getVoiceChannelById(voiceID);
-                if (channel == null) continue;
+            Guild guild = jda.getGuildById(DiscordBotConfUtils.guildID());
+            channel = guild.getVoiceChannelById(voiceID);
+            if (channel == null) continue;
 
-                User user = jda.getUserById(l);
-                if (user == null) continue;
-                Member member = guild.getMember(user);
-                if (member == null) {
-                    MessagingUtils.logWarning("Member with id " + l + " returned null!");
-                    continue;
-                }
-                channel.createPermissionOverride(member).setAllow(
-                        Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
-                        Permission.VOICE_STREAM, Permission.VOICE_USE_VAD,
-                        Permission.VOICE_START_ACTIVITIES
-                ).complete();
-
-                StreamLine.discordData.addToVoice(l, channel.getIdLong());
-                channels.add(channel);
+            User user = jda.getUserById(l);
+            if (user == null) continue;
+            Member member = guild.getMember(user);
+            if (member == null) {
+                MessagingUtils.logWarning("Member with id " + l + " returned null!");
+                continue;
             }
+            channel.putPermissionOverride(member).resetAllow().complete();
+            guild.kickVoiceMember(member).complete();
+
+            StreamLine.discordData.removeFromVoice(l, channel.getIdLong());
         }
 
-        return channels;
-    }
-
-    public static List<VoiceChannel> removeFromVoice(long voiceID, SavablePlayer... players) {
-        List<VoiceChannel> channels = new ArrayList<>();
-
-        for (SavablePlayer player : players) {
-            if (! StreamLine.discordData.isVerified(player.uuid)) continue;
-
-            JDA jda = StreamLine.getJda();
-            long l = StreamLine.discordData.getIDOfVerified(player.uuid);
-
-            for (Guild guild : jda.getGuilds()) {
-                VoiceChannel channel = guild.getVoiceChannelById(voiceID);
-                if (channel == null) continue;
-
-                User user = jda.getUserById(l);
-                if (user == null) continue;
-                Member member = guild.getMember(user);
-                if (member == null) {
-                    MessagingUtils.logWarning("Member with id " + l + " returned null!");
-                    continue;
-                }
-                channel.putPermissionOverride(member).resetAllow().complete();
-
-                StreamLine.discordData.removeFromVoice(l, channel.getIdLong());
-                channels.add(channel);
-            }
-        }
-
-        return channels;
+        return channel;
     }
 
     public static List<VoiceChannel> getVoiceChannelsByPlayer(SavablePlayer player) {
@@ -173,10 +185,11 @@ public class DiscordUtils {
             discordIDs.add(StreamLine.discordData.getIDOfVerified(player.uuid));
         }
 
-        for (Guild guild : jda.getGuilds()) {
-            for (long l : discordIDs) {
-                if (guild.getMemberById(l) == null) return false;
-            }
+        Guild guild = jda.getGuildById(DiscordBotConfUtils.guildID());
+        if (guild == null) return false;
+
+        for (long l : discordIDs) {
+            if (guild.getMemberById(l) == null) return false;
         }
 
         return true;
@@ -204,5 +217,28 @@ public class DiscordUtils {
         }
 
         return null;
+    }
+
+    public static boolean canCreateMoreVoice(SavablePlayer player) {
+        List<Long> vcList = StreamLine.discordData.getVoiceFrom(StreamLine.discordData.getIDOfVerified(player.uuid));
+
+        if (vcList == null) return true;
+
+        return vcList.size() < PluginUtils.findHighestNumberWithBasePermission(player, ConfigUtils.moduleBVoiceMaxBasePerm()).getKey();
+    }
+
+    public static boolean vcNameAlreadyExists(String vcName, CategoryType categoryType) {
+        JDA jda = StreamLine.getJda();
+        Guild guild = jda.getGuildById(DiscordBotConfUtils.guildID());
+        if (guild == null) return false;
+
+        Category category = guild.getCategoryById(DiscordBotConfUtils.categoryGet(categoryType));
+        if (category == null) return false;
+
+        for (VoiceChannel voiceChannel : category.getVoiceChannels()) {
+            if (voiceChannel.getName().equals(vcName)) return true;
+        }
+
+        return false;
     }
 }
