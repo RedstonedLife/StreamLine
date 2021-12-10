@@ -36,6 +36,9 @@ pom2.xml
 .gradle
 **/build/
 
+out
+out/*
+
 # Others
 bin
 bin/

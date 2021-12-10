@@ -44,6 +44,7 @@ subprojects {
         maven { url 'https://repo.viaversion.com' }
         //JitPack
         maven { url 'https://jitpack.io' }
+        maven { url = 'https://mvnrepository.com/artifact' }
     }
 
     jar.enabled = false
