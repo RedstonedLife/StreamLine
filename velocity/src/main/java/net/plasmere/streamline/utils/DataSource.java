@@ -250,15 +250,133 @@ public class DataSource {
 
     }
 
-    public static void updatePlayerParty(SavablePlayer player, SavableParty party)
+    //region Friends
+    /**
+     * Add a friend on the Database
+     *
+     * @param sender The Sender
+     * @param receiver The Receiver
+     */
+    public static void sendFriendRequest(SavablePlayer sender, SavablePlayer receiver)
     {
-        //TODO
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+        try
+        {
+            Connection connection = getConnection();
+            String query = "INSERT INTO player_friends (uuid, friendUUID, isPending) VALUES (?, ?, 0), (?, ?, 1)";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, sender.getUUID());
+            statement.setString(2, receiver.getUUID());
+            statement.setString(3, receiver.getUUID());
+            statement.setString(4, sender.getUUID());
+
+            statement.execute();
+
+        } catch (SQLException e) {
+            getLogger().warn("SQL Error: " + e.getMessage());
+        }
     }
 
-    public static void updatePlayerGuild(SavableGuild guild)
+    /**
+     * confirm Friend request,
+     *
+     * BY DEFAULT THE SENDER ALREADY HAS CONFIRMED SO CALL THIS ONLY WHEN THE RECEIVER CONFIRMS
+     *
+     * @param receiver The Receiver
+     * @param sender The Sender
+     * @param hasAccepted if the receiver has accepted the request.
+     */
+    public static void confirmFriendRequest(SavablePlayer receiver, SavablePlayer sender, boolean hasAccepted)
+    {
+        try
+        {
+            Connection connection = getConnection();
+            String query;
+            PreparedStatement statement;
+            if(hasAccepted)
+            {
+                query = "UPDATE player_friends SET isPending = 0 WHERE uuid = ? AND friendUUID = ?";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, receiver.getUUID());
+                statement.setString(2, sender.getUUID());
+            }
+            else
+            {
+                query = "DELETE FROM player_friends WHERE (uuid, friendUUID) IN ((?, ?), (?, ?))";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, receiver.getUUID());
+                statement.setString(2, sender.getUUID());
+                statement.setString(3, sender.getUUID());
+                statement.setString(4, receiver.getUUID());
+            }
+
+            statement.execute();
+
+        } catch (SQLException e) {
+            getLogger().warn("SQL Error: " + e.getMessage());
+        }
+    }
+    //endregion
+
+    //region Ignore Related Stuff
+    /**
+     * Ignore player :)
+     *
+     * @param sender The Sender
+     * @param receiver the player to ignore
+     */
+    public static void ignorePlayer(SavablePlayer sender, SavablePlayer receiver)
+    {
+        try
+        {
+            Connection connection = getConnection();
+            String query = "INSERT INTO player_ignores (uuid, ignoredUUID) VALUES (?, ?)";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, sender.getUUID());
+            statement.setString(2, receiver.getUUID());
+
+            statement.execute();
+
+        } catch (SQLException e) {
+            getLogger().warn("SQL Error: " + e.getMessage());
+        }
+    }
+    /**
+     * Removes an ignore row from the db
+     *
+     * @param sender The Sender
+     * @param receiver the player that was ignored
+     */
+    public static void stopIgnoringPlayer(SavablePlayer sender, SavablePlayer receiver)
+    {
+        try
+        {
+            Connection connection = getConnection();
+            String query = "DELETE FROM player_ignores WHERE (uuid = ?, ignoredUUID = ?)";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, sender.getUUID());
+            statement.setString(2, receiver.getUUID());
+
+            statement.execute();
+
+        } catch (SQLException e) {
+            getLogger().warn("SQL Error: " + e.getMessage());
+        }
+    }
+    //endregion
+
+    //region Party Related Stuff
+    public static void addPlayerToParty(SavablePlayer player, SavableParty party)
     {
         //TODO
         throw new java.lang.UnsupportedOperationException("Not supported yet.");
     }
+    //endregion
+
+    //region Guild Related Stuff
+    public static void addPlayerToGuild(SavableGuild guild)
+    {
+        //TODO
+        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+    }
+    //endregion
 }
