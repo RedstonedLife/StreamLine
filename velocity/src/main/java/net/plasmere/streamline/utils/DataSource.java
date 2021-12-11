@@ -6,6 +6,7 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.SavableGuild;
 import net.plasmere.streamline.objects.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
+import net.plasmere.streamline.utils.sql.SQLQueries;
 
 import java.sql.*;
 
@@ -34,11 +35,48 @@ public class DataSource {
         return ds.getConnection();
     }
 
+
+    /**
+     * This will verify if the player_data table exists
+     * if not, it will create all the tables on the selected db
+     */
+    public static void verifyTables()
+    {
+        try
+        {
+            Connection connection = getConnection();
+            //TODO GET PREFIX AND DATABASE NAME FROM CONFIG
+            String query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?;";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, "streamline");
+            statement.setString(2, "player_data");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            int value = resultSet.getInt(1);
+
+            if(value != 0)
+                return;
+
+            query = SQLQueries.tableCreation;
+            statement = connection.prepareStatement(query);
+            statement.executeQuery();
+
+        } catch (SQLException e) {
+            getLogger().warn("SQL Error: " + e.getMessage());
+        }
+
+    }
+
+    /**
+     * Update data of a player on the Database
+     *
+     * @param player The Player data.
+     */
     public static boolean updatePlayerData(SavablePlayer player)
     {
         try
         {
-            //TODO: find a better way to handle this. i dont know java, but this looks very ugly xd
             String query = "UPDATE streamline.player_data " +
                     "SET latestName = '"+player.latestName+"' " +
                     "SET displayName = '"+player.displayName+"' " +
@@ -58,12 +96,55 @@ public class DataSource {
         }
     }
 
-    public static SavablePlayer getPlayerData(SavablePlayer player)
+    /**
+     * Get player data on the Database
+     *
+     * @return a savablePlayer object of the player.
+     */
+    public static SavablePlayer getPlayerData(String UUID)
     {
-        //TODO
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+        try
+        {
+            Connection connection = getConnection();
+            String query = "SELECT * FROM player_data INNER JOIN player_experience ON player_experience.uuid = player_data.uuid WHERE player_data.uuid = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, UUID);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            SavablePlayer player = new SavablePlayer(UUID);
+
+            while(resultSet.next())
+            {
+                player.latestName = resultSet.getString("latestName");
+                player.displayName = resultSet.getString("displayName");
+                player.latestIP = resultSet.getString("latestIp");
+                player.latestVersion = resultSet.getString("latestVersion");
+                //player.latestServer = resultSet.getString("latestServer");
+                player.discordID = resultSet.getLong("discordId");
+                player.muted = resultSet.getBoolean("muted");
+                player.mutedTill = resultSet.getDate("mutedUntil");
+                player.points = resultSet.getInt("points");
+                player.totalXP = resultSet.getInt("totalExperience");
+                player.currentXP = resultSet.getInt("currentExperience");
+                player.lvl = resultSet.getInt("level");
+            }
+
+            return player;
+
+        } catch (SQLException e) {
+            getLogger().warn("SQL Error: " + e.getMessage());
+            return null;
+        }
+
     }
 
+    /**
+     * Add a new ip to a player on the Database
+     *
+     * @param player The Player data.
+     * @param address The ip address to add.
+     */
     public static void addIpToPlayer(SavablePlayer player, String address)
     {
         try
@@ -91,6 +172,12 @@ public class DataSource {
         }
     }
 
+    /**
+     * Add a name to a player on the Database
+     *
+     * @param player The Player data.
+     * @param name The new name to add.
+     */
     public static void addNameToPlayer(SavablePlayer player, String name)
     {
         try
@@ -118,6 +205,11 @@ public class DataSource {
         }
     }
 
+    /**
+     * Update experience data of a player on the Database
+     *
+     * @param player The Player data.
+     */
     public static void updatePlayerExperience(SavablePlayer player)
     {
         try{
@@ -128,6 +220,28 @@ public class DataSource {
             statement.setInt(2, player.currentXP);
             statement.setInt(3, player.lvl);
             statement.setString(4, player.getUUID());
+
+            statement.execute();
+        } catch (SQLException e) {
+            getLogger().warn("SQL Error: " + e.getMessage());
+        }
+
+    }
+
+    /**
+     * Update chat data of a player on the Database
+     *
+     * @param player The Player data.
+     */
+    public static void updatePlayerChat(SavablePlayer player)
+    {
+        try{
+            Connection connection = getConnection();
+            String query = "UPDATE player_chat SET chatChannel = ?, chatId = ? WHERE uuid = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, player.getUUID());
+            statement.setString(2, player.chatChannel.toString());
+            statement.setString(3, player.chatIdentifier);
 
             statement.execute();
         } catch (SQLException e) {

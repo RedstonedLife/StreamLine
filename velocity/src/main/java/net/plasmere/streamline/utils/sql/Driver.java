@@ -11,6 +11,12 @@ import net.plasmere.streamline.utils.UUIDUtils;
 
 import java.sql.*;
 
+/**
+ *
+ * @deprecated
+ * Use DataSource.
+ *
+ */
 public class Driver {
 
     public static Connection connect() throws SQLException {
