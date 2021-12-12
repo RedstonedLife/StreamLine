@@ -10,17 +10,17 @@ public enum SQLQueries {
             " CREATE TABLE player_experience (UUID char(128) COLLATE utf8mb4_bin NOT NULL, totalExperience int(11) NOT NULL, currentExperience int(11) NOT NULL, level int(11) NOT NULL DEFAULT 1) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
             " CREATE TABLE player_friends (UUID char(128) COLLATE utf8mb4_bin NOT NULL, friendUUID char(128) COLLATE utf8mb4_bin NOT NULL, isPending tinyint(1) DEFAULT 0) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
             " CREATE TABLE player_ignores (UUID char(128) COLLATE utf8mb4_bin NOT NULL, ignoredUUID char(128) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " CREATE TABLE player_names (UUID char(128) COLLATE utf8mb4_bin NOT NULL, name int(11) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
+            " CREATE TABLE player_names (UUID char(128) COLLATE utf8mb4_bin NOT NULL, name varchar(64) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
             " CREATE TABLE player_tags (UUID char(128) COLLATE utf8mb4_bin NOT NULL, tags varchar(64) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
             " ALTER TABLE guild_data ADD PRIMARY KEY (id), ADD KEY ownerUUID (ownerUUID);" +
             " ALTER TABLE party_data ADD PRIMARY KEY (id), ADD KEY ownerUUID (ownerUUID);" +
-            " ALTER TABLE player_addresses ADD PRIMARY KEY (UUID);" +
+            " ALTER TABLE player_addresses ADD INDEX (UUID), ADD UNIQUE KEY address (address);" +
             " ALTER TABLE player_chat ADD PRIMARY KEY (UUID);" +
             " ALTER TABLE player_data ADD PRIMARY KEY (UUID);" +
             " ALTER TABLE player_experience ADD PRIMARY KEY (UUID);" +
             " ALTER TABLE player_friends ADD PRIMARY KEY (UUID), ADD UNIQUE KEY friendUUID (friendUUID);" +
             " ALTER TABLE player_ignores ADD PRIMARY KEY (UUID);" +
-            " ALTER TABLE player_names ADD PRIMARY KEY (UUID), ADD UNIQUE KEY name (name);" +
+            " ALTER TABLE player_names ADD INDEX (UUID), ADD UNIQUE KEY name (name);" +
             " ALTER TABLE player_tags ADD PRIMARY KEY (UUID);" +
             " ALTER TABLE guild_data MODIFY id int(11) NOT NULL AUTO_INCREMENT;" +
             " ALTER TABLE party_data MODIFY id int(11) NOT NULL AUTO_INCREMENT;" +

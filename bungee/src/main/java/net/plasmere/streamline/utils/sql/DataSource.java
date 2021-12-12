@@ -33,15 +33,7 @@ public class DataSource {
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
             config.addDataSourceProperty("allowMultiQueries", "true");
             ds = new HikariDataSource(config);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -60,31 +52,31 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
-        try
+        String query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?;";
+
+        try (Connection connection = getConnection())
         {
-            Connection connection = getConnection();
-            //TODO GET PREFIX AND DATABASE NAME FROM CONFIG
-            String query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?;";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, StreamLine.databaseInfo.getDatabase());
-            statement.setString(2, "player_data");
+            try(PreparedStatement statement = connection.prepareStatement(query))
+            {
+                statement.setString(1, StreamLine.databaseInfo.getDatabase());
+                statement.setString(2, "player_data");
 
-            ResultSet resultSet = statement.executeQuery();
+                ResultSet resultSet = statement.executeQuery();
 
-            int value = 0;
+                int value = 0;
 
-            if(resultSet.next()) {
-                value = resultSet.getInt(1);
+                if(resultSet.next())
+                    value = resultSet.getInt(1);
+
+                if(value != 0) return;
             }
 
-//            MessagingUtils.logWarning("DataSouce$verifyTables : value = " + value);
-
-            if(value != 0)
-                return;
-
             query = SQLQueries.CREATE_TABLE.query;
-            statement = connection.prepareStatement(query);
-            statement.execute();
+            try(PreparedStatement statement = connection.prepareStatement(query))
+            {
+                statement.execute();
+            }
+
 
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
@@ -97,27 +89,27 @@ public class DataSource {
      *
      * @param player The Player data.
      */
-    public static boolean updatePlayerData(SavablePlayer player)
+    public static void updatePlayerData(SavablePlayer player)
     {
-        if (! ConfigUtils.moduleDBUse()) return false;
-        try
-        {
-            String query = "UPDATE " + StreamLine.databaseInfo.getDatabase() + ".player_data " +
-                    "SET latestName = '"+player.latestName+"' " +
-                    ", displayName = '"+player.displayName+"' " +
-                    ", latestIp = '"+player.latestIP+"' " +
-                    ", latestVersion = '"+player.latestVersion+"' " +
-                    //", latestServer = '"+player.latestServer+"' " +
-                    ", discordId = '"+player.discordID+"' " +
-                    ", mutedUntil = '"+player.mutedTill+"' " +
-                    ", points = '"+player.points+"' " +
-                    "WHERE player_data.uuid = '"+player.getUniqueId()+"'";
+        if (! ConfigUtils.moduleDBUse()) return;
 
-            getConnection().prepareStatement(query).execute();
-            return true;
+        String query = "REPLACE INTO player_data (uuid, latestName, displayName, latestIp, latestVersion, latestServer, discordId, mutedUntil, points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.getUUID());
+            statement.setString(2, player.latestName);
+            statement.setString(3, player.displayName);
+            statement.setString(4, player.latestIP);
+            statement.setString(5, player.latestVersion);
+            statement.setString(6, "NOT IMPLEMENTED");
+            statement.setLong(7, player.discordID);
+            statement.setDate(8, new java.sql.Date(player.mutedTill.getTime()));
+            statement.setInt(9, player.points);
+
+            statement.execute();
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
-            return false;
         }
     }
 
@@ -128,11 +120,11 @@ public class DataSource {
      */
     public static SavablePlayer getPlayerData(String UUID) throws Exception {
         if (! ConfigUtils.moduleDBUse()) throw new Exception("Database not enabled!");
-        try
+
+        String query = "SELECT * FROM player_data INNER JOIN player_experience ON player_experience.uuid = player_data.uuid WHERE player_data.uuid = ?";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
-            Connection connection = getConnection();
-            String query = "SELECT * FROM player_data INNER JOIN player_experience ON player_experience.uuid = player_data.uuid WHERE player_data.uuid = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, UUID);
 
             ResultSet resultSet = statement.executeQuery();
@@ -173,26 +165,16 @@ public class DataSource {
     public static void addIpToPlayer(SavablePlayer player, String address)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        try
+
+        String query = "REPLACE INTO player_addresses (uuid, address) VALUES (?, ?);";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
-            Connection connection = getConnection();
-            String query = "SELECT uuid, address FROM player_ip_addresses WHERE uuid = ? AND address = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, player.getUUID());
             statement.setString(2, address);
 
-            ResultSet result = connection.prepareStatement(query).executeQuery();
+            connection.prepareStatement(query).execute();
 
-            // If there is a result the ip address is already logged.
-            if(result.next())
-                return;
-
-            query = "INSERT INTO player_addresses (uuid, address) VALUES (?, ?)";
-            statement = connection.prepareStatement(query);
-            statement.setString(1, player.getUUID());
-            statement.setString(2, address);
-
-            statement.execute();
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
         }
@@ -207,26 +189,15 @@ public class DataSource {
     public static void addNameToPlayer(SavablePlayer player, String name)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        try
+
+        String query = "REPLACE INTO player_names (uuid, name) VALUES (?, ?)";
+
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
-            Connection connection = getConnection();
-            String query = "SELECT uuid, name FROM player_names WHERE uuid = ? AND name = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, player.getUUID());
             statement.setString(2, name);
 
-            ResultSet result = connection.prepareStatement(query).executeQuery();
-
-            // If there is a result the ip address is already logged.
-            if(result.next())
-                return;
-
-            query = "INSERT INTO player_names (uuid, address) VALUES (?, ?)";
-            statement = connection.prepareStatement(query);
-            statement.setString(1, player.getUUID());
-            statement.setString(2, name);
-
-            statement.execute();
+            connection.prepareStatement(query).execute();
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
         }
@@ -240,16 +211,18 @@ public class DataSource {
     public static void updatePlayerExperience(SavablePlayer player)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        try{
-            Connection connection = getConnection();
-            String query = "UPDATE player_experience SET totalExperience = ?, currentExperience = ?, level = ? WHERE uuid = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, player.totalXP);
-            statement.setInt(2, player.currentXP);
-            statement.setInt(3, player.lvl);
-            statement.setString(4, player.getUUID());
+
+        String query = "REPLACE INTO player_experience (uuid, totalExperience, currentExperience, level) VALUES (?, ?, ?, ?);";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.getUUID());
+            statement.setInt(2, player.totalXP);
+            statement.setInt(3, player.currentXP);
+            statement.setInt(4, player.lvl);
 
             statement.execute();
+
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
         }
@@ -263,19 +236,20 @@ public class DataSource {
     public static void updatePlayerChat(SavablePlayer player)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        try{
-            Connection connection = getConnection();
-            String query = "UPDATE player_chat SET chatChannel = ?, chatId = ? WHERE uuid = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
+
+        String query = "REPLACE INTO player_chat (uuid, chatChannel, chatId) VALUES (?, ?, ?);";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
             statement.setString(1, player.getUUID());
             statement.setString(2, player.chatChannel.toString());
             statement.setString(3, player.chatIdentifier);
 
             statement.execute();
+
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
         }
-
     }
 
     //region Friends
@@ -288,18 +262,17 @@ public class DataSource {
     public static void sendFriendRequest(SavableUser sender, SavableUser receiver)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        try
+
+        String query = "INSERT INTO player_friends (uuid, friendUUID, isPending) VALUES (?, ?, 0), (?, ?, 1)";
+
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
-            Connection connection = getConnection();
-            String query = "INSERT INTO player_friends (uuid, friendUUID, isPending) VALUES (?, ?, 0), (?, ?, 1)";
-            PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, sender.uuid);
             statement.setString(2, receiver.uuid);
             statement.setString(3, receiver.uuid);
             statement.setString(4, sender.uuid);
 
             statement.execute();
-
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
         }
@@ -317,22 +290,23 @@ public class DataSource {
     public static void confirmFriendRequest(SavableUser sender, SavableUser receiver, boolean hasAccepted)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        try
+
+        String query;
+
+        if(hasAccepted)
+            query = "UPDATE player_friends SET isPending = 0 WHERE uuid = ? AND friendUUID = ?";
+        else
+            query = "DELETE FROM player_friends WHERE (uuid, friendUUID) IN ((?, ?), (?, ?))";
+
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
-            Connection connection = getConnection();
-            String query;
-            PreparedStatement statement;
             if(hasAccepted)
             {
-                query = "UPDATE player_friends SET isPending = 0 WHERE uuid = ? AND friendUUID = ?";
-                statement = connection.prepareStatement(query);
                 statement.setString(1, receiver.uuid);
                 statement.setString(2, sender.uuid);
             }
             else
             {
-                query = "DELETE FROM player_friends WHERE (uuid, friendUUID) IN ((?, ?), (?, ?))";
-                statement = connection.prepareStatement(query);
                 statement.setString(1, receiver.uuid);
                 statement.setString(2, sender.uuid);
                 statement.setString(3, sender.uuid);
@@ -357,16 +331,15 @@ public class DataSource {
     public static void ignorePlayer(SavableUser sender, SavableUser receiver)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        try
+
+        String query = "INSERT INTO player_ignores (uuid, ignoredUUID) VALUES (?, ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
-            Connection connection = getConnection();
-            String query = "INSERT INTO player_ignores (uuid, ignoredUUID) VALUES (?, ?)";
-            PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, sender.uuid);
             statement.setString(2, receiver.uuid);
 
             statement.execute();
-
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
         }
@@ -380,16 +353,15 @@ public class DataSource {
     public static void stopIgnoringPlayer(SavableUser sender, SavableUser receiver)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        try
+
+        String query = "DELETE FROM player_ignores WHERE (uuid = ?, ignoredUUID = ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
-            Connection connection = getConnection();
-            String query = "DELETE FROM player_ignores WHERE (uuid = ?, ignoredUUID = ?)";
-            PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, sender.uuid);
             statement.setString(2, receiver.uuid);
 
             statement.execute();
-
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
         }
