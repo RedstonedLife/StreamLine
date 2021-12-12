@@ -34,6 +34,7 @@ import net.plasmere.streamline.utils.holders.GeyserHolder;
 import net.plasmere.streamline.utils.holders.LPHolder;
 import net.plasmere.streamline.utils.holders.ViaHolder;
 import net.plasmere.streamline.utils.holders.VoteHolder;
+import net.plasmere.streamline.utils.sql.DataSource;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -419,6 +420,7 @@ public class StreamLine extends Plugin {
 
 		if (ConfigUtils.moduleDBUse()) {
 			databaseInfo = new DatabaseInfo();
+			DataSource.verifyTables();
 		}
 
 		if (ConfigUtils.moduleDEnabled()) {

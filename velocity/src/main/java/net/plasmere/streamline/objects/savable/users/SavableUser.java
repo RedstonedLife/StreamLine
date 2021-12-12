@@ -10,6 +10,7 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.PluginUtils;
 import net.plasmere.streamline.utils.TextUtils;
+import net.plasmere.streamline.utils.sql.DataSource;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -118,7 +119,7 @@ public abstract class SavableUser {
 
                 if (player == null) return MessageConfUtils.nullB();
 
-                if (player.getCurrentServer().isPresent()) return ConfigUtils.consoleServer();
+                if (player.getCurrentServer().isEmpty()) return ConfigUtils.consoleServer();
 
                 return player.getCurrentServer().get().getServerInfo().getName();
             } catch (Exception e) {
@@ -231,10 +232,16 @@ public abstract class SavableUser {
                 while (data.startsWith("#")) {
                     data = reader.nextLine();
                 }
-                String[] dataSplit = data.split("=", 2);
-                if (keys.contains(dataSplit[0])) continue;
-                keys.add(dataSplit[0]);
-                addKeyValuePair(tryUpdateFormat(dataSplit[0]), dataSplit[1]);
+                try {
+                    String[] dataSplit = data.split("=", 2);
+                    if (keys.contains(dataSplit[0])) continue;
+                    keys.add(dataSplit[0]);
+                    addKeyValuePair(tryUpdateFormat(dataSplit[0]), dataSplit[1]);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    // do nothing.
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             reader.close();
@@ -406,6 +413,9 @@ public abstract class SavableUser {
 
         if (this.latestName == null) {
             try {
+                if (this.uuid == null) return;
+                if (this.uuid.equals("null")) return;
+
                 if (ConfigUtils.deleteBadStats()) {
                     this.dispose();
                 }
@@ -418,6 +428,9 @@ public abstract class SavableUser {
 
         if (this.latestName.equals("null")) {
             try {
+                if (this.uuid == null) return;
+                if (this.uuid.equals("null")) return;
+
                 if (ConfigUtils.deleteBadStats()) {
                     this.dispose();
                 }
@@ -493,6 +506,12 @@ public abstract class SavableUser {
         this.ignoreds = stringifyList(ignoredList, ",");
 
         updateKey("ignored", this.ignoreds);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.ignorePlayer(this, other);
     }
 
     public void tryRemIgnored(String uuid){
@@ -505,6 +524,12 @@ public abstract class SavableUser {
         this.ignoreds = stringifyList(ignoredList, ",");
 
         updateKey("ignored", this.ignoreds);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.stopIgnoringPlayer(this, other);
     }
 
     public void tryAddNewFriend(String uuid){
@@ -520,6 +545,13 @@ public abstract class SavableUser {
         this.friends = stringifyList(friendList, ",");
 
         updateKey("friends", this.friends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.confirmFriendRequest(this, other, true);
+        DataSource.confirmFriendRequest(other, this, true);
     }
 
     public void tryRemFriend(String uuid){
@@ -532,6 +564,13 @@ public abstract class SavableUser {
         this.friends = stringifyList(friendList, ",");
 
         updateKey("friends", this.friends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.confirmFriendRequest(this, other, false);
+        DataSource.confirmFriendRequest(other, this, false);
     }
 
     public void tryAddNewPendingToFriend(String uuid){
@@ -544,6 +583,12 @@ public abstract class SavableUser {
         this.pendingToFriends = stringifyList(pendingToFriendList, ",");
 
         updateKey("pending-to-friends", this.pendingToFriends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.sendFriendRequest(this, other);
     }
 
     public void tryRemPendingToFriend(String uuid){
@@ -556,6 +601,12 @@ public abstract class SavableUser {
         this.pendingToFriends = stringifyList(pendingToFriendList, ",");
 
         updateKey("pending-to-friends", this.pendingToFriends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.confirmFriendRequest(other, this, false);
     }
 
     public void tryAddNewPendingFromFriend(String uuid){
@@ -568,6 +619,12 @@ public abstract class SavableUser {
         this.pendingFromFriends = stringifyList(pendingFromFriendList, ",");
 
         updateKey("pending-from-friends", this.pendingFromFriends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.sendFriendRequest(other, this);
     }
 
     public void tryRemPendingFromFriend(String uuid){
@@ -580,6 +637,12 @@ public abstract class SavableUser {
         this.pendingFromFriends = stringifyList(pendingFromFriendList, ",");
 
         updateKey("pending-from-friends", this.pendingFromFriends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.confirmFriendRequest(this, other, false);
     }
 
     public List<String> loadTags(){

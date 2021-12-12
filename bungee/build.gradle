@@ -22,6 +22,9 @@ dependencies {
     implementation "com.viaversion:viaversion-api:${viaApiVersion}"
     implementation "net.kyori:adventure-text-serializer-legacy:${adventureVersion}"
     implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
+
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.1'
+
     implementation files('../libs/nuvotifier.jar')
 }
 

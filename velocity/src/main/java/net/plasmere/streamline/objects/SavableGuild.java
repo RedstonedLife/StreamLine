@@ -7,6 +7,7 @@ import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.plasmere.streamline.utils.UUIDUtils;
+import net.plasmere.streamline.utils.sql.DataSource;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -824,6 +825,8 @@ public class SavableGuild {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+//        DataSource.addPlayerToGuild(stat, this);
     }
 
     public void removeMemberFromGuild(SavableUser stat){

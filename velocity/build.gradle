@@ -37,6 +37,8 @@ dependencies {
     implementation 'mysql:mysql-connector-java:5.1.6'
     shadow 'mysql:mysql-connector-java:5.1.6'
 
+    implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.1'
+
     implementation files('../libs/nuvotifier.jar')
 }
 

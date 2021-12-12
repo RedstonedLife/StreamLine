@@ -1,5 +1,6 @@
 package net.plasmere.streamline.utils.sql;
 
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.enums.SavableType;
@@ -10,10 +11,17 @@ import net.plasmere.streamline.utils.UUIDUtils;
 
 import java.sql.*;
 
+/**
+ *
+ * @deprecated
+ * Use DataSource.
+ *
+ */
 public class Driver {
+
     public static Connection connect() throws SQLException {
         try {
-//            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Class.forName("com.mysql.jdbc.Driver").getDeclaredConstructor().newInstance();
 
             String connectionURL = "jdbc:mysql://%host%:%port%"
                     .replace("%host%", StreamLine.databaseInfo.getHost())
@@ -24,6 +32,7 @@ public class Driver {
 
             try {
                 Statement statement = connection.createStatement();
+
 
                 statement.execute("create database if not exists " + StreamLine.databaseInfo.getDatabase());
 
@@ -78,6 +87,34 @@ public class Driver {
             e.printStackTrace();
         }
         if (ConfigUtils.debug()) MessagingUtils.logInfo("Updated entry with type " + type + " and uuid " + uuid + "!");
+    }
+
+    public static void addNewIpToPlayer(String ipAddress, ProxiedPlayer player)
+    {
+        //TODO: IF IP IS ALREADY ON THE TABLE ^ SKIP :)
+        try
+        {
+            Connection connection = connect();
+
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT ipAddress FROM ipAddress WHERE ipAddress = "+ipAddress+"AND UUID = "+player.getUniqueId());
+
+            //If the ip is already on the db, we will skip this.
+            if(rs.isBeforeFirst())
+            {
+                return;
+            }
+            rs.close();
+            statement.close();
+
+            statement = connection.createStatement();
+            statement.executeQuery("INSERT INTO ipAddress () VALUES ()");
+
+            connection.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 //    public static void insert(SavableType type, String uuid) {

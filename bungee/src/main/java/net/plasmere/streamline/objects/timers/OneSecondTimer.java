@@ -130,6 +130,7 @@ public class OneSecondTimer implements Runnable {
             for (long k : StreamLine.discordData.getVerified().keySet()) {
                 String uuid = StreamLine.discordData.getUUIDOfVerified(k);
                 if (uuid == null) continue;
+                if (uuid.equals("null")) continue;
                 if (uuid.equals("")) continue;
 
                 SavableUser user = PlayerUtils.getOrGetSavableUser(uuid);

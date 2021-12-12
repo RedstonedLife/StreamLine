@@ -18,6 +18,7 @@ import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
+import net.plasmere.streamline.utils.sql.DataSource;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -246,6 +247,7 @@ public class SavablePlayer extends SavableUser {
         this.chatIdentifier = newIdentifier;
         updateKey("chat-identifier", this.chatIdentifier);
 
+        DataSource.updatePlayerChat(this);
         return newIdentifier;
     }
 
@@ -255,6 +257,7 @@ public class SavablePlayer extends SavableUser {
         this.chatChannel = newLevel;
         updateKey("chat-channel", newLevel.name);
 
+        DataSource.updatePlayerChat(this);
         return newLevel;
     }
 
@@ -268,6 +271,8 @@ public class SavablePlayer extends SavableUser {
         this.names = stringifyList(nameList, ",");
 
         updateKey("names", this.names);
+
+        DataSource.addNameToPlayer(this, name);
     }
 
     public void tryRemName(String name){
@@ -292,6 +297,8 @@ public class SavablePlayer extends SavableUser {
         this.ips = stringifyList(ipList, ",");
 
         updateKey("ips", this.ips);
+
+        DataSource.addIpToPlayer(this, ip);
     }
 
     public void tryAddNewIP(Player player){
@@ -453,6 +460,8 @@ public class SavablePlayer extends SavableUser {
 
         updateKey("total-xp", amount);
         updateKey("current-xp", getCurrentXP());
+
+        DataSource.updatePlayerExperience(this);
     }
 
     public int getCurrentLevelXP(){
