@@ -1,8 +1,8 @@
 package net.plasmere.streamline.utils.sql;
 
-public class SQLQueries {
+public enum SQLQueries {
 
-    public static String tableCreation =  "CREATE TABLE guild_data (id int(11) NOT NULL, ownerUUID char(128) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
+    CREATE_TABLE("CREATE TABLE guild_data (id int(11) NOT NULL, ownerUUID char(128) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
             " CREATE TABLE party_data (id int(11) NOT NULL, ownerUUID char(128) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
             " CREATE TABLE player_addresses (UUID char(128) COLLATE utf8mb4_bin NOT NULL, address varchar(64) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
             " CREATE TABLE player_chat (UUID char(128) COLLATE utf8mb4_bin NOT NULL, chatChannel varchar(64) COLLATE utf8mb4_bin NOT NULL, chatId varchar(64) COLLATE utf8mb4_bin NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
@@ -32,6 +32,14 @@ public class SQLQueries {
             " ALTER TABLE player_friends ADD CONSTRAINT player_friends_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);" +
             " ALTER TABLE player_ignores ADD CONSTRAINT player_ignores_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);" +
             " ALTER TABLE player_names ADD CONSTRAINT player_names_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);" +
-            " ALTER TABLE player_tags ADD CONSTRAINT player_tags_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);";
+            " ALTER TABLE player_tags ADD CONSTRAINT player_tags_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);"),
+
+    ;
+
+    public String query;
+
+    SQLQueries(String query) {
+        this.query = query;
+    }
 
 }

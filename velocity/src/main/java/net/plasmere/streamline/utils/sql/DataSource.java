@@ -31,6 +31,7 @@ public class DataSource {
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+            config.addDataSourceProperty("allowMultiQueries", "true");
             ds = new HikariDataSource(config);
         } catch (InstantiationException e) {
             e.printStackTrace();
@@ -81,7 +82,7 @@ public class DataSource {
             if(value != 0)
                 return;
 
-            query = SQLQueries.tableCreation;
+            query = SQLQueries.CREATE_TABLE.query;
             statement = connection.prepareStatement(query);
             statement.execute();
 
@@ -101,7 +102,7 @@ public class DataSource {
         if (! ConfigUtils.moduleDBUse()) return false;
         try
         {
-            String query = "UPDATE streamline.player_data " +
+            String query = "UPDATE " + StreamLine.databaseInfo.getDatabase() + ".player_data " +
                     "SET latestName = '"+player.latestName+"' " +
                     ", displayName = '"+player.displayName+"' " +
                     ", latestIp = '"+player.latestIP+"' " +
