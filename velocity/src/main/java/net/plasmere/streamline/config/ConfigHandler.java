@@ -193,7 +193,7 @@ public class ConfigHandler {
 
     public ConfigSection getConfSection(String path) {
         reloadConfig();
-        return (ConfigSection) conf.getSection(path);
+        return new ConfigSection(conf.getSection(path));
     }
 
     public Object getObjectConf(String path){
@@ -238,7 +238,7 @@ public class ConfigHandler {
 
     public ConfigSection getMessSection(String path) {
         reloadLocales();
-        return (ConfigSection)  mess.getSection(path);
+        return new ConfigSection( mess.getSection(path));
     }
 
     public Object getObjectMess(String path){
@@ -288,7 +288,7 @@ public class ConfigHandler {
 
     public ConfigSection getDisBotSection(String path) {
         reloadDiscordBot();
-        return (ConfigSection) discordBot.getSection(path);
+        return new ConfigSection(discordBot.getSection(path));
     }
 
     public Object getObjectDisBot(String path){
@@ -333,7 +333,7 @@ public class ConfigHandler {
 
     public ConfigSection getCommandSection(String path) {
         reloadCommands();
-        return (ConfigSection) commands.getSection(path);
+        return new ConfigSection(commands.getSection(path));
     }
 
     public Object getObjectCommand(String path){

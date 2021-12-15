@@ -352,7 +352,7 @@ public abstract class From {
             boolean trial = false;
 
             try {
-                trial = hasKeys((ConfigSection) base.getSection(currSearch));
+                trial = hasKeys(new ConfigSection(base.getSection(currSearch)));
             } catch (Exception e) {
                 // do nothing
             }
@@ -436,7 +436,7 @@ public abstract class From {
         boolean trial = false;
 
         try {
-            trial = hasKeys((ConfigSection) base.getSection(currSearch));
+            trial = hasKeys(new ConfigSection(base.getSection(currSearch)));
         } catch (Exception e) {
             // do nothing
         }
@@ -554,7 +554,7 @@ public abstract class From {
             boolean trial = false;
 
             try {
-                trial = hasKeys((ConfigSection) base.getSection(currSearch));
+                trial = hasKeys(new ConfigSection(base.getSection(currSearch)));
             } catch (Exception e) {
                 // do nothing
             }

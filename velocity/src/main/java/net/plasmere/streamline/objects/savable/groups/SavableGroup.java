@@ -21,6 +21,8 @@ public abstract class SavableGroup extends SavableFile {
     public long voiceID;
     public int maxSize;
 
+    public int databaseID;
+
     public enum Level {
         MEMBER,
         MODERATOR,
@@ -55,6 +57,10 @@ public abstract class SavableGroup extends SavableFile {
         maxSize = getOrSetDefault("settings.size.max", ConfigUtils.partyMax());
         // Discord.
         voiceID = getOrSetDefault("discord.channel.voice", 0L);
+        // Database.
+        if (ConfigUtils.moduleDBUse()) {
+            databaseID = getOrSetDefault("database.id", 1);
+        }
 
         populateMoreDefaults();
     }
@@ -87,6 +93,10 @@ public abstract class SavableGroup extends SavableFile {
         maxSize = getOrSetDefault("settings.size.max", maxSize);
         // Discord.
         voiceID = getOrSetDefault("discord.channel.voice", voiceID);
+        // Database.
+        if (ConfigUtils.moduleDBUse()) {
+            databaseID = getOrSetDefault("database.id", databaseID);
+        }
 
         loadMoreValues();
     }
@@ -351,6 +361,10 @@ public abstract class SavableGroup extends SavableFile {
 
     public void setVoiceID(long voiceID) {
         this.voiceID = voiceID;
+    }
+
+    public void setDatabaseID(int id) {
+        this.databaseID = id;
     }
 
     public boolean hasModPerms(String uuid) {

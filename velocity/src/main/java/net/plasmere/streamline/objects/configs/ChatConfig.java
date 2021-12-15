@@ -190,7 +190,7 @@ public class ChatConfig {
                 MessagingUtils.logSevere("You have an error with your chats! Keys cannot be the same! Skipping...");
                 continue;
             }
-            map.put(thing, section.getString(key));
+            map.put(thing, section.s.getString(key));
         }
 
         return map;
@@ -198,7 +198,7 @@ public class ChatConfig {
 
     public ConfigSection getFormatConfig(ChatChannel chatChannel, String chatName, MessageServerType messageServerType) {
         reloadConfig();
-        return (ConfigSection) conf.getSection("chats." + chatChannel.name + "." + chatName + "." + messageServerType.toString().toLowerCase(Locale.ROOT));
+        return new ConfigSection(conf.getSection("chats." + chatChannel.name + "." + chatName + "." + messageServerType.toString().toLowerCase(Locale.ROOT)));
     }
 
     public boolean hasChatPermission(SavableUser user, Chat chat, MessageServerType messageServerType) {

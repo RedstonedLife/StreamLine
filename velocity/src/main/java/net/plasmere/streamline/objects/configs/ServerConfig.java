@@ -66,7 +66,7 @@ public class ServerConfig {
 
     public TreeMap<Integer, String> getComparedMOTD() {
         try {
-            return TextUtils.comparedConfiguration((ConfigSection) serverConfig.getSection("motd"));
+            return TextUtils.comparedConfiguration(new ConfigSection(serverConfig.getSection("motd")));
         } catch (Exception e) {
             e.printStackTrace();
             return new TreeMap<>();
@@ -75,7 +75,7 @@ public class ServerConfig {
 
     public TreeMap<Integer, String> getComparedSample() {
         try {
-            return TextUtils.comparedConfiguration((ConfigSection) serverConfig.getSection("sample"));
+            return TextUtils.comparedConfiguration(new ConfigSection(serverConfig.getSection("sample")));
         } catch (Exception e) {
             e.printStackTrace();
             return new TreeMap<>();

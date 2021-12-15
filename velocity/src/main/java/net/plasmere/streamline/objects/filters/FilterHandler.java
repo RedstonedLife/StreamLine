@@ -42,13 +42,13 @@ public class FilterHandler {
     public static void loadFiltersFromConfiguration(Config configuration) {
         for (String key : configuration.keySet()) {
             try {
-                ConfigSection section = (ConfigSection) configuration.getSection(key);
-                boolean enabled = section.getBoolean("enabled");
-                String scriptName = section.getString("runs-script");
-                String bypassPermission = section.getString("bypass-permission");
-                boolean blocked = section.getBoolean("blocked");
-                String regex = section.getString("regex");
-                List<String> replacements = section.getStringList("replace-with");
+                ConfigSection section = new ConfigSection(configuration.getSection(key));
+                boolean enabled = section.s.getBoolean("enabled");
+                String scriptName = section.s.getString("runs-script");
+                String bypassPermission = section.s.getString("bypass-permission");
+                boolean blocked = section.s.getBoolean("blocked");
+                String regex = section.s.getString("regex");
+                List<String> replacements = section.s.getStringList("replace-with");
 
                 ChatFilter filter = new ChatFilter(key, enabled, scriptName, bypassPermission, blocked, regex, replacements);
                 addFilter(filter);

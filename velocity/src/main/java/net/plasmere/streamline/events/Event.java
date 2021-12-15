@@ -44,7 +44,7 @@ public class Event {
     public TreeMap<Integer, SingleSet<Condition, String>> compileCond() {
         TreeMap<Integer, SingleSet<Condition, String>> c = new TreeMap<>();
 
-        ConfigSection conditionsConf = (ConfigSection) configuration.getSection("conditions");
+        ConfigSection conditionsConf = new ConfigSection(configuration.getSection("conditions"));
         int i = 1;
 
         if (ConfigUtils.debug()) {
@@ -53,12 +53,12 @@ public class Event {
 
         for (String string : conditionsConf.keySet()) {
             try {
-                ConfigSection cond = (ConfigSection) configuration.getSection(conditionsConf.getPathPrefix() + string);
+                ConfigSection cond = new ConfigSection(configuration.getSection(conditionsConf.s.getPathPrefix() + string));
 
                 c.put(i,
                         new SingleSet<>(
-                                Condition.fromString(cond.getString("type")),
-                                cond.getString("value")
+                                Condition.fromString(cond.s.getString("type")),
+                                cond.s.getString("value")
                         )
                 );
             } catch (Exception e) {
@@ -84,17 +84,17 @@ public class Event {
     public TreeMap<Integer, SingleSet<Action, String>> compileAction() {
         TreeMap<Integer, SingleSet<Action, String>> a = new TreeMap<>();
 
-        ConfigSection actionsConf = (ConfigSection) configuration.getSection("actions");
+        ConfigSection actionsConf = new ConfigSection(configuration.getSection("actions"));
         int i = 1;
 
         for (String string : actionsConf.keySet()) {
             try {
-                ConfigSection act = (ConfigSection) configuration.getSection(actionsConf.getPathPrefix() + string);
+                ConfigSection act = new ConfigSection(configuration.getSection(actionsConf.s.getPathPrefix() + string));
 
                 a.put(i,
                         new SingleSet<>(
-                                Action.fromString(act.getString("type")),
-                                act.getString("value")
+                                Action.fromString(act.s.getString("type")),
+                                act.s.getString("value")
                         )
                 );
             } catch (Exception e) {

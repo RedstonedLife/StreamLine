@@ -139,7 +139,7 @@ public class TextUtils {
                 continue; // Do nothing.
             }
 
-            thing.put(it, configuration.getString(key));
+            thing.put(it, configuration.s.getString(key));
         }
 
         return thing;

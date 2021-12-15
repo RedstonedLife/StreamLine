@@ -89,7 +89,7 @@ public class DiscordData {
     public void loadChannels() {
         purgeChannels();
 
-        for (String key : ((ConfigSection) conf.getSection("channels")).getKeys()) {
+        for (String key : (new ConfigSection(conf.getSection("channels")).getKeys())) {
             if (key.contains("put")) continue;
 
             try {
@@ -846,13 +846,13 @@ public class DiscordData {
 
         for (String key : conf.getSection("roles.synced").keySet()) {
             try {
-                ConfigSection section = (ConfigSection) conf.getSection("roles.synced." + key);
-                long role = section.getLong("role");
+                ConfigSection section = new ConfigSection(conf.getSection("roles.synced." + key));
+                long role = section.s.getLong("role");
                 if (role == 0) {
 //                    section.set("role", 894583534017196105L);
 
                 }
-                String group = section.getString("group");
+                String group = section.s.getString("group");
 
                 SingleSet<Long, String> set = new SingleSet<>(role, group);
 
