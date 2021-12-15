@@ -45,11 +45,11 @@ public abstract class SavableGroup extends SavableFile {
         switch (type) {
             case PARTY -> {
                 user.setParty(uuid);
-                DataSource.createParty(user, (SavableParty) this);
+                this.databaseID = DataSource.createParty(user, (SavableParty) this);
             }
             case GUILD -> {
                 user.setGuild(uuid);
-                DataSource.createGuild(user, (SavableGuild) this);
+                this.databaseID = DataSource.createGuild(user, (SavableGuild) this);
             }
         }
     }

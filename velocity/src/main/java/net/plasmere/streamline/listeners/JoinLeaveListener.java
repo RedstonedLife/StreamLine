@@ -30,6 +30,7 @@ import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.objects.timers.ProcessDBUpdateRunnable;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
+import net.plasmere.streamline.utils.sql.DataSource;
 
 import java.util.List;
 import java.util.TreeMap;
@@ -79,16 +80,18 @@ public class JoinLeaveListener {
 
         if (ConfigUtils.debug()) MessagingUtils.logInfo("SavablePlayer : latestName = " + stat.latestName + " | uuid = " + stat.uuid);
 
-        try {
-            Thread initThread = new Thread(new ProcessDBUpdateRunnable(stat), "Streamline - Database Sync - Join");
-            initThread.setUncaughtExceptionHandler((t, e) -> {
-//                e.printStackTrace();
-                MessagingUtils.logSevere("Streamline failed to start thread properly properly: " + e.getMessage() + ".");
-            });
-            initThread.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        DataSource.updatePlayerData(stat);
+
+//        try {
+//            Thread initThread = new Thread(new ProcessDBUpdateRunnable(stat), "Streamline - Database Sync - Join");
+//            initThread.setUncaughtExceptionHandler((t, e) -> {
+////                e.printStackTrace();
+//                MessagingUtils.logSevere("Streamline failed to start thread properly properly: " + e.getMessage() + ".");
+//            });
+//            initThread.start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         if (ConfigUtils.updateDisplayNames()) {
             for (SavablePlayer p : PlayerUtils.getJustPlayers()) {
@@ -401,16 +404,18 @@ public class JoinLeaveListener {
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
-        try {
-            Thread initThread = new Thread(new ProcessDBUpdateRunnable(stat), "Streamline - Database Sync - Leave");
-            initThread.setUncaughtExceptionHandler((t, e) -> {
-//                e.printStackTrace();
-                MessagingUtils.logSevere("Streamline failed to start thread properly properly: " + e.getMessage() + ".");
-            });
-            initThread.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        DataSource.updatePlayerData(stat);
+
+//        try {
+//            Thread initThread = new Thread(new ProcessDBUpdateRunnable(stat), "Streamline - Database Sync - Leave");
+//            initThread.setUncaughtExceptionHandler((t, e) -> {
+////                e.printStackTrace();
+//                MessagingUtils.logSevere("Streamline failed to start thread properly properly: " + e.getMessage() + ".");
+//            });
+//            initThread.start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         String leavesOrder = ConfigUtils.moduleBPlayerLeaves();
 
@@ -507,12 +512,14 @@ public class JoinLeaveListener {
             }
         }
 
+        SavableGuild guild = GuildUtils.getGuild(stat);
+
+        SavableParty party = PartyUtils.getParty(stat.uuid);
+
         SingleSet<Boolean, ChatChannel> get = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("guild"), stat.guild);
         if (get.key) {
             StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("guild"), stat.guild);
         }
-
-        SavableParty party = PartyUtils.getParty(stat.uuid);
 
         if (party != null) {
             SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.uuid);
@@ -525,24 +532,6 @@ public class JoinLeaveListener {
             if (ChatsHandler.chatExists(stat.chatChannel, stat.chatIdentifier)) {
                 StreamLine.discordData.sendDiscordLeaveChannel(player, stat.chatChannel, stat.chatIdentifier);
             }
-        }
-
-        try {
-            for (Player pl : StreamLine.getInstance().getProxy().getAllPlayers()){
-                SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(pl.getUniqueId().toString());
-
-                if (GuildUtils.pHasGuild(stat)) {
-                    SavableGuild guild = GuildUtils.getGuild(stat);
-
-                    if (guild == null || p.equals(stat)) continue;
-                    if (guild.hasMember(p)) break;
-                    if (stat.guild.equals(p.guild)) break;
-
-                    GuildUtils.removeGuild(guild);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         SingleSet<Boolean, ChatChannel> get3 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("global"), "");

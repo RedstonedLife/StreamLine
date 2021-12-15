@@ -264,8 +264,12 @@ public class MessagingUtils {
         return (string == null) ? PlayerUtils.getOrGetSavableUser(player).displayName : string;
     }
 
-    public static void sendDisplayPluginMessageRequest(Player player) {
-        if (PlayerUtils.getServeredPPlayers(player.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+    public static void sendDisplayPluginMessageRequest(Player to) {
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("request.displayname"); // the channel could be whatever you want
@@ -273,7 +277,7 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        player.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
+        to.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
     }
 
     public static void sendGuildPluginMessageRequest(Player to, SavableGuild guild) {
@@ -307,7 +311,11 @@ public class MessagingUtils {
     }
 
     public static void sendPartyPluginMessageRequest(Player to, SavableParty party) {
-        if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("proxy.send.party"); // the channel could be whatever you want
@@ -333,7 +341,11 @@ public class MessagingUtils {
     }
 
     public static void sendSavableUserPluginMessageRequest(Player to, SavableUser user, String type) {
-        if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("proxy.send.user"); // the channel could be whatever you want
@@ -361,7 +373,11 @@ public class MessagingUtils {
     }
     
     public static void sendTeleportPluginMessageRequest(Player sender, Player to) {
-        if (PlayerUtils.getServeredPPlayers(sender.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("teleport"); // the channel could be whatever you want
@@ -374,21 +390,29 @@ public class MessagingUtils {
         sender.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
     }
 
-    public static void sendTagPingPluginMessageRequest(Player toPing) {
-        if (PlayerUtils.getServeredPPlayers(toPing.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+    public static void sendTagPingPluginMessageRequest(Player to) {
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("tag-ping"); // the channel could be whatever you want
-        out.writeUTF(toPing.getUniqueId().toString()); // this data could be whatever you want // THIS IS THE SENDER PLAYER
+        out.writeUTF(to.getUniqueId().toString()); // this data could be whatever you want // THIS IS THE SENDER PLAYER
 
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        toPing.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
+        to.sendPluginMessage(StreamLine.customIdentifier, out.toByteArray());
     }
 
     public static void sendGuildConfigPluginMessage(Player to, SavableGuild guild) {
-        if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("config.guild");
