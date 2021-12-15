@@ -46,9 +46,9 @@ public class SavableParty {
         this.leaderUUID = creatorUUID;
         this.maxSize = maxSize;
         this.totalMembersByUUID.add(creatorUUID);
-        this.totalMembers.add(PlayerUtils.getOrCreateSUByUUID(creatorUUID));
+        this.totalMembers.add(PlayerUtils.getOrGetSavableUser(creatorUUID));
         try {
-            PlayerUtils.getOrCreateSUByUUID(creatorUUID).updateKey("guild", creatorUUID);
+            PlayerUtils.getOrGetSavableUser(creatorUUID).updateKey("guild", creatorUUID);
         } catch (Exception e){
             // do nothing
         }
@@ -1037,7 +1037,7 @@ public class SavableParty {
 
     public void disband(){
         for (String uuid : totalMembersByUUID){
-            SavableUser stat = PlayerUtils.getOrCreateSUByUUID(uuid);
+            SavableUser stat = PlayerUtils.getOrGetSavableUser(uuid);
 
             stat.updateKey("party", "");
         }

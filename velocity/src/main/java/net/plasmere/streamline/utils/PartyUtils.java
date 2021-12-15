@@ -5,7 +5,8 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.SavableAdapter;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
@@ -14,7 +15,6 @@ import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class PartyUtils {
@@ -24,7 +24,7 @@ public class PartyUtils {
         List<SavableParty> rem = new ArrayList<>();
 
         for (SavableParty g : parties) {
-            if (g.leaderUUID == null) rem.add(g);
+            if (g.uuid == null) rem.add(g);
         }
 
         for (SavableParty g : rem) {
@@ -49,7 +49,7 @@ public class PartyUtils {
                 SavableParty party = getOrGetParty(file.getName().replace(".properties", ""));
 
                 if (party == null) continue;
-                if (party.leaderUUID == null) continue;
+                if (party.uuid == null) continue;
 
                 amount ++;
             } catch (Exception e) {
@@ -84,7 +84,7 @@ public class PartyUtils {
         if (party == null) {
             if (existsByUUID(uuid)) {
                 try {
-                    party = new SavableParty(uuid, false);
+                    party = new SavableParty(uuid);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -92,12 +92,6 @@ public class PartyUtils {
         }
 
         return party;
-    }
-
-    public static void loadAllMembersInAllParties(){
-        for (SavableParty party : parties) {
-            party.loadAllMembers();
-        }
     }
 
     public static boolean hasOnlineMemberAlready(SavableUser stat){
@@ -133,15 +127,13 @@ public class PartyUtils {
     }
 
     public static boolean existsByUUID(String uuid){
-        File file = new File(StreamLine.getInstance().getPDir(), uuid + ".properties");
+        File file = new File(SavableAdapter.Type.PARTY.path, uuid + SavableAdapter.Type.PARTY.suffix);
 
         return file.exists();
     }
 
     public static boolean exists(String username){
-        File file = new File(StreamLine.getInstance().getPDir(), Objects.requireNonNull(PlayerUtils.getOrCreatePlayerStat(username)).party + ".properties");
-
-        return file.exists();
+        return existsByUUID(UUIDUtils.swapToUUID(username));
     }
 
     public static boolean isParty(SavableParty party){
@@ -149,24 +141,21 @@ public class PartyUtils {
     }
 
     public static boolean pHasParty(SavableUser player) {
-        if (!existsByUUID(player.uuid)) return false;
+        if (! existsByUUID(player.uuid)) return false;
 
         SavableParty party;
         try {
-            party = new SavableParty(player.party, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            party = new SavableParty(player.party);
         } catch (NullPointerException e) {
             if (ConfigUtils.debug()) {
                 MessagingUtils.logWarning("SavablePlayer's party could not be found... Adding now!");
             }
 
-            player.updateKey("party", player.uuid);
+            player.setParty(player.uuid);
             return true;
         }
 
-        if (party.leaderUUID == null) {
+        if (party.uuid == null) {
             return false;
         }
 
@@ -229,7 +218,7 @@ public class PartyUtils {
 
                     if (member == null) continue;
 
-                    if (member.getUniqueId().toString().equals(party.leader.uuid)) {
+                    if (member.getUniqueId().toString().equals(PlayerUtils.getOrGetSavableUser(party.uuid).uuid)) {
                         MessagingUtils.sendBPUserMessage(party, p, member, openSender
                         );
                     } else {
@@ -329,7 +318,7 @@ public class PartyUtils {
         SavableParty g;
 
         try {
-            g = getParty(party.leaderUUID);
+            g = getParty(party.uuid);
         } catch (Exception e) {
             return;
             // Do nothing.
@@ -342,14 +331,14 @@ public class PartyUtils {
                 List<SavableParty> rem = new ArrayList<>();
 
                 for (SavableParty gu : parties) {
-                    String s = gu.leaderUUID;
+                    String s = gu.uuid;
 
                     if (s == null) {
                         rem.add(gu);
                         continue;
                     }
 
-                    if (s.equals(party.leaderUUID)) {
+                    if (s.equals(party.uuid)) {
                         rem.add(gu);
                     }
                 }
@@ -372,11 +361,11 @@ public class PartyUtils {
         boolean hasLeader = false;
 
         for (SavableParty party : parties){
-            if (party.leaderUUID == null) {
+            if (party.uuid == null) {
                 toRem.add(party);
                 continue;
             }
-            if (party.leaderUUID.equals(leader)) hasLeader = true;
+            if (party.uuid.equals(leader)) hasLeader = true;
         }
 
         for (SavableParty party : toRem) {
@@ -392,11 +381,7 @@ public class PartyUtils {
     }
 
     public static void removeParty(SavableParty party){
-        try {
-            party.saveInfo();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        party.saveAll();
         parties.remove(party);
     }
 
@@ -432,7 +417,7 @@ public class PartyUtils {
             }
 
             for (SavableUser pl : party.totalMembers) {
-                if (pl.uuid.equals(party.leaderUUID)) {
+                if (pl.uuid.equals(party.uuid)) {
                     MessagingUtils.sendBPUserMessage(party, from.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(inviteLeader, to)
                     );
                 } else {
@@ -495,7 +480,7 @@ public class PartyUtils {
                 );
 
                 for (SavableUser pl : party.totalMembers){
-                    if (pl.uuid.equals(party.leaderUUID)){
+                    if (pl.uuid.equals(party.uuid)){
                         MessagingUtils.sendBPUserMessage(party, accepter.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(acceptLeader, accepter)
                                 .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                                 .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
@@ -572,7 +557,7 @@ public class PartyUtils {
                 );
 
                 for (SavableUser pl : party.totalMembers) {
-                    if (pl.uuid.equals(party.leaderUUID)) {
+                    if (pl.uuid.equals(party.uuid)) {
                         MessagingUtils.sendBPUserMessage(party, denier.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(denyLeader, denier)
                                 .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                                 .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
@@ -741,14 +726,14 @@ public class PartyUtils {
         try {
             if (sender.equals(player)) {
                 MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(),  kickSelf);
-            } else if (player.equals(PlayerUtils.getOrCreateSUByUUID(party.leaderUUID))) {
+            } else if (player.equals(PlayerUtils.getOrGetSavableUser(party.uuid))) {
                 MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(),  noPermission);
             } else {
                 for (SavableUser pl : party.totalMembers) {
                     if (pl.equals(sender)) {
                         MessagingUtils.sendBPUserMessage(party, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(kickSender, player)
                         );
-                    } else if (! pl.uuid.equals(party.leaderUUID)) {
+                    } else if (! pl.uuid.equals(party.uuid)) {
                         MessagingUtils.sendBPUserMessage(party, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(kickUser, player)
                         );
                     } else {
@@ -757,7 +742,7 @@ public class PartyUtils {
                     }
                 }
 
-                party.removeMemberFromParty(player);
+                party.removeMemberFromGroup(player);
             }
 
             if (ConfigUtils.moduleDEnabled()) {
@@ -768,7 +753,9 @@ public class PartyUtils {
                 }
             }
         } catch (Exception e) {
-            MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(), MessageConfUtils.bungeeCommandErrorUnd());
+            MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(), MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", PartyUtils.class.getName())
+                    );
             e.printStackTrace();
         }
     }
@@ -803,7 +790,7 @@ public class PartyUtils {
                 return;
             }
 
-            if (! party.leaderUUID.equals(sender.uuid)) {
+            if (! party.uuid.equals(sender.uuid)) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPermission);
                 return;
             }
@@ -811,7 +798,7 @@ public class PartyUtils {
             for (SavableUser pl : party.totalMembers) {
                 if (! pl.online) continue;
 
-                if (! pl.uuid.equals(party.leaderUUID)) {
+                if (! pl.uuid.equals(party.uuid)) {
                     MessagingUtils.sendBPUserMessage(party, sender.findSender(), pl.findSender(), disbandMembers
                     );
                 } else {
@@ -1038,7 +1025,7 @@ public class PartyUtils {
                 return;
             }
 
-            if (!party.leaderUUID.equals(sender.uuid)) {
+            if (!party.uuid.equals(sender.uuid)) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPermission);
                 return;
             }
@@ -1054,7 +1041,7 @@ public class PartyUtils {
                     party.replaceLeader(player);
 
                     for (SavableUser pl : party.totalMembers) {
-                        if (pl.uuid.equals(party.leaderUUID)) {
+                        if (pl.uuid.equals(party.uuid)) {
                             MessagingUtils.sendBPUserMessage(party, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(promoteLeader, player)
                                     .replace("%level%", TextUtils.replaceAllPlayerBungee(textLeader, player)
                                     )
@@ -1077,7 +1064,7 @@ public class PartyUtils {
                     party.setModerator(player);
 
                     for (SavableUser pl : party.totalMembers) {
-                        if (pl.uuid.equals(party.leaderUUID)) {
+                        if (pl.uuid.equals(party.uuid)) {
                             MessagingUtils.sendBPUserMessage(party, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(promoteLeader, player)
                                     .replace("%level%", TextUtils.replaceAllPlayerBungee(textModerator, player)
                                     )
@@ -1144,7 +1131,7 @@ public class PartyUtils {
                     party.setMember(player);
 
                     for (SavableUser pl : party.totalMembers) {
-                        if (pl.uuid.equals(party.leaderUUID)) {
+                        if (pl.uuid.equals(party.uuid)) {
                             MessagingUtils.sendBPUserMessage(party, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(demoteLeader, player)
                                     .replace("%level%", TextUtils.replaceAllPlayerBungee(textMember, player)
                                     )
@@ -1249,7 +1236,7 @@ public class PartyUtils {
                 return;
             }
 
-            if (PlayerUtils.getOrCreateSUByUUID(party.leaderUUID).equals(sender)) {
+            if (PlayerUtils.getOrGetSavableUser(party.uuid).equals(sender)) {
                 for (SavableUser pl : party.totalMembers) {
                     if (pl.equals(sender)) {
                         MessagingUtils.sendBPUserMessage(party, sender.findSender(), pl.findSender(), leaveUser);
@@ -1276,7 +1263,7 @@ public class PartyUtils {
                     }
                 }
 
-                party.removeMemberFromParty(sender);
+                party.removeMemberFromGroup(sender);
 
                 if (ConfigUtils.moduleDEnabled()) {
                     if (ConfigUtils.partyToDiscord() && ConfigUtils.partyConsoleLeaves()) {
@@ -1316,7 +1303,7 @@ public class PartyUtils {
 
             for (SavableUser pl : party.totalMembers) {
                 MessagingUtils.sendBPUserMessage(party, sender.findSender(), pl.findSender(),
-                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("party", party.leaderUUID), "party", MessageServerType.BUNGEE)
+                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("party", party.uuid), "party", MessageServerType.BUNGEE)
                                 .replace("%message%", msg)
                 );
             }
@@ -1331,13 +1318,13 @@ public class PartyUtils {
             }
 
             if (ConfigUtils.moduleDPC()) {
-                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.leaderUUID, msg);
+                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.uuid, msg);
             }
 
             for (Player pp : PlayerUtils.getOnlinePPlayers()){
                 if (! pp.hasPermission(ConfigUtils.partyView())) continue;
 
-                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrGetPlayerStatByUUID(pp.getUniqueId().toString());
 
                 if (! them.gspy) continue;
 
@@ -1366,14 +1353,14 @@ public class PartyUtils {
 
             for (SavableUser pl : party.totalMembers) {
                 MessagingUtils.sendBPUserMessage(party, sender.findSender(), pl.findSender(),
-                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("party", party.leaderUUID), "party", MessageServerType.BUNGEE)
+                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("party", party.uuid), "party", MessageServerType.BUNGEE)
                                 .replace("%message%", msg)
                 );
             }
 
             if (! sender.chatIdentifier.equals(sender.party) && ! sender.chatIdentifier.equals("network")) {
                 MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(),
-                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("party", party.leaderUUID), "party", MessageServerType.BUNGEE)
+                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("party", party.uuid), "party", MessageServerType.BUNGEE)
                                 .replace("%message%", msg)
                 );
             }
@@ -1388,13 +1375,13 @@ public class PartyUtils {
             }
 
             if (ConfigUtils.moduleDPC()) {
-                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.leaderUUID, msg);
+                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.uuid, msg);
             }
 
             for (Player pp : PlayerUtils.getOnlinePPlayers()){
                 if (! pp.hasPermission(ConfigUtils.partyView())) continue;
 
-                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrGetPlayerStatByUUID(pp.getUniqueId().toString());
 
                 if (! them.gspy) continue;
 
@@ -1426,11 +1413,13 @@ public class PartyUtils {
 //            if (user instanceof SavablePlayer) players.add((SavablePlayer) user);
 //        }
 //
-//        DiscordUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
+//        DiscordUtils.createVoice(PlayerUtils.getOrGetSavableUser(party.uuid).latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
 //
 //        Category category = DiscordUtils.getCategory(CategoryType.PARTIES);
 //        if (category == null) {
-//            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+//            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+//                            .replace("%class%", this.getClass().getName())
+//                    );
 //            return;
 //        }
 //
@@ -1461,7 +1450,7 @@ public class PartyUtils {
             for (Player pp : PlayerUtils.getOnlinePPlayers()){
                 if (! pp.hasPermission(ConfigUtils.partyView())) continue;
 
-                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrGetPlayerStatByUUID(pp.getUniqueId().toString());
 
                 if (! them.gspy) continue;
 
@@ -1494,7 +1483,7 @@ public class PartyUtils {
             for (Player pp : PlayerUtils.getOnlinePPlayers()){
                 if (! pp.hasPermission(ConfigUtils.partyView())) continue;
 
-                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrGetPlayerStatByUUID(pp.getUniqueId().toString());
 
                 if (! them.gspy) continue;
 
@@ -1510,7 +1499,7 @@ public class PartyUtils {
 
         for (SavableParty party : gs) {
             try {
-                party.saveInfo();
+                party.saveAll();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1518,7 +1507,7 @@ public class PartyUtils {
     }
 
     public static boolean hasGroupedSize(String group) {
-        for (String key : ConfigUtils.getGroupSizeConfig().getKeys()) {
+        for (String key : ConfigUtils.getGroupSizeConfig().keySet()) {
             if (group.equals(key)) return true;
         }
 

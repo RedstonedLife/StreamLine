@@ -234,7 +234,7 @@ public class Lobbies {
         }
         writer.close();
 
-        //MessagingUtils.logInfo("Just saved SavableGuild info for leader (UUID): " + leaderUUID);
+        //MessagingUtils.logInfo("Just saved SavableGuild info for leader (UUID): " + uuid);
     }
 
     public String toString(){

@@ -35,7 +35,9 @@ public class BypassPCCommand extends SLCommand {
 
         SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
         if (player == null) {
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou());
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
+                            .replace("%class%", this.getClass().getName())
+                    );
             return;
         }
 
@@ -46,7 +48,9 @@ public class BypassPCCommand extends SLCommand {
 
             player.setBypassFor(amount);
         } catch (Exception e) {
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
             return;
         }
     }

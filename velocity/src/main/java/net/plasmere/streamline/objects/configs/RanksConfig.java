@@ -1,10 +1,10 @@
 package net.plasmere.streamline.objects.configs;
 
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.config.backend.ConfigurationProvider;
-import net.plasmere.streamline.config.backend.YamlConfiguration;
+
 import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.io.File;
@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.util.TreeMap;
 
 public class RanksConfig {
-    private Configuration conf;
+    private Config conf;
     private final String fileString = "ranks.yml";
     private final File file = new File(StreamLine.getInstance().getConfDir(), fileString);
 
@@ -30,7 +30,7 @@ public class RanksConfig {
         MessagingUtils.logInfo("Loaded chats settings!");
     }
 
-    public Configuration getConf() {
+    public Config getConf() {
         reloadConfig();
         return conf;
     }
@@ -43,7 +43,7 @@ public class RanksConfig {
         }
     }
 
-    public Configuration loadConfig(){
+    public Config loadConfig(){
         if (! file.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(fileString)){
                 Files.copy(in, file.toPath());
@@ -52,28 +52,11 @@ public class RanksConfig {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file); // ???
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public void saveConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(conf, file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return LightningBuilder.fromFile(file).createConfig();
     }
 
     public void setObject(String pathTo, Object object) {
         conf.set(pathTo, object);
-        saveConfig();
         reloadConfig();
     }
 
@@ -82,7 +65,7 @@ public class RanksConfig {
 
         TreeMap<Integer, String> groups = new TreeMap<>();
 
-        for (String key : conf.getSection("ranks").getKeys()) {
+        for (String key : conf.getSection("ranks").keySet()) {
             try {
                 groups.put(Integer.parseInt(key), conf.getString("ranks." + key));
             } catch (Exception e) {

@@ -24,10 +24,7 @@ import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 
 public class ChatListener implements Listener {
     private final String prefix = ConfigUtils.moduleStaffChatPrefix();
@@ -59,7 +56,7 @@ public class ChatListener implements Listener {
 
         try {
             for (ProxiedPlayer pl : StreamLine.getInstance().getProxy().getPlayers()){
-                SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(pl);
+                SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(pl.getUniqueId().toString());
 
                 if (GuildUtils.getGuild(p) == null && ! p.equals(stat)) continue;
                 if (GuildUtils.getGuild(p) != null) {
@@ -86,7 +83,7 @@ public class ChatListener implements Listener {
 
         if (ConfigUtils.punMutes() && stat.muted) {
             e.setCancelled(true);
-            if (stat.mutedTill != null) {
+            if (! Objects.equals(stat.mutedTill, new Date(0L))) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedTemp().replace("%date%", stat.mutedTill.toString()));
             } else {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedPerm());

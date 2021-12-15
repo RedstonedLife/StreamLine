@@ -1,8 +1,9 @@
 package net.plasmere.streamline.config;
 
+import de.leonhard.storage.sections.FlatFileSection;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.objects.chats.ChatChannel;
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 
 import java.util.List;
 
@@ -389,7 +390,7 @@ public class ConfigUtils {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfString("modules.bungee.parties.base-permission");
     }
-    public static Configuration getGroupSizeConfig() {
+    public static ConfigSection getGroupSizeConfig() {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfSection("modules.bungee.parties.group-size");
     }
@@ -580,6 +581,18 @@ public class ConfigUtils {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfBoolean("modules.bungee.guilds.plugin-messaging.enabled");
     }
+    public static boolean guildExperienceStartingLevel() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.bungee.guilds.experience.starting.level");
+    }
+    public static boolean guildExperienceStartingXP() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.bungee.guilds.experience.starting.xp");
+    }
+    public static boolean guildExperienceEquation() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.bungee.guilds.experience.equation");
+    }
     // ... Sudo.
     public static String noSudoPerm() {
         StreamLine.config.reloadConfig();
@@ -613,6 +626,18 @@ public class ConfigUtils {
     public static boolean deleteBadStats() {
         StreamLine.config.reloadConfig();
         return StreamLine.config.getConfBoolean("modules.bungee.stats.delete-bad");
+    }
+    public static boolean statsExperienceStartingLevel() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.bungee.stats.experience.starting.level");
+    }
+    public static boolean statsExperienceStartingXP() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.bungee.stats.experience.starting.xp");
+    }
+    public static boolean statsExperienceEquation() {
+        StreamLine.config.reloadConfig();
+        return StreamLine.config.getConfBoolean("modules.bungee.stats.experience.equation");
     }
     // ... Redirect.
     public static boolean redirectEnabled() {

@@ -19,11 +19,10 @@ import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.enums.Condition;
 import net.plasmere.streamline.objects.GeyserFile;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
-import net.plasmere.streamline.objects.enums.SavableType;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
@@ -31,11 +30,9 @@ import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.objects.timers.ProcessDBUpdateRunnable;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
-import net.plasmere.streamline.utils.sql.Driver;
 
 import java.util.List;
 import java.util.TreeMap;
-import java.util.concurrent.CompletableFuture;
 
 public class JoinLeaveListener {
     private final GeyserFile file = StreamLine.geyserHolder.file;
@@ -80,6 +77,8 @@ public class JoinLeaveListener {
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
+        if (ConfigUtils.debug()) MessagingUtils.logInfo("SavablePlayer : latestName = " + stat.latestName + " | uuid = " + stat.uuid);
+
         try {
             Thread initThread = new Thread(new ProcessDBUpdateRunnable(stat), "Streamline - Database Sync - Join");
             initThread.setUncaughtExceptionHandler((t, e) -> {
@@ -97,8 +96,8 @@ public class JoinLeaveListener {
             }
         }
 
-        stat.tryAddNewName(PlayerUtils.getSourceName(player));
-        stat.tryAddNewIP(player);
+        stat.addName(PlayerUtils.getSourceName(player));
+        stat.addIP(player);
 
         if (StreamLine.chatConfig.getDefaultOnFirstJoin()) {
             if (firstJoin) {
@@ -109,35 +108,47 @@ public class JoinLeaveListener {
         }
 
         try {
-            if (stat.guild != null) {
-                if (! stat.guild.equals("")) {
-                    if (! GuildUtils.existsByUUID(stat.guild)) {
-                        stat.updateKey("guild", "");
-                    } else {
-                        if (! GuildUtils.hasOnlineMemberAlready(stat)) {
-                            GuildUtils.addGuild(new SavableGuild(stat.guild, false));
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            for (Player pl : StreamLine.getProxy().getAllPlayers()) {
+                SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(pl.getUniqueId().toString());
 
-        try {
-            if (stat.party != null) {
-                if (! stat.party.equals("")) {
-                    if (! PartyUtils.existsByUUID(stat.party)) {
-                        stat.updateKey("party", "");
-                    } else {
-                        if (! PartyUtils.hasOnlineMemberAlready(stat)) {
-                            PartyUtils.addParty(new SavableParty(stat.party, false));
-                        }
-                    }
+                if (p == null) continue;
+
+                SavableGuild guild = GuildUtils.getGuild(p);
+
+                if (guild == null && ! p.equals(stat)) continue;
+                if (guild != null) {
+                    if (guild.hasMember(stat)) break;
                 }
+
+
+                if (GuildUtils.pHasGuild(stat)) {
+                    GuildUtils.addGuild(new SavableGuild(stat.guild));
+                }
+                break;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            for (Player pl : StreamLine.getProxy().getAllPlayers()) {
+                SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(pl.getUniqueId().toString());
+
+                if (p == null) continue;
+
+                SavableParty party = PartyUtils.getParty(p);
+
+                if (party == null && ! p.equals(stat)) continue;
+                if (party != null) {
+                    if (party.hasMember(stat)) break;
+                }
+
+                if (PartyUtils.pHasParty(stat)) {
+                    PartyUtils.addParty(new SavableParty(stat.party));
+                }
+                break;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         String joinsOrder = ConfigUtils.moduleBPlayerJoins();
@@ -147,7 +158,7 @@ public class JoinLeaveListener {
             for (Player p : StreamLine.getInstance().getProxy().getAllPlayers()) {
                 if (!p.hasPermission(ConfigUtils.moduleBPlayerJoinsPerm())) continue;
 
-                SavablePlayer other = PlayerUtils.getOrCreatePlayerStat(p);
+                SavablePlayer other = PlayerUtils.getOrGetPlayerStatByUUID(p.getUniqueId().toString());
 
                 label:
                 for (String s : order) {
@@ -242,9 +253,9 @@ public class JoinLeaveListener {
         SavableParty party = PartyUtils.getParty(stat.uuid);
 
         if (party != null) {
-            SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.leaderUUID);
+            SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.uuid);
             if (get2.key) {
-                StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("party"), party.leaderUUID);
+                StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("party"), party.uuid);
             }
         }
 
@@ -408,7 +419,7 @@ public class JoinLeaveListener {
             for (Player p : StreamLine.getInstance().getProxy().getAllPlayers()) {
                 if (! p.hasPermission(ConfigUtils.moduleBPlayerLeavesPerm())) continue;
 
-                SavablePlayer other = PlayerUtils.getOrCreatePlayerStat(p);
+                SavablePlayer other = PlayerUtils.getOrGetPlayerStatByUUID(p.getUniqueId().toString());
 
                 label:
                 for (String s : order) {
@@ -504,9 +515,9 @@ public class JoinLeaveListener {
         SavableParty party = PartyUtils.getParty(stat.uuid);
 
         if (party != null) {
-            SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.leaderUUID);
+            SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.uuid);
             if (get2.key) {
-                StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("party"), party.leaderUUID);
+                StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("party"), party.uuid);
             }
         }
 
@@ -518,7 +529,7 @@ public class JoinLeaveListener {
 
         try {
             for (Player pl : StreamLine.getInstance().getProxy().getAllPlayers()){
-                SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(pl);
+                SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(pl.getUniqueId().toString());
 
                 if (GuildUtils.pHasGuild(stat)) {
                     SavableGuild guild = GuildUtils.getGuild(stat);

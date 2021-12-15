@@ -14,8 +14,8 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.events.EventsHandler;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.filters.ChatFilter;
 import net.plasmere.streamline.objects.messaging.BungeeMassMessage;
@@ -43,9 +43,9 @@ public class MessagingUtils {
                 .replace("%from_type%", from)
                 .replace("%from%", from)
                 .replace("%message%", msg)
-                .replace("%from_server%", PlayerUtils.getOrCreateSavableUser(sender).findServer())
-                .replace("%server%", PlayerUtils.getOrCreateSavableUser(sender).findServer())
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(sender).latestVersion)
+                .replace("%from_server%", PlayerUtils.getOrGetSavableUser(sender).findServer())
+                .replace("%server%", PlayerUtils.getOrGetSavableUser(sender).findServer())
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(sender).latestVersion)
         );
     }
 
@@ -55,9 +55,9 @@ public class MessagingUtils {
                 .replace("%from_type%", from)
                 .replace("%from%", from)
                 .replace("%message%", msg)
-                .replace("%from_server%", PlayerUtils.getOrCreateSavableUser(sender).findServer())
-                .replace("%server%", PlayerUtils.getOrCreateSavableUser(sender).findServer())
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(sender).latestVersion)
+                .replace("%from_server%", PlayerUtils.getOrGetSavableUser(sender).findServer())
+                .replace("%server%", PlayerUtils.getOrGetSavableUser(sender).findServer())
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(sender).latestVersion)
         );
     }
 
@@ -125,7 +125,7 @@ public class MessagingUtils {
     }
 
     public static void sendBungeeMessage(BungeeMessage message){
-        SavableUser player = PlayerUtils.getOrCreateSavableUser(message.sender);
+        SavableUser player = PlayerUtils.getOrGetSavableUser(message.sender);
 
         message.to.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee((message.title + message.transition + message.message)
                         .replace("%sender_display%", PlayerUtils.getSourceName(message.sender)), message.sender)
@@ -261,7 +261,7 @@ public class MessagingUtils {
         sendDisplayPluginMessageRequest(player);
         String string = serveredUsernames.get(player);
 
-        return (string == null) ? PlayerUtils.getOrCreatePlayerStat(player).displayName : string;
+        return (string == null) ? PlayerUtils.getOrGetSavableUser(player).displayName : string;
     }
 
     public static void sendDisplayPluginMessageRequest(Player player) {
@@ -388,7 +388,7 @@ public class MessagingUtils {
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("config.guild");
-        out.writeUTF(guild.leaderUUID);
+        out.writeUTF(guild.uuid);
 
         try {
             Scanner reader = new Scanner(guild.file);
@@ -456,7 +456,7 @@ public class MessagingUtils {
                 player.sendMessage(TextUtils.codedText(MessageConfUtils.bToBReportMessage()
                                 .replace("%reporter%", sender)
                                 .replace("%report%", report)
-                                .replace("%version%", PlayerUtils.getOrCreatePlayerStat(player).latestVersion)
+                                .replace("%version%", PlayerUtils.getOrGetSavableUser(player).latestVersion)
                         )
                 );
             else
@@ -743,10 +743,10 @@ public class MessagingUtils {
     }
 
     public static void sendBPUserMessage(SavableParty party, CommandSource sender, CommandSource to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.uuid)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
-                .replace("%maxmax%", party.leader == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(party.leader)))
+                .replace("%maxmax%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.uuid))))
                 .replace("%mods_count%", Integer.toString(party.moderators.size()))
                 .replace("%members_count%", Integer.toString(party.members.size()))
                 .replace("%total_count%", Integer.toString(party.totalMembers.size()))
@@ -757,20 +757,20 @@ public class MessagingUtils {
                 .replace("%invites%", invites(party))
                 .replace("%ispublic%", getIsPublic(party))
                 .replace("%ismuted%", getIsMuted(party))
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(sender).latestVersion)
-                .replace("%leader_display%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(party.leader))
-                .replace("%leader_normal%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(party.leader))
-                .replace("%leader_absolute%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(party.leader))
-                .replace("%leader_formatted%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(party.leader))
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(sender).latestVersion)
+                .replace("%leader_display%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_normal%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_formatted%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
                 .replace("%size%", Integer.toString(party.getSize()))
         ));
     }
 
     public static void sendBPUserMessageFromDiscord(SavableParty party, String nameUsed, CommandSource to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, party.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, party.uuid)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
-                .replace("%maxmax%", party.leader == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(party.leader)))
+                .replace("%maxmax%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.uuid))))
                 .replace("%mods_count%", Integer.toString(party.moderators.size()))
                 .replace("%members_count%", Integer.toString(party.members.size()))
                 .replace("%total_count%", Integer.toString(party.totalMembers.size()))
@@ -785,19 +785,19 @@ public class MessagingUtils {
                 .replace("%sender_normal%", nameUsed)
                 .replace("%sender_absolute%", nameUsed)
                 .replace("%sender_formatted%", nameUsed)
-                .replace("%leader_display%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(party.leader))
-                .replace("%leader_normal%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(party.leader))
-                .replace("%leader_absolute%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(party.leader))
-                .replace("%leader_formatted%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(party.leader))
+                .replace("%leader_display%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_normal%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_formatted%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
                 .replace("%size%", Integer.toString(party.getSize()))
         ));
     }
 
     public static void sendBPUserMessageFromDiscord(SavableParty party, SavableUser sender, CommandSource to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.uuid)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
-                .replace("%maxmax%", party.leader == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(party.leader)))
+                .replace("%maxmax%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.uuid))))
                 .replace("%mods_count%", Integer.toString(party.moderators.size()))
                 .replace("%members_count%", Integer.toString(party.members.size()))
                 .replace("%total_count%", Integer.toString(party.totalMembers.size()))
@@ -809,10 +809,10 @@ public class MessagingUtils {
                 .replace("%ispublic%", getIsPublic(party))
                 .replace("%ismuted%", getIsMuted(party))
                 .replace("%version%", sender.latestVersion)
-                .replace("%leader_display%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(party.leader))
-                .replace("%leader_normal%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(party.leader))
-                .replace("%leader_absolute%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(party.leader))
-                .replace("%leader_formatted%", party.leader == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(party.leader))
+                .replace("%leader_display%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_normal%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_formatted%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
                 .replace("%size%", Integer.toString(party.getSize()))
         ));
     }
@@ -825,10 +825,10 @@ public class MessagingUtils {
         JDA jda = StreamLine.getJda();
         EmbedBuilder eb = new EmbedBuilder();
 
-        String msg = TextUtils.replaceAllPlayerDiscord(TextUtils.replaceAllSenderDiscord(message.message, message.sender), party.leaderUUID)
+        String msg = TextUtils.replaceAllPlayerDiscord(TextUtils.replaceAllSenderDiscord(message.message, message.sender), party.uuid)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
-                .replace("%maxmax%", Integer.toString(party.getMaxSize(party.leader)))
+                .replace("%maxmax%", Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.uuid))))
                 .replace("%mods_count%", Integer.toString(party.moderators.size()))
                 .replace("%members_count%", Integer.toString(party.members.size()))
                 .replace("%total_count%", Integer.toString(party.totalMembers.size()))
@@ -839,12 +839,12 @@ public class MessagingUtils {
                 .replace("%invites%", invites(party))
                 .replace("%ispublic%", getIsPublic(party))
                 .replace("%ismuted%", getIsMuted(party))
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(message.sender).latestVersion)
-                .replace("%version%", PlayerUtils.getOrCreatePlayerStat((Player) message.sender).latestVersion)
-                .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_absolute%", PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(message.sender).latestVersion)
+                .replace("%version%", PlayerUtils.getOrGetPlayerStatByUUID(((Player) message.sender).getUniqueId().toString()).latestVersion)
+                .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_absolute%", PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
                 .replace("%size%", Integer.toString(party.getSize()));
 
         try {
@@ -880,12 +880,12 @@ public class MessagingUtils {
     }
 
     public static void sendBGUserMessage(SavableGuild guild, CommandSource sender, CommandSource to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.uuid)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
-                .replace("%mods_count%", Integer.toString(guild.modsByUUID.size()))
-                .replace("%members_count%", Integer.toString(guild.membersByUUID.size()))
-                .replace("%total_count%", Integer.toString(guild.totalMembersByUUID.size()))
+                .replace("%mods_count%", Integer.toString(guild.moderators.size()))
+                .replace("%members_count%", Integer.toString(guild.members.size()))
+                .replace("%total_count%", Integer.toString(guild.totalMembers.size()))
                 .replace("%invites_count%", Integer.toString(guild.invites.size()))
                 .replace("%mods%", modsGuild(guild))
                 .replace("%members%", membersGuild(guild))
@@ -895,29 +895,29 @@ public class MessagingUtils {
                 .replace("%ismuted%", getIsMutedGuild(guild))
                 .replace("%total_xp%", Integer.toString(guild.totalXP))
                 .replace("%current_xp%", Integer.toString(guild.currentXP))
-                .replace("%level%", Integer.toString(guild.lvl))
+                .replace("%level%", Integer.toString(guild.level))
                 .replace("%name%", guild.name)
-                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.lvl + 1)))
+                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.level + 1)))
                 .replace("%xplevel%", Integer.toString(guild.xpUntilNextLevel()))
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(sender).latestVersion)
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(sender).latestVersion)
                 .replace("%name%", guild.name)
                 .replace("%length%", String.valueOf(guild.name.length()))
                 .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength()))
                 .replace("%codes%", (ConfigUtils.guildIncludeColors() ? GuildUtils.withCodes : GuildUtils.withoutCodes))
-                .replace("%leader_display%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_normal%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_absolute%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_formatted%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                .replace("%leader_display%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_normal%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_absolute%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_formatted%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
         ));
     }
 
     public static void sendBGUserMessageFromDiscord(SavableGuild guild, String nameUsed, CommandSource to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, guild.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, guild.uuid)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
-                .replace("%mods_count%", Integer.toString(guild.modsByUUID.size()))
-                .replace("%members_count%", Integer.toString(guild.membersByUUID.size()))
-                .replace("%total_count%", Integer.toString(guild.totalMembersByUUID.size()))
+                .replace("%mods_count%", Integer.toString(guild.moderators.size()))
+                .replace("%members_count%", Integer.toString(guild.members.size()))
+                .replace("%total_count%", Integer.toString(guild.totalMembers.size()))
                 .replace("%invites_count%", Integer.toString(guild.invites.size()))
                 .replace("%mods%", modsGuild(guild))
                 .replace("%members%", membersGuild(guild))
@@ -927,9 +927,9 @@ public class MessagingUtils {
                 .replace("%ismuted%", getIsMutedGuild(guild))
                 .replace("%total_xp%", Integer.toString(guild.totalXP))
                 .replace("%current_xp%", Integer.toString(guild.currentXP))
-                .replace("%level%", Integer.toString(guild.lvl))
+                .replace("%level%", Integer.toString(guild.level))
                 .replace("%name%", guild.name)
-                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.lvl + 1)))
+                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.level + 1)))
                 .replace("%xplevel%", Integer.toString(guild.xpUntilNextLevel()))
                 .replace("%name%", guild.name)
                 .replace("%length%", String.valueOf(guild.name.length()))
@@ -939,20 +939,20 @@ public class MessagingUtils {
                 .replace("%sender_normal%", nameUsed)
                 .replace("%sender_absolute%", nameUsed)
                 .replace("%sender_formatted%", nameUsed)
-                .replace("%leader_display%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_normal%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_absolute%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_formatted%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                .replace("%leader_display%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_normal%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_absolute%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_formatted%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
         ));
     }
 
     public static void sendBGUserMessageFromDiscord(SavableGuild guild, SavableUser sender, CommandSource to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.uuid)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
-                .replace("%mods_count%", Integer.toString(guild.modsByUUID.size()))
-                .replace("%members_count%", Integer.toString(guild.membersByUUID.size()))
-                .replace("%total_count%", Integer.toString(guild.totalMembersByUUID.size()))
+                .replace("%mods_count%", Integer.toString(guild.moderators.size()))
+                .replace("%members_count%", Integer.toString(guild.members.size()))
+                .replace("%total_count%", Integer.toString(guild.totalMembers.size()))
                 .replace("%invites_count%", Integer.toString(guild.invites.size()))
                 .replace("%mods%", modsGuild(guild))
                 .replace("%members%", membersGuild(guild))
@@ -962,19 +962,19 @@ public class MessagingUtils {
                 .replace("%ismuted%", getIsMutedGuild(guild))
                 .replace("%total_xp%", Integer.toString(guild.totalXP))
                 .replace("%current_xp%", Integer.toString(guild.currentXP))
-                .replace("%level%", Integer.toString(guild.lvl))
+                .replace("%level%", Integer.toString(guild.level))
                 .replace("%name%", guild.name)
-                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.lvl + 1)))
+                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.level + 1)))
                 .replace("%xplevel%", Integer.toString(guild.xpUntilNextLevel()))
                 .replace("%version%", sender.latestVersion)
                 .replace("%name%", guild.name)
                 .replace("%length%", String.valueOf(guild.name.length()))
                 .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength()))
                 .replace("%codes%", (ConfigUtils.guildIncludeColors() ? GuildUtils.withCodes : GuildUtils.withoutCodes))
-                .replace("%leader_display%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_normal%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_absolute%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_formatted%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                .replace("%leader_display%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_normal%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_absolute%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_formatted%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
         ));
     }
 
@@ -986,12 +986,12 @@ public class MessagingUtils {
         JDA jda = StreamLine.getJda();
         EmbedBuilder eb = new EmbedBuilder();
 
-        String msg = TextUtils.replaceAllPlayerDiscord(TextUtils.replaceAllSenderDiscord(message.message, message.sender), guild.leaderUUID)
+        String msg = TextUtils.replaceAllPlayerDiscord(TextUtils.replaceAllSenderDiscord(message.message, message.sender), guild.uuid)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
-                .replace("%mods_count%", Integer.toString(guild.modsByUUID.size()))
-                .replace("%members_count%", Integer.toString(guild.membersByUUID.size()))
-                .replace("%total_count%", Integer.toString(guild.totalMembersByUUID.size()))
+                .replace("%mods_count%", Integer.toString(guild.moderators.size()))
+                .replace("%members_count%", Integer.toString(guild.members.size()))
+                .replace("%total_count%", Integer.toString(guild.totalMembers.size()))
                 .replace("%invites_count%", Integer.toString(guild.invites.size()))
                 .replace("%mods%", modsGuild(guild))
                 .replace("%members%", membersGuild(guild))
@@ -1001,19 +1001,19 @@ public class MessagingUtils {
                 .replace("%ismuted%", getIsMutedGuild(guild))
                 .replace("%total_xp%", Integer.toString(guild.totalXP))
                 .replace("%current_xp%", Integer.toString(guild.currentXP))
-                .replace("%level%", Integer.toString(guild.lvl))
+                .replace("%level%", Integer.toString(guild.level))
                 .replace("%name%", guild.name)
-                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.lvl + 1)))
+                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.level + 1)))
                 .replace("%xplevel%", Integer.toString(guild.xpUntilNextLevel()))
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(message.sender).latestVersion)
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(message.sender).latestVersion)
                 .replace("%name%", guild.name)
                 .replace("%length%", String.valueOf(guild.name.length()))
                 .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength()))
                 .replace("%codes%", (ConfigUtils.guildIncludeColors() ? GuildUtils.withCodes : GuildUtils.withoutCodes))
-                .replace("%leader_display%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_normal%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_absolute%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_formatted%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)));
+                .replace("%leader_display%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_normal%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_absolute%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_formatted%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)));
 
         try {
             if (ConfigUtils.moduleAvatarUse()) {
@@ -1069,8 +1069,8 @@ public class MessagingUtils {
                     .replace("%guild_members%", (guild != null ? Integer.toString(guild.totalMembers.size()) : PlayerUtils.notSet))
                     .replace("%guild_xp_total%", (guild != null ? Integer.toString(guild.totalXP) : PlayerUtils.notSet))
                     .replace("%guild_xp_current%", (guild != null ? Integer.toString(guild.currentXP) : PlayerUtils.notSet))
-                    .replace("%guild_lvl%", (guild != null ? Integer.toString(guild.lvl) : PlayerUtils.notSet))
-                    .replace("%guild_leader%", (guild != null ? PlayerUtils.getOrGetSavableUser(guild.leaderUUID).displayName : PlayerUtils.notSet))
+                    .replace("%guild_lvl%", (guild != null ? Integer.toString(guild.level) : PlayerUtils.notSet))
+                    .replace("%guild_leader%", (guild != null ? PlayerUtils.getOrGetSavableUser(guild.uuid).displayName : PlayerUtils.notSet))
                     .replace("%guild_uuid%", (guild != null ? player.guild : PlayerUtils.notSet))
                     .replace("%version%", player.latestVersion)
             ));
@@ -1089,8 +1089,8 @@ public class MessagingUtils {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(msg, user), sender)
                     .replace("%total_xp%", Integer.toString(player.totalXP))
                     .replace("%xp%", Integer.toString(player.getCurrentXP()))
-                    .replace("%level%", Integer.toString(player.lvl))
-                    .replace("%xpneeded%", Integer.toString(player.getNeededXp(player.lvl + 1)))
+                    .replace("%level%", Integer.toString(player.level))
+                    .replace("%xpneeded%", Integer.toString(player.getNeededXp(player.level + 1)))
                     .replace("%xplevel%", Integer.toString(player.xpUntilNextLevel()))
                     .replace("%playtime%", TextUtils.truncate(Double.toString(player.getPlayHours()), 3))
                     .replace("%version%", player.latestVersion)
@@ -1106,8 +1106,8 @@ public class MessagingUtils {
                     .replace("%guild_members%", (guild != null ? Integer.toString(guild.totalMembers.size()) : PlayerUtils.notSet))
                     .replace("%guild_xp_total%", (guild != null ? Integer.toString(guild.totalXP) : PlayerUtils.notSet))
                     .replace("%guild_xp_current%", (guild != null ? Integer.toString(guild.currentXP) : PlayerUtils.notSet))
-                    .replace("%guild_lvl%", (guild != null ? Integer.toString(guild.lvl) : PlayerUtils.notSet))
-                    .replace("%guild_leader%", (guild != null ? PlayerUtils.getOrGetSavableUser(guild.leaderUUID).displayName : PlayerUtils.notSet))
+                    .replace("%guild_lvl%", (guild != null ? Integer.toString(guild.level) : PlayerUtils.notSet))
+                    .replace("%guild_leader%", (guild != null ? PlayerUtils.getOrGetSavableUser(guild.uuid).displayName : PlayerUtils.notSet))
                     .replace("%guild_uuid%", (guild != null ? player.guild : PlayerUtils.notSet))
                     .replace("%sspy%", (player.sspy ? PlayerUtils.sspyT : PlayerUtils.sspyF))
                     .replace("%gspy%", (player.gspy ? PlayerUtils.gspyT : PlayerUtils.gspyF))
@@ -1179,8 +1179,10 @@ public class MessagingUtils {
 
     public static void sendBUserMessage(CommandSource sender, String msg){
         if (sender instanceof Player) {
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStat(((Player) sender).getUniqueId().toString());
+
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
-                    .replace("%version%", PlayerUtils.getOrCreatePlayerStat((Player) sender).latestVersion)
+                    .replace("%version%", (player != null ? player.latestVersion : MessageConfUtils.nullB()))
             ));
         } else {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)));
@@ -1219,7 +1221,7 @@ public class MessagingUtils {
         if (as instanceof Player) {
             for (Player player : players) {
                 player.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, as)
-                        .replace("%version%", PlayerUtils.getOrCreatePlayerStat((Player) as).latestVersion)
+                        .replace("%version%", PlayerUtils.getOrGetPlayerStatByUUID(((Player) as).getUniqueId().toString()).latestVersion)
                 ));
             }
         } else {
@@ -1365,17 +1367,8 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (String m : guild.modsByUUID){
-            SavableUser player;
-            try {
-                player = PlayerUtils.getOrGetPlayerStatByUUID(m);
-            } catch (Exception e) {
-                continue;
-            }
-
-//            if (player == null) continue;
-
-            if (i < guild.modsByUUID.size()){
+        for (SavableUser player : guild.moderators){
+            if (i < guild.moderators.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.guildsModsNLast(), player)
                         .replace("%version%", player == null ? MessageConfUtils.nullB() : Objects.requireNonNull(player).latestVersion)
                 );
@@ -1395,17 +1388,8 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (String m : guild.membersByUUID){
-            SavableUser player;
-            try {
-                player = PlayerUtils.getOrGetPlayerStatByUUID(m);
-            } catch (Exception e) {
-                continue;
-            }
-
-//            if (player == null) continue;
-
-            if (i < guild.membersByUUID.size()){
+        for (SavableUser player : guild.members){
+            if (i < guild.members.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.guildsMemsNLast(), player)
                         .replace("%version%", player == null ? MessageConfUtils.nullB() : Objects.requireNonNull(player).latestVersion)
                 );
@@ -1425,17 +1409,8 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (String m : guild.totalMembersByUUID){
-            SavableUser player;
-            try {
-                player = PlayerUtils.getOrGetPlayerStatByUUID(m);
-            } catch (Exception e) {
-                continue;
-            }
-
-//            if (player == null) continue;
-
-            if (i < guild.totalMembersByUUID.size()){
+        for (SavableUser player : guild.totalMembers){
+            if (i < guild.totalMembers.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.guildsTMemsNLast(), player)
                         .replace("%version%", player == null ? MessageConfUtils.nullB() : Objects.requireNonNull(player).latestVersion)
                 );
@@ -1455,16 +1430,7 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (String m : guild.invitesByUUID){
-            SavableUser player;
-            try {
-                player = PlayerUtils.getOrGetPlayerStatByUUID(m);
-            } catch (Exception e) {
-                continue;
-            }
-
-//            if (player == null) continue;
-
+        for (SavableUser player : guild.invites){
             if (i < guild.invites.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.guildsInvsNLast(), player)
                         .replace("%version%", player == null ? MessageConfUtils.nullB() : Objects.requireNonNull(player).latestVersion)

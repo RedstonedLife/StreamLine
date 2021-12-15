@@ -23,7 +23,9 @@ dependencies {
     implementation "net.kyori:adventure-text-serializer-legacy:${adventureVersion}"
     implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
 
-    implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.1'
+    implementation "com.zaxxer:HikariCP:${hikariCPVersion}"
+
+    implementation "org.mariuszgromada.math:MathParser.org-mXparser:${mathXVersion}"
 
     implementation files('../libs/nuvotifier.jar')
 }

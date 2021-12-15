@@ -24,7 +24,9 @@ public class JDAPingerCommand extends SLCommand {
     @Override
     public void run(CommandSender sender, String[] strings) {
         if (! ConfigUtils.moduleDEnabled()) {
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
             return;
         }
 

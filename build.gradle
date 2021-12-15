@@ -15,17 +15,19 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'net.plasmere'
-    version = '1.0.15.0'
+    version = '1.0.15.1'
 
     ext {
         caffeineVersion = '3.0.4'
         dv8tionVersion = '4.3.0_339'
         geysermcVersion = '1.4.2-SNAPSHOT'
         luckpermsVersion = '5.3'
-        nuvotifierVersion = '2.6.0'
+        nuvotifierVersion = '2.7.3'
         simplixStorageVersion = '3.2.3'
         sqlLiteVersion = '3.36.0.2'
-        viaApiVersion = '4.0.1'
+        viaApiVersion = '4.1.1'
+        hikariCPVersion = '4.0.1'
+        mathXVersion = '4.4.2'
     }
 
     java {

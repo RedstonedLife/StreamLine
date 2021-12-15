@@ -44,9 +44,9 @@ public class MessagingUtils {
                 .replace("%from_type%", from)
                 .replace("%from%", from)
                 .replace("%message%", msg)
-                .replace("%from_server%", PlayerUtils.getOrCreateSavableUser(sender).findServer())
-                .replace("%server%", PlayerUtils.getOrCreateSavableUser(sender).findServer())
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(sender).latestVersion)
+                .replace("%from_server%", PlayerUtils.getOrGetSavableUser(sender).findServer())
+                .replace("%server%", PlayerUtils.getOrGetSavableUser(sender).findServer())
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(sender).latestVersion)
         );
     }
 
@@ -56,9 +56,9 @@ public class MessagingUtils {
                 .replace("%from_type%", from)
                 .replace("%from%", from)
                 .replace("%message%", msg)
-                .replace("%from_server%", PlayerUtils.getOrCreateSavableUser(sender).findServer())
-                .replace("%server%", PlayerUtils.getOrCreateSavableUser(sender).findServer())
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(sender).latestVersion)
+                .replace("%from_server%", PlayerUtils.getOrGetSavableUser(sender).findServer())
+                .replace("%server%", PlayerUtils.getOrGetSavableUser(sender).findServer())
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(sender).latestVersion)
         );
     }
 
@@ -126,7 +126,7 @@ public class MessagingUtils {
     }
 
     public static void sendBungeeMessage(BungeeMessage message){
-        SavableUser player = PlayerUtils.getOrCreateSavableUser(message.sender);
+        SavableUser player = PlayerUtils.getOrGetSavableUser(message.sender);
 
         message.to.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee((message.title + message.transition + message.message)
                         .replace("%sender_display%", message.sender.getName()), message.sender)

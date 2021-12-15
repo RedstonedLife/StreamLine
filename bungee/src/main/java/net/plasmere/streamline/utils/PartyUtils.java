@@ -741,7 +741,7 @@ public class PartyUtils {
         try {
             if (sender.equals(player)) {
                 MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(),  kickSelf);
-            } else if (player.equals(PlayerUtils.getOrCreateSUByUUID(party.leaderUUID))) {
+            } else if (player.equals(PlayerUtils.getOrGetSavableUser(party.leaderUUID))) {
                 MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(),  noPermission);
             } else {
                 for (SavableUser pl : party.totalMembers) {
@@ -768,7 +768,9 @@ public class PartyUtils {
                 }
             }
         } catch (Exception e) {
-            MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(), MessageConfUtils.bungeeCommandErrorUnd());
+            MessagingUtils.sendBPUserMessage(party, sender.findSender(), sender.findSender(), MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", PartyUtils.class.getName())
+                    );
             e.printStackTrace();
         }
     }
@@ -1430,7 +1432,9 @@ public class PartyUtils {
 //
 //        Category category = DiscordUtils.getCategory(CategoryType.PARTIES);
 //        if (category == null) {
-//            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+//            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+//                            .replace("%class%", this.getClass().getName())
+//                    );
 //            return;
 //        }
 //

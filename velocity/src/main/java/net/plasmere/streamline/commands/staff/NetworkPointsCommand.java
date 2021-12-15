@@ -27,7 +27,7 @@ public class NetworkPointsCommand extends SLCommand {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else {
             if (! PlayerUtils.exists(args[0])) {
-                MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);
+                MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
                 return;
             }
 
@@ -76,7 +76,7 @@ public class NetworkPointsCommand extends SLCommand {
                     }
 
                     try {
-                        stat.remPoints(Integer.parseInt(args[2]));
+                        stat.removePoints(Integer.parseInt(args[2]));
 
                         if (! stat.latestName.equals(PlayerUtils.getSourceName(sender))) {
                             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.pointsRemoveO()
@@ -89,7 +89,9 @@ public class NetworkPointsCommand extends SLCommand {
                             );
                         }
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;
@@ -115,7 +117,9 @@ public class NetworkPointsCommand extends SLCommand {
                             );
                         }
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;
@@ -142,7 +146,9 @@ public class NetworkPointsCommand extends SLCommand {
                             );
                         }
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;

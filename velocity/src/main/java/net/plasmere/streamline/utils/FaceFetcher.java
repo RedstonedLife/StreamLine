@@ -1,7 +1,7 @@
 package net.plasmere.streamline.utils;
 
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 
 public class FaceFetcher {
@@ -18,7 +18,7 @@ public class FaceFetcher {
 
         return TextUtils.replaceAllPlayerBungee(string, player)
                 .replace("%player_uuid%", player.uuid)
-                .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
+                .replace("%guild_uuid%", guild == null ? "" : guild.uuid)
                 .replace("%guild_name%", guild == null ? "" : guild.name)
                 ;
     }

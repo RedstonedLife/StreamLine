@@ -28,7 +28,7 @@ public class StatsCommand extends SLCommand {
                 SavableUser person = PlayerUtils.getOrGetSavableUser(args[0]);
 
                 if (person == null) {
-                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);
+                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
                     return;
                 }
 
@@ -41,7 +41,7 @@ public class StatsCommand extends SLCommand {
                 SavableUser person = PlayerUtils.getOrGetSavableUser(args[0]);
 
                 if (person == null) {
-                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);
+                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
                     return;
                 }
 
@@ -73,7 +73,7 @@ public class StatsCommand extends SLCommand {
 //                    SavableConsole person = PlayerUtils.getConsoleStat();
 //
 //                    if (person == null) {
-//                        MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);
+//                        MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
 //                        return;
 //                    }
 //
@@ -82,7 +82,7 @@ public class StatsCommand extends SLCommand {
 //                    SavablePlayer person = PlayerUtils.getOrGetPlayerStat(args[0]);
 //
 //                    if (person == null) {
-//                        MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);
+//                        MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
 //                        return;
 //                    }
 //

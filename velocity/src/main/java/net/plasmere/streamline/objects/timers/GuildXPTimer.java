@@ -1,7 +1,7 @@
 package net.plasmere.streamline.objects.timers;
 
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
@@ -33,7 +33,7 @@ public class GuildXPTimer implements Runnable {
             List<SavableUser> users = new ArrayList<>(PlayerUtils.getStats());
 
             for (SavableUser user : users) {
-                if (user.guild == null) user.updateKey("guild", "");
+                if (user.guild == null) user.setGuild("");
                 if (user.guild.equals("")) continue;
 
                 SavableGuild guild = GuildUtils.getOrGetGuild(user.guild);

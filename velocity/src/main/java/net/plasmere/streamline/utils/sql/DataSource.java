@@ -4,12 +4,11 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
-import net.plasmere.streamline.utils.sql.SQLQueries;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -144,7 +143,7 @@ public class DataSource {
                 player.points = resultSet.getInt("points");
                 player.totalXP = resultSet.getInt("totalExperience");
                 player.currentXP = resultSet.getInt("currentExperience");
-                player.lvl = resultSet.getInt("level");
+                player.level = resultSet.getInt("level");
             }
 
             return player;
@@ -219,7 +218,7 @@ public class DataSource {
             statement.setString(1, player.getUUID());
             statement.setInt(2, player.totalXP);
             statement.setInt(3, player.currentXP);
-            statement.setInt(4, player.lvl);
+            statement.setInt(4, player.level);
 
             statement.execute();
 

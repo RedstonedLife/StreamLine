@@ -15,10 +15,10 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
+import net.plasmere.streamline.objects.savable.SavableAdapter;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
-import net.plasmere.streamline.utils.sql.DataSource;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -27,10 +27,8 @@ import java.util.*;
 public class SavablePlayer extends SavableUser {
     public int totalXP;
     public int currentXP;
-    public int lvl;
+    public int level;
     public int playSeconds;
-    public String ips;
-    public String names;
     public String latestIP;
     public List<String> ipList;
     public List<String> nameList;
@@ -45,29 +43,20 @@ public class SavablePlayer extends SavableUser {
     public int defaultLevel = 1;
 
     public SavablePlayer(Player player) {
-        super(player.getUniqueId().toString());
-        this.player = player;
-    }
-
-    public SavablePlayer(Player player, boolean create){
-        super(player.getUniqueId().toString(), create);
+        super(player, SavableAdapter.Type.PLAYER);
         this.player = player;
     }
 
     public SavablePlayer(String thing){
-        super(PlayerUtils.createCheck(thing), false);
-    }
-
-    public SavablePlayer(String thing, boolean createNew){
-        super(PlayerUtils.createCheck(thing), createNew);
+        super(PlayerUtils.createCheck(thing), SavableAdapter.Type.PLAYER);
     }
 
     public SavablePlayer(UUID uuid) {
-        super(uuid.toString(), false);
+        super(uuid.toString(), SavableAdapter.Type.PLAYER);
     }
 
     public boolean onlineCheck(){
-        for (Player p : StreamLine.getInstance().getProxy().getAllPlayers()){
+        for (Player p : StreamLine.getProxy().getAllPlayers()){
             if (p.getUsername().equals(this.latestName)) return true;
         }
 
@@ -75,135 +64,88 @@ public class SavablePlayer extends SavableUser {
     }
 
     @Override
-    public void preConstruct(String string) {
-        this.player = PlayerUtils.getPPlayerByUUID(string);
-
-        if (this.player == null) {
-            this.uuid = string;
-            this.online = false;
-            return;
-        }
-
-        String ipSt = player.getRemoteAddress().toString().replace("/", "");
-        String[] ipSplit = ipSt.split(":");
-        ipSt = ipSplit[0];
-
-        this.uuid = player.getUniqueId().toString();
-        this.latestIP = ipSt;
-        this.latestName = player.getUsername();
-
-        this.ips = ipSt;
-        this.names = player.getUsername();
-        this.online = onlineCheck();
-
-        String toLatestVersion = "";
-
-        if (StreamLine.viaHolder.enabled) {
-            if (StreamLine.geyserHolder.enabled && StreamLine.geyserHolder.file.hasProperty(this.uuid)) {
-                toLatestVersion = "GEYSER";
-            } else {
-                toLatestVersion = StreamLine.viaHolder.getProtocol(UUID.fromString(this.uuid)).getName();
-            }
-        } else {
-            toLatestVersion = "Not Enabled";
-        }
-
-
-        this.latestVersion = toLatestVersion;
-        updateKeyNoLoad("latest-version", toLatestVersion);
-    }
-
-    @Override
-    public int getPointsFromConfig(){
-        return ConfigUtils.pointsDefault();
-    }
-
-    @Override
-    public TreeSet<String> addedProperties() {
-        TreeSet<String> defaults = new TreeSet<>();
-        defaults.add("ips=" + ips);
-        defaults.add("names=" + names);
-        defaults.add("latest-ip=" + latestIP);
-        defaults.add("lvl=" + defaultLevel);
-        defaults.add("total-xp=0");
-        defaults.add("current-xp=0");
-        defaults.add("playtime=0");
-        defaults.add("muted=false");
-        defaults.add("muted-till=");
-        if (ConfigUtils.customChats()) {
-            defaults.add("chat-channel=" + StreamLine.chatConfig.getDefaultChannel());
-            defaults.add("chat-identifier=" + StreamLine.chatConfig.getDefaultIdentifier());
-        }
-        defaults.add("discord-id=");
-        defaults.add("bypass-for=0");
-        //defaults.add("");
-        return defaults;
-    }
-
-    @Override
-    public List<String> getTagsFromConfig(){
+    public List<String> getTagsFromConfig() {
         return ConfigUtils.tagsDefaults();
     }
 
     @Override
-    public void loadMoreVars() {
-        this.online = onlineCheck();
-        if (! this.online) this.latestVersion = getFromKey("latest-version");
-
-        this.ips = getFromKey("ips");
-        this.names = getFromKey("names");
-        this.latestIP = getFromKey("latest-ip");
-        this.ipList = loadIPs();
-        this.nameList = loadNames();
-        this.playSeconds = Integer.parseInt(getFromKey("playtime"));
-        this.muted = Boolean.parseBoolean(getFromKey("muted"));
-        try {
-            this.mutedTill = new Date(Long.parseLong(getFromKey("muted-till")));
-        } catch (Exception e) {
-            this.mutedTill = null;
-        }
-
-        this.lvl = Integer.parseInt(getFromKey("lvl"));
-        this.totalXP = Integer.parseInt(getFromKey("total-xp"));
-        this.currentXP = Integer.parseInt(getFromKey("current-xp"));
-
-
+    public void populateMoreDefaults() {
+        // Ips.
+        latestIP = getOrSetDefault("player.ips.latest", "");
+        ipList = getOrSetDefault("player.ips.list", new ArrayList<>());
+        // Names.
+        nameList = getOrSetDefault("player.names", new ArrayList<>());
+        // Stats.
+        level = getOrSetDefault("player.stats.level", defaultLevel);
+        totalXP = getOrSetDefault("player.stats.experience.total", 0);
+        currentXP = getOrSetDefault("player.stats.experience.current", 0);
+        playSeconds = getOrSetDefault("player.stats.playtime.seconds", 0);
+        // Punishments.
+        muted = getOrSetDefault("player.punishments.mute.toggled", false);
+        mutedTill = new Date(getOrSetDefault("player.punishments.mute.expires", new Date(0L).toInstant().toEpochMilli()));
+        // Chats.
         if (ConfigUtils.customChats()) {
-            this.chatChannel = parseChatLevel(getFromKey("chat-channel"));
-            this.chatIdentifier = getFromKey("chat-identifier");
+            chatChannel = parseChatLevel(getOrSetDefault("player.chat.channel", StreamLine.chatConfig.getDefaultChannel()));
+            chatIdentifier = getOrSetDefault("player.chat.identifier", StreamLine.chatConfig.getDefaultIdentifier());
+            bypassFor = getOrSetDefault("player.chat.bypass-for", 0);
         }
+        // Discord.
+        discordID = getOrSetDefault("player.discord.id", 0L);
+    }
 
-        try {
-            this.discordID = Long.parseLong(getFromKey("discord-id"));
-        } catch (Exception e) {
-            this.discordID = 0L;
+    @Override
+    public void loadMoreValues() {
+        // Ips.
+        latestIP = getOrSetDefault("player.ips.latest", latestIP);
+        ipList = getOrSetDefault("player.ips.list", ipList);
+        // Names.
+        nameList = getOrSetDefault("player.names", nameList);
+        // Stats.
+        level = getOrSetDefault("player.stats.level", level);
+        totalXP = getOrSetDefault("player.stats.experience.total", totalXP);
+        currentXP = getOrSetDefault("player.stats.experience.current", currentXP);
+        playSeconds = getOrSetDefault("player.stats.playtime.seconds", playSeconds);
+        // Punishments.
+        muted = getOrSetDefault("player.punishments.mute.toggled", muted);
+        mutedTill = new Date(getOrSetDefault("player.punishments.mute.expires", mutedTill.toInstant().toEpochMilli()));
+        // Chats.
+        if (ConfigUtils.customChats()) {
+            chatChannel = parseChatLevel(getOrSetDefault("player.chat.channel", (chatChannel != null ? chatChannel.name : StreamLine.chatConfig.getDefaultChannel())));
+            chatIdentifier = getOrSetDefault("player.chat.identifier", chatIdentifier);
+            bypassFor = getOrSetDefault("player.chat.bypass-for", bypassFor);
         }
+        // Discord.
+        discordID = getOrSetDefault("player.discord.id", discordID);
+    }
 
-        try {
-            this.bypassFor = Integer.parseInt(getFromKey("bypass-for"));
-        } catch (Exception e) {
-            this.bypassFor = 0;
+    @Override
+    public void saveMore() {
+
+        // Ips.
+        set("player.ips.latest", latestIP);
+        set("player.ips.list", ipList);
+        // Names.
+        set("player.names", nameList);
+        // Stats.
+        set("player.stats.level", level);
+        set("player.stats.experience.total", totalXP);
+        set("player.stats.experience.current", currentXP);
+        set("player.stats.playtime.seconds", playSeconds);
+        // Punishments.
+        set("player.punishments.mute.toggled", muted);
+        set("player.punishments.mute.expires", mutedTill.toInstant().getEpochSecond());
+        // Chats.
+        if (ConfigUtils.customChats()) {
+            set("player.chat.channel", (chatChannel != null ? chatChannel.name : StreamLine.chatConfig.getDefaultChannel()));
+            set("player.chat.identifier", chatIdentifier);
+            set("player.chat.bypass-for", bypassFor);
         }
+        // Discord.
+        set("player.discord.id", discordID);
     }
 
     public static ChatChannel parseChatLevel(String string) {
         return ChatsHandler.getChannel(string);
-    }
-
-    @Override
-    TreeMap<String, String> addedUpdatableKeys() {
-        TreeMap<String, String> thing = new TreeMap<>();
-
-        thing.put("latestip", "latest-ip");
-        thing.put("latestname", "latest-name");
-        thing.put("displayname", "display-name");
-        thing.put("latestversion", "latest-version");
-        thing.put("xp", "total-xp");
-        thing.put("totalXP", "total-xp");
-        thing.put("currentXP", "current-xp");
-        thing.put("chat-level", "chat-channel");
-
-        return thing;
     }
 
     public static void sendMessageFormatted(CommandSource sender, String formatFrom, ChatChannel newLevel, ChatChannel oldLevel) {
@@ -226,8 +168,9 @@ public class SavablePlayer extends SavableUser {
     }
 
     public int setBypassFor(int set) {
+//        loadValues();
         this.bypassFor = set;
-        updateKey("bypass-for", this.bypassFor);
+//        saveAll();
 
         if (this.online) {
             MessagingUtils.sendBUserMessage(this.player, MessageConfUtils.bypassPCMessage().replace("%messages%", String.valueOf(this.bypassFor)));
@@ -237,17 +180,17 @@ public class SavablePlayer extends SavableUser {
     }
 
     public int tickBypassFor() {
+//        loadValues();
         this.bypassFor --;
-        updateKey("bypass-for", this.bypassFor);
+//        //        saveAll();
 
         return this.bypassFor;
     }
 
     public String setChatIdentifier(String newIdentifier) {
         this.chatIdentifier = newIdentifier;
-        updateKey("chat-identifier", this.chatIdentifier);
+        //        saveAll();
 
-        DataSource.updatePlayerChat(this);
         return newIdentifier;
     }
 
@@ -255,176 +198,102 @@ public class SavablePlayer extends SavableUser {
         ChatChannel newLevel = parseChatLevel(channel);
 
         this.chatChannel = newLevel;
-        updateKey("chat-channel", newLevel.name);
+        //        saveAll();
 
-        DataSource.updatePlayerChat(this);
         return newLevel;
     }
 
-    public void tryAddNewName(String name){
-        if (nameList == null) this.nameList = new ArrayList<>();
-
+    public void addName(String name){
+        //        loadValues();
         if (nameList.contains(name)) return;
 
-        this.nameList.add(name);
-
-        this.names = stringifyList(nameList, ",");
-
-        updateKey("names", this.names);
-
-        DataSource.addNameToPlayer(this, name);
+        nameList.add(name);
+        //        saveAll();
     }
 
-    public void tryRemName(String name){
-        if (nameList == null) this.nameList = new ArrayList<>();
-
+    public void removeName(String name){
+        //        loadValues();
         if (! nameList.contains(name)) return;
 
-        this.nameList.remove(name);
-
-        this.names = stringifyList(nameList, ",");
-
-        updateKey("names", this.names);
+        nameList.remove(name);
+        //        saveAll();
     }
 
-    public void tryAddNewIP(String ip){
-        if (ipList == null) this.ipList = new ArrayList<>();
-
+    public void addIP(String ip){
+        //        loadValues();
         if (ipList.contains(ip)) return;
 
-        this.ipList.add(ip);
-
-        this.ips = stringifyList(ipList, ",");
-
-        updateKey("ips", this.ips);
-
-        DataSource.addIpToPlayer(this, ip);
+        ipList.add(ip);
+        //        saveAll();
     }
 
-    public void tryAddNewIP(Player player){
+    public void addIP(Player player){
         String ipSt = player.getRemoteAddress().toString().replace("/", "");
         String[] ipSplit = ipSt.split(":");
         ipSt = ipSplit[0];
 
-        tryAddNewIP(ipSt);
+        addIP(ipSt);
     }
 
-    public void tryRemIP(String ip){
-        if (ipList == null) this.ipList = new ArrayList<>();
-
+    public void removeIP(String ip){
+        //        loadValues();
         if (! ipList.contains(ip)) return;
 
-        this.ipList.remove(ip);
-
-        this.ips = stringifyList(ipList, ",");
-
-        updateKey("ips", this.ips);
+        ipList.remove(ip);
+        //        saveAll();
     }
 
-    public void tryRemIP(Player player){
+    public void removeIP(Player player){
         String ipSt = player.getRemoteAddress().toString().replace("/", "");
         String[] ipSplit = ipSt.split(":");
         ipSt = ipSplit[0];
 
-        tryRemIP(ipSt);
+        removeIP(ipSt);
     }
 
     public void addPlaySecond(int amount){
+        //        loadValues();
         setPlaySeconds(playSeconds + amount);
     }
 
     public void setPlaySeconds(int amount){
-        updateKey("playtime", amount);
+        playSeconds = amount;
+        //        saveAll();
     }
 
     public double getPlayMinutes(){
+        //        loadValues();
         return playSeconds / (60.0d);
     }
 
     public double getPlayHours(){
+        //        loadValues();
         return playSeconds / (60.0d * 60.0d);
     }
 
     public double getPlayDays(){
+        //        loadValues();
         return playSeconds / (60.0d * 60.0d * 24.0d);
     }
 
     public String getPlaySecondsAsString(){
+        //        loadValues();
         return TextUtils.truncate(String.valueOf(this.playSeconds), 2);
     }
 
     public String getPlayMinutesAsString(){
+        //        loadValues();
         return TextUtils.truncate(String.valueOf(getPlayMinutes()), 2);
     }
 
     public String getPlayHoursAsString(){
+        //        loadValues();
         return TextUtils.truncate(String.valueOf(getPlayHours()), 2);
     }
 
     public String getPlayDaysAsString(){
+        //        loadValues();
         return TextUtils.truncate(String.valueOf(getPlayDays()), 2);
-    }
-
-    public List<String> loadIPs(){
-        List<String> thing = new ArrayList<>();
-
-        String search = "ips";
-
-        try {
-            if (getFromKey(search) == null) return thing;
-            if (getFromKey(search).equals("")) return thing;
-
-            if (! getFromKey(search).contains(",")) {
-                thing.add(getFromKey(search));
-                return thing;
-            }
-
-            for (String t : getFromKey(search).split(",")) {
-                if (t == null) continue;
-                if (t.equals("")) continue;
-
-                try {
-                    thing.add(t);
-                } catch (Exception e) {
-                    //continue;
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public List<String> loadNames(){
-        List<String> thing = new ArrayList<>();
-
-        String search = "names";
-
-        try {
-            if (getFromKey(search) == null) return thing;
-            if (getFromKey(search).equals("")) return thing;
-
-            if (! getFromKey(search).contains(",")) {
-                thing.add(getFromKey(search));
-                return thing;
-            }
-
-            for (String t : getFromKey(search).split(",")) {
-                if (t == null) continue;
-                if (t.equals("")) continue;
-
-                try {
-                    thing.add(t);
-                } catch (Exception e) {
-                    //continue;
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return thing;
     }
 
     /*
@@ -443,30 +312,32 @@ public class SavablePlayer extends SavableUser {
     }
 
     public int xpUntilNextLevel(){
-        return getNeededXp(this.lvl + 1) - this.totalXP;
+        //        loadValues();
+        return getNeededXp(this.level + 1) - this.totalXP;
     }
 
     public void addTotalXP(int amount){
+        //        loadValues();
         setTotalXP(amount + this.totalXP);
     }
 
     public void setTotalXP(int amount){
+        //        loadValues();
         this.totalXP = amount;
 
         while (xpUntilNextLevel() <= 0) {
-            int setLevel = this.lvl + 1;
-            updateKey("lvl", setLevel);
+            int setLevel = this.level + 1;
+            this.level = setLevel;
         }
 
-        updateKey("total-xp", amount);
-        updateKey("current-xp", getCurrentXP());
-
-        DataSource.updatePlayerExperience(this);
+        currentXP = getCurrentXP();
+        //        saveAll();
     }
 
     public int getCurrentLevelXP(){
+        //        loadValues();
         int xpTill = 0;
-        for (int i = 0; i <= this.lvl; i++) {
+        for (int i = 0; i <= this.level; i++) {
             xpTill += getNeededXp(i);
         }
 
@@ -474,22 +345,23 @@ public class SavablePlayer extends SavableUser {
     }
 
     public int getCurrentXP(){
+        //        loadValues();
         return this.totalXP - getCurrentLevelXP();
     }
 
     public void setMuted(boolean value) {
         muted = value;
-        updateKey("muted", value);
+        //        saveAll();
     }
 
     public void setMutedTill(long value) {
         mutedTill = new Date(value);
-        updateKey("muted-till", value);
+        //        saveAll();
     }
 
     public void removeMutedTill(){
-        mutedTill = null;
-        updateKey("muted-till", "");
+        mutedTill = new Date(0L);
+        //        saveAll();
     }
 
     public void updateMute(boolean set, Date newMutedUntil){
@@ -497,19 +369,24 @@ public class SavablePlayer extends SavableUser {
         setMutedTill(newMutedUntil.getTime());
     }
 
-    public void toggleMuted() { setMuted(! muted); }
+    public void toggleMuted() {
+        //        loadValues();
+        setMuted(! muted);
+    }
 
     public void setDiscordID(long id) {
         this.discordID = id;
-        updateKey("discord-id", id);
+        //        saveAll();
     }
-    
+
     public String getDisplayName() {
         return this.displayName;
     }
 
     public void setDisplayName(String name) {
-        updateKey("display-name", name);
+//        loadValues();
+        displayName = name;
+        //        saveAll();
     }
 
     public void connect(ServerInfo target) {
@@ -532,7 +409,7 @@ public class SavablePlayer extends SavableUser {
         return null;
     }
 
-    
+
     public long getPing() {
         if (online) {
             return Objects.requireNonNull(PlayerUtils.getPPlayer(latestName)).getPing();

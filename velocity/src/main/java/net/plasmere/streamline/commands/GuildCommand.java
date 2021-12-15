@@ -5,7 +5,7 @@ import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.GuildUtils;
@@ -27,7 +27,9 @@ public class GuildCommand extends SLCommand {
         SavableUser stat = PlayerUtils.getOrGetSavableUser(sender);
 
         if (stat == null) {
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou());
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
+                            .replace("%class%", this.getClass().getName())
+                    );
             return;
         }
 
@@ -36,7 +38,9 @@ public class GuildCommand extends SLCommand {
             try {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
             } catch (Exception e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 e.printStackTrace();
             }
         } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildJoinAliases())) {
@@ -49,7 +53,9 @@ public class GuildCommand extends SLCommand {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else {
@@ -62,7 +68,9 @@ public class GuildCommand extends SLCommand {
 
                     GuildUtils.joinGuild(stat, user);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }
@@ -75,7 +83,9 @@ public class GuildCommand extends SLCommand {
             try {
                 GuildUtils.leaveGuild(stat);
             } catch (Exception e) {
-                MessagingUtils.sendBUserMessage(stat.findSender(), MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(stat.findSender(), MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 e.printStackTrace();
             }
         } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCreateAliases())) {
@@ -88,14 +98,18 @@ public class GuildCommand extends SLCommand {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else {
                 try {
                     GuildUtils.createGuild(stat, TextUtils.argsToStringMinus(args, 0));
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }
@@ -117,7 +131,9 @@ public class GuildCommand extends SLCommand {
 
                     GuildUtils.promotePlayer(stat, user);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(stat.findSender(), MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(stat.findSender(), MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }
@@ -131,7 +147,9 @@ public class GuildCommand extends SLCommand {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else {
@@ -144,7 +162,9 @@ public class GuildCommand extends SLCommand {
 
                     GuildUtils.demotePlayer(stat, user);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }
@@ -158,14 +178,18 @@ public class GuildCommand extends SLCommand {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else {
                 try {
                     GuildUtils.sendChat(stat, TextUtils.argsToStringMinus(args, 0));
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }
@@ -178,7 +202,9 @@ public class GuildCommand extends SLCommand {
             try {
                 GuildUtils.listGuild(stat);
             } catch (Exception e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 e.printStackTrace();
             }
         } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildOpenAliases())) {
@@ -190,7 +216,9 @@ public class GuildCommand extends SLCommand {
             try {
                 GuildUtils.openGuild(stat);
             } catch (Exception e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 e.printStackTrace();
             }
         } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildCloseAliases())) {
@@ -202,7 +230,9 @@ public class GuildCommand extends SLCommand {
             try {
                 GuildUtils.closeGuild(stat);
             } catch (Exception e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 e.printStackTrace();
             }
         } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildDisbandAliases())) {
@@ -214,7 +244,9 @@ public class GuildCommand extends SLCommand {
             try {
                 GuildUtils.disband(stat);
             } catch (Throwable e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 e.printStackTrace();
             }
         } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildAcceptAliases())) {
@@ -227,7 +259,9 @@ public class GuildCommand extends SLCommand {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else {
@@ -240,7 +274,9 @@ public class GuildCommand extends SLCommand {
 
                     GuildUtils.acceptInvite(stat, user);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }
@@ -254,7 +290,9 @@ public class GuildCommand extends SLCommand {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else {
@@ -267,7 +305,9 @@ public class GuildCommand extends SLCommand {
 
                     GuildUtils.denyInvite(stat, user);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }
@@ -281,7 +321,9 @@ public class GuildCommand extends SLCommand {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else {
@@ -294,7 +336,9 @@ public class GuildCommand extends SLCommand {
 
                     GuildUtils.sendInvite(user, stat);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }
@@ -308,7 +352,9 @@ public class GuildCommand extends SLCommand {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else {
@@ -321,7 +367,9 @@ public class GuildCommand extends SLCommand {
 
                     GuildUtils.kickMember(stat, user);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }
@@ -334,7 +382,9 @@ public class GuildCommand extends SLCommand {
             try {
                 GuildUtils.muteGuild(stat);
             } catch (Throwable e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 e.printStackTrace();
             }
         } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildWarpAliases())) {
@@ -345,7 +395,9 @@ public class GuildCommand extends SLCommand {
             try {
                 GuildUtils.warpGuild(stat);
             } catch (Throwable e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 e.printStackTrace();
             }
         } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildInfoAliases())) {
@@ -357,7 +409,9 @@ public class GuildCommand extends SLCommand {
             try {
                 GuildUtils.info(stat);
             } catch (Throwable e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 e.printStackTrace();
             }
         } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases())) {
@@ -370,14 +424,18 @@ public class GuildCommand extends SLCommand {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else {
                 try {
                     GuildUtils.rename(stat, TextUtils.argsToStringMinus(args, 0));
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }
@@ -391,7 +449,9 @@ public class GuildCommand extends SLCommand {
 
                 GuildUtils.sendInvite(user, stat);
             } catch (Exception e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 e.printStackTrace();
             }
         }
@@ -399,7 +459,7 @@ public class GuildCommand extends SLCommand {
         try {
             SavableGuild guild = GuildUtils.getGuild(stat);
             if (guild == null) return;
-            guild.saveInfo();
+            guild.saveAll();
         } catch (Exception e) {
             e.printStackTrace();
         }

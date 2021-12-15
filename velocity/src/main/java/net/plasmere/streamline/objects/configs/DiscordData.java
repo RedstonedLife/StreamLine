@@ -2,6 +2,9 @@ package net.plasmere.streamline.objects.configs;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.server.ServerInfo;
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
+import de.leonhard.storage.sections.FlatFileSection;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -10,12 +13,11 @@ import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.config.backend.ConfigurationProvider;
-import net.plasmere.streamline.config.backend.YamlConfiguration;
+
 import net.plasmere.streamline.objects.DataChannel;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
@@ -33,7 +35,7 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class DiscordData {
-    private Configuration conf;
+    private Config conf;
     private final String fileString = "discord-data.yml";
     private final File file = new File(StreamLine.getInstance().getConfDir(), fileString);
     public TreeMap<Long, DataChannel> loadedChannels = new TreeMap<>();
@@ -55,7 +57,7 @@ public class DiscordData {
         MessagingUtils.logInfo("Loaded discord data!");
     }
 
-    public Configuration getConf() {
+    public Config getConf() {
         reloadConfig();
         return conf;
     }
@@ -68,7 +70,7 @@ public class DiscordData {
         }
     }
 
-    public Configuration loadConfig(){
+    public Config loadConfig(){
         if (! file.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(fileString)){
                 Files.copy(in, file.toPath());
@@ -77,23 +79,7 @@ public class DiscordData {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file); // ???
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public void saveConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(conf, file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return LightningBuilder.fromFile(file).createConfig();
     }
 
     public void purgeChannels() {
@@ -103,7 +89,7 @@ public class DiscordData {
     public void loadChannels() {
         purgeChannels();
 
-        for (String key : conf.getSection("channels").getKeys()) {
+        for (String key : ((ConfigSection) conf.getSection("channels")).getKeys()) {
             if (key.contains("put")) continue;
 
             try {
@@ -111,6 +97,9 @@ public class DiscordData {
                 loadedChannels.put(l, getChannel(l));
 
 //                if (ConfigUtils.debug()) MessagingUtils.logInfo("ID: " + l + " | Channel: " + loadedChannels.get(l).chat.chatChannel.name + " , " + loadedChannels.get(l).chat.identifier);
+//            } catch (NumberFormatException e) {
+//                if (! key.contains(".")) e.printStackTrace();
+//                // do nothing.
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -225,10 +214,10 @@ public class DiscordData {
                                         player,
                                         TextUtils.formatted(ConfigUtils.moduleDPCDDGuildTitle()
                                                 .replace("%guild_name%", guild.name)
-                                                .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.leaderUUID).latestName)
-                                                .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                                                .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                                                .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                                                .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.uuid).latestName)
+                                                .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                                                .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                                                .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
                                         ),
                                         TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGuildLeaves(), player),
                                         channel),
@@ -243,10 +232,10 @@ public class DiscordData {
                                 new DiscordMessage(
                                         player,
                                         TextUtils.formatted(ConfigUtils.moduleDPCDDPartyTitle()
-                                                .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.leaderUUID).latestName)
-                                                .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                                                .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                                                .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                                                .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.uuid).latestName)
+                                                .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                                                .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                                                .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
                                         ),
                                         TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDPartyLeaves(), player),
                                         channel),
@@ -301,10 +290,10 @@ public class DiscordData {
                                 player,
                                 TextUtils.formatted(ConfigUtils.moduleDPCDDGuildTitle()
                                         .replace("%guild_name%", guild.name)
-                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.leaderUUID).latestName)
-                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.uuid).latestName)
+                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
                                 ),
                                 TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGuildJoins(), player),
                                 channel),
@@ -319,10 +308,10 @@ public class DiscordData {
                         new DiscordMessage(
                                 player,
                                 TextUtils.formatted(ConfigUtils.moduleDPCDDPartyTitle()
-                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.leaderUUID).latestName)
-                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.uuid).latestName)
+                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
                                 ),
                                 TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDPartyJoins(), player),
                                 channel),
@@ -375,10 +364,10 @@ public class DiscordData {
                                 player,
                                 TextUtils.formatted(ConfigUtils.moduleDPCDDGuildTitle()
                                         .replace("%guild_name%", guild.name)
-                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.leaderUUID).latestName)
-                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(guild.uuid).latestName)
+                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
                                 ),
                                 TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDGuildLeaves(), player),
                                 channel),
@@ -393,10 +382,10 @@ public class DiscordData {
                         new DiscordMessage(
                                 player,
                                 TextUtils.formatted(ConfigUtils.moduleDPCDDPartyTitle()
-                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.leaderUUID).latestName)
-                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                                        .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.uuid).latestName)
+                                        .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                                        .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                                        .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
                                 ),
                                 TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCDDPartyLeaves(), player),
                                 channel),
@@ -535,14 +524,12 @@ public class DiscordData {
     public void addVerified(long discordID, String uuid) {
         conf.set("verified." + discordID, uuid);
 
-        saveConfig();
         reloadConfig();
     }
 
     public void remVerified(long discordID) {
         conf.set("verified." + discordID, null);
 
-        saveConfig();
         reloadConfig();
     }
 
@@ -566,7 +553,7 @@ public class DiscordData {
         reloadConfig();
         TreeMap<Long, String> verified = new TreeMap<>();
 
-        for (String key : conf.getSection("verified").getKeys()) {
+        for (String key : conf.getSection("verified").keySet()) {
             long k = 0L;
             try {
                 k = Long.parseLong(key);
@@ -611,7 +598,6 @@ public class DiscordData {
         conf.set("channels." + channelID + ".joins", dataChannel.joins);
         conf.set("channels." + channelID + ".leaves", dataChannel.leaves);
         conf.set("channels." + channelID + ".message-type", dataChannel.messageType);
-        saveConfig();
         reloadConfig();
         loadChannels();
     }
@@ -624,7 +610,6 @@ public class DiscordData {
         conf.set("channels." + channelID + ".leaves", null);
         conf.set("channels." + channelID + ".message-type", null);
         conf.set("channels." + channelID, null);
-        saveConfig();
         reloadConfig();
     }
 
@@ -689,7 +674,7 @@ public class DiscordData {
     public boolean isChannel(Long channelID) {
         reloadConfig();
 
-        for (String keys : conf.getSection("channels").getKeys()) {
+        for (String keys : conf.getSection("channels").keySet()) {
             if (keys.equals(channelID.toString())) return true;
         }
 
@@ -698,7 +683,6 @@ public class DiscordData {
 
     public void setObject(String pathTo, Object object) {
         conf.set(pathTo, object);
-        saveConfig();
         reloadConfig();
     }
 
@@ -754,13 +738,13 @@ public class DiscordData {
                 if (ConfigUtils.moduleDPCChangeOnVerifyType().equals("discord")) {
                     newName = TextUtils.replaceAllPlayerDiscord(ConfigUtils.moduleDPCChangeOnVerifyTo(), player)
                             .replace("%player_uuid%", player.uuid)
-                            .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
+                            .replace("%guild_uuid%", guild == null ? "" : guild.uuid)
                             .replace("%guild_name%", guild == null ? "" : guild.name);
                 }
                 if (ConfigUtils.moduleDPCChangeOnVerifyType().equals("bungee")) {
                     newName = TextUtils.replaceAllPlayerBungee(ConfigUtils.moduleDPCChangeOnVerifyTo(), player)
                             .replace("%player_uuid%", player.uuid)
-                            .replace("%guild_uuid%", guild == null ? "" : guild.leaderUUID)
+                            .replace("%guild_uuid%", guild == null ? "" : guild.uuid)
                             .replace("%guild_name%", guild == null ? "" : guild.name);
                 }
 
@@ -817,7 +801,6 @@ public class DiscordData {
 
         boostQueueUUIDs.add(user.uuid);
         conf.set("boosters.queue", boostQueueUUIDs);
-        saveConfig();
         reloadConfig();
     }
 
@@ -828,7 +811,6 @@ public class DiscordData {
 
         boostQueueUUIDs.remove(user.uuid);
         conf.set("boosters.queue", boostQueueUUIDs);
-        saveConfig();
         reloadConfig();
     }
 
@@ -840,7 +822,6 @@ public class DiscordData {
     public String setRolesPriority(String priority) {
         reloadConfig();
         conf.set("roles.priority", priority);
-        saveConfig();
         reloadConfig();
         return priority;
     }
@@ -858,14 +839,14 @@ public class DiscordData {
 
         TreeMap<String, SingleSet<Long, String>> toReturn = new TreeMap<>();
 
-        if (conf.getSection("roles.synced") == null) {
+//        if (conf.getSection("roles.synced")) {
             conf.set("roles.synced.default.role", 894583534017196105L);
             conf.set("roles.synced.default.group", "default");
-        }
+//        }
 
-        for (String key : conf.getSection("roles.synced").getKeys()) {
+        for (String key : conf.getSection("roles.synced").keySet()) {
             try {
-                Configuration section = conf.getSection("roles.synced." + key);
+                ConfigSection section = (ConfigSection) conf.getSection("roles.synced." + key);
                 long role = section.getLong("role");
                 if (role == 0) {
 //                    section.set("role", 894583534017196105L);
@@ -883,7 +864,6 @@ public class DiscordData {
             }
         }
 
-        saveConfig();
         reloadConfig();
 
         return toReturn;
@@ -898,7 +878,6 @@ public class DiscordData {
         linked.add(voiceID);
         conf.set("linked-voice." + userID, linked);
 
-        saveConfig();
         reloadConfig();
 
         return voiceID;
@@ -913,7 +892,6 @@ public class DiscordData {
         linked.remove(voiceID);
         conf.set("linked-voice." + userID, linked);
 
-        saveConfig();
         reloadConfig();
 
         return voiceID;
@@ -927,7 +905,7 @@ public class DiscordData {
     public List<Long> idsForVoice(long voiceID) {
         List<Long> toReturn = new ArrayList<>();
 
-        for (String key : conf.getSection("linked-voice").getKeys()) {
+        for (String key : conf.getSection("linked-voice").keySet()) {
             try {
                 long id = Long.parseLong(key);
 

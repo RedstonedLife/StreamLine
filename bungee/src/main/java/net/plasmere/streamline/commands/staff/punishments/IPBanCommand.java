@@ -94,7 +94,9 @@ public class IPBanCommand extends SLCommand {
                             toAdd = TimeUtil.convertStringTimeToDouble(args[2]);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime());
+                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                             return;
                         }
 
@@ -227,7 +229,9 @@ public class IPBanCommand extends SLCommand {
                     SavablePlayer other = PlayerUtils.getPlayerStat(args[1]);
 
                     if (other == null) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 
@@ -257,7 +261,9 @@ public class IPBanCommand extends SLCommand {
                         toAdd = TimeUtil.convertStringTimeToDouble(args[2]);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 

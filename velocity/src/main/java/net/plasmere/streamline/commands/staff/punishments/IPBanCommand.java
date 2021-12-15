@@ -2,11 +2,11 @@ package net.plasmere.streamline.commands.staff.punishments;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
+import de.leonhard.storage.Config;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 public class IPBanCommand extends SLCommand {
-    private Configuration bans = StreamLine.bans.getBans();
+    private Config bans = StreamLine.bans.getBans();
 
     public IPBanCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
@@ -94,7 +94,9 @@ public class IPBanCommand extends SLCommand {
                             toAdd = TimeUtil.convertStringTimeToDouble(args[2]);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime());
+                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                             return;
                         }
 
@@ -106,7 +108,6 @@ public class IPBanCommand extends SLCommand {
                         bans.set(ipToBan + ".reason", reason);
                         bans.set(ipToBan + ".till", till);
                         bans.set(ipToBan + ".sentenced", Instant.now().toString());
-                        StreamLine.bans.saveConfig();
 
                         for (SavablePlayer player : PlayerUtils.getPlayerStatsByIP(ip)) {
                             if (player.online) {
@@ -175,7 +176,6 @@ public class IPBanCommand extends SLCommand {
                     bans.set(ipToBan + ".reason", reason);
                     bans.set(ipToBan + ".till", "");
                     bans.set(ipToBan + ".sentenced", Instant.now().toString());
-                    StreamLine.bans.saveConfig();
 
                     for (SavablePlayer player : PlayerUtils.getPlayerStatsByIP(ip)) {
                         if (player.online) {
@@ -227,7 +227,9 @@ public class IPBanCommand extends SLCommand {
                     SavablePlayer other = PlayerUtils.getPlayerStat(args[1]);
 
                     if (other == null) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 
@@ -257,7 +259,9 @@ public class IPBanCommand extends SLCommand {
                         toAdd = TimeUtil.convertStringTimeToDouble(args[2]);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 
@@ -269,7 +273,6 @@ public class IPBanCommand extends SLCommand {
                     bans.set(ipToBan + ".reason", reason);
                     bans.set(ipToBan + ".till", till);
                     bans.set(ipToBan + ".sentenced", Instant.now().toString());
-                    StreamLine.bans.saveConfig();
 
                     for (SavablePlayer player : PlayerUtils.getPlayerStatsByIP(ip)) {
                         if (player.online) {
@@ -325,7 +328,6 @@ public class IPBanCommand extends SLCommand {
                     }
 
                     bans.set(ipToBan + ".banned", false);
-                    StreamLine.bans.saveConfig();
 
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.ipBanUnSender()
                             .replace("%ip%", ip)
@@ -352,7 +354,7 @@ public class IPBanCommand extends SLCommand {
                 }
             } else if (args[0].equals("check")) {
                 if (args[1].equals("all") || args[1].equals("*")) {
-                    Collection<String> banned = bans.getKeys();
+                    Collection<String> banned = bans.keySet();
                     TreeList<String> bannedIPs = new TreeList<>();
 
                     for (String ban : banned) {
@@ -392,7 +394,7 @@ public class IPBanCommand extends SLCommand {
             strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
-        for (String ip : bans.getKeys()) {
+        for (String ip : bans.keySet()) {
             if (! ip.contains("_")) continue;
             ip = ip.replace("_", ".");
             if (bans.getBoolean(ip + ".banned")) banned.add(ip);

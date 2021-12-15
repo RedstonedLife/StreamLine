@@ -57,7 +57,9 @@ public class MuteCommand extends SLCommand {
                     final double timeAmount = TimeUtil.convertStringTimeToDouble(args[2]);
 
                     if (timeAmount == -1d) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 
@@ -149,7 +151,9 @@ public class MuteCommand extends SLCommand {
                 final double timeAmount = TimeUtil.convertStringTimeToDouble(args[2]);
 
                 if (timeAmount == -1d) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     return;
                 }
 

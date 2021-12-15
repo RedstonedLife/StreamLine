@@ -1,8 +1,10 @@
 package net.plasmere.streamline.objects.filters;
 
 
+import de.leonhard.storage.Config;
+import de.leonhard.storage.sections.FlatFileSection;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.backend.Configuration;
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 import org.apache.commons.collections4.list.TreeList;
 
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ public class FilterHandler {
     public static List<ChatFilter> filters = new ArrayList<>();
 
     public static TreeList<String> getAllFiltersByName() {
-        return new TreeList<>(StreamLine.chatFilters.getConf().getKeys());
+        return new TreeList<>(StreamLine.chatFilters.getConf().keySet());
     }
 
     public static ChatFilter addFilter(ChatFilter filter) {
@@ -23,7 +25,7 @@ public class FilterHandler {
     }
 
     public static ChatFilter remFilter(ChatFilter filter) {
-        if (!filters.contains(filter)) return filter;
+        if (! filters.contains(filter)) return filter;
 
         filters.remove(filter);
         return filter;
@@ -37,10 +39,10 @@ public class FilterHandler {
         return null;
     }
 
-    public static void loadFiltersFromConfiguration(Configuration configuration) {
-        for (String key : configuration.getKeys()) {
+    public static void loadFiltersFromConfiguration(Config configuration) {
+        for (String key : configuration.keySet()) {
             try {
-                Configuration section = configuration.getSection(key);
+                ConfigSection section = (ConfigSection) configuration.getSection(key);
                 boolean enabled = section.getBoolean("enabled");
                 String scriptName = section.getString("runs-script");
                 String bypassPermission = section.getString("bypass-permission");

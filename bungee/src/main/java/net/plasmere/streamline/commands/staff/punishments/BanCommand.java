@@ -63,7 +63,9 @@ public class BanCommand extends SLCommand {
                         toAdd = TimeUtil.convertStringTimeToDouble(args[2]);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 
@@ -198,7 +200,9 @@ public class BanCommand extends SLCommand {
                     toAdd = TimeUtil.convertStringTimeToDouble(args[2]);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     return;
                 }
 

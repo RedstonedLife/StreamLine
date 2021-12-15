@@ -1,5 +1,6 @@
 package net.plasmere.streamline.utils.holders;
 
+import com.velocitypowered.api.proxy.Player;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.ViaAPI;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
@@ -15,11 +16,21 @@ public class ViaHolder {
     }
 
     public boolean isPresent() {
-//        return StreamLine.getProxy().getPluginManager().getPlugin("viaversion").isPresent() || StreamLine.getProxy().getPluginManager().getPlugin("ViaVersion").isPresent();
-        return false;
+        boolean present = StreamLine.getProxy().getPluginManager().getPlugin("viaversion").isPresent() || StreamLine.getProxy().getPluginManager().getPlugin("ViaVersion").isPresent();
+
+        if (! present) return present;
+
+        try {
+            ViaAPI<Player> t = Via.getAPI();
+            return true;
+        } catch (Exception e) {
+//            MessagingUtils.logWarning("ViaVersion support in Strealine is manually disabled due to a bug with ViaVersion on Velocity... :( Hopefully they fix it. :)");
+//            MessagingUtils.logWarning("Error: " + e.getMessage());
+            return false;
+        }
     }
 
-    public ViaAPI via() {
+    public ViaAPI<Player> via() {
         try {
             if (isPresent()) {
                 return Via.getAPI();

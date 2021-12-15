@@ -1,12 +1,14 @@
 package net.plasmere.streamline.events;
 
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
+import de.leonhard.storage.sections.FlatFileSection;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.config.backend.ConfigurationProvider;
-import net.plasmere.streamline.config.backend.YamlConfiguration;
+
 import net.plasmere.streamline.events.enums.Action;
 import net.plasmere.streamline.events.enums.Condition;
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.utils.MessagingUtils;
 
@@ -17,7 +19,7 @@ import java.util.TreeMap;
 public class Event {
     public File path = StreamLine.getInstance().getEDir();
 
-    public Configuration configuration;
+    public Config configuration;
     public List<String> tags;
     public TreeMap<Integer, SingleSet<Condition, String>> conditions = new TreeMap<>();
     public TreeMap<Integer, SingleSet<Action, String>> actions = new TreeMap<>();
@@ -26,7 +28,7 @@ public class Event {
 
     public Event(File file){
         try {
-            configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(path, file.getName()));
+            configuration = LightningBuilder.fromFile(file).createConfig();
 
             tags = configuration.getStringList("tags");
 
@@ -42,16 +44,16 @@ public class Event {
     public TreeMap<Integer, SingleSet<Condition, String>> compileCond() {
         TreeMap<Integer, SingleSet<Condition, String>> c = new TreeMap<>();
 
-        Configuration conditionsConf = configuration.getSection("conditions");
+        ConfigSection conditionsConf = (ConfigSection) configuration.getSection("conditions");
         int i = 1;
 
         if (ConfigUtils.debug()) {
-            MessagingUtils.logInfo("Amount of conditions --> " + conditionsConf.getKeys().size());
+            MessagingUtils.logInfo("Amount of conditions --> " + conditionsConf.keySet().size());
         }
 
-        for (String string : conditionsConf.getKeys()) {
+        for (String string : conditionsConf.keySet()) {
             try {
-                Configuration cond = conditionsConf.getSection(string);
+                ConfigSection cond = (ConfigSection) configuration.getSection(conditionsConf.getPathPrefix() + string);
 
                 c.put(i,
                         new SingleSet<>(
@@ -82,12 +84,12 @@ public class Event {
     public TreeMap<Integer, SingleSet<Action, String>> compileAction() {
         TreeMap<Integer, SingleSet<Action, String>> a = new TreeMap<>();
 
-        Configuration actionsConf = configuration.getSection("actions");
+        ConfigSection actionsConf = (ConfigSection) configuration.getSection("actions");
         int i = 1;
 
-        for (String string : actionsConf.getKeys()) {
+        for (String string : actionsConf.keySet()) {
             try {
-                Configuration act = actionsConf.getSection(string);
+                ConfigSection act = (ConfigSection) configuration.getSection(actionsConf.getPathPrefix() + string);
 
                 a.put(i,
                         new SingleSet<>(

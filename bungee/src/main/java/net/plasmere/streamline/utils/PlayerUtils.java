@@ -432,7 +432,7 @@ public class PlayerUtils {
     public static boolean checkIfMuted(ProxiedPlayer sender, SavablePlayer stat){
         checkAndUpdateIfMuted(stat);
 
-        if (stat.mutedTill != null) {
+        if (! Objects.equals(stat.mutedTill, new Date(0L))) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedTemp().replace("%date%", stat.mutedTill.toString()));
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedPerm());
@@ -441,7 +441,7 @@ public class PlayerUtils {
     }
 
     public static void checkAndUpdateIfMuted(SavablePlayer stat){
-        if (stat.mutedTill != null) {
+        if (! Objects.equals(stat.mutedTill, new Date(0L))) {
             if (stat.mutedTill.before(Date.from(Instant.now()))) {
                 stat.setMuted(false);
                 stat.removeMutedTill();

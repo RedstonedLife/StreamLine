@@ -2,7 +2,7 @@ package net.plasmere.streamline.commands.staff;
 
 import com.velocitypowered.api.command.CommandSource;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.MessagingUtils;

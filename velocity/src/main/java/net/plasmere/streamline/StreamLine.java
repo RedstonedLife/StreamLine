@@ -33,10 +33,11 @@ import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.EventsReader;
 import net.plasmere.streamline.libs.Metrics;
 import net.plasmere.streamline.listeners.LPListener;
-import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.configs.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.timers.*;
 import net.plasmere.streamline.scripts.ScriptsHandler;
@@ -54,7 +55,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -590,7 +590,7 @@ public class StreamLine {
 		SavableConsole console = PlayerUtils.applyConsole();
 		if (GuildUtils.existsByUUID(console.guild)) {
 			try {
-				GuildUtils.addGuild(new SavableGuild(console.guild, false));
+				GuildUtils.addGuild(new SavableGuild(console.guild));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -664,16 +664,16 @@ public class StreamLine {
 			PlayerUtils.kickAll(MessageConfUtils.kicksStopping());
 		}
 
-		if (ConfigUtils.onCloseMain()) {
-			config.saveConf();
-			config.saveLocales();
-			config.saveDiscordBot();
-			config.saveCommands();
-		}
-
-		if (ConfigUtils.onCloseSettings()) {
-			serverConfig.saveConfig();
-		}
+//		if (ConfigUtils.onCloseMain()) {
+//			config.saveConf();
+//			config.saveLocales();
+//			config.saveDiscordBot();
+//			config.saveCommands();
+//		}
+//
+//		if (ConfigUtils.onCloseSettings()) {
+//			serverConfig.saveConfig();
+//		}
 
 		guilds.cancel();
 		players.cancel();
@@ -720,20 +720,25 @@ public class StreamLine {
 		}
 
 		saveGuilds();
+		saveParties();
 
 		PluginUtils.state = NetworkState.STOPPED;
 	}
 
 	public void saveGuilds(){
 		for (SavableGuild guild : GuildUtils.getGuilds()){
-			try {
-				guild.saveInfo();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			guild.saveAll();
 		}
 
 		getLogger().info("Saved " + GuildUtils.getGuilds().size() + " Guilds!");
+	}
+
+	public void saveParties(){
+		for (SavableParty party : PartyUtils.getParties()){
+			party.saveAll();
+		}
+
+		getLogger().info("Saved " + PartyUtils.getParties().size() + " Parties!");
 	}
 
 	public static StreamLine getInstance() { return instance; }

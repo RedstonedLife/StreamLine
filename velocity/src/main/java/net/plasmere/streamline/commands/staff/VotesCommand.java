@@ -62,7 +62,9 @@ public class VotesCommand extends SLCommand {
                                 .replace("%votes%", args[2])
                         );
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                         return;
                     }
@@ -84,7 +86,9 @@ public class VotesCommand extends SLCommand {
                                 .replace("%votes%", args[2])
                         );
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                         return;
                     }
@@ -107,7 +111,9 @@ public class VotesCommand extends SLCommand {
                                 .replace("%votes%", args[2])
                         );
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                         return;
                     }

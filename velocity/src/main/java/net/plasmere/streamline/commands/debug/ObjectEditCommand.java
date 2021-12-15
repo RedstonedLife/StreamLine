@@ -49,7 +49,9 @@ public class ObjectEditCommand extends SLCommand {
                     break;
             }
         } catch (Throwable e) {
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
 //            e.printStackTrace();
         }
     }
