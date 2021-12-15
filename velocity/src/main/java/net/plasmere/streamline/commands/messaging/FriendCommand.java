@@ -120,6 +120,7 @@ public class FriendCommand extends SLCommand {
 
                     stat.removePendingFromFriend(other.uuid);
                     other.removePendingToFriend(stat.uuid);
+                    other.setFriendRequestDenied(stat);
 
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendDenySelf(), other));
                     if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof SavableConsole) {
@@ -143,6 +144,8 @@ public class FriendCommand extends SLCommand {
                     other.removePendingFromFriend(stat.uuid);
                     stat.removeFriend(other.uuid);
                     other.removeFriend(stat.uuid);
+                    stat.setFriendRequestDenied(other);
+                    other.setFriendRequestDenied(stat);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendRemSelf(), other));
                     if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof SavableConsole) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendRemOther(), sender));

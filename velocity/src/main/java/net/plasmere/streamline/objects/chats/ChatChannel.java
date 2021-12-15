@@ -8,6 +8,7 @@ public class ChatChannel {
 
     public ChatChannel(String name, String permission) {
         this.name = name.toLowerCase(Locale.ROOT);
+        this.permission = permission;
     }
 
     public String toString() {

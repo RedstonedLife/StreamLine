@@ -68,13 +68,17 @@ public class ChatConfig {
     }
 
     public void createChannels() {
-        for (String key : conf.getSection("chats").keySet()){
+        for (String key : new ConfigSection(conf.getSection("chats")).getKeys()) {
             if (key.equals("base-permission")) continue;
             if (key.equals("default-just-first-join")) continue;
             if (key.equals("default-channel")) continue;
             if (key.equals("default-identifier")) continue;
 
-            ChatsHandler.createChatChannel(key, conf.getString("chats." + key + ".permission"));
+            String value = conf.getString("chats." + key + ".permission");
+
+            MessagingUtils.logWarning("Value = " + value);
+
+            ChatsHandler.createChatChannel(key, value);
         }
 
         ChatsHandler.createChatChannel("off", "");
@@ -82,7 +86,7 @@ public class ChatConfig {
 
     public void createChats() {
         for (ChatChannel chatChannel : ChatsHandler.createdChannels) {
-            for (String chatName : conf.getSection("chats." + chatChannel.name).keySet()) {
+            for (String chatName : new ConfigSection(conf.getSection("chats." + chatChannel.name)).getKeys()) {
                 if (chatName.equals("permission")) continue;
 
                 String identifier = conf.getString("chats." + chatChannel.name + "." + chatName + ".identifier");

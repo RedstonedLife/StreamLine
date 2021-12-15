@@ -7,6 +7,7 @@ import net.plasmere.streamline.objects.savable.SavableFile;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.*;
+import net.plasmere.streamline.utils.sql.DataSource;
 
 import java.io.File;
 import java.util.*;
@@ -39,9 +40,17 @@ public abstract class SavableGroup extends SavableFile {
         SavableUser user = PlayerUtils.getOrGetSavableUser(uuid);
         if (user == null) return;
 
+        addToTMembers(user);
+
         switch (type) {
-            case GUILD -> user.setGuild(uuid);
-            case PARTY -> user.setParty(uuid);
+            case PARTY -> {
+                user.setParty(uuid);
+                DataSource.createParty(user, (SavableParty) this);
+            }
+            case GUILD -> {
+                user.setGuild(uuid);
+                DataSource.createGuild(user, (SavableGuild) this);
+            }
         }
     }
 
@@ -79,6 +88,18 @@ public abstract class SavableGroup extends SavableFile {
         return users;
     }
 
+    public List<String> parseUUIDListFromUsers(List<SavableUser> users) {
+        List<String> uuids = new ArrayList<>();
+
+        for (SavableUser user : users) {
+            if (uuids.contains(user.uuid)) continue;
+
+            uuids.add(user.uuid);
+        }
+
+        return uuids;
+    }
+
     abstract public void populateMoreDefaults();
 
     public void loadValues(){
@@ -105,10 +126,10 @@ public abstract class SavableGroup extends SavableFile {
 
     public void saveAll() {
         // Users.
-        set("users.moderators", moderators);
-        set("users.members", members);
-        set("users.total", totalMembers);
-        set("users.invites", invites);
+        set("users.moderators", parseUUIDListFromUsers(moderators));
+        set("users.members", parseUUIDListFromUsers(members));
+        set("users.total", parseUUIDListFromUsers(totalMembers));
+        set("users.invites", parseUUIDListFromUsers(invites));
         // Settings.
         set("settings.mute.toggled", isMuted);
         set("settings.public.toggled", isPublic);
@@ -160,6 +181,15 @@ public abstract class SavableGroup extends SavableFile {
 
     public void remFromTMembers(SavableUser stat){
         totalMembers.remove(stat);
+
+        switch (type) {
+            case PARTY -> {
+                DataSource.removePlayerFromParty(stat, (SavableParty) this);
+            }
+            case GUILD -> {
+                DataSource.removePlayerFromGuild(stat, (SavableGuild) this);
+            }
+        }
     }
 
     public void remFromInvites(SavableUser from, SavableUser stat){
@@ -182,15 +212,25 @@ public abstract class SavableGroup extends SavableFile {
         totalMembers.add(stat);
     }
 
-    public void addToInvites(SavableUser stat){
-        invites.add(stat);
+    public void addInvite(SavableUser to) {
+        invites.add(to);
     }
 
     public void addMember(SavableUser stat){
         addToTMembers(stat);
         addToMembers(stat);
 
-        stat.setGuild(uuid);
+
+        switch (type) {
+            case PARTY -> {
+                stat.setParty(uuid);
+                DataSource.addPlayerToParty(stat, (SavableParty) this);
+            }
+            case GUILD -> {
+                stat.setGuild(uuid);
+                DataSource.addPlayerToGuild(stat, (SavableGuild) this);
+            }
+        }
     }
 
     public void removeMemberFromGroup(SavableUser stat){
@@ -227,10 +267,6 @@ public abstract class SavableGroup extends SavableFile {
                 }
             }
         }
-    }
-
-    public void addInvite(SavableUser to) {
-        invites.add(to);
     }
 
     public void setMuted(boolean bool) {
@@ -341,16 +377,19 @@ public abstract class SavableGroup extends SavableFile {
 
         file.delete();
 
-//        if (! file.renameTo(new File(filePrePath + uuid.toString() + ".properties"))){
-//            MessagingUtils.logInfo("Could not rename a guild file for " + uuid + "...");
-//        }
-
         file = null;
         file = new File(type.path + uuid + type.suffix);
 
         try {
             for (SavableUser p : totalMembers) {
-                p.setGuild(uuid);
+                switch (type) {
+                    case PARTY -> {
+                        p.setParty(uuid);
+                    }
+                    case GUILD -> {
+                        p.setGuild(uuid);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

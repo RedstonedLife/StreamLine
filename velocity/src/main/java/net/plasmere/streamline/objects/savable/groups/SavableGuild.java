@@ -1,7 +1,9 @@
 package net.plasmere.streamline.objects.savable.groups;
 
+import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.savable.SavableAdapter;
-import net.plasmere.streamline.objects.savable.groups.SavableGroup;
+import net.plasmere.streamline.utils.MathUtils;
+import net.plasmere.streamline.utils.sql.DataSource;
 
 public class SavableGuild extends SavableGroup {
     public String name;
@@ -9,7 +11,7 @@ public class SavableGuild extends SavableGroup {
     public int currentXP;
     public int level;
 
-    public int defaultLevel = 1;
+    public int defaultLevel = ConfigUtils.guildExperienceStartingLevel();
 
     public SavableGuild(String creatorUUID, String name) {
         this(creatorUUID);
@@ -25,8 +27,8 @@ public class SavableGuild extends SavableGroup {
     @Override
     public void populateMoreDefaults() {
         name = getOrSetDefault("guild.name", "");
-        totalXP = getOrSetDefault("guild.stats.experience.total", 0);
-        currentXP = getOrSetDefault("guild.stats.experience.current", 0);
+        totalXP = getOrSetDefault("guild.stats.experience.total", ConfigUtils.guildExperienceStartingXP());
+        currentXP = getOrSetDefault("guild.stats.experience.current", ConfigUtils.guildExperienceStartingXP());
         level = getOrSetDefault("guild.stats.level", defaultLevel);
     }
 
@@ -40,7 +42,7 @@ public class SavableGuild extends SavableGroup {
 
     @Override
     public void saveMore() {
-
+        DataSource.updateGuildData(this);
     }
 
     /*
@@ -50,17 +52,24 @@ public class SavableGuild extends SavableGroup {
    9 × current_level – 158 (for levels 31+)
     */
 
-    public int getNeededXp(int fromLevel){
+    public int getNeededXp() {
         int needed = 0;
 
-        needed = 2500 + (2500 * (fromLevel - defaultLevel));
+        String function =
+                ConfigUtils.guildExperienceEquation()
+                        .replace("%default_level%", String.valueOf(defaultLevel))
+                        .replace("%guild_level%", String.valueOf(level))
+                        .replace("%guild_current_xp%", String.valueOf(currentXP))
+                        .replace("%guild_total_xp%", String.valueOf(totalXP));
+
+        needed = (int) Math.round(MathUtils.eval(function));
 
         return needed;
     }
 
     public int xpUntilNextLevel(){
         //        loadValues();
-        return getNeededXp(this.level + 1) - this.totalXP;
+        return getNeededXp() - this.totalXP;
     }
 
     public void addTotalXP(int amount){
@@ -85,7 +94,7 @@ public class SavableGuild extends SavableGroup {
         //        loadValues();
         int xpTill = 0;
         for (int i = 0; i <= this.level; i++) {
-            xpTill += getNeededXp(i);
+            xpTill += getNeededXp();
         }
 
         return xpTill;

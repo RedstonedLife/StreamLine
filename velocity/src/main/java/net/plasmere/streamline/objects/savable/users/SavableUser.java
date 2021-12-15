@@ -12,6 +12,7 @@ import net.plasmere.streamline.objects.savable.SavableFile;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
+import net.plasmere.streamline.utils.sql.DataSource;
 
 import java.io.File;
 import java.util.*;
@@ -131,7 +132,7 @@ public abstract class SavableUser extends SavableFile {
         latestVersion = getOrSetDefault("profile.latest.version", getLatestVersion());
         latestServer = getOrSetDefault("profile.latest.server", MessageConfUtils.nullB());
         displayName = getOrSetDefault("profile.display-name", latestName);
-        tagList = getOrSetDefault("profile.tags", new ArrayList<>());
+        tagList = getOrSetDefault("profile.tags", getTagsFromConfig());
         points = getOrSetDefault("profile.points", ConfigUtils.pointsDefault());
         // Savables.
         guild = getOrSetDefault("savables.guild", "");
@@ -265,6 +266,10 @@ public abstract class SavableUser extends SavableFile {
 
     public void addIgnoredPlayer(String uuid) {
         //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
+
+        DataSource.ignorePlayer(this, other);
         if (ignoredList.contains(uuid)) return;
 
         ignoredList.add(uuid);
@@ -273,6 +278,10 @@ public abstract class SavableUser extends SavableFile {
 
     public void removeIgnoredPlayer(String uuid) {
         //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
+
+        DataSource.stopIgnoringPlayer(this, other);
         if (! ignoredList.contains(uuid)) return;
 
         ignoredList.remove(uuid);
@@ -281,10 +290,18 @@ public abstract class SavableUser extends SavableFile {
 
     public void addFriend(String uuid) {
         //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
+
+        DataSource.confirmFriendRequest(this, other, true);
         if (friendList.contains(uuid)) return;
 
         friendList.add(uuid);
         //        saveAll();
+    }
+
+    public void setFriendRequestDenied(SavableUser receiver) {
+        DataSource.confirmFriendRequest(this, receiver, false);
     }
 
     public void removeFriend(String uuid) {
@@ -297,6 +314,10 @@ public abstract class SavableUser extends SavableFile {
 
     public void addPendingToFriend(String uuid) {
         //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
+
+        DataSource.sendFriendRequest(this, other);
         if (pendingToFriendList.contains(uuid)) return;
 
         pendingToFriendList.add(uuid);
@@ -305,6 +326,10 @@ public abstract class SavableUser extends SavableFile {
 
     public void removePendingToFriend(String uuid) {
         //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
+
+        DataSource.confirmFriendRequest(this, other, false);
         if (! pendingToFriendList.contains(uuid)) return;
 
         pendingToFriendList.remove(uuid);
@@ -313,6 +338,10 @@ public abstract class SavableUser extends SavableFile {
 
     public void addPendingFromFriend(String uuid) {
         //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
+
+        DataSource.sendFriendRequest(other, this);
         if (pendingFromFriendList.contains(uuid)) return;
 
         pendingFromFriendList.add(uuid);

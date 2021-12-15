@@ -528,6 +528,16 @@ public class MessageConfUtils {
         return StreamLine.config.mess.getString("parties.ismuted.false");
     }
 
+    public static String partiesSave() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("parties.save");
+    }
+
+    public static String partiesReload() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("parties.reload");
+    }
+
     // Guilds.
     public static String guildsNone() {
         StreamLine.config.reloadLocales();
@@ -597,6 +607,16 @@ public class MessageConfUtils {
     public static String guildsIsMutedFalse() {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("guilds.ismuted.false");
+    }
+
+    public static String guildsSave() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("guilds.save");
+    }
+
+    public static String guildsReload() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("guilds.reload");
     }
 
     // Sudo.
@@ -1347,6 +1367,16 @@ public class MessageConfUtils {
     public static String getStatsLast() {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("getstats.message.last");
+    }
+
+    public static String getStatsSave() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("getstats.save");
+    }
+
+    public static String getStatsReload() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("getstats.reload");
     }
 
     // // Settings.

@@ -132,7 +132,7 @@ public abstract class From {
             }
         }
 
-        return LightningBuilder.fromPath(cfile.toPath()).createConfig();
+        return LightningBuilder.fromFile(cfile).createConfig();
     }
 
     public Config getFirstTranslations(String language) {
@@ -154,7 +154,7 @@ public abstract class From {
             }
         }
 
-        return LightningBuilder.fromPath(mfile(language).toPath()).createConfig();
+        return LightningBuilder.fromFile(mfile(language)).createConfig();
     }
 
     public Config getFirstServerConfig() {
@@ -166,7 +166,7 @@ public abstract class From {
             }
         }
 
-        return LightningBuilder.fromPath(scfile.toPath()).createConfig();
+        return LightningBuilder.fromFile(scfile).createConfig();
     }
 
     public Config getFirstDiscordBot() {
@@ -178,7 +178,7 @@ public abstract class From {
             }
         }
 
-        return LightningBuilder.fromPath(disbotFile.toPath()).createConfig();
+        return LightningBuilder.fromFile(disbotFile).createConfig();
     }
 
     public Config getFirstCommands() {
@@ -190,7 +190,7 @@ public abstract class From {
             }
         }
 
-        return LightningBuilder.fromPath(commandFile.toPath()).createConfig();
+        return LightningBuilder.fromFile(commandFile).createConfig();
     }
 
     public Config getFirstChats() {
@@ -202,7 +202,7 @@ public abstract class From {
             }
         }
 
-        return LightningBuilder.fromPath(chatsFile.toPath()).createConfig();
+        return LightningBuilder.fromFile(chatsFile).createConfig();
     }
 
     public abstract void setupConfigFix();

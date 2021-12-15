@@ -236,6 +236,8 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
+        MessagingUtils.logWarning("UUID = " + player.getUUID());
+
         String query = "REPLACE INTO player_chat (uuid, chatChannel, chatId) VALUES (?, ?, ?);";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
@@ -372,7 +374,7 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
         if(!player.party.isEmpty()) return;
-        String query = "INSERT INTO party_members (UUID, partyId) VALUES (?, ?)";
+        String query = "INSERT INTO party_member (UUID, partyId) VALUES (?, ?)";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
@@ -390,7 +392,7 @@ public class DataSource {
         if (! ConfigUtils.moduleDBUse()) return;
         if(player.party.isEmpty()) return; //wtf
 
-        String query = "DELETE FROM party_members WHERE (UUID = ?, partyId = ?)";
+        String query = "DELETE FROM party_member WHERE (UUID = ?, partyId = ?)";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
@@ -407,7 +409,7 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
-        String query = "INSERT INTO party_data (id, voiceId, maxSize) VALUES (?, ?, ?); INSERT INTO party_members (UUID, partyId, level) VALUES (?, ?, ?)";
+        String query = "INSERT INTO party_data (id, voiceId, maxSize) VALUES (?, ?, ?); INSERT INTO party_member (UUID, partyId, level) VALUES (?, ?, ?)";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
@@ -448,7 +450,7 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
         if(!player.guild.isEmpty()) return;
-        String query = "INSERT INTO guild_members (UUID, guildId) VALUES (?, ?)";
+        String query = "INSERT INTO guild_member (UUID, guildId) VALUES (?, ?)";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
@@ -466,7 +468,7 @@ public class DataSource {
         if (! ConfigUtils.moduleDBUse()) return;
         if(player.guild.isEmpty()) return; //wtf
 
-        String query = "DELETE FROM guild_members WHERE (UUID = ?, guildId = ?)";
+        String query = "DELETE FROM guild_member WHERE (UUID = ?, guildId = ?)";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
@@ -483,7 +485,7 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
-        String query = "INSERT INTO guild_data (id, name, totalExperience, currentExperience, level, isMuted, isPublic, voiceId, maxSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); INSERT INTO guild_members (UUID, guildId, level) VALUES (?, ?, ?)";
+        String query = "INSERT INTO guild_data (id, name, totalExperience, currentExperience, level, isMuted, isPublic, voiceId, maxSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); INSERT INTO guild_member (UUID, guildId, level) VALUES (?, ?, ?)";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {

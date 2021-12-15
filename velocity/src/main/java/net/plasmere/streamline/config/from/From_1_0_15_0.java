@@ -28,7 +28,23 @@ public class From_1_0_15_0 extends From{
 
     @Override
     public void setupLocalesFix() {
+        addUpdatedLocalesEntry("getstats.save", "&eJust saved all of the current users in the cache!", "en_US");
+        addUpdatedLocalesEntry("getstats.reload", "&eJust reloaded all cached users. Make sure to save the users first! &d/getstats save", "en_US");
 
+        addUpdatedLocalesEntry("parties.save", "&eJust saved all of the current parties in the cache!", "en_US");
+        addUpdatedLocalesEntry("parties.reload", "&eJust reloaded all cached parties. Make sure to save the parties first! &d/parties save", "en_US");
+
+        addUpdatedLocalesEntry("guilds.save", "&eJust saved all of the current guilds in the cache!", "en_US");
+        addUpdatedLocalesEntry("guilds.reload", "&eJust reloaded all cached guilds. Make sure to save the guilds first! &d/guilds save", "en_US");
+
+        addUpdatedLocalesEntry("getstats.save", "&eJust saved all of the current users in the cache!", "fr_FR");
+        addUpdatedLocalesEntry("getstats.reload", "&eJust reloaded all cached users. Make sure to save the users first! &d/getstats save", "fr_FR");
+
+        addUpdatedLocalesEntry("parties.save", "&eJust saved all of the current parties in the cache!", "fr_FR");
+        addUpdatedLocalesEntry("parties.reload", "&eJust reloaded all cached parties. Make sure to save the parties first! &d/parties save", "fr_FR");
+
+        addUpdatedLocalesEntry("guilds.save", "&eJust saved all of the current guilds in the cache!", "fr_FR");
+        addUpdatedLocalesEntry("guilds.reload", "&eJust reloaded all cached guilds. Make sure to save the guilds first! &d/guilds save", "fr_FR");
     }
 
     @Override

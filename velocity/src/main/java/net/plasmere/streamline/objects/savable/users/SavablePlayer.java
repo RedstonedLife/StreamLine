@@ -16,9 +16,12 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.savable.SavableAdapter;
+import net.plasmere.streamline.utils.MathUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
+import net.plasmere.streamline.utils.sql.DataSource;
+//import org.mariuszgromada.math.mxparser.Function;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -40,7 +43,7 @@ public class SavablePlayer extends SavableUser {
     public long discordID;
     public int bypassFor;
 
-    public int defaultLevel = 1;
+    public int defaultLevel = ConfigUtils.statsExperienceStartingLevel();
 
     public SavablePlayer(Player player) {
         super(player, SavableAdapter.Type.PLAYER);
@@ -53,14 +56,6 @@ public class SavablePlayer extends SavableUser {
 
     public SavablePlayer(UUID uuid) {
         super(uuid.toString(), SavableAdapter.Type.PLAYER);
-    }
-
-    public boolean onlineCheck(){
-        for (Player p : StreamLine.getProxy().getAllPlayers()){
-            if (p.getUsername().equals(this.latestName)) return true;
-        }
-
-        return false;
     }
 
     @Override
@@ -77,8 +72,8 @@ public class SavablePlayer extends SavableUser {
         nameList = getOrSetDefault("player.names", new ArrayList<>());
         // Stats.
         level = getOrSetDefault("player.stats.level", defaultLevel);
-        totalXP = getOrSetDefault("player.stats.experience.total", 0);
-        currentXP = getOrSetDefault("player.stats.experience.current", 0);
+        totalXP = getOrSetDefault("player.stats.experience.total", ConfigUtils.statsExperienceStartingXP());
+        currentXP = getOrSetDefault("player.stats.experience.current", ConfigUtils.statsExperienceStartingXP());
         playSeconds = getOrSetDefault("player.stats.playtime.seconds", 0);
         // Punishments.
         muted = getOrSetDefault("player.punishments.mute.toggled", false);
@@ -191,6 +186,7 @@ public class SavablePlayer extends SavableUser {
         this.chatIdentifier = newIdentifier;
         //        saveAll();
 
+        DataSource.updatePlayerChat(this);
         return newIdentifier;
     }
 
@@ -200,11 +196,13 @@ public class SavablePlayer extends SavableUser {
         this.chatChannel = newLevel;
         //        saveAll();
 
+        DataSource.updatePlayerChat(this);
         return newLevel;
     }
 
     public void addName(String name){
         //        loadValues();
+        DataSource.addNameToPlayer(this, name);
         if (nameList.contains(name)) return;
 
         nameList.add(name);
@@ -221,6 +219,7 @@ public class SavablePlayer extends SavableUser {
 
     public void addIP(String ip){
         //        loadValues();
+        DataSource.addIpToPlayer(this, ip);
         if (ipList.contains(ip)) return;
 
         ipList.add(ip);
@@ -303,17 +302,20 @@ public class SavablePlayer extends SavableUser {
    9 × current_level – 158 (for levels 31+)
     */
 
-    public int getNeededXp(int fromLevel){
+    public int getNeededXp(){
         int needed = 0;
 
-        needed = 2500 + (2500 * (fromLevel - defaultLevel));
+        String function = TextUtils.replaceAllPlayerDiscord(ConfigUtils.statsExperienceEquation(), this)
+                        .replace("%default_level%", String.valueOf(defaultLevel));
+
+        needed = (int) Math.round(MathUtils.eval(function));
 
         return needed;
     }
 
     public int xpUntilNextLevel(){
         //        loadValues();
-        return getNeededXp(this.level + 1) - this.totalXP;
+        return getNeededXp() - this.totalXP;
     }
 
     public void addTotalXP(int amount){
@@ -331,6 +333,7 @@ public class SavablePlayer extends SavableUser {
         }
 
         currentXP = getCurrentXP();
+        DataSource.updatePlayerExperience(this);
         //        saveAll();
     }
 
@@ -338,7 +341,7 @@ public class SavablePlayer extends SavableUser {
         //        loadValues();
         int xpTill = 0;
         for (int i = 0; i <= this.level; i++) {
-            xpTill += getNeededXp(i);
+            xpTill += getNeededXp();
         }
 
         return xpTill;
@@ -427,7 +430,6 @@ public class SavablePlayer extends SavableUser {
         return uuid;
     }
 
-    
     public UUID getUniqueId() {
         return UUID.fromString(uuid);
     }

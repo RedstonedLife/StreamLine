@@ -2,6 +2,7 @@ package net.plasmere.streamline.objects.savable.groups;
 
 import net.plasmere.streamline.objects.savable.SavableAdapter;
 import net.plasmere.streamline.objects.savable.groups.SavableGroup;
+import net.plasmere.streamline.utils.sql.DataSource;
 
 public class SavableParty extends SavableGroup {
     public SavableParty(String creatorUUID, int maxSize) {
@@ -26,6 +27,6 @@ public class SavableParty extends SavableGroup {
 
     @Override
     public void saveMore() {
-
+        DataSource.updatePartyData(this);
     }
 }

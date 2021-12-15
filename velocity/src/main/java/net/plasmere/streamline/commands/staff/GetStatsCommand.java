@@ -10,6 +10,7 @@ import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class GetStatsCommand extends SLCommand {
     public GetStatsCommand(String base, String perm, String[] aliases){
@@ -18,18 +19,30 @@ public class GetStatsCommand extends SLCommand {
 
     @Override
     public void run(CommandSource sender, String[] args) {
-        if (PlayerUtils.getStats().size() <= 0) {
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsNone());
-            return;
-        }
+        if (args.length <= 0) {
+            if (PlayerUtils.getStats().size() <= 0) {
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsNone());
+                return;
+            }
 
-        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsMessage()
-                .replace("%stats%", getStats())
-        );
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsMessage()
+                    .replace("%stats%", getStats())
+            );
+        } else {
+            switch (args[0]) {
+                case "save" -> {
+
+                }
+            }
+        }
     }
 
     @Override
     public Collection<String> onTabComplete(CommandSource sender, String[] args) {
+        if (args.length == 1) {
+            return TextUtils.getCompletion(List.of("save", "reload"), args[0]);
+        }
+
         return new ArrayList<>();
     }
 

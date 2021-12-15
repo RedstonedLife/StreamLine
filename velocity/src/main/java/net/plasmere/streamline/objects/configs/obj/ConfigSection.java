@@ -1,6 +1,7 @@
 package net.plasmere.streamline.objects.configs.obj;
 
 import de.leonhard.storage.sections.FlatFileSection;
+import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,8 +18,10 @@ public class ConfigSection {
     public Set<String> getKeys() {
         Set<String> toReturn = new HashSet<>();
 
-        for (String string : s.keySet()) {
-            if (string.contains(".")) continue;
+        for (String string : s.singleLayerKeySet()) {
+//            MessagingUtils.logWarning("String: " + string);
+//            String[] args = string.replace(this.pathPrefix, "").split("\\.");
+            if (toReturn.contains(string)) continue;
             toReturn.add(string);
         }
 
