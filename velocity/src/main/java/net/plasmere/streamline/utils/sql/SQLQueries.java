@@ -2,37 +2,117 @@ package net.plasmere.streamline.utils.sql;
 
 public enum SQLQueries {
 
-    CREATE_TABLE("CREATE TABLE guild_data (id int(11) NOT NULL, ownerUUID char(128) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " CREATE TABLE party_data (id int(11) NOT NULL, ownerUUID char(128) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " CREATE TABLE player_addresses (UUID char(128) COLLATE utf8mb4_bin NOT NULL, address varchar(64) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " CREATE TABLE player_chat (UUID char(128) COLLATE utf8mb4_bin NOT NULL, chatChannel varchar(64) COLLATE utf8mb4_bin NOT NULL, chatId varchar(64) COLLATE utf8mb4_bin NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " CREATE TABLE player_data (UUID char(128) COLLATE utf8mb4_bin NOT NULL, latestName varchar(64) COLLATE utf8mb4_bin NOT NULL, displayName varchar(64) COLLATE utf8mb4_bin NOT NULL, latestIp varchar(64) COLLATE utf8mb4_bin NOT NULL, latestVersion varchar(16) COLLATE utf8mb4_bin NOT NULL, latestServer varchar(64) COLLATE utf8mb4_bin NOT NULL, discordId bigint(20) DEFAULT NULL, muted tinyint(1) DEFAULT 0, mutedUntil datetime DEFAULT NULL, currentPartyId int(11) DEFAULT NULL, currentGuildId int(11) DEFAULT NULL, points int(11) DEFAULT 0) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " CREATE TABLE player_experience (UUID char(128) COLLATE utf8mb4_bin NOT NULL, totalExperience int(11) NOT NULL, currentExperience int(11) NOT NULL, level int(11) NOT NULL DEFAULT 1) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " CREATE TABLE player_friends (UUID char(128) COLLATE utf8mb4_bin NOT NULL, friendUUID char(128) COLLATE utf8mb4_bin NOT NULL, isPending tinyint(1) DEFAULT 0) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " CREATE TABLE player_ignores (UUID char(128) COLLATE utf8mb4_bin NOT NULL, ignoredUUID char(128) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " CREATE TABLE player_names (UUID char(128) COLLATE utf8mb4_bin NOT NULL, name varchar(64) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " CREATE TABLE player_tags (UUID char(128) COLLATE utf8mb4_bin NOT NULL, tags varchar(64) COLLATE utf8mb4_bin NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;" +
-            " ALTER TABLE guild_data ADD PRIMARY KEY (id), ADD KEY ownerUUID (ownerUUID);" +
-            " ALTER TABLE party_data ADD PRIMARY KEY (id), ADD KEY ownerUUID (ownerUUID);" +
-            " ALTER TABLE player_addresses ADD INDEX (UUID), ADD UNIQUE KEY address (address);" +
-            " ALTER TABLE player_chat ADD PRIMARY KEY (UUID);" +
-            " ALTER TABLE player_data ADD PRIMARY KEY (UUID);" +
-            " ALTER TABLE player_experience ADD PRIMARY KEY (UUID);" +
-            " ALTER TABLE player_friends ADD PRIMARY KEY (UUID), ADD UNIQUE KEY friendUUID (friendUUID);" +
-            " ALTER TABLE player_ignores ADD PRIMARY KEY (UUID);" +
-            " ALTER TABLE player_names ADD INDEX (UUID), ADD UNIQUE KEY name (name);" +
-            " ALTER TABLE player_tags ADD PRIMARY KEY (UUID);" +
-            " ALTER TABLE guild_data MODIFY id int(11) NOT NULL AUTO_INCREMENT;" +
-            " ALTER TABLE party_data MODIFY id int(11) NOT NULL AUTO_INCREMENT;" +
-            " ALTER TABLE guild_data ADD CONSTRAINT guild_data_ibfk_1 FOREIGN KEY (ownerUUID) REFERENCES player_data (UUID);" +
-            " ALTER TABLE party_data ADD CONSTRAINT party_data_ibfk_1 FOREIGN KEY (ownerUUID) REFERENCES player_data (UUID);" +
-            " ALTER TABLE player_addresses ADD CONSTRAINT player_addresses_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);" +
-            " ALTER TABLE player_chat ADD CONSTRAINT player_chat_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);" +
-            " ALTER TABLE player_experience ADD CONSTRAINT player_experience_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);" +
-            " ALTER TABLE player_friends ADD CONSTRAINT player_friends_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);" +
-            " ALTER TABLE player_ignores ADD CONSTRAINT player_ignores_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);" +
-            " ALTER TABLE player_names ADD CONSTRAINT player_names_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);" +
-            " ALTER TABLE player_tags ADD CONSTRAINT player_tags_ibfk_1 FOREIGN KEY (UUID) REFERENCES player_data (UUID);"),
+    CREATE_TABLE("CREATE TABLE `player_data` (" +
+            "  `UUID` char(128) PRIMARY KEY NOT NULL," +
+            "  `latestName` varchar(64) NOT NULL," +
+            "  `displayName` varchar(64) NOT NULL," +
+            "  `latestIp` varchar(64) NOT NULL," +
+            "  `latestVersion` varchar(16) NOT NULL," +
+            "  `latestServer` varchar(64) NOT NULL," +
+            "  `discordId` bigint," +
+            "  `muted` boolean DEFAULT 0," +
+            "  `mutedUntil` datetime," +
+            "  `currentPartyId` int," +
+            "  `currentGuildId` int," +
+            "  `points` int DEFAULT 0" +
+            ");" +
+            "" +
+            "CREATE TABLE `player_experience` (" +
+            "  `UUID` char(128) PRIMARY KEY NOT NULL," +
+            "  `totalExperience` int NOT NULL," +
+            "  `currentExperience` int NOT NULL," +
+            "  `level` int NOT NULL DEFAULT 1" +
+            ");" +
+            "" +
+            "CREATE TABLE `player_names` (" +
+            "  `UUID` char(128) PRIMARY KEY NOT NULL," +
+            "  `name` varchar(64) UNIQUE NOT NULL" +
+            ");" +
+            "" +
+            "CREATE TABLE `player_chat` (" +
+            "  `UUID` char(128) PRIMARY KEY NOT NULL," +
+            "  `chatChannel` varchar(64) NOT NULL," +
+            "  `chatId` varchar(64) NOT NULL" +
+            ");" +
+            "" +
+            "CREATE TABLE `player_addresses` (" +
+            "  `UUID` char(128) PRIMARY KEY NOT NULL," +
+            "  `address` varchar(64) NOT NULL" +
+            ");" +
+            "" +
+            "CREATE TABLE `player_tags` (" +
+            "  `UUID` char(128) PRIMARY KEY NOT NULL," +
+            "  `tag` varchar(64) NOT NULL" +
+            ");" +
+            "" +
+            "CREATE TABLE `player_friends` (" +
+            "  `UUID` char(128) PRIMARY KEY NOT NULL," +
+            "  `friendUUID` char(128) UNIQUE NOT NULL," +
+            "  `isPending` boolean DEFAULT 0" +
+            ");" +
+            "" +
+            "CREATE TABLE `player_ignores` (" +
+            "  `UUID` char(128) PRIMARY KEY NOT NULL," +
+            "  `ignoredUUID` char(128) NOT NULL" +
+            ");" +
+            "" +
+            "CREATE TABLE `guild_data` (" +
+            "  `id` int PRIMARY KEY AUTO_INCREMENT," +
+            "  `name` varchar(128) UNIQUE NOT NULL," +
+            "  `totalExperience` int NOT NULL," +
+            "  `currentExperience` int NOT NULL," +
+            "  `level` int NOT NULL DEFAULT 1," +
+            "  `isMuted` boolean NOT NULL DEFAULT 0," +
+            "  `isPublic` boolean NOT NULL DEFAULT 0," +
+            "  `voiceId` bigint DEFAULT null," +
+            "  `maxSize` int NOT NULL" +
+            ");" +
+            "" +
+            "CREATE TABLE `guild_member` (" +
+            "  `UUID` char(128) UNIQUE," +
+            "  `guildId` int," +
+            "  `level` ENUM ('MEMBER', 'MODERATOR', 'LEADER') NOT NULL" +
+            ");" +
+            "" +
+            "CREATE TABLE `party_data` (" +
+            "  `id` int PRIMARY KEY AUTO_INCREMENT," +
+            "  `isMuted` boolean NOT NULL DEFAULT 0," +
+            "  `isPublic` boolean NOT NULL DEFAULT 0," +
+            "  `voiceId` bigint DEFAULT null," +
+            "  `maxSize` int NOT NULL" +
+            ");" +
+            "" +
+            "CREATE TABLE `party_member` (" +
+            "  `UUID` char(128) UNIQUE," +
+            "  `partyId` int," +
+            "  `level` ENUM ('MEMBER', 'MODERATOR', 'LEADER') NOT NULL" +
+            ");" +
+            "" +
+            "ALTER TABLE `player_data` ADD FOREIGN KEY (`currentPartyId`) REFERENCES `party_data` (`id`);" +
+            "" +
+            "ALTER TABLE `player_data` ADD FOREIGN KEY (`currentGuildId`) REFERENCES `guild_data` (`id`);" +
+            "" +
+            "ALTER TABLE `player_experience` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
+            "" +
+            "ALTER TABLE `player_names` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
+            "" +
+            "ALTER TABLE `player_chat` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
+            "" +
+            "ALTER TABLE `player_addresses` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
+            "" +
+            "ALTER TABLE `player_tags` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
+            "" +
+            "ALTER TABLE `player_friends` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
+            "" +
+            "ALTER TABLE `player_ignores` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
+            "" +
+            "ALTER TABLE `party_member` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
+            "" +
+            "ALTER TABLE `party_member` ADD FOREIGN KEY (`partyId`) REFERENCES `party_data` (`id`);" +
+            "" +
+            "ALTER TABLE `guild_member` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
+            "" +
+            "ALTER TABLE `guild_member` ADD FOREIGN KEY (`guildId`) REFERENCES `guild_data` (`id`);"),
 
     ;
 

@@ -371,8 +371,75 @@ public class DataSource {
     public static void addPlayerToParty(SavableUser player, SavableParty party)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        //TODO
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+        if(!player.party.isEmpty()) return;
+        String query = "INSERT INTO party_members (UUID, partyId) VALUES (?, ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.uuid);
+            statement.setInt(2, party.databaseID);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+    }
+
+    public static void removePlayerFromParty(SavableUser player, SavableParty party)
+    {
+        if (! ConfigUtils.moduleDBUse()) return;
+        if(player.party.isEmpty()) return; //wtf
+
+        String query = "DELETE FROM party_members WHERE (UUID = ?, partyId = ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.uuid);
+            statement.setInt(2, party.databaseID);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+    }
+
+    public static void createParty(SavableUser founder, SavableParty party)
+    {
+        if (! ConfigUtils.moduleDBUse()) return;
+
+        String query = "INSERT INTO party_data (id, voiceId, maxSize) VALUES (?, ?, ?); INSERT INTO party_members (UUID, partyId, level) VALUES (?, ?, ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setInt(1, party.databaseID);
+            statement.setLong(2, party.voiceID);
+            statement.setInt(3, party.maxSize);
+            statement.setString(4, founder.uuid);
+            statement.setInt(5, party.databaseID);
+            statement.setInt(6, 3);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+    }
+
+    public static void updatePartyData(SavableParty party)
+    {
+        if (! ConfigUtils.moduleDBUse()) return;
+
+        String query = "REPLACE INTO party_data (id, voiceId, maxSize) VALUES (?, ?, ?);";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setInt(1, party.databaseID);
+            statement.setLong(2, party.voiceID);
+            statement.setInt(3, party.maxSize);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
     }
     //endregion
 
@@ -380,8 +447,87 @@ public class DataSource {
     public static void addPlayerToGuild(SavableUser player, SavableGuild guild)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        //TODO
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+        if(!player.guild.isEmpty()) return;
+        String query = "INSERT INTO guild_members (UUID, guildId) VALUES (?, ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.uuid);
+            statement.setInt(2, guild.databaseID);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+    }
+
+    public static void removePlayerFromGuild(SavableUser player, SavableGuild guild)
+    {
+        if (! ConfigUtils.moduleDBUse()) return;
+        if(player.guild.isEmpty()) return; //wtf
+
+        String query = "DELETE FROM guild_members WHERE (UUID = ?, guildId = ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.uuid);
+            statement.setInt(2, guild.databaseID);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+    }
+
+    public static void createGuild(SavableUser player, SavableGuild guild)
+    {
+        if (! ConfigUtils.moduleDBUse()) return;
+
+        String query = "INSERT INTO guild_data (id, name, totalExperience, currentExperience, level, isMuted, isPublic, voiceId, maxSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); INSERT INTO guild_members (UUID, guildId, level) VALUES (?, ?, ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setInt(1, guild.databaseID);
+            statement.setString(2, guild.name);
+            statement.setInt(3, guild.totalXP);
+            statement.setInt(4, guild.currentXP);
+            statement.setInt(5, guild.level);
+            statement.setBoolean(6, guild.isMuted);
+            statement.setBoolean(7, guild.isPublic);
+            statement.setLong(8, guild.voiceID);
+            statement.setInt(9, guild.maxSize);
+            statement.setString(10, player.uuid);
+            statement.setInt(11, guild.databaseID);
+            statement.setInt(12, 3);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+    }
+
+    public static void updateGuildData(SavableGuild guild)
+    {
+        if (! ConfigUtils.moduleDBUse()) return;
+
+        String query = "REPLACE INTO guild_data (id, name, totalExperience, currentExperience, level, isMuted, isPublic, voiceId, maxSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setInt(1, guild.databaseID);
+            statement.setString(2, guild.name);
+            statement.setInt(3, guild.totalXP);
+            statement.setInt(4, guild.currentXP);
+            statement.setInt(5, guild.level);
+            statement.setBoolean(6, guild.isMuted);
+            statement.setBoolean(7, guild.isPublic);
+            statement.setLong(8, guild.voiceID);
+            statement.setInt(9, guild.maxSize);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
     }
     //endregion
 }
