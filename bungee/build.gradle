@@ -25,7 +25,9 @@ dependencies {
 
     implementation "com.zaxxer:HikariCP:${hikariCPVersion}"
 
-    implementation "org.mariuszgromada.math:MathParser.org-mXparser:${mathXVersion}"
+    // https://mvnrepository.com/artifact/net.objecthunter/exp4j
+    implementation "net.objecthunter:exp4j:${objectHunterVersion}"
+    shadow "net.objecthunter:exp4j:${objectHunterVersion}"
 
     implementation files('../libs/nuvotifier.jar')
 }

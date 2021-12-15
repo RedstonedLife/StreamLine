@@ -7,7 +7,7 @@ public class From_1_0_15_0 extends From{
 
     @Override
     public String versionFrom() {
-        return "1.0.14.9";
+        return "1.0.15.0";
     }
 
     @Override

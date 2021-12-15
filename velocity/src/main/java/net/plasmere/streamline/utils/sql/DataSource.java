@@ -165,6 +165,8 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
+//        MessagingUtils.logWarning("UUID = " + player.getUUID());
+
         String query = "REPLACE INTO player_addresses (uuid, address) VALUES (?, ?);";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
@@ -172,7 +174,7 @@ public class DataSource {
             statement.setString(1, player.getUUID());
             statement.setString(2, address);
 
-            connection.prepareStatement(query).execute();
+            statement.execute();
 
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
@@ -189,14 +191,16 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
-        String query = "REPLACE INTO player_names (uuid, name) VALUES (?, ?)";
+//        MessagingUtils.logWarning("UUID = " + player.getUUID());
+
+        String query = "REPLACE INTO player_names (uuid, name) VALUES (?, ?);";
 
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
             statement.setString(1, player.getUUID());
             statement.setString(2, name);
 
-            connection.prepareStatement(query).execute();
+            statement.execute();
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
         }
@@ -235,8 +239,6 @@ public class DataSource {
     public static void updatePlayerChat(SavablePlayer player)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-
-        MessagingUtils.logWarning("UUID = " + player.getUUID());
 
         String query = "REPLACE INTO player_chat (uuid, chatChannel, chatId) VALUES (?, ?, ?);";
 

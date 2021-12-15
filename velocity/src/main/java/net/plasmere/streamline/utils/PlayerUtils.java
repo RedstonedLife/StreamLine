@@ -299,6 +299,16 @@ public class PlayerUtils {
         }
     }
 
+    public static void reloadAll() {
+        stats.clear();
+
+        for (Player player : getOnlinePPlayers()) {
+            addPlayerStat(player);
+        }
+
+        applyConsole();
+    }
+
     public static int saveAll(){
         int push = 0;
 

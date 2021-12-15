@@ -172,14 +172,17 @@ public abstract class SavableGroup extends SavableFile {
     }
 
     public void removeFromModerators(SavableUser stat){
+        if (! moderators.contains(stat)) return;
         moderators.remove(stat);
     }
 
     public void remFromMembers(SavableUser stat){
+        if (! members.contains(stat)) return;
         members.remove(stat);
     }
 
     public void remFromTMembers(SavableUser stat){
+        if (! totalMembers.contains(stat)) return;
         totalMembers.remove(stat);
 
         switch (type) {
@@ -193,26 +196,32 @@ public abstract class SavableGroup extends SavableFile {
     }
 
     public void remFromInvites(SavableUser from, SavableUser stat){
+        if (! invites.contains(stat)) return;
         invites.remove(stat);
     }
 
     public void remFromInvitesCompletely(SavableUser stat){
+        if (! invites.contains(stat)) return;
         invites.remove(stat);
     }
 
     public void addToModerators(SavableUser stat){
+        if (moderators.contains(stat)) return;
         moderators.add(stat);
     }
 
     public void addToMembers(SavableUser stat){
+        if (members.contains(stat)) return;
         members.add(stat);
     }
 
     public void addToTMembers(SavableUser stat){
+        if (totalMembers.contains(stat)) return;
         totalMembers.add(stat);
     }
 
     public void addInvite(SavableUser to) {
+        if (invites.contains(to)) return;
         invites.add(to);
     }
 
@@ -267,6 +276,11 @@ public abstract class SavableGroup extends SavableFile {
                 }
             }
         }
+
+        remFromInvitesCompletely(stat);
+        removeFromModerators(stat);
+        remFromMembers(stat);
+        remFromTMembers(stat);
     }
 
     public void setMuted(boolean bool) {
@@ -299,7 +313,7 @@ public abstract class SavableGroup extends SavableFile {
     public void setModerator(SavableUser stat){
         Random RNG = new Random();
 
-        removeFromModerators(stat);
+        remFromMembers(stat);
 
         if (uuid.equals(stat.uuid)){
             if (totalMembers.size() <= 1) {
@@ -332,6 +346,8 @@ public abstract class SavableGroup extends SavableFile {
                 }
             }
         }
+
+        addToModerators(stat);
     }
 
     public void setMember(SavableUser stat){
@@ -370,30 +386,23 @@ public abstract class SavableGroup extends SavableFile {
                 }
             }
         }
+
+        addToMembers(stat);
+        addToTMembers(stat);
     }
 
     public void replaceLeader(SavableUser with){
         addToModerators(PlayerUtils.getOrGetSavableUser(uuid));
+        removeFromModerators(with);
+        remFromMembers(with);
+        remFromInvitesCompletely(with);
+
+        this.uuid = with.uuid;
 
         file.delete();
 
         file = null;
         file = new File(type.path + uuid + type.suffix);
-
-        try {
-            for (SavableUser p : totalMembers) {
-                switch (type) {
-                    case PARTY -> {
-                        p.setParty(uuid);
-                    }
-                    case GUILD -> {
-                        p.setGuild(uuid);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         saveAll();
     }

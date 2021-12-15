@@ -1441,6 +1441,22 @@ public class GuildUtils {private static final List<SavableGuild> guilds = new Ar
         }
     }
 
+    public static void reloadAll() {
+        guilds.clear();
+
+        for (SavableUser user : PlayerUtils.getStatsOnline()) {
+            SavableGuild guild = getGuild(user);
+
+            if (guild != null) {
+                if (guild.hasMember(user)) continue;
+            }
+
+            if (pHasGuild(user)) {
+                addGuild(new SavableGuild(user.guild));
+            }
+        }
+    }
+
     public static void saveAll(){
         List<SavableGuild> gs = new ArrayList<>(getGuilds());
 

@@ -39,10 +39,9 @@ dependencies {
 
     implementation "com.zaxxer:HikariCP:${hikariCPVersion}"
 
-    implementation "org.mariuszgromada.math:MathParser.org-mXparser:${mathXVersion}"
-    shadow "org.mariuszgromada.math:MathParser.org-mXparser:${mathXVersion}"
-    implementation 'net.sourceforge.jeval:jeval:0.9.4'
-    shadow 'net.sourceforge.jeval:jeval:0.9.4'
+    // https://mvnrepository.com/artifact/net.objecthunter/exp4j
+    implementation "net.objecthunter:exp4j:${objectHunterVersion}"
+    shadow "net.objecthunter:exp4j:${objectHunterVersion}"
 
     implementation files('../libs/nuvotifier.jar')
 }

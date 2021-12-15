@@ -27,7 +27,7 @@ subprojects {
         sqlLiteVersion = '3.36.0.2'
         viaApiVersion = '4.1.1'
         hikariCPVersion = '4.0.1'
-        mathXVersion = '4.4.2'
+        objectHunterVersion = '0.4.8'
     }
 
     java {

@@ -6,6 +6,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.savable.SavableAdapter;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
@@ -1491,6 +1492,22 @@ public class PartyUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void reloadAll() {
+        parties.clear();
+
+        for (SavableUser user : PlayerUtils.getStatsOnline()) {
+            SavableParty party = getParty(user);
+
+            if (party != null) {
+                if (party.hasMember(user)) continue;
+            }
+
+            if (pHasParty(user)) {
+                addParty(new SavableParty(user.party));
+            }
         }
     }
 

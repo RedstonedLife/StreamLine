@@ -277,7 +277,11 @@ public class MessagingUtils {
     }
 
     public static void sendGuildPluginMessageRequest(Player to, SavableGuild guild) {
-        if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getCurrentServer().get().getServerInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("proxy.send.guild"); // the channel could be whatever you want

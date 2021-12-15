@@ -45,9 +45,20 @@ public class SavablePlayer extends SavableUser {
 
     public int defaultLevel = ConfigUtils.statsExperienceStartingLevel();
 
+    public String getLatestIP() {
+        if (this.player == null) return MessageConfUtils.nullB();
+
+        String ipSt = player.getRemoteAddress().toString().replace("/", "");
+        String[] ipSplit = ipSt.split(":");
+        ipSt = ipSplit[0];
+
+        return ipSt;
+    }
+
     public SavablePlayer(Player player) {
         super(player, SavableAdapter.Type.PLAYER);
         this.player = player;
+        this.latestIP = getLatestIP();
     }
 
     public SavablePlayer(String thing){
@@ -66,7 +77,7 @@ public class SavablePlayer extends SavableUser {
     @Override
     public void populateMoreDefaults() {
         // Ips.
-        latestIP = getOrSetDefault("player.ips.latest", "");
+        latestIP = getOrSetDefault("player.ips.latest", getLatestIP());
         ipList = getOrSetDefault("player.ips.list", new ArrayList<>());
         // Names.
         nameList = getOrSetDefault("player.names", new ArrayList<>());

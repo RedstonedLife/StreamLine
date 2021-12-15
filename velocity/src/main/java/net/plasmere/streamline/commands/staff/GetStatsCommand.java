@@ -31,7 +31,12 @@ public class GetStatsCommand extends SLCommand {
         } else {
             switch (args[0]) {
                 case "save" -> {
-
+                    PlayerUtils.saveAll();
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsSave());
+                }
+                case "reload" -> {
+                    PlayerUtils.reloadAll();
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsReload());
                 }
             }
         }

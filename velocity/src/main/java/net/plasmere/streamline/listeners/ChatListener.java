@@ -44,6 +44,7 @@ public class ChatListener {
             if (msg.startsWith(">>>")) {
                 sender.sendMessage(TextUtils.codedText("&eWe salute you&8, &3commander&8! &do7"));
                 e.setResult(PlayerChatEvent.ChatResult.denied());
+                return;
             }
         }
 
