@@ -407,24 +407,28 @@ public class DataSource {
         }
     }
 
-    public static void createParty(SavableUser founder, SavableParty party)
+    public static int createParty(SavableUser founder, SavableParty party)
     {
-        if (! ConfigUtils.moduleDBUse()) return;
+        if (! ConfigUtils.moduleDBUse()) return -1;
 
-        String query = "INSERT INTO party_data (id, voiceId, maxSize) VALUES (?, ?, ?); INSERT INTO party_member (UUID, partyId, level) VALUES (?, ?, ?)";
+        String query = "INSERT INTO party_data (voiceId, maxSize) VALUES (?, ?); " +
+                "INSERT INTO party_member (UUID, partyId, level) VALUES (?, ?, ?); " +
+                "SELECT id FROM party_data WHERE id = SCOPE_IDENTITY();";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
-            statement.setInt(1, party.databaseID);
-            statement.setLong(2, party.voiceID);
-            statement.setInt(3, party.maxSize);
-            statement.setString(4, founder.uuid);
-            statement.setInt(5, party.databaseID);
-            statement.setInt(6, 3);
+            statement.setLong(1, party.voiceID);
+            statement.setInt(2, party.maxSize);
+            statement.setString(3, founder.uuid);
+            statement.setInt(4, party.databaseID);
+            statement.setInt(5, 3);
 
-            statement.execute();
+            ResultSet resultSet = statement.executeQuery();
+
+            return resultSet.getInt("id");
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            return -1;
         }
     }
 
@@ -483,30 +487,34 @@ public class DataSource {
         }
     }
 
-    public static void createGuild(SavableUser player, SavableGuild guild)
+    public static int createGuild(SavableUser player, SavableGuild guild)
     {
-        if (! ConfigUtils.moduleDBUse()) return;
+        if (! ConfigUtils.moduleDBUse()) return -1;
 
-        String query = "INSERT INTO guild_data (id, name, totalExperience, currentExperience, level, isMuted, isPublic, voiceId, maxSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); INSERT INTO guild_member (UUID, guildId, level) VALUES (?, ?, ?)";
+        String query = "INSERT INTO guild_data (name, totalExperience, currentExperience, level, isMuted, isPublic, voiceId, maxSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?);" +
+                " INSERT INTO guild_member (UUID, guildId, level) VALUES (?, ?, ?);" +
+                "SELECT id FROM guild_data WHERE id = SCOPE_IDENTITY();";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
-            statement.setInt(1, guild.databaseID);
-            statement.setString(2, guild.name);
-            statement.setInt(3, guild.totalXP);
-            statement.setInt(4, guild.currentXP);
-            statement.setInt(5, guild.level);
-            statement.setBoolean(6, guild.isMuted);
-            statement.setBoolean(7, guild.isPublic);
-            statement.setLong(8, guild.voiceID);
-            statement.setInt(9, guild.maxSize);
-            statement.setString(10, player.uuid);
-            statement.setInt(11, guild.databaseID);
-            statement.setInt(12, 3);
+            statement.setString(1, guild.name);
+            statement.setInt(2, guild.totalXP);
+            statement.setInt(3, guild.currentXP);
+            statement.setInt(4, guild.level);
+            statement.setBoolean(5, guild.isMuted);
+            statement.setBoolean(6, guild.isPublic);
+            statement.setLong(7, guild.voiceID);
+            statement.setInt(8, guild.maxSize);
+            statement.setString(9, player.uuid);
+            statement.setInt(10, guild.databaseID);
+            statement.setInt(11, 3);
 
-            statement.execute();
+            ResultSet result = statement.executeQuery();
+
+            return result.getInt("id");
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            return -1;
         }
     }
 
