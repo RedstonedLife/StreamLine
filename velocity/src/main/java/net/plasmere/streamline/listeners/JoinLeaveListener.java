@@ -101,6 +101,7 @@ public class JoinLeaveListener {
 
         stat.addName(PlayerUtils.getSourceName(player));
         stat.addIP(player);
+        stat.setLatestIP(player);
 
         if (StreamLine.chatConfig.getDefaultOnFirstJoin()) {
             if (firstJoin) {

@@ -19,7 +19,7 @@ public class DataSource {
 
     static {
         try {
-            Class.forName("com.mysql.jdbc.Driver").getDeclaredConstructor().newInstance();
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
 
             config.setJdbcUrl("jdbc:mysql://%host%:%port%/%database%"
                     .replace("%host%", StreamLine.databaseInfo.getHost())

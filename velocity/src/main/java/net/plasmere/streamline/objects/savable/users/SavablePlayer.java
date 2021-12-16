@@ -58,7 +58,7 @@ public class SavablePlayer extends SavableUser {
     public SavablePlayer(Player player) {
         super(player, SavableAdapter.Type.PLAYER);
         this.player = player;
-        this.latestIP = getLatestIP();
+        setLatestIP(getLatestIP());
     }
 
     public SavablePlayer(String thing){
@@ -126,7 +126,6 @@ public class SavablePlayer extends SavableUser {
 
     @Override
     public void saveMore() {
-
         // Ips.
         set("player.ips.latest", latestIP);
         set("player.ips.list", ipList);
@@ -148,6 +147,11 @@ public class SavablePlayer extends SavableUser {
         }
         // Discord.
         set("player.discord.id", discordID);
+
+        // Update Player.
+        DataSource.updatePlayerData(this);
+        DataSource.updatePlayerChat(this);
+        DataSource.updatePlayerExperience(this);
     }
 
     public static ChatChannel parseChatLevel(String string) {
@@ -228,6 +232,15 @@ public class SavablePlayer extends SavableUser {
         //        saveAll();
     }
 
+    public void setLatestIP(String ip) {
+        this.latestIP = ip;
+        saveAll();
+    }
+
+    public void setLatestIP(Player player) {
+        setLatestIP(PlayerUtils.parsePlayerIP(player));
+    }
+
     public void addIP(String ip){
         //        loadValues();
         DataSource.addIpToPlayer(this, ip);
@@ -238,11 +251,7 @@ public class SavablePlayer extends SavableUser {
     }
 
     public void addIP(Player player){
-        String ipSt = player.getRemoteAddress().toString().replace("/", "");
-        String[] ipSplit = ipSt.split(":");
-        ipSt = ipSplit[0];
-
-        addIP(ipSt);
+        addIP(PlayerUtils.parsePlayerIP(player));
     }
 
     public void removeIP(String ip){
@@ -254,11 +263,7 @@ public class SavablePlayer extends SavableUser {
     }
 
     public void removeIP(Player player){
-        String ipSt = player.getRemoteAddress().toString().replace("/", "");
-        String[] ipSplit = ipSt.split(":");
-        ipSt = ipSplit[0];
-
-        removeIP(ipSt);
+        removeIP(PlayerUtils.parsePlayerIP(player));
     }
 
     public void addPlaySecond(int amount){

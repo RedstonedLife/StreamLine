@@ -1951,6 +1951,14 @@ public class PlayerUtils {
         return thing;
     }
 
+    public static String parsePlayerIP(Player player) {
+        String ipSt = player.getRemoteAddress().toString().replace("/", "");
+        String[] ipSplit = ipSt.split(":");
+        ipSt = ipSplit[0];
+
+        return ipSt;
+    }
+
     // No stats.
     public static final String noStatsFound = StreamLine.config.getMessString("stats.no-stats");
     // Not high enough permissions.
