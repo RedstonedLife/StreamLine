@@ -411,21 +411,30 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return -1;
 
-        String query = "INSERT INTO party_data (voiceId, maxSize) VALUES (?, ?); " +
-                "INSERT INTO party_member (UUID, partyId, level) VALUES (?, ?, ?); " +
-                "SELECT id FROM party_data WHERE id = SCOPE_IDENTITY();";
-
-        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        try(Connection connection = getConnection())
         {
-            statement.setLong(1, party.voiceID);
-            statement.setInt(2, party.maxSize);
-            statement.setString(3, founder.uuid);
-            statement.setInt(4, party.databaseID);
-            statement.setInt(5, 3);
+            String query = "INSERT INTO party_data (voiceId, maxSize) VALUES (?, ?); " +
+                    "INSERT INTO party_member (UUID, partyId, level) VALUES (?, ?, ?); ";
 
-            ResultSet resultSet = statement.executeQuery();
+            try(PreparedStatement statement = connection.prepareStatement(query))
+            {
+                statement.setLong(1, party.voiceID);
+                statement.setInt(2, party.maxSize);
+                statement.setString(3, founder.uuid);
+                statement.setInt(4, party.databaseID);
+                statement.setInt(5, 3);
 
-            return resultSet.getInt("id");
+                statement.execute();
+            }
+
+            query = "SELECT id FROM party_data WHERE id = SCOPE_IDENTITY();";
+
+            try(PreparedStatement statement = connection.prepareStatement(query))
+            {
+                ResultSet resultSet = statement.executeQuery();
+                return resultSet.getInt("id");
+            }
+
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
             return -1;
@@ -491,27 +500,36 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return -1;
 
-        String query = "INSERT INTO guild_data (name, totalExperience, currentExperience, level, isMuted, isPublic, voiceId, maxSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?);" +
-                " INSERT INTO guild_member (UUID, guildId, level) VALUES (?, ?, ?);" +
-                "SELECT id FROM guild_data WHERE id = SCOPE_IDENTITY();";
-
-        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        try(Connection connection = getConnection())
         {
-            statement.setString(1, guild.name);
-            statement.setInt(2, guild.totalXP);
-            statement.setInt(3, guild.currentXP);
-            statement.setInt(4, guild.level);
-            statement.setBoolean(5, guild.isMuted);
-            statement.setBoolean(6, guild.isPublic);
-            statement.setLong(7, guild.voiceID);
-            statement.setInt(8, guild.maxSize);
-            statement.setString(9, player.uuid);
-            statement.setInt(10, guild.databaseID);
-            statement.setInt(11, 3);
+            String query = "INSERT INTO guild_data (name, totalExperience, currentExperience, level, isMuted, isPublic, voiceId, maxSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?);" +
+                    " INSERT INTO guild_member (UUID, guildId, level) VALUES (?, ?, ?);";
 
-            ResultSet result = statement.executeQuery();
+            try(PreparedStatement statement = connection.prepareStatement(query))
+            {
+                statement.setString(1, guild.name);
+                statement.setInt(2, guild.totalXP);
+                statement.setInt(3, guild.currentXP);
+                statement.setInt(4, guild.level);
+                statement.setBoolean(5, guild.isMuted);
+                statement.setBoolean(6, guild.isPublic);
+                statement.setLong(7, guild.voiceID);
+                statement.setInt(8, guild.maxSize);
+                statement.setString(9, player.uuid);
+                statement.setInt(10, guild.databaseID);
+                statement.setInt(11, 3);
 
-            return result.getInt("id");
+                statement.execute();
+            }
+
+            query = "SELECT id FROM guild_data WHERE id = SCOPE_IDENTITY();";
+
+            try(PreparedStatement statement = connection.prepareStatement(query))
+            {
+                ResultSet resultSet = statement.executeQuery();
+                return resultSet.getInt("id");
+            }
+
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
             return -1;
