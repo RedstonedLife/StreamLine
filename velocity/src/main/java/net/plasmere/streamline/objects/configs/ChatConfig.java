@@ -76,7 +76,7 @@ public class ChatConfig {
 
             String value = conf.getString("chats." + key + ".permission");
 
-            MessagingUtils.logWarning("Value = " + value);
+//            MessagingUtils.logWarning("Value = " + value);
 
             ChatsHandler.createChatChannel(key, value);
         }
