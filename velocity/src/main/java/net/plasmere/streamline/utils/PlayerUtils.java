@@ -3,6 +3,7 @@ package net.plasmere.streamline.utils;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
@@ -661,7 +662,7 @@ public class PlayerUtils {
     }
 
     public static String getSourceName(CommandSource source){
-        if (source instanceof Player) return ((Player) source).getUsername();
+        if (! (source instanceof ConsoleCommandSource)) return ((Player) source).getUsername();
         else return ConfigUtils.consoleName();
     }
 
