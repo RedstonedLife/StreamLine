@@ -89,8 +89,7 @@ public class DataSource {
 
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
-            statement.setString(1, StreamLine.databaseInfo.getDatabase());
-            statement.setString(2, "player_data");
+            statement.setString(1, player.uuid);
 
             ResultSet resultSet = statement.executeQuery();
 

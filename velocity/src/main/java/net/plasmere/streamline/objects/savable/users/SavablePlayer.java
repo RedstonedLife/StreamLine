@@ -217,6 +217,7 @@ public class SavablePlayer extends SavableUser {
 
     public void addName(String name){
         //        loadValues();
+        DataSource.updatePlayerData(this);
         DataSource.addNameToPlayer(this, name);
         if (nameList.contains(name)) return;
 
@@ -243,6 +244,7 @@ public class SavablePlayer extends SavableUser {
 
     public void addIP(String ip){
         //        loadValues();
+        DataSource.updatePlayerData(this);
         DataSource.addIpToPlayer(this, ip);
         if (ipList.contains(ip)) return;
 
