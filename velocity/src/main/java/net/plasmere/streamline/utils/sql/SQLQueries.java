@@ -86,33 +86,7 @@ public enum SQLQueries {
             "  `UUID` char(128) UNIQUE," +
             "  `partyId` int," +
             "  `level` ENUM ('MEMBER', 'MODERATOR', 'LEADER') NOT NULL" +
-            ");" +
-            "" +
-            "ALTER TABLE `player_data` ADD FOREIGN KEY (`currentPartyId`) REFERENCES `party_data` (`id`);" +
-            "" +
-            "ALTER TABLE `player_data` ADD FOREIGN KEY (`currentGuildId`) REFERENCES `guild_data` (`id`);" +
-            "" +
-            "ALTER TABLE `player_experience` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_names` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_chat` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_addresses` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_tags` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_friends` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_ignores` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `party_member` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `party_member` ADD FOREIGN KEY (`partyId`) REFERENCES `party_data` (`id`);" +
-            "" +
-            "ALTER TABLE `guild_member` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `guild_member` ADD FOREIGN KEY (`guildId`) REFERENCES `guild_data` (`id`);"),
+            ");"),
 
     ;
 
