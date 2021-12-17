@@ -83,6 +83,28 @@ public class DataSource {
 
     }
 
+    public static boolean userExistsOnTheDB(SavableUser player)
+    {
+        String query = "SELECT COUNT(*) FROM player_data WHERE UUID = ?;";
+
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, StreamLine.databaseInfo.getDatabase());
+            statement.setString(2, "player_data");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            boolean returnValue = false;
+            if(resultSet.next())
+                returnValue = resultSet.getBoolean(1);
+                return returnValue;
+
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+        return false;
+    }
+
     /**
      * Update data of a player on the Database
      *
@@ -165,6 +187,12 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
+        if(!userExistsOnTheDB(player))
+        {
+            MessagingUtils.logWarning("Player doesn't exist on the database, you should execute updatePlayerData first.");
+            return;
+        }
+
 //        MessagingUtils.logWarning("UUID = " + player.getUUID());
 
         String query = "REPLACE INTO player_addresses (uuid, address) VALUES (?, ?);";
@@ -191,6 +219,11 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
+        if(!userExistsOnTheDB(player))
+        {
+            MessagingUtils.logWarning("Player doesn't exist on the database, you should execute updatePlayerData first.");
+            return;
+        }
 //        MessagingUtils.logWarning("UUID = " + player.getUUID());
 
         String query = "REPLACE INTO player_names (uuid, name) VALUES (?, ?);";
