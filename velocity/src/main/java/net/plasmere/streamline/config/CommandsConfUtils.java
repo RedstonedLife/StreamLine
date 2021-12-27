@@ -1110,6 +1110,23 @@ public class CommandsConfUtils {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.configs.votes.permission");
     }
+    // PlayTime.
+    public static boolean comBPlayTime() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.configs.playtime.enabled");
+    }
+    public static String comBPlayTimeBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.configs.playtime.base");
+    }
+    public static List<String> comBPlayTimeAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.configs.playtime.aliases");
+    }
+    public static String comBPlayTimePerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.configs.playtime.permission");
+    }
     // ... Messaging.
     // Ignore.
     public static boolean comBIgnore() {

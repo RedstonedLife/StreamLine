@@ -149,9 +149,11 @@ public class SavablePlayer extends SavableUser {
         set("player.discord.id", discordID);
 
         // Update Player.
-        DataSource.updatePlayerData(this);
-        DataSource.updatePlayerChat(this);
-        DataSource.updatePlayerExperience(this);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.updatePlayerData(this);
+            DataSource.updatePlayerChat(this);
+            DataSource.updatePlayerExperience(this);
+        }
     }
 
     public static ChatChannel parseChatLevel(String string) {
@@ -201,7 +203,9 @@ public class SavablePlayer extends SavableUser {
         this.chatIdentifier = newIdentifier;
         //        saveAll();
 
-        DataSource.updatePlayerChat(this);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.updatePlayerChat(this);
+        }
         return newIdentifier;
     }
 
@@ -211,14 +215,18 @@ public class SavablePlayer extends SavableUser {
         this.chatChannel = newLevel;
         //        saveAll();
 
-        DataSource.updatePlayerChat(this);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.updatePlayerChat(this);
+        }
         return newLevel;
     }
 
     public void addName(String name){
         //        loadValues();
-        DataSource.updatePlayerData(this);
-        DataSource.addNameToPlayer(this, name);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.updatePlayerData(this);
+            DataSource.addNameToPlayer(this, name);
+        }
         if (nameList.contains(name)) return;
 
         nameList.add(name);
@@ -244,8 +252,10 @@ public class SavablePlayer extends SavableUser {
 
     public void addIP(String ip){
         //        loadValues();
-        DataSource.updatePlayerData(this);
-        DataSource.addIpToPlayer(this, ip);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.updatePlayerData(this);
+            DataSource.addIpToPlayer(this, ip);
+        }
         if (ipList.contains(ip)) return;
 
         ipList.add(ip);
@@ -351,7 +361,9 @@ public class SavablePlayer extends SavableUser {
         }
 
         currentXP = getCurrentXP();
-        DataSource.updatePlayerExperience(this);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.updatePlayerExperience(this);
+        }
         //        saveAll();
     }
 
@@ -402,12 +414,6 @@ public class SavablePlayer extends SavableUser {
 
     public String getDisplayName() {
         return this.displayName;
-    }
-
-    public void setDisplayName(String name) {
-//        loadValues();
-        displayName = name;
-        //        saveAll();
     }
 
     public void connect(ServerInfo target) {

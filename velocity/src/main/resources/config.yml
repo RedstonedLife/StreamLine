@@ -14,7 +14,7 @@ modules:
   offline-mode: false
   # Enables / disables the database.
   database:
-    use: true
+    use: false
   # Permission that you will give to all of your staff.
   # (Used for staff chats and other staff determined staff modules...)
   staff-permission: "streamline.staff"

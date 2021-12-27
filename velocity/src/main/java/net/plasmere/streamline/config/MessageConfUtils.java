@@ -1728,4 +1728,54 @@ public class MessageConfUtils {
         StreamLine.config.reloadLocales();
         return StreamLine.config.mess.getString("bypass-proxychat.done");
     }
+
+    public static String playtimeConsoleToggle() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("playtime.console.toggle");
+    }
+
+    public static String playtimeConsoleEnabled() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("playtime.console.enabled");
+    }
+
+    public static String playtimeConsoleDisabled() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("playtime.console.disabled");
+    }
+
+    public static String playtimeGet() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("playtime.get");
+    }
+
+    public static String playtimeRemove() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("playtime.remove");
+    }
+
+    public static String playtimeAdd() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("playtime.add");
+    }
+
+    public static String playtimeSet() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("playtime.set");
+    }
+
+    public static String playtimeSyncStart() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("playtime.sync.start");
+    }
+
+    public static String playtimeSyncFinish() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("playtime.sync.finish");
+    }
+
+    public static String playtimeTop() {
+        StreamLine.config.reloadLocales();
+        return StreamLine.config.mess.getString("playtime.top");
+    }
 }

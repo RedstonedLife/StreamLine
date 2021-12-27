@@ -2,7 +2,7 @@ package net.plasmere.streamline.utils.sql;
 
 public enum SQLQueries {
 
-    CREATE_TABLE("CREATE TABLE `player_data` (" +
+    CREATE_TABLE("CREATE TABLE IF NOT EXISTS `player_data` (" +
             "  `UUID` char(128) PRIMARY KEY NOT NULL," +
             "  `latestName` varchar(64) NOT NULL," +
             "  `displayName` varchar(64) NOT NULL," +
@@ -17,46 +17,46 @@ public enum SQLQueries {
             "  `points` int DEFAULT 0" +
             ");" +
             "" +
-            "CREATE TABLE `player_experience` (" +
+            "CREATE TABLE IF NOT EXISTS `player_experience` (" +
             "  `UUID` char(128) PRIMARY KEY NOT NULL," +
             "  `totalExperience` int NOT NULL," +
             "  `currentExperience` int NOT NULL," +
             "  `level` int NOT NULL DEFAULT 1" +
             ");" +
             "" +
-            "CREATE TABLE `player_names` (" +
+            "CREATE TABLE IF NOT EXISTS `player_names` (" +
             "  `UUID` char(128) PRIMARY KEY NOT NULL," +
             "  `name` varchar(64) UNIQUE NOT NULL" +
             ");" +
             "" +
-            "CREATE TABLE `player_chat` (" +
+            "CREATE TABLE IF NOT EXISTS `player_chat` (" +
             "  `UUID` char(128) PRIMARY KEY NOT NULL," +
             "  `chatChannel` varchar(64) NOT NULL," +
             "  `chatId` varchar(64) NOT NULL" +
             ");" +
             "" +
-            "CREATE TABLE `player_addresses` (" +
+            "CREATE TABLE IF NOT EXISTS `player_addresses` (" +
             "  `UUID` char(128) PRIMARY KEY NOT NULL," +
             "  `address` varchar(64) NOT NULL" +
             ");" +
             "" +
-            "CREATE TABLE `player_tags` (" +
+            "CREATE TABLE IF NOT EXISTS `player_tags` (" +
             "  `UUID` char(128) PRIMARY KEY NOT NULL," +
             "  `tag` varchar(64) NOT NULL" +
             ");" +
             "" +
-            "CREATE TABLE `player_friends` (" +
+            "CREATE TABLE IF NOT EXISTS `player_friends` (" +
             "  `UUID` char(128) PRIMARY KEY NOT NULL," +
             "  `friendUUID` char(128) UNIQUE NOT NULL," +
             "  `isPending` boolean DEFAULT 0" +
             ");" +
             "" +
-            "CREATE TABLE `player_ignores` (" +
+            "CREATE TABLE IF NOT EXISTS `player_ignores` (" +
             "  `UUID` char(128) PRIMARY KEY NOT NULL," +
             "  `ignoredUUID` char(128) NOT NULL" +
             ");" +
             "" +
-            "CREATE TABLE `guild_data` (" +
+            "CREATE TABLE IF NOT EXISTS `guild_data` (" +
             "  `id` int PRIMARY KEY AUTO_INCREMENT," +
             "  `name` varchar(128) UNIQUE NOT NULL," +
             "  `totalExperience` int NOT NULL," +
@@ -68,13 +68,13 @@ public enum SQLQueries {
             "  `maxSize` int NOT NULL" +
             ");" +
             "" +
-            "CREATE TABLE `guild_member` (" +
+            "CREATE TABLE IF NOT EXISTS `guild_member` (" +
             "  `UUID` char(128) UNIQUE," +
             "  `guildId` int," +
             "  `level` ENUM ('MEMBER', 'MODERATOR', 'LEADER') NOT NULL" +
             ");" +
             "" +
-            "CREATE TABLE `party_data` (" +
+            "CREATE TABLE IF NOT EXISTS `party_data` (" +
             "  `id` int PRIMARY KEY AUTO_INCREMENT," +
             "  `isMuted` boolean NOT NULL DEFAULT 0," +
             "  `isPublic` boolean NOT NULL DEFAULT 0," +
@@ -82,37 +82,11 @@ public enum SQLQueries {
             "  `maxSize` int NOT NULL" +
             ");" +
             "" +
-            "CREATE TABLE `party_member` (" +
+            "CREATE TABLE IF NOT EXISTS `party_member` (" +
             "  `UUID` char(128) UNIQUE," +
             "  `partyId` int," +
             "  `level` ENUM ('MEMBER', 'MODERATOR', 'LEADER') NOT NULL" +
-            ");" +
-            "" +
-            "ALTER TABLE `player_data` ADD FOREIGN KEY (`currentPartyId`) REFERENCES `party_data` (`id`);" +
-            "" +
-            "ALTER TABLE `player_data` ADD FOREIGN KEY (`currentGuildId`) REFERENCES `guild_data` (`id`);" +
-            "" +
-            "ALTER TABLE `player_experience` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_names` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_chat` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_addresses` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_tags` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_friends` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `player_ignores` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `party_member` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `party_member` ADD FOREIGN KEY (`partyId`) REFERENCES `party_data` (`id`);" +
-            "" +
-            "ALTER TABLE `guild_member` ADD FOREIGN KEY (`UUID`) REFERENCES `player_data` (`UUID`);" +
-            "" +
-            "ALTER TABLE `guild_member` ADD FOREIGN KEY (`guildId`) REFERENCES `guild_data` (`id`);"),
+            ");"),
 
     ;
 

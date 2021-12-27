@@ -4,12 +4,11 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
-import net.plasmere.streamline.utils.sql.SQLQueries;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -19,23 +18,17 @@ public class DataSource {
     private static HikariDataSource ds;
 
     static {
-        try {
-            Class.forName("com.mysql.jdbc.Driver").getDeclaredConstructor().newInstance();
-
-            config.setJdbcUrl("jdbc:mysql://%host%:%port%/%database%"
-                    .replace("%host%", StreamLine.databaseInfo.getHost())
-                    .replace("%port%", String.valueOf(StreamLine.databaseInfo.getPort()))
-                    .replace("%database%", StreamLine.databaseInfo.getDatabase()));
-            config.setUsername(StreamLine.databaseInfo.getUser());
-            config.setPassword(StreamLine.databaseInfo.getPass());
-            config.addDataSourceProperty("cachePrepStmts", "true");
-            config.addDataSourceProperty("prepStmtCacheSize", "250");
-            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-            config.addDataSourceProperty("allowMultiQueries", "true");
-            ds = new HikariDataSource(config);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        config.setJdbcUrl("jdbc:mysql://%host%:%port%/%database%"
+                .replace("%host%", StreamLine.databaseInfo.getHost())
+                .replace("%port%", String.valueOf(StreamLine.databaseInfo.getPort()))
+                .replace("%database%", StreamLine.databaseInfo.getDatabase()));
+        config.setUsername(StreamLine.databaseInfo.getUser());
+        config.setPassword(StreamLine.databaseInfo.getPass());
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("allowMultiQueries", "true");
+        ds = new HikariDataSource(config);
     }
 
     private DataSource() {}
@@ -82,6 +75,27 @@ public class DataSource {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
         }
 
+    }
+
+    public static boolean userExistsOnTheDB(SavableUser player)
+    {
+        String query = "SELECT COUNT(*) FROM player_data WHERE UUID = ?;";
+
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.uuid);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            boolean returnValue = false;
+            if(resultSet.next())
+                returnValue = resultSet.getBoolean(1);
+            return returnValue;
+
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+        return false;
     }
 
     /**
@@ -144,7 +158,7 @@ public class DataSource {
                 player.points = resultSet.getInt("points");
                 player.totalXP = resultSet.getInt("totalExperience");
                 player.currentXP = resultSet.getInt("currentExperience");
-                player.lvl = resultSet.getInt("level");
+                player.level = resultSet.getInt("level");
             }
 
             return player;
@@ -166,6 +180,14 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
+        if(!userExistsOnTheDB(player))
+        {
+            MessagingUtils.logWarning("Player doesn't exist on the database, you should execute updatePlayerData first.");
+            return;
+        }
+
+//        MessagingUtils.logWarning("UUID = " + player.getUUID());
+
         String query = "REPLACE INTO player_addresses (uuid, address) VALUES (?, ?);";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
@@ -173,7 +195,7 @@ public class DataSource {
             statement.setString(1, player.getUUID());
             statement.setString(2, address);
 
-            connection.prepareStatement(query).execute();
+            statement.execute();
 
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
@@ -190,14 +212,21 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
-        String query = "REPLACE INTO player_names (uuid, name) VALUES (?, ?)";
+        if(!userExistsOnTheDB(player))
+        {
+            MessagingUtils.logWarning("Player doesn't exist on the database, you should execute updatePlayerData first.");
+            return;
+        }
+//        MessagingUtils.logWarning("UUID = " + player.getUUID());
+
+        String query = "REPLACE INTO player_names (uuid, name) VALUES (?, ?);";
 
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
             statement.setString(1, player.getUUID());
             statement.setString(2, name);
 
-            connection.prepareStatement(query).execute();
+            statement.execute();
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
         }
@@ -219,7 +248,7 @@ public class DataSource {
             statement.setString(1, player.getUUID());
             statement.setInt(2, player.totalXP);
             statement.setInt(3, player.currentXP);
-            statement.setInt(4, player.lvl);
+            statement.setInt(4, player.level);
 
             statement.execute();
 
@@ -372,8 +401,88 @@ public class DataSource {
     public static void addPlayerToParty(SavableUser player, SavableParty party)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        //TODO
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+        if(!player.party.isEmpty()) return;
+        String query = "INSERT INTO party_member (UUID, partyId) VALUES (?, ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.uuid);
+            statement.setInt(2, party.databaseID);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+    }
+
+    public static void removePlayerFromParty(SavableUser player, SavableParty party)
+    {
+        if (! ConfigUtils.moduleDBUse()) return;
+        if(player.party.isEmpty()) return; //wtf
+
+        String query = "DELETE FROM party_member WHERE (UUID = ?, partyId = ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.uuid);
+            statement.setInt(2, party.databaseID);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+    }
+
+    public static int createParty(SavableUser founder, SavableParty party)
+    {
+        if (! ConfigUtils.moduleDBUse()) return -1;
+
+        try(Connection connection = getConnection())
+        {
+            String query = "INSERT INTO party_data (voiceId, maxSize) VALUES (?, ?); " +
+                    "INSERT INTO party_member (UUID, partyId, level) VALUES (?, ?, ?); ";
+
+            try(PreparedStatement statement = connection.prepareStatement(query))
+            {
+                statement.setLong(1, party.voiceID);
+                statement.setInt(2, party.maxSize);
+                statement.setString(3, founder.uuid);
+                statement.setInt(4, party.databaseID);
+                statement.setInt(5, 3);
+
+                statement.execute();
+            }
+
+            query = "SELECT id FROM party_data WHERE id = SCOPE_IDENTITY();";
+
+            try(PreparedStatement statement = connection.prepareStatement(query))
+            {
+                ResultSet resultSet = statement.executeQuery();
+                return resultSet.getInt("id");
+            }
+
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    public static void updatePartyData(SavableParty party)
+    {
+        if (! ConfigUtils.moduleDBUse()) return;
+
+        String query = "REPLACE INTO party_data (id, voiceId, maxSize) VALUES (?, ?, ?);";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setInt(1, party.databaseID);
+            statement.setLong(2, party.voiceID);
+            statement.setInt(3, party.maxSize);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
     }
     //endregion
 
@@ -381,8 +490,100 @@ public class DataSource {
     public static void addPlayerToGuild(SavableUser player, SavableGuild guild)
     {
         if (! ConfigUtils.moduleDBUse()) return;
-        //TODO
-        throw new java.lang.UnsupportedOperationException("Not supported yet.");
+        if(!player.guild.isEmpty()) return;
+        String query = "INSERT INTO guild_member (UUID, guildId) VALUES (?, ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.uuid);
+            statement.setInt(2, guild.databaseID);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+    }
+
+    public static void removePlayerFromGuild(SavableUser player, SavableGuild guild)
+    {
+        if (! ConfigUtils.moduleDBUse()) return;
+        if(player.guild.isEmpty()) return; //wtf
+
+        String query = "DELETE FROM guild_member WHERE (UUID = ?, guildId = ?)";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setString(1, player.uuid);
+            statement.setInt(2, guild.databaseID);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
+    }
+
+    public static int createGuild(SavableUser player, SavableGuild guild)
+    {
+        if (! ConfigUtils.moduleDBUse()) return -1;
+
+        try(Connection connection = getConnection())
+        {
+            String query = "INSERT INTO guild_data (name, totalExperience, currentExperience, level, isMuted, isPublic, voiceId, maxSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?);" +
+                    " INSERT INTO guild_member (UUID, guildId, level) VALUES (?, ?, ?);";
+
+            try(PreparedStatement statement = connection.prepareStatement(query))
+            {
+                statement.setString(1, guild.name);
+                statement.setInt(2, guild.totalXP);
+                statement.setInt(3, guild.currentXP);
+                statement.setInt(4, guild.level);
+                statement.setBoolean(5, guild.isMuted);
+                statement.setBoolean(6, guild.isPublic);
+                statement.setLong(7, guild.voiceID);
+                statement.setInt(8, guild.maxSize);
+                statement.setString(9, player.uuid);
+                statement.setInt(10, guild.databaseID);
+                statement.setInt(11, 3);
+
+                statement.execute();
+            }
+
+            query = "SELECT id FROM guild_data WHERE id = SCOPE_IDENTITY();";
+
+            try(PreparedStatement statement = connection.prepareStatement(query))
+            {
+                ResultSet resultSet = statement.executeQuery();
+                return resultSet.getInt("id");
+            }
+
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    public static void updateGuildData(SavableGuild guild)
+    {
+        if (! ConfigUtils.moduleDBUse()) return;
+
+        String query = "REPLACE INTO guild_data (id, name, totalExperience, currentExperience, level, isMuted, isPublic, voiceId, maxSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+        try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
+        {
+            statement.setInt(1, guild.databaseID);
+            statement.setString(2, guild.name);
+            statement.setInt(3, guild.totalXP);
+            statement.setInt(4, guild.currentXP);
+            statement.setInt(5, guild.level);
+            statement.setBoolean(6, guild.isMuted);
+            statement.setBoolean(7, guild.isPublic);
+            statement.setLong(8, guild.voiceID);
+            statement.setInt(9, guild.maxSize);
+
+            statement.execute();
+        } catch (SQLException e) {
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+        }
     }
     //endregion
 }

@@ -78,7 +78,9 @@ public class JoinLeaveListener {
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
-        if (ConfigUtils.debug()) MessagingUtils.logInfo("SavablePlayer : latestName = " + stat.latestName + " | uuid = " + stat.uuid);
+//        if (ConfigUtils.debug()) MessagingUtils.logInfo("SavablePlayer : latestName = " + stat.latestName + " | uuid = " + stat.uuid);
+
+        StreamLine.playTimeConf.setPlayTime(stat.uuid, stat.playSeconds);
 
         DataSource.updatePlayerData(stat);
 
@@ -293,6 +295,9 @@ public class JoinLeaveListener {
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
 
+        stat.setLatestName(player.getUsername());
+        stat.updateOnline();
+
         try {
             SingleSet<Boolean, ChatChannel> get1 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("local"), stat.getServer().getServerInfo().getName());
             if (get1.key) {
@@ -404,6 +409,10 @@ public class JoinLeaveListener {
         Player player = ev.getPlayer();
 
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
+
+        StreamLine.playTimeConf.setPlayTime(stat.uuid, stat.playSeconds);
+
+        stat.updateOnline();
 
         DataSource.updatePlayerData(stat);
 

@@ -29,7 +29,6 @@ import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.objects.timers.ProcessDBUpdateRunnable;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
-import net.plasmere.streamline.utils.sql.Driver;
 
 import java.util.Collection;
 import java.util.List;

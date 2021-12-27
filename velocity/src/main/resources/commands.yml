@@ -832,6 +832,18 @@ commands:
         aliases:
           - "bvotes"
           - "bvot"
+      # The playtime command.
+      playtime:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "playtime"
+        # Custom permission.
+        permission: "streamline.command.playtime"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "bplaytime"
+          - "bpt"
     # For messaging commands...
     messaging:
       # The ignore command.

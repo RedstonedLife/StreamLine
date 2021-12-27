@@ -91,6 +91,7 @@ public class OneSecondTimer implements Runnable {
             }
 
             for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
+                player.updateOnline();
                 PlayerUtils.checkAndUpdateIfMuted(player);
             }
 
@@ -216,7 +217,11 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (party.voiceID == 0L) {
-                VoiceChannel channel = DiscordUtils.createVoice(PlayerUtils.getOrGetSavableUser(party.uuid).latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
+                SavableUser user = PlayerUtils.getOrGetSavableUser(party.uuid);
+
+                if (user == null) continue;
+
+                VoiceChannel channel = DiscordUtils.createVoice(user.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
                 if (channel == null) continue;
                 party.setVoiceID(channel.getIdLong());
             } else {

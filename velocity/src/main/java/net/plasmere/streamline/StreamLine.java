@@ -94,6 +94,7 @@ public class StreamLine {
 	public static OfflineStats offlineStats;
 	public static ChatConfig chatConfig;
 	public static Votes votes;
+	public static PlayTimeConf playTimeConf;
 	public static RanksConfig ranksConfig;
 	public static ChatFilters chatFilters;
 	public static DatabaseInfo databaseInfo;
@@ -447,6 +448,8 @@ public class StreamLine {
 			ranksConfig = new RanksConfig();
 			votes = new Votes();
 		}
+
+		playTimeConf = new PlayTimeConf();
 
 		if (ConfigUtils.moduleBChatFiltersEnabled()) {
 			if (ConfigUtils.scriptsEnabled()) {

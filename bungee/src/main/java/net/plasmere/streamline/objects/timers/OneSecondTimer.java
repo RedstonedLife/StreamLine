@@ -111,16 +111,6 @@ public class OneSecondTimer implements Runnable {
         tickGuilds();
         tickGuildSync();
         tickPartySync();
-
-//        if (! StreamLine.databaseInfo.getHost().equals("")) {
-//            for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
-//                if (player.onlineCheck()) {
-//                    for (String key : new TreeMap<>(player.getInfo()).keySet()) {
-//                        Driver.update(SavableType.PLAYER, UUIDUtils.stripUUID(player.uuid), key.replace('-', '_'), player.getInfo().get(key));
-//                    }
-//                }
-//            }
-//        }
     }
 
     public void tickGuilds() {

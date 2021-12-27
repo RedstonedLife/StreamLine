@@ -22,6 +22,7 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.configs.PlayTimeConf;
 import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.lists.SingleSet;
@@ -662,6 +663,8 @@ public class PlayerUtils {
     }
 
     public static String getSourceName(CommandSource source){
+        if (source == null) return MessageConfUtils.nullB();
+
         if (! (source instanceof ConsoleCommandSource)) return ((Player) source).getUsername();
         else return ConfigUtils.consoleName();
     }
@@ -822,7 +825,7 @@ public class PlayerUtils {
             e.printStackTrace();
         }
 
-        MessagingUtils.logInfo("GetOrGet returning null...");
+//        MessagingUtils.logInfo("GetOrGet returning null...");
         return null;
     }
 
@@ -1958,6 +1961,33 @@ public class PlayerUtils {
         ipSt = ipSplit[0];
 
         return ipSt;
+    }
+
+    public static void loadAllPlayers() {
+        File[] files = SavableAdapter.Type.PLAYER.path.listFiles();
+        if (files == null) return;
+        if (files.length <= 0) return;
+
+        for (File file : files) {
+            if (! file.getName().contains("-")) continue;
+            if (! file.getName().endsWith(SavableAdapter.Type.PLAYER.suffix)) continue;
+
+            addPlayerStat(file.getName().replace(SavableAdapter.Type.PLAYER.suffix, ""));
+        }
+    }
+
+    public static void syncPlayTime(boolean justOnline) {
+        PlayTimeConf playTimeConf = StreamLine.playTimeConf;
+        if (justOnline) {
+            for (SavablePlayer player : getJustPlayers()) {
+                playTimeConf.setPlayTime(player.uuid, player.playSeconds);
+            }
+        } else {
+            loadAllPlayers();
+            for (SavablePlayer player : getJustPlayers()) {
+                playTimeConf.setPlayTime(player.uuid, player.playSeconds);
+            }
+        }
     }
 
     // No stats.

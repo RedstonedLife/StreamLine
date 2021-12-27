@@ -107,9 +107,10 @@ public abstract class SavableUser extends SavableFile {
     }
 
     public boolean updateOnline() {
-        if (uuid.equals("%")) return false;
+        if (uuid.equals("%")) this.online = false;
 
-        return PlayerUtils.isInOnlineList(this.latestName);
+        this.online = PlayerUtils.isInOnlineList(this.uuid);
+        return this.online;
     }
 
     public SavableUser(CommandSource sender, SavableAdapter.Type type) {
@@ -269,7 +270,9 @@ public abstract class SavableUser extends SavableFile {
         SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
         if (other == null) return;
 
-        DataSource.ignorePlayer(this, other);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.ignorePlayer(this, other);
+        }
         if (ignoredList.contains(uuid)) return;
 
         ignoredList.add(uuid);
@@ -281,7 +284,9 @@ public abstract class SavableUser extends SavableFile {
         SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
         if (other == null) return;
 
-        DataSource.stopIgnoringPlayer(this, other);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.stopIgnoringPlayer(this, other);
+        }
         if (! ignoredList.contains(uuid)) return;
 
         ignoredList.remove(uuid);
@@ -293,7 +298,9 @@ public abstract class SavableUser extends SavableFile {
         SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
         if (other == null) return;
 
-        DataSource.confirmFriendRequest(this, other, true);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.confirmFriendRequest(this, other, true);
+        }
         if (friendList.contains(uuid)) return;
 
         friendList.add(uuid);
@@ -301,7 +308,9 @@ public abstract class SavableUser extends SavableFile {
     }
 
     public void setFriendRequestDenied(SavableUser receiver) {
-        DataSource.confirmFriendRequest(this, receiver, false);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.confirmFriendRequest(this, receiver, false);
+        }
     }
 
     public void removeFriend(String uuid) {
@@ -317,7 +326,9 @@ public abstract class SavableUser extends SavableFile {
         SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
         if (other == null) return;
 
-        DataSource.sendFriendRequest(this, other);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.sendFriendRequest(this, other);
+        }
         if (pendingToFriendList.contains(uuid)) return;
 
         pendingToFriendList.add(uuid);
@@ -329,7 +340,9 @@ public abstract class SavableUser extends SavableFile {
         SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
         if (other == null) return;
 
-        DataSource.confirmFriendRequest(this, other, false);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.confirmFriendRequest(this, other, false);
+        }
         if (! pendingToFriendList.contains(uuid)) return;
 
         pendingToFriendList.remove(uuid);
@@ -341,7 +354,9 @@ public abstract class SavableUser extends SavableFile {
         SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
         if (other == null) return;
 
-        DataSource.sendFriendRequest(other, this);
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.sendFriendRequest(other, this);
+        }
         if (pendingFromFriendList.contains(uuid)) return;
 
         pendingFromFriendList.add(uuid);
@@ -359,6 +374,9 @@ public abstract class SavableUser extends SavableFile {
     public void setPoints(int amount) {
 //        //        loadValues();
         points = amount;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
         //        saveAll();
     }
 
@@ -374,6 +392,9 @@ public abstract class SavableUser extends SavableFile {
 
     public void setSSPY(boolean value) {
         sspy = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
         //        saveAll();
     }
 
@@ -394,6 +415,9 @@ public abstract class SavableUser extends SavableFile {
 
     public void setGSPY(boolean value) {
         gspy = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
         //        saveAll();
     }
 
@@ -404,6 +428,9 @@ public abstract class SavableUser extends SavableFile {
 
     public void setGSPYVS(boolean value) {
         gspyvs = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
         //        saveAll();
     }
 
@@ -414,6 +441,9 @@ public abstract class SavableUser extends SavableFile {
 
     public void setPSPY(boolean value) {
         pspy = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
         //        saveAll();
     }
 
@@ -424,6 +454,9 @@ public abstract class SavableUser extends SavableFile {
 
     public void setPSPYVS(boolean value) {
         pspyvs = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
         //        saveAll();
     }
 
@@ -434,6 +467,9 @@ public abstract class SavableUser extends SavableFile {
 
     public void setSC(boolean value) {
         sc = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
         //        saveAll();
     }
 
@@ -444,6 +480,9 @@ public abstract class SavableUser extends SavableFile {
 
     public void setSCVS(boolean value) {
         scvs = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
         //        saveAll();
     }
 
@@ -454,6 +493,9 @@ public abstract class SavableUser extends SavableFile {
 
     public void setSCView(boolean value) {
         viewsc = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
         //        saveAll();
     }
 
@@ -511,6 +553,16 @@ public abstract class SavableUser extends SavableFile {
     public void setLatestServer(String server) {
         //this.latestServer = server;
         latestServer = server;
+        //        saveAll();
+    }
+
+    public void setLatestName(String name) {
+        latestName = name;
+    }
+
+    public void setDisplayName(String name) {
+//        loadValues();
+        displayName = name;
         //        saveAll();
     }
 

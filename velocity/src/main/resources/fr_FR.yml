@@ -2064,3 +2064,16 @@ broadcast:
 bypass-proxychat:
   message: "&eYou will now bypass proxychat for &a%messages% &emessages!"
   done: "&eNo longer bypassing proxychat."
+
+playtime:
+  console:
+    toggle: "&eToggled console printing to %toggle%&8!"
+    enabled: "&aTRUE"
+    disabled: "&cFALSE"
+  get: "&ePlayTime of &d%player_formatted%&8: &6%player_play_hours%"
+  remove: "&eRemoved &6%playtime% &evote(s) from &d%player_formatted%&8! &eCurrent&8: &6%player_play_hours%"
+  add: "&eAdded &6%playtime% &evote(s) to &d%player_formatted%&8! &eCurrent&8: &6%player_play_hours%"
+  set: "&eSet &6%playtime% &evote(s) for &d%player_formatted%&8! &eCurrent&8: &6%player_play_hours%"
+  sync:
+    start: "&eSyncing now...!"
+    finish: "&eFinished syncing!"

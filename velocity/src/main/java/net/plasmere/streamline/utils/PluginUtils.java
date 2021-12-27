@@ -100,6 +100,9 @@ public class PluginUtils {
         if (CommandsConfUtils.comBVotes() && ConfigUtils.moduleBRanksEnabled()) {
             registerCommand(new VotesCommand(CommandsConfUtils.comBVotesBase(), CommandsConfUtils.comBVotesPerm(), stringListToArray(CommandsConfUtils.comBVotesAliases())));
         }
+        if (CommandsConfUtils.comBPlayTime()) {
+            registerCommand(new PlayTimeCommand(CommandsConfUtils.comBPlayTimeBase(), CommandsConfUtils.comBPlayTimePerm(), stringListToArray(CommandsConfUtils.comBPlayTimeAliases())));
+        }
         if (CommandsConfUtils.comBTeleport()) {
             registerCommand(new TeleportCommand(CommandsConfUtils.comBTeleportBase(), CommandsConfUtils.comBTeleportPerm(), stringListToArray(CommandsConfUtils.comBTeleportAliases())));
         }
