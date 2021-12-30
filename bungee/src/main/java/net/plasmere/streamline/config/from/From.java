@@ -331,7 +331,7 @@ public abstract class From {
     public int applyConfig() {
         int applied = 0;
 
-        for (int itgr : config.keySet()) {
+        for (int itgr : config.singleLayerKeySet()) {
             c.set(config.get(itgr).key, config.get(itgr).value);
             applied ++;
         }
@@ -350,13 +350,13 @@ public abstract class From {
     public int applyLocales() {
         int applied = 0;
 
-        for (String locale : locales.keySet()) {
-            for (int itgr : locales.get(locale).keySet()) {
+        for (String locale : locales.singleLayerKeySet()) {
+            for (int itgr : locales.get(locale).singleLayerKeySet()) {
                 m.set(locales.get(locale).get(itgr).key, locales.get(locale).get(itgr).value);
                 applied ++;
             }
 
-            if (locales.get(locale).keySet().size() > 0) {
+            if (locales.get(locale).singleLayerKeySet().size() > 0) {
                 try {
                     ConfigurationProvider.getProvider(YamlConfiguration.class).save(m, mfile(locale));
                 } catch (Exception e) {
@@ -371,7 +371,7 @@ public abstract class From {
     public int applyServerConfig() {
         int applied = 0;
 
-        for (int itgr : serverConfig.keySet()) {
+        for (int itgr : serverConfig.singleLayerKeySet()) {
             sc.set(serverConfig.get(itgr).key, serverConfig.get(itgr).value);
             applied ++;
         }
@@ -390,7 +390,7 @@ public abstract class From {
     public int applyDiscordBot() {
         int applied = 0;
 
-        for (int itgr : discordBot.keySet()) {
+        for (int itgr : discordBot.singleLayerKeySet()) {
             dis.set(discordBot.get(itgr).key, discordBot.get(itgr).value);
             applied ++;
         }
@@ -409,7 +409,7 @@ public abstract class From {
     public int applyCommands() {
         int applied = 0;
 
-        for (int itgr : commands.keySet()) {
+        for (int itgr : commands.singleLayerKeySet()) {
             comm.set(commands.get(itgr).key, commands.get(itgr).value);
             applied ++;
         }
@@ -428,7 +428,7 @@ public abstract class From {
     public int applyChats() {
         int applied = 0;
 
-        for (int itgr : chats.keySet()) {
+        for (int itgr : chats.singleLayerKeySet()) {
             ch.set(chats.get(itgr).key, chats.get(itgr).value);
             applied ++;
         }
@@ -790,7 +790,7 @@ public abstract class From {
 
     public void applyCatchAlls() {
         MessagingUtils.logSevere("Could not fix occurrences in your server config because it is currently disabled by the plugin maker! (To fix!)");
-        for (String regex : catchAll_values.keySet()) {
+        for (String regex : catchAll_values.singleLayerKeySet()) {
             for (FileType of : FileType.values()) {
                 replaceAllOccurrencesInFiles(of, regex, catchAll_values.get(regex));
             }

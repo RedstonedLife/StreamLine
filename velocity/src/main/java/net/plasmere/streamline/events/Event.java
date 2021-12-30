@@ -48,10 +48,10 @@ public class Event {
         int i = 1;
 
         if (ConfigUtils.debug()) {
-            MessagingUtils.logInfo("Amount of conditions --> " + conditionsConf.keySet().size());
+            MessagingUtils.logInfo("Amount of conditions --> " + conditionsConf.getKeys().size());
         }
 
-        for (String string : conditionsConf.keySet()) {
+        for (String string : conditionsConf.getKeys()) {
             try {
                 ConfigSection cond = new ConfigSection(configuration.getSection(conditionsConf.s.getPathPrefix() + string));
 
@@ -87,7 +87,7 @@ public class Event {
         ConfigSection actionsConf = new ConfigSection(configuration.getSection("actions"));
         int i = 1;
 
-        for (String string : actionsConf.keySet()) {
+        for (String string : actionsConf.getKeys()) {
             try {
                 ConfigSection act = new ConfigSection(configuration.getSection(actionsConf.s.getPathPrefix() + string));
 

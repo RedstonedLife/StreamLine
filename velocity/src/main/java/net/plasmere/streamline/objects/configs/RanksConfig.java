@@ -65,7 +65,7 @@ public class RanksConfig {
 
         TreeMap<Integer, String> groups = new TreeMap<>();
 
-        for (String key : conf.getSection("ranks").keySet()) {
+        for (String key : conf.getSection("ranks").singleLayerKeySet()) {
             try {
                 groups.put(Integer.parseInt(key), conf.getString("ranks." + key));
             } catch (Exception e) {

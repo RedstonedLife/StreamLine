@@ -17,7 +17,7 @@ public class RanksUtils {
     private static int OTHER = 0;
 
     public static int fromName(String name){
-        for (int n : StreamLine.ranksConfig.checkedGroups().keySet()) {
+        for (int n : StreamLine.ranksConfig.checkedGroups().singleLayerKeySet()) {
             if (StreamLine.ranksConfig.checkedGroups().get(n).equals(name)) return n;
         }
 

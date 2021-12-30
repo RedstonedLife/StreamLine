@@ -96,7 +96,7 @@ public class SavableParty {
     }
 
 //    public int getInfoIntFor(String key) {
-//        for (Integer i : info.keySet()) {
+//        for (Integer i : info.singleLayerKeySet()) {
 //            if (info.get(i).key.equals(key)) return i;
 //        }
 //
@@ -120,7 +120,7 @@ public class SavableParty {
     public TreeSet<String> getInfoAsPropertyList() {
         TreeSet<String> infoList = new TreeSet<>();
         List<String> keys = new ArrayList<>();
-        for (String key : info.keySet()){
+        for (String key : info.singleLayerKeySet()){
             if (keys.contains(key)) continue;
 
             infoList.add(key + "=" + getFromKey(key));
@@ -149,7 +149,7 @@ public class SavableParty {
     }
 
 //    public boolean infoContainsKey(String key){
-//        for (Integer i : info.keySet()) {
+//        for (Integer i : info.singleLayerKeySet()) {
 //            if (info.get(i).key.equals(key)) return true;
 //        }
 //
@@ -332,7 +332,7 @@ public class SavableParty {
     }
 
     public String tryUpdateFormat(String from){
-        for (String key : updatableKeys().keySet()) {
+        for (String key : updatableKeys().singleLayerKeySet()) {
             if (! from.equals(key)) continue;
 
             return updatableKeys().get(key);

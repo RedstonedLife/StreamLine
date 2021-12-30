@@ -22,18 +22,9 @@ public class PartyUtils {
     private static final List<SavableParty> parties = new ArrayList<>();
 
     public static List<SavableParty> getParties() {
-        List<SavableParty> rem = new ArrayList<>();
-
-        for (SavableParty g : parties) {
-            if (g.uuid == null) rem.add(g);
-        }
-
-        for (SavableParty g : rem) {
-            parties.remove(g);
-        }
-
         return parties;
     }
+
     // SavableParty , Invites
     public static Map<SavableParty, List<SavableUser>> invites = new HashMap<>();
 
@@ -79,13 +70,13 @@ public class PartyUtils {
         }
     }
 
-    public static SavableParty getOrGetParty(String uuid){
-        SavableParty party = getParty(uuid);
+    public static SavableParty getOrGetParty(SavableUser stat) {
+        SavableParty party = getParty(stat);
 
         if (party == null) {
-            if (existsByUUID(uuid)) {
+            if (existsByPUID(stat.party)) {
                 try {
-                    party = new SavableParty(uuid);
+                    party = new SavableParty(stat.party);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -95,22 +86,15 @@ public class PartyUtils {
         return party;
     }
 
-    public static boolean hasOnlineMemberAlready(SavableUser stat){
-        List<SavableUser> users = new ArrayList<>(PlayerUtils.getStats());
-
-        for (SavableUser user : users) {
-            if (user.uuid.equals(stat.uuid)) continue;
-            if (user.party.equals(stat.party)) return true;
-        }
-
-        return false;
+    public static SavableParty getOrGetParty(String uuid){
+        return getOrGetParty(PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static SavableParty getParty(String uuid) {
+    public static SavableParty getGroupByPUID(String uuid) {
         try {
-            for (SavableParty party : parties) {
-                if (party.hasMember(PlayerUtils.getOrGetSavableUser(uuid))) {
-                    return party;
+            for (SavableParty group : parties) {
+                if (group.uuid.equals(uuid)) {
+                    return group;
                 }
             }
             return null;
@@ -120,6 +104,68 @@ public class PartyUtils {
         }
     }
 
+    public static SavableParty getOrGetGroupByGUID(String uuid){
+        SavableParty group = getGroupByPUID(uuid);
+
+        if (group == null) {
+            if (existsByPUID(uuid)) {
+                try {
+                    group = new SavableParty(uuid);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return group;
+    }
+
+    public static boolean groupIsLoadedAlready(SavableUser stat) {
+        return groupsContainsGroupByUUID(stat.guild);
+    }
+
+    public static boolean playerIsInGroupsByUUID(String uuid) {
+        for (SavableParty group : parties) {
+            for (SavableUser user : group.totalMembers) {
+                if (user.uuid.equals(uuid)) return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean groupsContainsGroupByUUID(String uuid) {
+        for (SavableParty group : parties) {
+            if (group.uuid.equals(uuid)) return true;
+        }
+
+        return false;
+    }
+
+    public static SavableParty addParty(SavableParty group){
+        if (groupsContainsGroupByUUID(group.uuid)) {
+            if (ConfigUtils.debug()) MessagingUtils.logInfo(group.uuid + " is already in parties list!");
+            return getOrGetGroupByGUID(group.uuid);
+        }
+
+        parties.add(group);
+
+        return group;
+    }
+
+    public static boolean hasOnlineMemberAlready(SavableUser stat){
+        List<SavableUser> users = new ArrayList<>(PlayerUtils.getStats());
+
+        for (SavableUser user : users) {
+            if (user.uuid.equals(stat.uuid)) continue;
+            for (SavableParty party : parties) {
+                if (party.uuid.equals(stat.party)) return true;
+            }
+        }
+
+        return false;
+    }
+
     public static boolean hasParty(SavableUser player) {
         for (SavableParty party : parties) {
             if (party.hasMember(player)) return true;
@@ -127,14 +173,14 @@ public class PartyUtils {
         return false;
     }
 
-    public static boolean existsByUUID(String uuid){
+    public static boolean existsByPUID(String uuid){
         File file = new File(SavableAdapter.Type.PARTY.path, uuid + SavableAdapter.Type.PARTY.suffix);
 
         return file.exists();
     }
 
     public static boolean exists(String username){
-        return existsByUUID(UUIDUtils.swapToUUID(username));
+        return existsByPUID(UUIDUtils.swapToUUID(username));
     }
 
     public static boolean isParty(SavableParty party){
@@ -142,7 +188,7 @@ public class PartyUtils {
     }
 
     public static boolean pHasParty(SavableUser player) {
-        if (! existsByUUID(player.uuid)) return false;
+        if (! existsByPUID(player.uuid)) return false;
 
         SavableParty party;
         try {
@@ -188,7 +234,7 @@ public class PartyUtils {
         if (p == null) return;
 
         try {
-            SavableParty party = getParty(sender);
+            SavableParty party = getOrGetParty(sender);
 
             if (! isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(p, noPartyFound);
@@ -246,7 +292,7 @@ public class PartyUtils {
 
         if (p == null) return;
 
-        if (getParty(player) != null) {
+        if (getOrGetParty(player) != null) {
             MessagingUtils.sendBUserMessage(p, alreadyMade);
             return;
         }
@@ -288,7 +334,7 @@ public class PartyUtils {
     }
 
     public static void createParty(SavableUser sender) {
-        SavableParty g = getParty(sender);
+        SavableParty g = getOrGetParty(sender);
 
         if (g != null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), alreadyMade);
@@ -311,47 +357,6 @@ public class PartyUtils {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void addParty(SavableParty party){
-        SavableParty g;
-
-        try {
-            g = getParty(party.uuid);
-        } catch (Exception e) {
-            return;
-            // Do nothing.
-        }
-
-        if (g != null) return;
-
-        try {
-            if (parties.size() > 0) {
-                List<SavableParty> rem = new ArrayList<>();
-
-                for (SavableParty gu : parties) {
-                    String s = gu.uuid;
-
-                    if (s == null) {
-                        rem.add(gu);
-                        continue;
-                    }
-
-                    if (s.equals(party.uuid)) {
-                        rem.add(gu);
-                    }
-                }
-
-                for (SavableParty gd : rem) {
-                    parties.remove(gd);
-                }
-            }
-
-            parties.add(party);
-        } catch (Exception e){
-            MessagingUtils.logInfo("Error adding party...");
             e.printStackTrace();
         }
     }
@@ -388,7 +393,7 @@ public class PartyUtils {
 
     public static void sendInvite(SavableUser to, SavableUser from) {
         try {
-            SavableParty party = getParty(from);
+            SavableParty party = getOrGetParty(from);
 
             if (! checkPlayer(party, to, from)) return;
 
@@ -402,7 +407,7 @@ public class PartyUtils {
                 return;
             }
 
-            if (isParty(getParty(to))) {
+            if (isParty(getOrGetParty(to))) {
                 MessagingUtils.sendBUserMessage(from.findSender(), alreadyHasOneOthers);
                 return;
             }
@@ -445,7 +450,7 @@ public class PartyUtils {
 
     public static void acceptInvite(SavableUser accepter, SavableUser from) {
         try {
-            SavableParty party = getParty(from);
+            SavableParty party = getOrGetParty(from);
 
             if (!isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(accepter.findSender(), acceptFailure);
@@ -457,7 +462,7 @@ public class PartyUtils {
                 return;
             }
 
-            if (isParty(getParty(accepter))) {
+            if (isParty(getOrGetParty(accepter))) {
                 MessagingUtils.sendBUserMessage(accepter.findSender(), alreadyHasOneSelf);
                 return;
             }
@@ -532,7 +537,7 @@ public class PartyUtils {
 
     public static void denyInvite(SavableUser denier, SavableUser from) {
         try {
-            SavableParty party = getParty(from);
+            SavableParty party = getOrGetParty(from);
 
             if (!isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(denier.findSender(), denyFailure);
@@ -597,7 +602,7 @@ public class PartyUtils {
     }
 
     public static void warpParty(SavableUser sender){
-        SavableParty party = getParty(sender);
+        SavableParty party = getOrGetParty(sender);
 
         if (!isParty(party) || party == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -649,7 +654,7 @@ public class PartyUtils {
     }
 
     public static void muteParty(SavableUser sender){
-        SavableParty party = getParty(sender);
+        SavableParty party = getOrGetParty(sender);
 
         if (!isParty(party) || party == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -697,7 +702,7 @@ public class PartyUtils {
     }
 
     public static void kickMember(SavableUser sender, SavableUser player) {
-        SavableParty party = getParty(sender);
+        SavableParty party = getOrGetParty(sender);
 
         if (!isParty(party) || party == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), kickFailure);
@@ -762,7 +767,7 @@ public class PartyUtils {
     }
 
     public static void info(SavableUser sender){
-        SavableParty party = getParty(sender);
+        SavableParty party = getOrGetParty(sender);
 
         if (!isParty(party) || party == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -779,7 +784,7 @@ public class PartyUtils {
 
     public static void disband(SavableUser sender) {
         try {
-            SavableParty party = getParty(sender);
+            SavableParty party = getOrGetParty(sender);
 
             if (!isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -826,7 +831,7 @@ public class PartyUtils {
 
     public static void openParty(SavableUser sender) {
         try {
-            SavableParty party = getParty(sender);
+            SavableParty party = getOrGetParty(sender);
 
             if (!isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -874,7 +879,7 @@ public class PartyUtils {
 
     public static void closeParty(SavableUser sender) {
         try {
-            SavableParty party = getParty(sender);
+            SavableParty party = getOrGetParty(sender);
 
             if (!isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -922,7 +927,7 @@ public class PartyUtils {
 
     public static void listParty(SavableUser sender) {
         try {
-            SavableParty party = getParty(sender);
+            SavableParty party = getOrGetParty(sender);
 
             if (!isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -1009,7 +1014,7 @@ public class PartyUtils {
 
     public static void promotePlayer(SavableUser sender, SavableUser player) {
         try {
-            SavableParty party = getParty(sender);
+            SavableParty party = getOrGetParty(sender);
 
             if (!isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -1099,7 +1104,7 @@ public class PartyUtils {
 
     public static void demotePlayer(SavableUser sender, SavableUser player) {
         try {
-            SavableParty party = getParty(sender);
+            SavableParty party = getOrGetParty(sender);
 
             if (!isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -1173,7 +1178,7 @@ public class PartyUtils {
 
     public static void joinParty(SavableUser sender, SavableUser from) {
         try {
-            SavableParty party = getParty(from);
+            SavableParty party = getOrGetParty(from);
 
             if (!isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -1185,7 +1190,7 @@ public class PartyUtils {
                 return;
             }
 
-            if (isParty(getParty(sender))) {
+            if (isParty(getOrGetParty(sender))) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), alreadyHasOneSelf);
                 return;
             }
@@ -1225,7 +1230,7 @@ public class PartyUtils {
 
     public static void leaveParty(SavableUser sender) {
         try {
-            SavableParty party = getParty(sender);
+            SavableParty party = getOrGetParty(sender);
 
             if (!isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -1283,7 +1288,7 @@ public class PartyUtils {
 
     public static void sendChat(SavableUser sender, String msg) {
         try {
-            SavableParty party = getParty(sender);
+            SavableParty party = getOrGetParty(sender);
 
             if (! isParty(party) || party == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPartyFound);
@@ -1499,7 +1504,7 @@ public class PartyUtils {
         parties.clear();
 
         for (SavableUser user : PlayerUtils.getStatsOnline()) {
-            SavableParty party = getParty(user);
+            SavableParty party = getOrGetParty(user);
 
             if (party != null) {
                 if (party.hasMember(user)) continue;
@@ -1512,9 +1517,7 @@ public class PartyUtils {
     }
 
     public static void saveAll(){
-        List<SavableParty> gs = new ArrayList<>(getParties());
-
-        for (SavableParty party : gs) {
+        for (SavableParty party : new ArrayList<>(parties)) {
             try {
                 party.saveAll();
             } catch (Exception e) {
@@ -1524,7 +1527,7 @@ public class PartyUtils {
     }
 
     public static boolean hasGroupedSize(String group) {
-        for (String key : ConfigUtils.getGroupSizeConfig().keySet()) {
+        for (String key : ConfigUtils.getGroupSizeConfig().getKeys()) {
             if (group.equals(key)) return true;
         }
 

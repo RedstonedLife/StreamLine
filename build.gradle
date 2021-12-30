@@ -15,12 +15,12 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'net.plasmere'
-    version = '1.0.15.1'
+    version = '1.0.15.2'
 
     ext {
         caffeineVersion = '3.0.4'
         dv8tionVersion = '4.3.0_339'
-        geysermcVersion = '1.4.2-SNAPSHOT'
+        geysermcVersion = '2.0.0-SNAPSHOT'
         luckpermsVersion = '5.3'
         nuvotifierVersion = '2.7.3'
         simplixStorageVersion = '3.2.3'

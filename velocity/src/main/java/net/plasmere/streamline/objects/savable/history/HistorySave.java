@@ -58,11 +58,11 @@ public class HistorySave {
     }
 
     public TreeList<String> getTimestamps(String server) {
-        return new TreeList<>(conf.getSection(server).keySet());
+        return new TreeList<>(conf.getSection(server).singleLayerKeySet());
     }
 
     public TreeList<String> getTalkedInServers() {
-        return new TreeList<>(conf.keySet());
+        return new TreeList<>(conf.singleLayerKeySet());
     }
 
     public TreeMap<Long, String> getTimestampsWithMessageFrom(String timestampFrom, String server) {

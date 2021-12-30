@@ -4,7 +4,6 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import de.leonhard.storage.Config;
 import de.leonhard.storage.LightningBuilder;
-import de.leonhard.storage.sections.FlatFileSection;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -205,7 +204,7 @@ public class DiscordData {
                                 ConfigUtils.moduleDPCDDGlobalUseAvatar()
                         );
                     } else if (type.equals(ChatsHandler.getChannel("guild"))) {
-                        SavableGuild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
+                        SavableGuild guild = GuildUtils.getOrGetGuild(PlayerUtils.getOrGetSavableUser(player));
 
                         if (guild == null) return;
 
@@ -224,7 +223,7 @@ public class DiscordData {
                                 ConfigUtils.moduleDPCDDGuildUseAvatar()
                         );
                     } else if (type.equals(ChatsHandler.getChannel("party"))) {
-                        SavableParty party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
+                        SavableParty party = PartyUtils.getOrGetParty(PlayerUtils.getOrGetSavableUser(player).uuid);
 
                         if (party == null) return;
 
@@ -281,7 +280,7 @@ public class DiscordData {
                         ConfigUtils.moduleDPCDDGlobalUseAvatar()
                 );
             } else if (chatChannel.equals(ChatsHandler.getChannel("guild"))) {
-                SavableGuild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
+                SavableGuild guild = GuildUtils.getOrGetGuild(PlayerUtils.getOrGetSavableUser(player));
 
                 if (guild == null) return;
 
@@ -300,7 +299,7 @@ public class DiscordData {
                         ConfigUtils.moduleDPCDDGuildUseAvatar()
                 );
             } else if (chatChannel.equals(ChatsHandler.getChannel("party"))) {
-                SavableParty party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
+                SavableParty party = PartyUtils.getOrGetParty(PlayerUtils.getOrGetSavableUser(player).uuid);
 
                 if (party == null) return;
 
@@ -355,7 +354,7 @@ public class DiscordData {
                         ConfigUtils.moduleDPCDDGlobalUseAvatar()
                 );
             } else if (type.equals(ChatsHandler.getChannel("guild"))) {
-                SavableGuild guild = GuildUtils.getGuild(PlayerUtils.getOrGetSavableUser(player));
+                SavableGuild guild = GuildUtils.getOrGetGuild(PlayerUtils.getOrGetSavableUser(player));
 
                 if (guild == null) return;
 
@@ -374,7 +373,7 @@ public class DiscordData {
                         ConfigUtils.moduleDPCDDGuildUseAvatar()
                 );
             } else if (type.equals(ChatsHandler.getChannel("party"))) {
-                SavableParty party = PartyUtils.getParty(PlayerUtils.getOrGetSavableUser(player).uuid);
+                SavableParty party = PartyUtils.getOrGetParty(PlayerUtils.getOrGetSavableUser(player).uuid);
 
                 if (party == null) return;
 
@@ -435,13 +434,13 @@ public class DiscordData {
 
                 MessagingUtils.sendServerMessageFromDiscord(user.getName(), server, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             } else if (channelData.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
-                SavableGuild guild = GuildUtils.getGuild(channelData.identifier);
+                SavableGuild guild = GuildUtils.getOrGetGuild(channelData.identifier);
 
                 if (guild == null) return;
 
                 GuildUtils.sendChatFromDiscord(user.getName(), guild, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             } else if (channelData.chatChannel.equals(ChatsHandler.getChannel("party"))) {
-                SavableParty party = PartyUtils.getParty(channelData.identifier);
+                SavableParty party = PartyUtils.getOrGetParty(channelData.identifier);
 
                 if (party == null) return;
 
@@ -476,7 +475,7 @@ public class DiscordData {
 
                 MessagingUtils.sendServerMessageFromDiscord(player, server, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             } else if (channelData.chatChannel.equals(ChatsHandler.getChannel("guild"))) {
-                SavableGuild guild = GuildUtils.getGuild(channelData.identifier);
+                SavableGuild guild = GuildUtils.getOrGetGuild(channelData.identifier);
 
                 if (guild == null) {
                     return;
@@ -484,7 +483,7 @@ public class DiscordData {
 
                 GuildUtils.sendChatFromDiscord(player, guild, StreamLine.chatConfig.getDefaultFormat(ChatsHandler.getOrGetChat(channelData.chatChannel.name, channelData.identifier).chatChannel, MessageServerType.DISCORD), message);
             } else if (channelData.chatChannel.equals(ChatsHandler.getChannel("party"))) {
-                SavableParty party = PartyUtils.getParty(channelData.identifier);
+                SavableParty party = PartyUtils.getOrGetParty(channelData.identifier);
 
                 if (party == null) return;
 
@@ -553,7 +552,7 @@ public class DiscordData {
         reloadConfig();
         TreeMap<Long, String> verified = new TreeMap<>();
 
-        for (String key : conf.getSection("verified").keySet()) {
+        for (String key : conf.getSection("verified").singleLayerKeySet()) {
             long k = 0L;
             try {
                 k = Long.parseLong(key);
@@ -674,7 +673,7 @@ public class DiscordData {
     public boolean isChannel(Long channelID) {
         reloadConfig();
 
-        for (String keys : conf.getSection("channels").keySet()) {
+        for (String keys : conf.getSection("channels").singleLayerKeySet()) {
             if (keys.equals(channelID.toString())) return true;
         }
 
@@ -715,7 +714,7 @@ public class DiscordData {
         addVerified(user.getIdLong(), uuid);
         player.setDiscordID(user.getIdLong());
 
-        SavableGuild guild = GuildUtils.getGuild(player.uuid);
+        SavableGuild guild = GuildUtils.getOrGetGuild(player.uuid);
 
         if (g == null) {
             if (ConfigUtils.debug()) MessagingUtils.logInfo("Guild returned null!");
@@ -844,7 +843,7 @@ public class DiscordData {
             conf.set("roles.synced.default.group", "default");
 //        }
 
-        for (String key : conf.getSection("roles.synced").keySet()) {
+        for (String key : conf.getSection("roles.synced").singleLayerKeySet()) {
             try {
                 ConfigSection section = new ConfigSection(conf.getSection("roles.synced." + key));
                 long role = section.s.getLong("role");
@@ -905,7 +904,7 @@ public class DiscordData {
     public List<Long> idsForVoice(long voiceID) {
         List<Long> toReturn = new ArrayList<>();
 
-        for (String key : conf.getSection("linked-voice").keySet()) {
+        for (String key : conf.getSection("linked-voice").singleLayerKeySet()) {
             try {
                 long id = Long.parseLong(key);
 

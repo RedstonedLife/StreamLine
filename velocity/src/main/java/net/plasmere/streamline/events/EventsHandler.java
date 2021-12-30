@@ -106,7 +106,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_PARTY_MEMBERS:
-                    SavableParty party = PartyUtils.getParty(player);
+                    SavableParty party = PartyUtils.getOrGetParty(player);
                     if (party == null) continue;
 
                     for (SavableUser user : party.totalMembers) {
@@ -116,7 +116,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_GUILD_MEMBERS:
-                    SavableGuild guild = GuildUtils.getGuild(player);
+                    SavableGuild guild = GuildUtils.getOrGetGuild(player);
                     if (guild == null) continue;
 
                     for (SavableUser user : guild.totalMembers) {
@@ -218,7 +218,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_PARTY_MEMBERS:
-                    SavableParty party = PartyUtils.getParty(player);
+                    SavableParty party = PartyUtils.getOrGetParty(player);
                     if (party == null) continue;
 
                     for (SavableUser person : party.totalMembers) {
@@ -228,7 +228,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_GUILD_MEMBERS:
-                    SavableGuild guild = GuildUtils.getGuild(player);
+                    SavableGuild guild = GuildUtils.getOrGetGuild(player);
                     if (guild == null) continue;
 
                     for (SavableUser person : guild.totalMembers) {

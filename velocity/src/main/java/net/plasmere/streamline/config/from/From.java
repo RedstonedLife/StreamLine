@@ -338,12 +338,12 @@ public abstract class From {
     }
 
     public boolean hasKeys(ConfigSection configuration) {
-        if (configuration.keySet().size() > 0) return true;
+        if (configuration.getKeys().size() > 0) return true;
         else return false;
     }
 
     public boolean hasKeys(Config configuration) {
-        if (configuration.keySet().size() > 0) return true;
+        if (configuration.singleLayerKeySet().size() > 0) return true;
         else return false;
     }
 
@@ -358,7 +358,7 @@ public abstract class From {
             }
 
             if (trial) {
-                for (String key : base.getSection(currSearch).keySet()) {
+                for (String key : base.getSection(currSearch).singleLayerKeySet()) {
                     findDeepKeys(base, currSearch + "." + key, toFileType);
                 }
             } else {
@@ -452,7 +452,7 @@ public abstract class From {
 //            base.set(newPath, obj);
 //            base.set(currSearch, null);
         } else {
-            for (String key : base.getSection(currSearch).keySet()) {
+            for (String key : base.getSection(currSearch).singleLayerKeySet()) {
                 iterateDeepPaths(base, fromPath, toPath, currSearch + "." + key, fileType, language);
             }
         }
@@ -560,7 +560,7 @@ public abstract class From {
             }
 
             if (trial) {
-                for (String key : base.getSection(currSearch).keySet()) {
+                for (String key : base.getSection(currSearch).singleLayerKeySet()) {
                     findDeepKeys(base, currSearch + "." + key, toFileType);
                 }
             } else {
@@ -601,7 +601,7 @@ public abstract class From {
     }
 
     public void replaceLoop(Config base, FileType of, String from, String to) {
-        for (String key : base.keySet()) {
+        for (String key : base.singleLayerKeySet()) {
             replaceDeep(base, key, of, from, to);
         }
     }

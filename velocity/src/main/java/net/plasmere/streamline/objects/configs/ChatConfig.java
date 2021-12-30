@@ -177,9 +177,9 @@ public class ChatConfig {
         TreeMap<Integer, String> map = new TreeMap<>();
 
         if (section == null) return map;
-        if (section.keySet().size() <= 0) return map;
+        if (section.getKeys().size() <= 0) return map;
 
-        for (String key : section.keySet()) {
+        for (String key : section.getKeys()) {
             int thing = 0;
 
             try {

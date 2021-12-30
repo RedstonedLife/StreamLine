@@ -117,7 +117,7 @@ public class OneSecondTimer implements Runnable {
         if (StreamLine.getJda() == null) return;
 
         if (ConfigUtils.moduleDPCChangeOnVerifyUnchangeable()) {
-            for (long k : StreamLine.discordData.getVerified().keySet()) {
+            for (long k : StreamLine.discordData.getVerified().singleLayerKeySet()) {
                 String uuid = StreamLine.discordData.getUUIDOfVerified(k);
                 if (uuid == null) continue;
                 if (uuid.equals("null")) continue;

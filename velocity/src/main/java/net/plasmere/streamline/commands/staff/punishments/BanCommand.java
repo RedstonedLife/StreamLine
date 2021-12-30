@@ -303,7 +303,7 @@ public class BanCommand extends SLCommand {
             strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
-        for (String uuid : bans.keySet()) {
+        for (String uuid : bans.singleLayerKeySet()) {
             if (uuid.contains("_")) continue;
             if (bans.getBoolean(uuid + ".banned")) banned.add(UUIDUtils.getCachedName(uuid));
         }

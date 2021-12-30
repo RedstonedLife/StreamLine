@@ -49,7 +49,7 @@ public class Votes {
     }
 
     public boolean hasVotes(String uuid) {
-        for (String key : votes.keySet()) {
+        for (String key : votes.singleLayerKeySet()) {
             if (key.equals(uuid)) return true;
         }
 
@@ -76,11 +76,11 @@ public class Votes {
     }
 
     public int getUniques(){
-        return votes.keySet().size();
+        return votes.singleLayerKeySet().size();
     }
 
     public boolean getConsole(){
-        if (! votes.keySet().contains("console")) setConsole(false);
+        if (! votes.singleLayerKeySet().contains("console")) setConsole(false);
 
         return votes.getBoolean("console");
     }

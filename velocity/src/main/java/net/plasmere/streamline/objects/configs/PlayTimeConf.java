@@ -50,7 +50,7 @@ public class PlayTimeConf {
     }
 
     public boolean hasPlayTime(String uuid) {
-        for (String key : config.keySet()) {
+        for (String key : config.singleLayerKeySet()) {
             if (key.equals(uuid)) return true;
         }
 
@@ -96,11 +96,11 @@ public class PlayTimeConf {
     }
 
     public int getUniques(){
-        return config.keySet().size();
+        return config.singleLayerKeySet().size();
     }
 
     public boolean getConsole(){
-        if (! config.keySet().contains("console")) setConsole(false);
+        if (! config.singleLayerKeySet().contains("console")) setConsole(false);
 
         return config.getBoolean("console");
     }

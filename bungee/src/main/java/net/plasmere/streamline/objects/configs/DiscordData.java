@@ -132,7 +132,7 @@ public class DiscordData {
 //    }
 
     public boolean ifHasChannels(ChatChannel type, String identifier) {
-        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(type, identifier).keySet());
+        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(type, identifier).singleLayerKeySet());
 
         if (channels == null) return false;
         if (channels.size() <= 0) return false;
@@ -149,7 +149,7 @@ public class DiscordData {
 
         TreeMap<Long, String> channels = getChannelsByData(type, identifier);
 
-        for (Long channel : channels.keySet()) {
+        for (Long channel : channels.singleLayerKeySet()) {
             switch (channels.get(channel)) {
                 case "normal" -> {
                     if (type.equals(ChatsHandler.getChannel("local"))) {
@@ -268,7 +268,7 @@ public class DiscordData {
     public void sendDiscordJoinChannel(CommandSender player, ChatChannel chatChannel, String identifier) {
         if (! ConfigUtils.moduleDEnabled()) return;
 
-        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(chatChannel, identifier).keySet());
+        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(chatChannel, identifier).singleLayerKeySet());
 
         for (Long channel : channels) {
             if (chatChannel.equals(ChatsHandler.getChannel("local"))) {
@@ -342,7 +342,7 @@ public class DiscordData {
     public void sendDiscordLeaveChannel(CommandSender player, ChatChannel type, String identifier) {
         if (! ConfigUtils.moduleDEnabled()) return;
 
-        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(type, identifier).keySet());
+        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(type, identifier).singleLayerKeySet());
 
         for (Long channel : channels) {
             if (type.equals(ChatsHandler.getChannel("local"))) {
@@ -509,7 +509,7 @@ public class DiscordData {
 
         TreeMap<Long, String> toReturn = new TreeMap<>();
 
-        for (Long id : loadedChannels.keySet()) {
+        for (Long id : loadedChannels.singleLayerKeySet()) {
             DataChannel set = loadedChannels.get(id);
 
 //            if (ConfigUtils.debug()) MessagingUtils.logInfo("ID: " + id);
@@ -553,7 +553,7 @@ public class DiscordData {
     public long getIDOfVerified(String uuid) {
         reloadConfig();
 
-        for (long id : getVerified().keySet()) {
+        for (long id : getVerified().singleLayerKeySet()) {
             if (getVerified().get(id).equals(uuid)) return id;
         }
 
@@ -581,7 +581,7 @@ public class DiscordData {
     public boolean isVerified(Long discordID) {
         reloadConfig();
 
-        for (long key : getVerified().keySet()) {
+        for (long key : getVerified().singleLayerKeySet()) {
             if (key == discordID) return true;
         }
 
@@ -591,7 +591,7 @@ public class DiscordData {
     public boolean isVerified(String uuid) {
         reloadConfig();
 
-        for (long key : getVerified().keySet()) {
+        for (long key : getVerified().singleLayerKeySet()) {
             if (getVerified().get(key).equals(uuid)) return true;
         }
 
@@ -627,7 +627,7 @@ public class DiscordData {
     }
 
     public TreeMap<Long, Boolean> ifChannelBypasses(ChatChannel type, String identifier) {
-        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(type, identifier).keySet());
+        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(type, identifier).singleLayerKeySet());
         TreeMap<Long, Boolean> toReturn = new TreeMap<>();
 
         for (long l : channels) {
@@ -642,7 +642,7 @@ public class DiscordData {
     }
 
     public TreeMap<Long, Boolean> ifChannelJoins(ChatChannel type, String identifier) {
-        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(type, identifier).keySet());
+        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(type, identifier).singleLayerKeySet());
         TreeMap<Long, Boolean> toReturn = new TreeMap<>();
 
         for (long l : channels) {
@@ -657,7 +657,7 @@ public class DiscordData {
     }
 
     public TreeMap<Long, Boolean> ifChannelLeaves(ChatChannel type, String identifier) {
-        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(type, identifier).keySet());
+        TreeSet<Long> channels = new TreeSet<>(getChannelsByData(type, identifier).singleLayerKeySet());
         TreeMap<Long, Boolean> toReturn = new TreeMap<>();
 
         for (long l : channels) {

@@ -366,7 +366,7 @@ public class ServerConfig {
 
     public TreeSet<String> getEmotes() {
         reloadConfig();
-        return new TreeSet<>(serverConfig.getSection("proxy-chat.emotes").keySet());
+        return new TreeSet<>(serverConfig.getSection("proxy-chat.emotes").singleLayerKeySet());
     }
 
     public void setAllowGlobal(boolean bool) {

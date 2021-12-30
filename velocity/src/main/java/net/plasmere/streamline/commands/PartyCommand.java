@@ -195,7 +195,7 @@ public class PartyCommand extends SLCommand {
                     }
                 } else {
                     try {
-                        if (PartyUtils.getParty(PlayerUtils.getPlayerStat(sender)) != null) {
+                        if (PartyUtils.getOrGetParty(PlayerUtils.getPlayerStat(sender)) != null) {
                             PartyUtils.openPartySized(player, Integer.parseInt(args[1]));
                         } else {
                             PartyUtils.createPartySized(player, Integer.parseInt(args[1]));

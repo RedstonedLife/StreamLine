@@ -41,7 +41,7 @@ public class ConfigSection {
     }
 
     public Set<String> keySet(final String key) {
-        return s.keySet(createFinalKey(key));
+        return s.singleLayerKeySet(createFinalKey(key));
     }
 
     public void remove(final String key) {

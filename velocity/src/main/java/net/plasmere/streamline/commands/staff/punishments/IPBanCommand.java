@@ -354,7 +354,7 @@ public class IPBanCommand extends SLCommand {
                 }
             } else if (args[0].equals("check")) {
                 if (args[1].equals("all") || args[1].equals("*")) {
-                    Collection<String> banned = bans.keySet();
+                    Collection<String> banned = bans.singleLayerKeySet();
                     TreeList<String> bannedIPs = new TreeList<>();
 
                     for (String ban : banned) {
@@ -394,7 +394,7 @@ public class IPBanCommand extends SLCommand {
             strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
-        for (String ip : bans.keySet()) {
+        for (String ip : bans.singleLayerKeySet()) {
             if (! ip.contains("_")) continue;
             ip = ip.replace("_", ".");
             if (bans.getBoolean(ip + ".banned")) banned.add(ip);

@@ -14,7 +14,7 @@ public class FilterHandler {
     public static List<ChatFilter> filters = new ArrayList<>();
 
     public static TreeList<String> getAllFiltersByName() {
-        return new TreeList<>(StreamLine.chatFilters.getConf().keySet());
+        return new TreeList<>(StreamLine.chatFilters.getConf().singleLayerKeySet());
     }
 
     public static ChatFilter addFilter(ChatFilter filter) {
@@ -40,7 +40,7 @@ public class FilterHandler {
     }
 
     public static void loadFiltersFromConfiguration(Config configuration) {
-        for (String key : configuration.keySet()) {
+        for (String key : configuration.singleLayerKeySet()) {
             try {
                 ConfigSection section = new ConfigSection(configuration.getSection(key));
                 boolean enabled = section.s.getBoolean("enabled");

@@ -283,7 +283,7 @@ public class ChatListener implements Listener {
                     if (stat.chatChannel.equals(ChatsHandler.getChannel("global"))) {
                         if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("global"), "")) {
                             TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("global"), "");
-                            for (Long l : ifHas.keySet()) {
+                            for (Long l : ifHas.singleLayerKeySet()) {
                                 if (!ifHas.get(l)) continue;
 
                                 StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("global"), "", msg);
@@ -294,7 +294,7 @@ public class ChatListener implements Listener {
                     if (stat.chatChannel.equals(ChatsHandler.getChannel("local"))) {
                         if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("local"), sender.getServer().getInfo().getName())) {
                             TreeMap<Long, Boolean> ifHas = StreamLine.discordData.ifChannelBypasses(ChatsHandler.getChannel("local"), sender.getServer().getInfo().getName());
-                            for (Long l : ifHas.keySet()) {
+                            for (Long l : ifHas.singleLayerKeySet()) {
                                 if (!ifHas.get(l)) continue;
 
                                 StreamLine.discordData.sendDiscordChannel(sender, ChatsHandler.getChannel("local"), sender.getServer().getInfo().getName(), msg);

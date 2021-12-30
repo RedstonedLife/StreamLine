@@ -240,7 +240,7 @@ public class Lobbies {
     public String toString(){
         StringBuilder stringBuilder = new StringBuilder("[");
 
-        for (String server : servers.keySet()){
+        for (String server : servers.singleLayerKeySet()){
             stringBuilder.append(server).append("(");
             int i = 1;
             for (String allowed : servers.get(server)) {

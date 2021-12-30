@@ -93,7 +93,7 @@ public class TextUtils {
             TreeMap<Integer, String> pieces = new TreeMap<>();
             int iter = 0;
             int from = 0;
-            for (Integer key : founds.keySet()) {
+            for (Integer key : founds.singleLayerKeySet()) {
                 int at = text.indexOf(founds.get(key), from);
                 pieces.put(iter, text.substring(at));
                 from = at;
@@ -102,7 +102,7 @@ public class TextUtils {
 
             tc = new TextComponent(pieces.get(0));
 
-            for (Integer key : pieces.keySet()) {
+            for (Integer key : pieces.singleLayerKeySet()) {
                 if (key == 0) continue;
 
                 String p = pieces.get(key);
@@ -350,7 +350,7 @@ public class TextUtils {
 
         TreeMap<Integer, ProxiedPlayer> indexed = getTaggedPlayersIndexed(args, sender.getServer().getInfo().getName());
 
-        for (Integer index : indexed.keySet()) {
+        for (Integer index : indexed.singleLayerKeySet()) {
             args[index] = StreamLine.serverConfig.getTagsPrefix() + args[index];
         }
 
@@ -424,7 +424,7 @@ public class TextUtils {
         int i = 0;
         StringBuilder text = new StringBuilder();
 
-        for (Integer split : splitMsg.keySet()){
+        for (Integer split : splitMsg.singleLayerKeySet()){
             i++;
             if (splitMsg.get(split).equals("")) continue;
 

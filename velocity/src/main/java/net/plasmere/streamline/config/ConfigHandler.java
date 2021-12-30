@@ -208,7 +208,7 @@ public class ConfigHandler {
 
     public Collection<String> getConfKeys() {
         reloadConfig();
-        return conf.keySet();
+        return conf.singleLayerKeySet();
     }
 
     public String getMessString(String path) {
@@ -253,7 +253,7 @@ public class ConfigHandler {
 
     public Collection<String> getMessKeys() {
         reloadLocales();
-        return mess.keySet();
+        return mess.singleLayerKeySet();
     }
 
     public String getDisBotString(String path) {
@@ -303,7 +303,7 @@ public class ConfigHandler {
 
     public Collection<String> getDisBotKeys() {
         reloadDiscordBot();
-        return discordBot.keySet();
+        return discordBot.singleLayerKeySet();
     }
 
     public String getCommandString(String path) {
@@ -348,6 +348,6 @@ public class ConfigHandler {
 
     public Collection<String> getCommandKeys() {
         reloadCommands();
-        return commands.keySet();
+        return commands.singleLayerKeySet();
     }
 }

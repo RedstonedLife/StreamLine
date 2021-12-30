@@ -118,7 +118,7 @@ public class GlobalOnlineCommand extends SLCommand {
     private String getGroupedPlayers(String group, HashMap<ProxiedPlayer, String> playerGroup, HashMap<ProxiedPlayer, Server> playerServers){
         List<ProxiedPlayer> players = new ArrayList<>();
 
-        for (ProxiedPlayer player : playerGroup.keySet()){
+        for (ProxiedPlayer player : playerGroup.singleLayerKeySet()){
             if (group.toLowerCase().equals(playerGroup.get(player).toLowerCase()))
                 players.add(player);
         }

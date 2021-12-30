@@ -1076,7 +1076,7 @@ public class MessagingUtils {
     }
 
     public static void sendStatUserMessage(SavableUser user, CommandSource sender, String msg){
-        SavableGuild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
         if (user instanceof SavableConsole) {
             SavableConsole player = PlayerUtils.getConsoleStat();

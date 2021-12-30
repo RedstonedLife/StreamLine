@@ -14,7 +14,7 @@ public class FaceFetcher {
     }
 
     public static String getPlaceholdersApplied(SavablePlayer player, String string) {
-        SavableGuild guild = GuildUtils.getGuild(player);
+        SavableGuild guild = GuildUtils.getOrGetGuild(player);
 
         return TextUtils.replaceAllPlayerBungee(string, player)
                 .replace("%player_uuid%", player.uuid)

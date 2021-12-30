@@ -63,7 +63,7 @@ public class ChatHistoryCommand extends SLCommand {
         StringBuilder builder = new StringBuilder();
 
         int i = 0;
-        for (Long l : map.keySet()) {
+        for (Long l : map.singleLayerKeySet()) {
             if (i >= view) break;
 
 //            if (i == 0) {

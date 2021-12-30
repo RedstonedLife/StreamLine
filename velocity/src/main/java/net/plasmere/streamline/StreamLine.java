@@ -124,6 +124,7 @@ public class StreamLine {
 	public ScheduledTask playtime;
 	public ScheduledTask oneSecTimer;
 	public ScheduledTask motdUpdater;
+	public ScheduledTask groupsDatabaseSyncer;
 
 	private String currentMOTD;
 	private int motdPage;
@@ -176,14 +177,14 @@ public class StreamLine {
 			);
 			jda = jdaBuilder.build().awaitReady();
 		} catch (Exception e) {
-			getLogger().warn("An unknown error occurred building JDA...");
+			MessagingUtils.logWarning("An unknown error occurred building JDA...");
 			return;
 		}
 
 		if (jda.getStatus() == JDA.Status.CONNECTED) {
 			isReady = true;
 
-			getLogger().info("JDA status is connected...");
+			MessagingUtils.logInfo("JDA status is connected...");
 		}
 	}
 
@@ -266,6 +267,7 @@ public class StreamLine {
 			playtime = server.getScheduler().buildTask(this, new PlaytimeTimer(1)).repeat(1, TimeUnit.SECONDS).schedule();
 			oneSecTimer = server.getScheduler().buildTask(this, new OneSecondTimer()).repeat(1, TimeUnit.SECONDS).schedule();
 			motdUpdater = server.getScheduler().buildTask(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime())).repeat(1, TimeUnit.SECONDS).schedule();
+			groupsDatabaseSyncer = server.getScheduler().buildTask(this, new GroupDatabaseSyncTimer(60)).repeat(1, TimeUnit.SECONDS).schedule();
 
 			// DO NOT FORGET TO UPDATE AMOUNT BELOW! :/
 			getLogger().info("Loaded 7 runnable(s) into memory...!");
@@ -591,7 +593,7 @@ public class StreamLine {
 
 		// Set up SavableConsole.
 		SavableConsole console = PlayerUtils.applyConsole();
-		if (GuildUtils.existsByUUID(console.guild)) {
+		if (GuildUtils.existsByGUID(console.guild)) {
 			try {
 				GuildUtils.addGuild(new SavableGuild(console.guild));
 			} catch (Exception e) {
@@ -685,6 +687,7 @@ public class StreamLine {
 		saveCachedPlayers.cancel();
 		oneSecTimer.cancel();
 		motdUpdater.cancel();
+		groupsDatabaseSyncer.cancel();
 
 		try {
 			if (ConfigUtils.moduleDEnabled()) {

@@ -50,7 +50,7 @@ public class EventsHandler {
 
         if (p == null) return;
 
-        for (Integer i : event.actions.keySet()) {
+        for (Integer i : event.actions.singleLayerKeySet()) {
             switch (event.actions.get(i).key) {
                 case SEND_MESSAGE_TO:
                     MessagingUtils.sendBUserMessage(p, adjust(event, player, i));
@@ -158,7 +158,7 @@ public class EventsHandler {
 
         if (p == null) return;
 
-        for (Integer i : event.actions.keySet()) {
+        for (Integer i : event.actions.singleLayerKeySet()) {
             if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#runEvent() --> i = " + i);
 
             switch (event.actions.get(i).key) {

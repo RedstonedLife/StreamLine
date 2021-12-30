@@ -131,7 +131,7 @@ public class TextUtils {
     public static TreeMap<Integer, String> comparedConfiguration(ConfigSection configuration){
         TreeMap<Integer, String> thing = new TreeMap<>();
 
-        for (String key : configuration.keySet()) {
+        for (String key : configuration.getKeys()) {
             int it = 0;
             try {
                 it = Integer.parseInt(key);

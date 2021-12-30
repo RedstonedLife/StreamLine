@@ -467,12 +467,12 @@ public class SettingsEditCommand extends SLCommand {
             if (args[1].equals("motd") || args[1].equals("sample")) {
                 List<String> keys = new ArrayList<>();
 
-                for (Integer key : StreamLine.serverConfig.getComparedMOTD().keySet()) {
+                for (Integer key : StreamLine.serverConfig.getComparedMOTD().singleLayerKeySet()) {
                     if (keys.contains(String.valueOf(key))) continue;
                     keys.add(String.valueOf(key));
                 }
 
-                for (Integer key : StreamLine.serverConfig.getComparedSample().keySet()) {
+                for (Integer key : StreamLine.serverConfig.getComparedSample().singleLayerKeySet()) {
                     if (keys.contains(String.valueOf(key))) continue;
                     keys.add(String.valueOf(key));
                 }

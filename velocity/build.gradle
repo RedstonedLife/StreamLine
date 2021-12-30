@@ -27,7 +27,7 @@ dependencies {
     shadow "net.kyori:adventure-text-minimessage:${minimessageVersion}"
 
     implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
-    implementation "org.geysermc:connector:${geysermcVersion}"
+    implementation "org.geysermc:core:${geysermcVersion}"
     implementation "com.viaversion:viaversion-api:${viaApiVersion}"
     implementation "org.projectlombok:lombok:${lombokVersion}"
 

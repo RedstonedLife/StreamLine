@@ -27,7 +27,6 @@ import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
-import net.plasmere.streamline.objects.timers.ProcessDBUpdateRunnable;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
 import net.plasmere.streamline.utils.sql.DataSource;
@@ -113,48 +112,15 @@ public class JoinLeaveListener {
             stat.setChat(StreamLine.chatConfig.getDefaultChannel(), StreamLine.chatConfig.getDefaultIdentifier());
         }
 
-        try {
-            for (Player pl : StreamLine.getProxy().getAllPlayers()) {
-                SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(pl.getUniqueId().toString());
+        SavableGuild guild = null;
+        SavableParty party = null;
 
-                if (p == null) continue;
-
-                SavableGuild guild = GuildUtils.getGuild(p);
-
-                if (guild == null && ! p.equals(stat)) continue;
-                if (guild != null) {
-                    if (guild.hasMember(stat)) break;
-                }
-
-
-                if (GuildUtils.pHasGuild(stat)) {
-                    GuildUtils.addGuild(new SavableGuild(stat.guild));
-                }
-                break;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (! GuildUtils.guildIsLoadedAlready(stat)) {
+            guild = GuildUtils.addGuild(new SavableGuild(stat.guild));
         }
-        try {
-            for (Player pl : StreamLine.getProxy().getAllPlayers()) {
-                SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(pl.getUniqueId().toString());
 
-                if (p == null) continue;
-
-                SavableParty party = PartyUtils.getParty(p);
-
-                if (party == null && ! p.equals(stat)) continue;
-                if (party != null) {
-                    if (party.hasMember(stat)) break;
-                }
-
-                if (PartyUtils.pHasParty(stat)) {
-                    PartyUtils.addParty(new SavableParty(stat.party));
-                }
-                break;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (! PartyUtils.hasOnlineMemberAlready(stat)) {
+            party = PartyUtils.addParty(new SavableParty(stat.party));
         }
 
         String joinsOrder = ConfigUtils.moduleBPlayerJoins();
@@ -181,7 +147,6 @@ public class JoinLeaveListener {
                         case "guild":
                             if (!ConfigUtils.guildSendJoins()) continue;
 
-                            SavableGuild guild = GuildUtils.getGuild(other);
                             if (guild == null) continue;
 
                             if (guild.hasMember(stat)) {
@@ -193,7 +158,6 @@ public class JoinLeaveListener {
                         case "party":
                             if (!ConfigUtils.partySendJoins()) continue;
 
-                            SavableParty party = PartyUtils.getParty(other);
                             if (party == null) continue;
 
                             if (party.hasMember(stat)) {
@@ -255,8 +219,6 @@ public class JoinLeaveListener {
         if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("guild"), stat.guild)) {
             StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("guild"), stat.guild);
         }
-
-        SavableParty party = PartyUtils.getParty(stat.uuid);
 
         if (party != null) {
             SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.uuid);
@@ -451,7 +413,7 @@ public class JoinLeaveListener {
                         case "guild":
                             if (! ConfigUtils.guildSendLeaves()) continue;
 
-                            SavableGuild guild = GuildUtils.getGuild(other);
+                            SavableGuild guild = GuildUtils.getOrGetGuild(other);
                             if (guild == null) continue;
 
                             if (guild.hasMember(stat)) {
@@ -463,7 +425,7 @@ public class JoinLeaveListener {
                         case "party":
                             if (! ConfigUtils.partySendLeaves()) continue;
 
-                            SavableParty party = PartyUtils.getParty(other);
+                            SavableParty party = PartyUtils.getOrGetParty(other);
                             if (party == null) continue;
 
                             if (party.hasMember(stat)) {
@@ -522,9 +484,9 @@ public class JoinLeaveListener {
             }
         }
 
-        SavableGuild guild = GuildUtils.getGuild(stat);
+        SavableGuild guild = GuildUtils.getOrGetGuild(stat);
 
-        SavableParty party = PartyUtils.getParty(stat.uuid);
+        SavableParty party = PartyUtils.getOrGetParty(stat);
 
         SingleSet<Boolean, ChatChannel> get = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("guild"), stat.guild);
         if (get.key) {

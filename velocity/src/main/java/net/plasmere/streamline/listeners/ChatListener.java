@@ -78,7 +78,7 @@ public class ChatListener {
 
                 if (p == null) continue;
 
-                SavableGuild guild = GuildUtils.getGuild(p);
+                SavableGuild guild = GuildUtils.getOrGetGuild(p);
 
                 if (guild == null && ! p.equals(stat)) continue;
                 if (guild != null) {
@@ -100,7 +100,7 @@ public class ChatListener {
 
                 if (p == null) continue;
 
-                SavableParty party = PartyUtils.getParty(p);
+                SavableParty party = PartyUtils.getOrGetParty(p);
 
                 if (party == null && ! p.equals(stat)) continue;
                 if (party != null) {
@@ -223,7 +223,7 @@ public class ChatListener {
 
                                 for (Player player : msgWithTagged.value) {
 //                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
-                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
+                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
                                 }
 
                                 if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -244,7 +244,7 @@ public class ChatListener {
 
                                     for (Player player : msgWithTagged.value) {
 //                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
-                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
+                                        player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
                                     }
 
                                     if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -270,7 +270,7 @@ public class ChatListener {
                                 for (Player player : msgWithTagged.value) {
                                     
 //                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
-                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
+                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
                                 }
 
                                 if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -303,7 +303,7 @@ public class ChatListener {
 
                         for (Player player : msgWithTagged.value) {
 //                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
-                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
+                            player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
                         }
 
                         if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -323,7 +323,7 @@ public class ChatListener {
 
                     e.setResult(PlayerChatEvent.ChatResult.denied());
                 } else if (stat.chatChannel.equals(ChatsHandler.getChannel("party"))) {
-                    PartyUtils.sendChat(stat, PartyUtils.getParty(stat.chatIdentifier), msg);
+                    PartyUtils.sendChat(stat, PartyUtils.getOrGetParty(stat.chatIdentifier), msg);
 
                     e.setResult(PlayerChatEvent.ChatResult.denied());
                 }

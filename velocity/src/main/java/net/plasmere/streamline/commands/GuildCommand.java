@@ -104,6 +104,17 @@ public class GuildCommand extends SLCommand {
                     e.printStackTrace();
                 }
             } else {
+                if (args[1].equals("")) {
+                    try {
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
+                    } catch (Exception e) {
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                                .replace("%class%", this.getClass().getName())
+                        );
+                        e.printStackTrace();
+                    }
+                }
+
                 try {
                     GuildUtils.createGuild(stat, TextUtils.argsToStringMinus(args, 0));
                 } catch (Exception e) {
@@ -457,7 +468,7 @@ public class GuildCommand extends SLCommand {
         }
 
         try {
-            SavableGuild guild = GuildUtils.getGuild(stat);
+            SavableGuild guild = GuildUtils.getOrGetGuild(stat);
             if (guild == null) return;
             guild.saveAll();
         } catch (Exception e) {

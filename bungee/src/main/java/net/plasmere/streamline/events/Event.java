@@ -68,7 +68,7 @@ public class Event {
 
         if (ConfigUtils.debug()) {
             MessagingUtils.logInfo("Event#compileCond():");
-            for (Integer it : c.keySet()) {
+            for (Integer it : c.singleLayerKeySet()) {
                 MessagingUtils.logInfo("   > " + it + " : ( ( " +
                         c.get(it).key + " , " +
                         c.get(it).value + " ) )"
