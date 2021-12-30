@@ -65,6 +65,13 @@ public class DataSource {
                 int value = 0;
 
                 if(resultSet.next())
+                    //TODO: THIS IS TESTED ONLY ON MARIADB, PLEASE TEST IT ON MYSQL.
+                    query = "ALTER TABLE player_data ADD COLUMN IF NOT EXISTS playedSeconds INT NOT NULL DEFAULT '0';";
+
+                    try(PreparedStatement statement1 = connection.prepareStatement(query)) {
+                        statement1.execute();
+                    }
+
                     value = resultSet.getInt(1);
 
                 if(value != 0) return;
@@ -113,7 +120,7 @@ public class DataSource {
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
-        String query = "REPLACE INTO player_data (uuid, latestName, displayName, latestIp, latestVersion, latestServer, discordId, mutedUntil, points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String query = "REPLACE INTO player_data (uuid, latestName, displayName, latestIp, latestVersion, latestServer, discordId, mutedUntil, points, playedSeconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
@@ -126,6 +133,7 @@ public class DataSource {
             statement.setLong(7, player.discordID);
             statement.setDate(8, new java.sql.Date(player.mutedTill.getTime()));
             statement.setInt(9, player.points);
+            statement.setInt(10, player.playSeconds);
 
             statement.execute();
         } catch (SQLException e) {
@@ -165,6 +173,7 @@ public class DataSource {
                 player.totalXP = resultSet.getInt("totalExperience");
                 player.currentXP = resultSet.getInt("currentExperience");
                 player.level = resultSet.getInt("level");
+                player.playSeconds = resultSet.getInt("playedSeconds");
             }
 
             return player;
