@@ -144,22 +144,31 @@ public class MSBConfig {
         return map;
     }
 
-//    public String parsePlaceholder(String from) {
-//        String pattern = "((%mysqlb_).*?[%])";
-//
-//        Pattern search = Pattern.compile(pattern);
-//        Matcher matcher = search.matcher(from);
-//
-//        TreeMap<String, String> toReplace = new TreeMap<>();
-//
-//        int i = 1;
-//        while (matcher.find()) {
-//            String matched = matcher.group(i);
-//
-//
-//            i ++;
-//        }
-//    }
+    public String parsePlaceholder(String from, SavableUser on) {
+        String pattern = "((%mysqlb_).*?[%])";
+
+        Pattern search = Pattern.compile(pattern);
+        Matcher matcher = search.matcher(from);
+
+        TreeMap<String, String> toReplace = new TreeMap<>();
+
+        int i = 1;
+        while (matcher.find()) {
+            String matched = matcher.group(i);
+
+            String replace = onRequest(on, matched.substring("%mysqlb_".length()).substring(0, matched.substring("%mysqlb_".length()).length() - 1));
+
+            toReplace.put(matched, replace);
+
+            i ++;
+        }
+
+        for (String match : toReplace.keySet()) {
+            from = from.replace(match, toReplace.get(match));
+        }
+
+        return from;
+    }
 
     public String onRequest(SavableUser user, String params) {
         if (params.contains("_")) {

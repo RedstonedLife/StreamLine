@@ -482,6 +482,10 @@ public class TextUtils {
     public static String replaceAllPlayerBungee(String of, SavableUser user) {
         if (user == null) return of;
 
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
         return of
                 .replace("%player_uuid%", user.uuid)
 
@@ -539,6 +543,10 @@ public class TextUtils {
 
             if (user == null) return of;
 
+            if (ConfigUtils.mysqlbridgerEnabled()) {
+                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+            }
+
             return of
                     .replace("%player_uuid%", user.uuid)
 
@@ -588,6 +596,10 @@ public class TextUtils {
 
     public static String replaceAllUserBungee(String of, SavableUser user) {
         if (user == null) return of;
+
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
 
         return of
                 .replace("%user_uuid%", user.uuid)
@@ -646,6 +658,10 @@ public class TextUtils {
 
             if (user == null) return of;
 
+            if (ConfigUtils.mysqlbridgerEnabled()) {
+                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+            }
+
             return of
                     .replace("%user_uuid%", user.uuid)
 
@@ -695,6 +711,10 @@ public class TextUtils {
 
     public static String replaceAllSenderBungee(String of, SavableUser user) {
         if (user == null) return of;
+
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
 
         return of
                 .replace("%sender_uuid%", user.uuid)
@@ -754,6 +774,12 @@ public class TextUtils {
         if (StreamLine.discordData.isVerified(dID)) {
             SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(dID));
 
+            if (user == null) return of;
+
+            if (ConfigUtils.mysqlbridgerEnabled()) {
+                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+            }
+
             return of
                     .replace("%sender_uuid%", user.uuid)
 
@@ -804,6 +830,10 @@ public class TextUtils {
     public static String replaceAllPlayerDiscord(String of, SavableUser user) {
         if (user == null) return of;
 
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
         return of
                 .replace("%player_uuid%", user.uuid)
 
@@ -847,6 +877,10 @@ public class TextUtils {
     public static String replaceAllUserDiscord(String of, SavableUser user) {
         if (user == null) return of;
 
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
         return of
                 .replace("%user_uuid%", user.uuid)
 
@@ -889,6 +923,10 @@ public class TextUtils {
 
     public static String replaceAllSenderDiscord(String of, SavableUser user) {
         if (user == null) return of;
+
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
 
         return of
                 .replace("%sender_uuid%", user.uuid)

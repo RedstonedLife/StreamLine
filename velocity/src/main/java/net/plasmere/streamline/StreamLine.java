@@ -471,7 +471,9 @@ public class StreamLine {
 			DataSource.verifyTables();
 		}
 
-
+		if (ConfigUtils.mysqlbridgerEnabled()) {
+			msbConfig = new MSBConfig();
+		}
 
 		if (ConfigUtils.moduleDEnabled()) {
 			if (ConfigUtils.moduleDPC()) {
