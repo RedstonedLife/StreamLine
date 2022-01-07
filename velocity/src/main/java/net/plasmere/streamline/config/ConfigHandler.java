@@ -1,9 +1,11 @@
 package net.plasmere.streamline.config;
 
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
+import de.leonhard.storage.sections.FlatFileSection;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.config.backend.ConfigurationProvider;
-import net.plasmere.streamline.config.backend.YamlConfiguration;
+
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
@@ -17,12 +19,12 @@ import java.util.List;
 import java.util.TreeSet;
 
 public class ConfigHandler {
-    public Configuration conf;
+    public Config conf;
     //    public Configuration oConf;
-    public Configuration mess;
+    public Config mess;
     //    public Configuration oMess;
-    public Configuration discordBot;
-    public Configuration commands;
+    public Config discordBot;
+    public Config commands;
 
     public static String language = "";
 
@@ -89,7 +91,7 @@ public class ConfigHandler {
         commands = loadCommands();
     }
 
-    public Configuration loadConf(){
+    public Config loadConf(){
         if (! cfile.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(cstring)){
                 Files.copy(in, cfile.toPath());
@@ -98,15 +100,7 @@ public class ConfigHandler {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(cfile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
+        return LightningBuilder.fromFile(cfile).createConfig();
     }
 
     public static TreeSet<String> acceptableTranslations() {
@@ -118,7 +112,7 @@ public class ConfigHandler {
         return trans;
     }
 
-    public Configuration loadLocales(String language) {
+    public Config loadLocales(String language) {
         if (! translationPath.exists()) if (! translationPath.mkdirs()) MessagingUtils.logSevere("COULD NOT MAKE TRANSLATION FOLDER(S)!");
 
         if (! en_USFile.exists()) {
@@ -137,17 +131,10 @@ public class ConfigHandler {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(mfile(language));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return thing;
+        return LightningBuilder.fromFile(mfile(language)).createConfig();
     }
 
-    public Configuration loadDiscordBot(){
+    public Config loadDiscordBot(){
         if (! disbotFile.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(disbotString)){
                 Files.copy(in, disbotFile.toPath());
@@ -156,18 +143,10 @@ public class ConfigHandler {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(disbotFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
+        return LightningBuilder.fromFile(disbotFile).createConfig();
     }
 
-    public Configuration loadCommands(){
+    public Config loadCommands(){
         if (! commandFile.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(commandString)){
                 Files.copy(in, commandFile.toPath());
@@ -176,15 +155,7 @@ public class ConfigHandler {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(commandFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
+        return LightningBuilder.fromFile(commandFile).createConfig();
     }
 
     /*
@@ -194,38 +165,6 @@ public class ConfigHandler {
        \  /      \  /      \  /      \  /      \  /      \  /      \  /      \  /      \  /      \  /      \  /      \  /      \  /      \  /      \  /      \  /
         \/        \/        \/        \/        \/        \/        \/        \/        \/        \/        \/        \/        \/        \/        \/        \/
      */
-
-    public void saveConf(){
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(conf, cfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveLocales(){
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(mess, mfile(ConfigHandler.language));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveDiscordBot(){
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(discordBot, disbotFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveCommands(){
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(commands, commandFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public String getConfString(String path) {
         reloadConfig();
@@ -249,12 +188,12 @@ public class ConfigHandler {
 
     public List<Integer> getConfIntegerList(String path) {
         reloadConfig();
-        return conf.getIntList(path);
+        return conf.getIntegerList(path);
     }
 
-    public Configuration getConfSection(String path) {
+    public ConfigSection getConfSection(String path) {
         reloadConfig();
-        return conf.getSection(path);
+        return new ConfigSection(conf.getSection(path));
     }
 
     public Object getObjectConf(String path){
@@ -264,13 +203,12 @@ public class ConfigHandler {
 
     public void setObjectConf(String path, Object thing){
         conf.set(path, thing);
-        saveConf();
         reloadConfig();
     }
 
     public Collection<String> getConfKeys() {
         reloadConfig();
-        return conf.getKeys();
+        return conf.singleLayerKeySet();
     }
 
     public String getMessString(String path) {
@@ -295,12 +233,12 @@ public class ConfigHandler {
 
     public List<Integer> getMessIntegerList(String path) {
         reloadLocales();
-        return conf.getIntList(path);
+        return conf.getIntegerList(path);
     }
 
-    public Configuration getMessSection(String path) {
+    public ConfigSection getMessSection(String path) {
         reloadLocales();
-        return mess.getSection(path);
+        return new ConfigSection( mess.getSection(path));
     }
 
     public Object getObjectMess(String path){
@@ -310,13 +248,12 @@ public class ConfigHandler {
 
     public void setObjectMess(String path, Object thing){
         mess.set(path, thing);
-        saveLocales();
         reloadLocales();
     }
 
     public Collection<String> getMessKeys() {
         reloadLocales();
-        return mess.getKeys();
+        return mess.singleLayerKeySet();
     }
 
     public String getDisBotString(String path) {
@@ -346,12 +283,12 @@ public class ConfigHandler {
 
     public List<Integer> getDisBotIntegerList(String path) {
         reloadDiscordBot();
-        return discordBot.getIntList(path);
+        return discordBot.getIntegerList(path);
     }
 
-    public Configuration getDisBotSection(String path) {
+    public ConfigSection getDisBotSection(String path) {
         reloadDiscordBot();
-        return discordBot.getSection(path);
+        return new ConfigSection(discordBot.getSection(path));
     }
 
     public Object getObjectDisBot(String path){
@@ -361,13 +298,12 @@ public class ConfigHandler {
 
     public void setObjectDisBot(String path, Object thing){
         discordBot.set(path, thing);
-        saveDiscordBot();
         reloadDiscordBot();
     }
 
     public Collection<String> getDisBotKeys() {
         reloadDiscordBot();
-        return discordBot.getKeys();
+        return discordBot.singleLayerKeySet();
     }
 
     public String getCommandString(String path) {
@@ -392,12 +328,12 @@ public class ConfigHandler {
 
     public List<Integer> getCommandIntegerList(String path) {
         reloadCommands();
-        return commands.getIntList(path);
+        return commands.getIntegerList(path);
     }
 
-    public Configuration getCommandSection(String path) {
+    public ConfigSection getCommandSection(String path) {
         reloadCommands();
-        return commands.getSection(path);
+        return new ConfigSection(commands.getSection(path));
     }
 
     public Object getObjectCommand(String path){
@@ -407,12 +343,11 @@ public class ConfigHandler {
 
     public void setObjectCommand(String path, Object thing){
         commands.set(path, thing);
-        saveCommands();
         reloadCommands();
     }
 
     public Collection<String> getCommandKeys() {
         reloadCommands();
-        return commands.getKeys();
+        return commands.singleLayerKeySet();
     }
 }

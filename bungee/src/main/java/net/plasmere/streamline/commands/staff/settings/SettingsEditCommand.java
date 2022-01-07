@@ -54,7 +54,9 @@ public class SettingsEditCommand extends SLCommand {
                             at = Integer.parseInt(args[2]);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                             return;
                         }
 
@@ -72,7 +74,9 @@ public class SettingsEditCommand extends SLCommand {
                             time = Integer.parseInt(motdtime);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                             return;
                         }
 
@@ -98,7 +102,9 @@ public class SettingsEditCommand extends SLCommand {
                             atS = Integer.parseInt(args[2]);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                             return;
                         }
 
@@ -161,7 +167,9 @@ public class SettingsEditCommand extends SLCommand {
 //                            atChat = Integer.parseInt(args[2]);
 //                        } catch (Exception e) {
 //                            e.printStackTrace();
-//                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+//                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+//                            .replace("%class%", this.getClass().getName())
+//                    );
 //                            return;
 //                        }
 //
@@ -181,7 +189,9 @@ public class SettingsEditCommand extends SLCommand {
 //                            atCh = Integer.parseInt(args[2]);
 //                        } catch (Exception e) {
 //                            e.printStackTrace();
-//                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+//                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+//                            .replace("%class%", this.getClass().getName())
+//                    );
 //                            return;
 //                        }
 //
@@ -252,7 +262,9 @@ public class SettingsEditCommand extends SLCommand {
                             enabledM = Boolean.parseBoolean(enabledMM);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                             return;
                         }
 
@@ -343,7 +355,9 @@ public class SettingsEditCommand extends SLCommand {
             atChat = Integer.parseInt(args[2]);
         } catch (Exception e) {
             e.printStackTrace();
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
             return -10000000;
         }
 
@@ -453,12 +467,12 @@ public class SettingsEditCommand extends SLCommand {
             if (args[1].equals("motd") || args[1].equals("sample")) {
                 List<String> keys = new ArrayList<>();
 
-                for (Integer key : StreamLine.serverConfig.getComparedMOTD().keySet()) {
+                for (Integer key : StreamLine.serverConfig.getComparedMOTD().singleLayerKeySet()) {
                     if (keys.contains(String.valueOf(key))) continue;
                     keys.add(String.valueOf(key));
                 }
 
-                for (Integer key : StreamLine.serverConfig.getComparedSample().keySet()) {
+                for (Integer key : StreamLine.serverConfig.getComparedSample().singleLayerKeySet()) {
                     if (keys.contains(String.valueOf(key))) continue;
                     keys.add(String.valueOf(key));
                 }

@@ -27,10 +27,12 @@ public class IgnoreCommand extends SLCommand {
         SavableUser stat = PlayerUtils.getOrGetSavableUser(sender.getName());
 
         if (stat == null) {
-            stat = PlayerUtils.getOrCreateSavableUser(sender);
+            stat = PlayerUtils.getOrGetSavableUser(sender);
             if (stat == null) {
                 MessagingUtils.logSevere("CANNOT INSTANTIATE THE PLAYER: " + sender.getName());
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 return;
             }
         }
@@ -49,10 +51,12 @@ public class IgnoreCommand extends SLCommand {
             SavableUser other;
 
             if (args[1].equals("%")) {
-                other = PlayerUtils.getOrCreateSUByUUID("%");
+                other = PlayerUtils.getOrGetSavableUser("%");
             } else {
                 if (! PlayerUtils.exists(args[1])) {
-                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);
+                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName())
+                            .replace("%class%", this.getClass().getName())
+                    );
                     return;
                 }
 
@@ -120,7 +124,7 @@ public class IgnoreCommand extends SLCommand {
         List<String> strPlayers = new ArrayList<>();
         List<String> ignored = new ArrayList<>();
 
-        SavableUser player = PlayerUtils.getOrCreateSavableUser(sender);
+        SavableUser player = PlayerUtils.getOrGetSavableUser(sender);
 
         if (player == null) return new ArrayList<>();
 

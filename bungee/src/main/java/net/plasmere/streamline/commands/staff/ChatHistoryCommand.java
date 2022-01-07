@@ -40,7 +40,9 @@ public class ChatHistoryCommand extends SLCommand {
             try {
                 view = Integer.parseInt(args[3]);
             } catch (Exception e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 return;
             }
         }
@@ -61,7 +63,7 @@ public class ChatHistoryCommand extends SLCommand {
         StringBuilder builder = new StringBuilder();
 
         int i = 0;
-        for (Long l : map.keySet()) {
+        for (Long l : map.singleLayerKeySet()) {
             if (i >= view) break;
 
 //            if (i == 0) {

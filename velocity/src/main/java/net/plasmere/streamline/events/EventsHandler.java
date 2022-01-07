@@ -5,8 +5,8 @@ import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.events.enums.Condition;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -84,16 +84,16 @@ public class EventsHandler {
                     player.addPoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case TAKE_POINTS:
-                    player.remPoints(Integer.parseInt(event.actions.get(i).value));
+                    player.removePoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case SET_POINTS:
                     player.setPoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case ADD_TAG:
-                    player.tryAddNewTag(event.actions.get(i).value);
+                    player.addTag(event.actions.get(i).value);
                     continue;
                 case REM_TAG:
-                    player.tryRemTag(event.actions.get(i).value);
+                    player.removeTag(event.actions.get(i).value);
                     continue;
                 case SEND_MESSAGE_TO_FRIENDS:
                     for (String uuid : player.friendList){
@@ -106,7 +106,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_PARTY_MEMBERS:
-                    SavableParty party = PartyUtils.getParty(player);
+                    SavableParty party = PartyUtils.getOrGetParty(player);
                     if (party == null) continue;
 
                     for (SavableUser user : party.totalMembers) {
@@ -116,7 +116,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_GUILD_MEMBERS:
-                    SavableGuild guild = GuildUtils.getGuild(player);
+                    SavableGuild guild = GuildUtils.getOrGetGuild(player);
                     if (guild == null) continue;
 
                     for (SavableUser user : guild.totalMembers) {
@@ -196,16 +196,16 @@ public class EventsHandler {
                     player.addPoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case TAKE_POINTS:
-                    player.remPoints(Integer.parseInt(event.actions.get(i).value));
+                    player.removePoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case SET_POINTS:
                     player.setPoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case ADD_TAG:
-                    player.tryAddNewTag(event.actions.get(i).value);
+                    player.addTag(event.actions.get(i).value);
                     continue;
                 case REM_TAG:
-                    player.tryRemTag(event.actions.get(i).value);
+                    player.removeTag(event.actions.get(i).value);
                     continue;
                 case SEND_MESSAGE_TO_FRIENDS:
                     for (String uuid : player.friendList){
@@ -218,7 +218,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_PARTY_MEMBERS:
-                    SavableParty party = PartyUtils.getParty(player);
+                    SavableParty party = PartyUtils.getOrGetParty(player);
                     if (party == null) continue;
 
                     for (SavableUser person : party.totalMembers) {
@@ -228,7 +228,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_GUILD_MEMBERS:
-                    SavableGuild guild = GuildUtils.getGuild(player);
+                    SavableGuild guild = GuildUtils.getOrGetGuild(player);
                     if (guild == null) continue;
 
                     for (SavableUser person : guild.totalMembers) {

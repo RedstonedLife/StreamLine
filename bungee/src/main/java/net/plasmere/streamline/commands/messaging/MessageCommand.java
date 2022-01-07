@@ -31,7 +31,9 @@ public class MessageCommand extends SLCommand {
         SavableUser stat = PlayerUtils.getOrGetSavableUser(thing);
 
         if (stat == null) {
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou());
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
+                            .replace("%class%", this.getClass().getName())
+                    );
             return;
         }
 
@@ -44,7 +46,9 @@ public class MessageCommand extends SLCommand {
                 statTo = PlayerUtils.getSavableUserByUUID("%");
             } else {
                 if (! PlayerUtils.exists(args[0])) {
-                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);
+                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName())
+                            .replace("%class%", this.getClass().getName())
+                    );
                     return;
                 }
 
@@ -69,7 +73,7 @@ public class MessageCommand extends SLCommand {
 
         if (sender instanceof ProxiedPlayer) {
             ProxiedPlayer p = (ProxiedPlayer) sender;
-            SavablePlayer player = PlayerUtils.getOrCreatePlayerStatByUUID(p.getUniqueId().toString());
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStatByUUID(p.getUniqueId().toString());
             for (String uuid : player.ignoredList) {
                 ignored.add(UUIDUtils.getCachedName(uuid));
             }

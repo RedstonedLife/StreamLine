@@ -40,7 +40,9 @@ public class ChatHistoryCommand extends SLCommand {
             try {
                 view = Integer.parseInt(args[3]);
             } catch (Exception e) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 return;
             }
         }

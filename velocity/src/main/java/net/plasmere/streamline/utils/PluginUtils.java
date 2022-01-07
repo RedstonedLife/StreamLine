@@ -8,6 +8,8 @@ import net.plasmere.streamline.commands.debug.ObjectEditCommand;
 import net.plasmere.streamline.commands.messaging.*;
 import net.plasmere.streamline.commands.servers.GoToServerLobbyCommand;
 import net.plasmere.streamline.commands.servers.GoToServerVanillaCommand;
+import net.plasmere.streamline.commands.sql.MSBExecuteCommand;
+import net.plasmere.streamline.commands.sql.MSBQueryCommand;
 import net.plasmere.streamline.commands.staff.*;
 import net.plasmere.streamline.commands.staff.events.BTagCommand;
 import net.plasmere.streamline.commands.staff.events.EventReloadCommand;
@@ -99,6 +101,15 @@ public class PluginUtils {
         }
         if (CommandsConfUtils.comBVotes() && ConfigUtils.moduleBRanksEnabled()) {
             registerCommand(new VotesCommand(CommandsConfUtils.comBVotesBase(), CommandsConfUtils.comBVotesPerm(), stringListToArray(CommandsConfUtils.comBVotesAliases())));
+        }
+        if (CommandsConfUtils.comBMSBExecute() && ConfigUtils.mysqlbridgerEnabled()) {
+            registerCommand(new MSBExecuteCommand(CommandsConfUtils.comBMSBExecuteBase(), CommandsConfUtils.comBMSBExecutePerm(), stringListToArray(CommandsConfUtils.comBMSBExecuteAliases())));
+        }
+        if (CommandsConfUtils.comBMSBQuery() && ConfigUtils.mysqlbridgerEnabled()) {
+            registerCommand(new MSBQueryCommand(CommandsConfUtils.comBMSBQueryBase(), CommandsConfUtils.comBMSBQueryPerm(), stringListToArray(CommandsConfUtils.comBMSBQueryAliases())));
+        }
+        if (CommandsConfUtils.comBPlayTime()) {
+            registerCommand(new PlayTimeCommand(CommandsConfUtils.comBPlayTimeBase(), CommandsConfUtils.comBPlayTimePerm(), stringListToArray(CommandsConfUtils.comBPlayTimeAliases())));
         }
         if (CommandsConfUtils.comBTeleport()) {
             registerCommand(new TeleportCommand(CommandsConfUtils.comBTeleportBase(), CommandsConfUtils.comBTeleportPerm(), stringListToArray(CommandsConfUtils.comBTeleportAliases())));

@@ -26,7 +26,9 @@ public class ReplyCommand extends SLCommand {
         SavableUser stat = PlayerUtils.getOrGetSavableUser(thing);
 
         if (stat == null) {
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou());
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
+                            .replace("%class%", this.getClass().getName())
+                    );
             return;
         }
 

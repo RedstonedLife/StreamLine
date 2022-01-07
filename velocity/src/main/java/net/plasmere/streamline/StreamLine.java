@@ -33,10 +33,12 @@ import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.EventsReader;
 import net.plasmere.streamline.libs.Metrics;
 import net.plasmere.streamline.listeners.LPListener;
-import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.configs.obj.MSBConfig;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.configs.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.timers.*;
 import net.plasmere.streamline.scripts.ScriptsHandler;
@@ -45,6 +47,7 @@ import net.plasmere.streamline.utils.holders.GeyserHolder;
 import net.plasmere.streamline.utils.holders.LPHolder;
 import net.plasmere.streamline.utils.holders.ViaHolder;
 import net.plasmere.streamline.utils.holders.VoteHolder;
+import net.plasmere.streamline.utils.sql.DataSource;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -53,11 +56,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -93,9 +96,13 @@ public class StreamLine {
 	public static OfflineStats offlineStats;
 	public static ChatConfig chatConfig;
 	public static Votes votes;
+	public static PlayTimeConf playTimeConf;
 	public static RanksConfig ranksConfig;
 	public static ChatFilters chatFilters;
 	public static DatabaseInfo databaseInfo;
+
+	public static MSBConfig msbConfig;
+	public static TreeMap<String, String> holders = new TreeMap<>();
 
 	public final static String customChannel = "streamline:channel";
 	public final static String[] identifer = customChannel.split(":", 2);
@@ -122,6 +129,7 @@ public class StreamLine {
 	public ScheduledTask playtime;
 	public ScheduledTask oneSecTimer;
 	public ScheduledTask motdUpdater;
+	public ScheduledTask groupsDatabaseSyncer;
 
 	private String currentMOTD;
 	private int motdPage;
@@ -174,14 +182,14 @@ public class StreamLine {
 			);
 			jda = jdaBuilder.build().awaitReady();
 		} catch (Exception e) {
-			getLogger().warn("An unknown error occurred building JDA...");
+			MessagingUtils.logWarning("An unknown error occurred building JDA...");
 			return;
 		}
 
 		if (jda.getStatus() == JDA.Status.CONNECTED) {
 			isReady = true;
 
-			getLogger().info("JDA status is connected...");
+			MessagingUtils.logInfo("JDA status is connected...");
 		}
 	}
 
@@ -264,6 +272,7 @@ public class StreamLine {
 			playtime = server.getScheduler().buildTask(this, new PlaytimeTimer(1)).repeat(1, TimeUnit.SECONDS).schedule();
 			oneSecTimer = server.getScheduler().buildTask(this, new OneSecondTimer()).repeat(1, TimeUnit.SECONDS).schedule();
 			motdUpdater = server.getScheduler().buildTask(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime())).repeat(1, TimeUnit.SECONDS).schedule();
+			groupsDatabaseSyncer = server.getScheduler().buildTask(this, new GroupDatabaseSyncTimer(60)).repeat(1, TimeUnit.SECONDS).schedule();
 
 			// DO NOT FORGET TO UPDATE AMOUNT BELOW! :/
 			getLogger().info("Loaded 7 runnable(s) into memory...!");
@@ -447,6 +456,8 @@ public class StreamLine {
 			votes = new Votes();
 		}
 
+		playTimeConf = new PlayTimeConf();
+
 		if (ConfigUtils.moduleBChatFiltersEnabled()) {
 			if (ConfigUtils.scriptsEnabled()) {
 				chatFilters = new ChatFilters();
@@ -457,6 +468,11 @@ public class StreamLine {
 
 		if (ConfigUtils.moduleDBUse()) {
 			databaseInfo = new DatabaseInfo();
+			DataSource.verifyTables();
+		}
+
+		if (ConfigUtils.mysqlbridgerEnabled()) {
+			msbConfig = new MSBConfig();
 		}
 
 		if (ConfigUtils.moduleDEnabled()) {
@@ -512,6 +528,8 @@ public class StreamLine {
 		PluginUtils.state = NetworkState.STARTING;
 
 		instance = this;
+		// Teller.
+		getLogger().info("Loading version [v" + getVersion() + "]...");
 
 		// LP Support.
 		lpHolder = new LPHolder();
@@ -523,9 +541,6 @@ public class StreamLine {
 		geyserHolder = new GeyserHolder();
 
 		getProxy().getChannelRegistrar().register(customIdentifier);
-
-		// Teller.
-		getLogger().info("Loading version [v" + getVersion() + "]...");
 
 		// Configs...
 		loadConfigs();
@@ -586,13 +601,8 @@ public class StreamLine {
 
 		// Set up SavableConsole.
 		SavableConsole console = PlayerUtils.applyConsole();
-		if (GuildUtils.existsByUUID(console.guild)) {
-			try {
-				GuildUtils.addGuild(new SavableGuild(console.guild, false));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		SavableGuild guild = GuildUtils.addGuildIfNotAlreadyLoaded(console);
+		SavableParty party = PartyUtils.addPartyIfNotAlreadyLoaded(console);
 
 		// Setting up SavablePlayer's HistorySave files.
 		if (ConfigUtils.chatHistoryEnabled()) {
@@ -662,16 +672,16 @@ public class StreamLine {
 			PlayerUtils.kickAll(MessageConfUtils.kicksStopping());
 		}
 
-		if (ConfigUtils.onCloseMain()) {
-			config.saveConf();
-			config.saveLocales();
-			config.saveDiscordBot();
-			config.saveCommands();
-		}
-
-		if (ConfigUtils.onCloseSettings()) {
-			serverConfig.saveConfig();
-		}
+//		if (ConfigUtils.onCloseMain()) {
+//			config.saveConf();
+//			config.saveLocales();
+//			config.saveDiscordBot();
+//			config.saveCommands();
+//		}
+//
+//		if (ConfigUtils.onCloseSettings()) {
+//			serverConfig.saveConfig();
+//		}
 
 		guilds.cancel();
 		players.cancel();
@@ -680,6 +690,7 @@ public class StreamLine {
 		saveCachedPlayers.cancel();
 		oneSecTimer.cancel();
 		motdUpdater.cancel();
+		groupsDatabaseSyncer.cancel();
 
 		try {
 			if (ConfigUtils.moduleDEnabled()) {
@@ -718,20 +729,25 @@ public class StreamLine {
 		}
 
 		saveGuilds();
+		saveParties();
 
 		PluginUtils.state = NetworkState.STOPPED;
 	}
 
 	public void saveGuilds(){
 		for (SavableGuild guild : GuildUtils.getGuilds()){
-			try {
-				guild.saveInfo();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			guild.saveAll();
 		}
 
 		getLogger().info("Saved " + GuildUtils.getGuilds().size() + " Guilds!");
+	}
+
+	public void saveParties(){
+		for (SavableParty party : PartyUtils.getParties()){
+			party.saveAll();
+		}
+
+		getLogger().info("Saved " + PartyUtils.getParties().size() + " Parties!");
 	}
 
 	public static StreamLine getInstance() { return instance; }

@@ -58,7 +58,7 @@ public class GeyserFile {
     public File getFile() { return file; }
 
     public boolean hasProperty(String property) {
-        for (String info : info.keySet()) {
+        for (String info : info.singleLayerKeySet()) {
             if (info.equals(property)) return true;
         }
 
@@ -70,7 +70,7 @@ public class GeyserFile {
     }
 
     public String getUUID(String username){
-        for (String uuid : info.keySet()) {
+        for (String uuid : info.singleLayerKeySet()) {
             if (getName(uuid).equals(username)) return uuid;
         }
 
@@ -92,7 +92,7 @@ public class GeyserFile {
     public TreeSet<String> getInfoAsPropertyList() {
         TreeSet<String> thing = new TreeSet<>();
 
-        for (String uuid : info.keySet()) {
+        for (String uuid : info.singleLayerKeySet()) {
             thing.add(uuid.toString() + "=" + getName(uuid));
         }
 
@@ -143,7 +143,7 @@ public class GeyserFile {
         StringBuilder stringBuilder = new StringBuilder("[");
 
         int i = 1;
-        for (String uuid : info.keySet()){
+        for (String uuid : info.singleLayerKeySet()){
             stringBuilder.append(uuid).append("=").append(getName(uuid));
             if (i < info.size()) {
                 stringBuilder.append(",");

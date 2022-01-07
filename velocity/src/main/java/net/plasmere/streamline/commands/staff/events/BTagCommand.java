@@ -26,7 +26,7 @@ public class BTagCommand extends SLCommand {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else {
             if (! PlayerUtils.exists(args[0])) {
-                MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);
+                MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
                 return;
             }
 

@@ -5,8 +5,8 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.GuildUtils;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -209,14 +209,14 @@ public class ChatsHandler {
             case "guild":
                 if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
                     for (SavableGuild guild : GuildUtils.getGuilds()) {
-                        thing.add(guild.leaderUUID);
+                        thing.add(guild.uuid);
                     }
                 }
                 break;
             case "party":
                 if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
                     for (SavableParty party : PartyUtils.getParties()) {
-                        thing.add(party.leaderUUID);
+                        thing.add(party.uuid);
                     }
                 }
                 break;
@@ -252,14 +252,14 @@ public class ChatsHandler {
                 case "guild":
                     if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
                         for (SavableGuild guild : GuildUtils.getGuilds()) {
-                            thing.add(guild.leaderUUID);
+                            thing.add(guild.uuid);
                         }
                     }
                     break;
                 case "party":
                     if (user.hasPermission(StreamLine.chatConfig.getDefaultPerm(chatChannel))) {
                         for (SavableParty party : PartyUtils.getParties()) {
-                            thing.add(party.leaderUUID);
+                            thing.add(party.uuid);
                         }
                     }
                     break;

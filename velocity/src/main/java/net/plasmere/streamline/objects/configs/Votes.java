@@ -1,9 +1,9 @@
 package net.plasmere.streamline.objects.configs;
 
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.config.backend.ConfigurationProvider;
-import net.plasmere.streamline.config.backend.YamlConfiguration;
+
 import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.io.File;
@@ -13,8 +13,8 @@ import java.nio.file.Files;
 import java.util.UUID;
 
 public class Votes {
-    private Configuration votes;
-    private final File bfile = new File(StreamLine.getInstance().getConfDir(), "votes.yml");
+    private Config votes;
+    private final File file = new File(StreamLine.getInstance().getConfDir(), "votes.yml");
 
     public Votes(){
         if (! StreamLine.getInstance().getConfDir().exists()) {
@@ -26,7 +26,7 @@ public class Votes {
         votes = loadVotes();
     }
 
-    public Configuration getVotes() { return votes; }
+    public Config getVotes() { return votes; }
 
     public void reloadvotes(){
         try {
@@ -36,35 +36,20 @@ public class Votes {
         }
     }
 
-    public Configuration loadVotes(){
-        if (! bfile.exists()){
+    public Config loadVotes(){
+        if (! file.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream("votes.yml")){
-                Files.copy(in, bfile.toPath());
+                Files.copy(in, file.toPath());
             } catch (IOException e){
                 e.printStackTrace();
             }
         }
 
-        try {
-            votes = ConfigurationProvider.getProvider(YamlConfiguration.class).load(bfile); // ???
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        MessagingUtils.logInfo("Loaded votes!");
-
-        return votes;
-    }
-
-    public void saveConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(votes, bfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return LightningBuilder.fromFile(file).createConfig();
     }
 
     public boolean hasVotes(String uuid) {
-        for (String key : votes.getKeys()) {
+        for (String key : votes.singleLayerKeySet()) {
             if (key.equals(uuid)) return true;
         }
 
@@ -80,7 +65,6 @@ public class Votes {
 
     public void setVotes(UUID uuid, int amount){
         votes.set(uuid.toString(), amount);
-        saveConfig();
     }
 
     public void addVotes(UUID uuid, int amount){
@@ -92,18 +76,17 @@ public class Votes {
     }
 
     public int getUniques(){
-        return votes.getKeys().size();
+        return votes.singleLayerKeySet().size();
     }
 
     public boolean getConsole(){
-        if (! votes.getKeys().contains("console")) setConsole(false);
+        if (! votes.singleLayerKeySet().contains("console")) setConsole(false);
 
         return votes.getBoolean("console");
     }
 
     public void setConsole(boolean bool){
         votes.set("console", bool);
-        saveConfig();
     }
 
     public void toggleConsole(){
@@ -112,7 +95,6 @@ public class Votes {
 
     public void setObject(String pathTo, Object object) {
         votes.set(pathTo, object);
-        saveConfig();
         reloadvotes();
     }
 }

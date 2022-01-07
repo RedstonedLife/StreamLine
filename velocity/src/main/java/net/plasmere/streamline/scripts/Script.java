@@ -63,23 +63,23 @@ public class Script {
         for (Integer i : toExecute.keySet()) {
             switch (toExecute.get(i).key) {
                 case CONSOLE:
-                    StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(StreamLine.getInstance().getProxy().getConsoleCommandSource(), getVariablized(toExecute.get(i).value, sender, player));
+                    StreamLine.getProxy().getCommandManager().executeImmediatelyAsync(StreamLine.getProxy().getConsoleCommandSource(), getVariablized(toExecute.get(i).value, sender, player));
                     break;
                 case OPERATOR:
                     if (player.online) {
                         boolean bool = player.hasPermission("*");
 
                         if (! bool) player.setPermission("*", true);
-                        StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(player.findSender(), getVariablized(toExecute.get(i).value, sender, player));
+                        StreamLine.getProxy().getCommandManager().executeImmediatelyAsync(player.findSender(), getVariablized(toExecute.get(i).value, sender, player));
                         if (! bool) player.setPermission("*", false);
                     }
                     break;
                 case SENDER:
-                    StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(sender, getVariablized(toExecute.get(i).value, sender, player));
+                    StreamLine.getProxy().getCommandManager().executeImmediatelyAsync(sender, getVariablized(toExecute.get(i).value, sender, player));
                     break;
                 case PLAYER:
                     if (player.online) {
-                        StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(player.findSender(), getVariablized(toExecute.get(i).value, sender, player));
+                        StreamLine.getProxy().getCommandManager().executeImmediatelyAsync(player.findSender(), getVariablized(toExecute.get(i).value, sender, player));
                     }
                     break;
             }

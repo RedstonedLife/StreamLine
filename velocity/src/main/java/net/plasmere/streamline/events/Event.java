@@ -1,12 +1,14 @@
 package net.plasmere.streamline.events;
 
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
+import de.leonhard.storage.sections.FlatFileSection;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.config.backend.ConfigurationProvider;
-import net.plasmere.streamline.config.backend.YamlConfiguration;
+
 import net.plasmere.streamline.events.enums.Action;
 import net.plasmere.streamline.events.enums.Condition;
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.utils.MessagingUtils;
 
@@ -17,7 +19,7 @@ import java.util.TreeMap;
 public class Event {
     public File path = StreamLine.getInstance().getEDir();
 
-    public Configuration configuration;
+    public Config configuration;
     public List<String> tags;
     public TreeMap<Integer, SingleSet<Condition, String>> conditions = new TreeMap<>();
     public TreeMap<Integer, SingleSet<Action, String>> actions = new TreeMap<>();
@@ -26,7 +28,7 @@ public class Event {
 
     public Event(File file){
         try {
-            configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(path, file.getName()));
+            configuration = LightningBuilder.fromFile(file).createConfig();
 
             tags = configuration.getStringList("tags");
 
@@ -42,7 +44,7 @@ public class Event {
     public TreeMap<Integer, SingleSet<Condition, String>> compileCond() {
         TreeMap<Integer, SingleSet<Condition, String>> c = new TreeMap<>();
 
-        Configuration conditionsConf = configuration.getSection("conditions");
+        ConfigSection conditionsConf = new ConfigSection(configuration.getSection("conditions"));
         int i = 1;
 
         if (ConfigUtils.debug()) {
@@ -51,12 +53,12 @@ public class Event {
 
         for (String string : conditionsConf.getKeys()) {
             try {
-                Configuration cond = conditionsConf.getSection(string);
+                ConfigSection cond = new ConfigSection(configuration.getSection(conditionsConf.s.getPathPrefix() + string));
 
                 c.put(i,
                         new SingleSet<>(
-                                Condition.fromString(cond.getString("type")),
-                                cond.getString("value")
+                                Condition.fromString(cond.s.getString("type")),
+                                cond.s.getString("value")
                         )
                 );
             } catch (Exception e) {
@@ -82,17 +84,17 @@ public class Event {
     public TreeMap<Integer, SingleSet<Action, String>> compileAction() {
         TreeMap<Integer, SingleSet<Action, String>> a = new TreeMap<>();
 
-        Configuration actionsConf = configuration.getSection("actions");
+        ConfigSection actionsConf = new ConfigSection(configuration.getSection("actions"));
         int i = 1;
 
         for (String string : actionsConf.getKeys()) {
             try {
-                Configuration act = actionsConf.getSection(string);
+                ConfigSection act = new ConfigSection(configuration.getSection(actionsConf.s.getPathPrefix() + string));
 
                 a.put(i,
                         new SingleSet<>(
-                                Action.fromString(act.getString("type")),
-                                act.getString("value")
+                                Action.fromString(act.s.getString("type")),
+                                act.s.getString("value")
                         )
                 );
             } catch (Exception e) {

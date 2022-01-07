@@ -1,10 +1,10 @@
 package net.plasmere.streamline.objects.configs;
 
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.config.backend.ConfigurationProvider;
-import net.plasmere.streamline.config.backend.YamlConfiguration;
+
 import net.plasmere.streamline.objects.DataChannel;
 import net.plasmere.streamline.objects.filters.ChatFilter;
 import net.plasmere.streamline.objects.filters.FilterHandler;
@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.util.TreeMap;
 
 public class ChatFilters {
-    private Configuration conf;
+    private Config conf;
     private final String fileString = "chat-filters.yml";
     private final File file = new File(StreamLine.getInstance().getConfDir(), fileString);
     public TreeMap<Long, DataChannel> loadedChannels = new TreeMap<>();
@@ -38,7 +38,7 @@ public class ChatFilters {
         MessagingUtils.logInfo("Loaded chat filters!");
     }
 
-    public Configuration getConf() {
+    public Config getConf() {
         reloadConfig();
         return conf;
     }
@@ -51,7 +51,7 @@ public class ChatFilters {
         }
     }
 
-    public Configuration loadConfig(){
+    public Config loadConfig(){
         if (! file.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(fileString)){
                 Files.copy(in, file.toPath());
@@ -60,31 +60,13 @@ public class ChatFilters {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file); // ???
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public void saveConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(conf, file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return LightningBuilder.fromFile(file).createConfig();
     }
 
     public void saveFilter(ChatFilter filter) {
         conf.set(filter.name + ".enabled", filter.enabled);
         conf.set(filter.name + ".regex", filter.regex);
         conf.set(filter.name + ".replace-with", filter.replacements);
-
-        saveConfig();
         reloadConfig();
     }
 

@@ -60,7 +60,7 @@ public class Script {
     public void execute(CommandSender sender, SavableUser player) {
         if (player == null) return;
 
-        for (Integer i : toExecute.keySet()) {
+        for (Integer i : toExecute.singleLayerKeySet()) {
             switch (toExecute.get(i).key) {
                 case CONSOLE:
                     StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(StreamLine.getInstance().getProxy().getConsole(), getVariablized(toExecute.get(i).value, sender, player));

@@ -27,7 +27,9 @@ public class NetworkPointsCommand extends SLCommand {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else {
             if (! PlayerUtils.exists(args[0])) {
-                MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);
+                MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName())
+                            .replace("%class%", this.getClass().getName())
+                    );
                 return;
             }
 
@@ -89,7 +91,9 @@ public class NetworkPointsCommand extends SLCommand {
                             );
                         }
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;
@@ -115,7 +119,9 @@ public class NetworkPointsCommand extends SLCommand {
                             );
                         }
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;
@@ -142,7 +148,9 @@ public class NetworkPointsCommand extends SLCommand {
                             );
                         }
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorInt());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         if (ConfigUtils.errSendToConsole()) e.printStackTrace();
                     }
                     break;

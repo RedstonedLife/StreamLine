@@ -10,6 +10,7 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.PluginUtils;
 import net.plasmere.streamline.utils.UUIDUtils;
+import net.plasmere.streamline.utils.sql.DataSource;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -45,7 +46,7 @@ public abstract class SavableUser {
     public String pendingFromFriends;
     public List<String> pendingFromFriendList;
     public String latestVersion;
-//    public String latestServer;
+    //    public String latestServer;
     public boolean online;
     public boolean sspy;
     public boolean gspy;
@@ -72,7 +73,7 @@ public abstract class SavableUser {
 
         preConstruct(fileName);
 
-        this.file = UUIDUtils.getCachedFile(StreamLine.getInstance().getPlDir(), fileName);
+        this.file = new File(StreamLine.getInstance().getPlDir(), uuid + ".properties");
 
         if (createNew) {
             try {
@@ -113,13 +114,17 @@ public abstract class SavableUser {
         if (this.uuid.equals("%")) {
             return ConfigUtils.consoleServer();
         } else {
-            ProxiedPlayer player = PlayerUtils.getPPlayerByUUID(this.uuid);
+            try {
+                ProxiedPlayer player = PlayerUtils.getPPlayerByUUID(this.uuid);
 
-            if (player == null) return MessageConfUtils.nullB();
+                if (player == null) return MessageConfUtils.nullB();
 
-            if (player.getServer() == null) return ConfigUtils.consoleServer();
+                if (player.getServer() == null) return ConfigUtils.consoleServer();
 
-            return player.getServer().getInfo().getName();
+                return player.getServer().getInfo().getName();
+            } catch (Exception e) {
+                return MessageConfUtils.nullB();
+            }
         }
     }
 
@@ -138,7 +143,7 @@ public abstract class SavableUser {
     }
 
 //    public int getInfoIntFor(String key) {
-//        for (Integer i : info.keySet()) {
+//        for (Integer i : info.singleLayerKeySet()) {
 //            if (info.get(i).key.equals(key)) return i;
 //        }
 //
@@ -167,7 +172,7 @@ public abstract class SavableUser {
     public TreeSet<String> getInfoAsPropertyList() {
         TreeSet<String> infoList = new TreeSet<>();
         List<String> keys = new ArrayList<>();
-        for (String key : info.keySet()){
+        for (String key : info.singleLayerKeySet()){
             if (keys.contains(key)) continue;
 
             infoList.add(key + "=" + getFromKey(key));
@@ -196,7 +201,7 @@ public abstract class SavableUser {
     }
 
 //    public boolean infoContainsKey(String key){
-//        for (Integer i : info.keySet()) {
+//        for (Integer i : info.singleLayerKeySet()) {
 //            if (info.get(i).key.equals(key)) return true;
 //        }
 //
@@ -227,10 +232,16 @@ public abstract class SavableUser {
                 while (data.startsWith("#")) {
                     data = reader.nextLine();
                 }
-                String[] dataSplit = data.split("=", 2);
-                if (keys.contains(dataSplit[0])) continue;
-                keys.add(dataSplit[0]);
-                addKeyValuePair(tryUpdateFormat(dataSplit[0]), dataSplit[1]);
+                try {
+                    String[] dataSplit = data.split("=", 2);
+                    if (keys.contains(dataSplit[0])) continue;
+                    keys.add(dataSplit[0]);
+                    addKeyValuePair(tryUpdateFormat(dataSplit[0]), dataSplit[1]);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    // do nothing.
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             reader.close();
@@ -402,6 +413,9 @@ public abstract class SavableUser {
 
         if (this.latestName == null) {
             try {
+                if (this.uuid == null) return;
+                if (this.uuid.equals("null")) return;
+
                 if (ConfigUtils.deleteBadStats()) {
                     this.dispose();
                 }
@@ -414,6 +428,9 @@ public abstract class SavableUser {
 
         if (this.latestName.equals("null")) {
             try {
+                if (this.uuid == null) return;
+                if (this.uuid.equals("null")) return;
+
                 if (ConfigUtils.deleteBadStats()) {
                     this.dispose();
                 }
@@ -440,7 +457,7 @@ public abstract class SavableUser {
     abstract TreeMap<String, String> addedUpdatableKeys();
 
     public String tryUpdateFormat(String from){
-        for (String key : updatableKeys().keySet()) {
+        for (String key : updatableKeys().singleLayerKeySet()) {
             if (! from.equals(key)) continue;
 
             return updatableKeys().get(key);
@@ -489,6 +506,12 @@ public abstract class SavableUser {
         this.ignoreds = stringifyList(ignoredList, ",");
 
         updateKey("ignored", this.ignoreds);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.ignorePlayer(this, other);
     }
 
     public void tryRemIgnored(String uuid){
@@ -501,6 +524,12 @@ public abstract class SavableUser {
         this.ignoreds = stringifyList(ignoredList, ",");
 
         updateKey("ignored", this.ignoreds);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.stopIgnoringPlayer(this, other);
     }
 
     public void tryAddNewFriend(String uuid){
@@ -516,6 +545,13 @@ public abstract class SavableUser {
         this.friends = stringifyList(friendList, ",");
 
         updateKey("friends", this.friends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.confirmFriendRequest(this, other, true);
+        DataSource.confirmFriendRequest(other, this, true);
     }
 
     public void tryRemFriend(String uuid){
@@ -528,6 +564,13 @@ public abstract class SavableUser {
         this.friends = stringifyList(friendList, ",");
 
         updateKey("friends", this.friends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.confirmFriendRequest(this, other, false);
+        DataSource.confirmFriendRequest(other, this, false);
     }
 
     public void tryAddNewPendingToFriend(String uuid){
@@ -540,6 +583,12 @@ public abstract class SavableUser {
         this.pendingToFriends = stringifyList(pendingToFriendList, ",");
 
         updateKey("pending-to-friends", this.pendingToFriends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.sendFriendRequest(this, other);
     }
 
     public void tryRemPendingToFriend(String uuid){
@@ -552,6 +601,12 @@ public abstract class SavableUser {
         this.pendingToFriends = stringifyList(pendingToFriendList, ",");
 
         updateKey("pending-to-friends", this.pendingToFriends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.confirmFriendRequest(other, this, false);
     }
 
     public void tryAddNewPendingFromFriend(String uuid){
@@ -564,6 +619,12 @@ public abstract class SavableUser {
         this.pendingFromFriends = stringifyList(pendingFromFriendList, ",");
 
         updateKey("pending-from-friends", this.pendingFromFriends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.sendFriendRequest(other, this);
     }
 
     public void tryRemPendingFromFriend(String uuid){
@@ -576,6 +637,12 @@ public abstract class SavableUser {
         this.pendingFromFriends = stringifyList(pendingFromFriendList, ",");
 
         updateKey("pending-from-friends", this.pendingFromFriends);
+
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+
+        if (other == null) return;
+
+        DataSource.confirmFriendRequest(this, other, false);
     }
 
     public List<String> loadTags(){

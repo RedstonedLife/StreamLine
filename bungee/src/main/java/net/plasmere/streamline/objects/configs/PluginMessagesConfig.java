@@ -165,14 +165,14 @@ public class PluginMessagesConfig {
     }
 
     public boolean hasChatPermission(SavableUser user, Chat chat, MessageServerType messageServerType) {
-        for (Integer integer : getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).keySet()) {
+        for (Integer integer : getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).singleLayerKeySet()) {
             if (user.hasPermission(getChatBasePerm() + integer)) return true;
         }
         return false;
     }
 
     public boolean hasChatPermission(ProxiedPlayer user, Chat chat, MessageServerType messageServerType) {
-        for (Integer integer : getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).keySet()) {
+        for (Integer integer : getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).singleLayerKeySet()) {
             if (user.hasPermission(getChatBasePerm() + integer)) return true;
         }
         return false;

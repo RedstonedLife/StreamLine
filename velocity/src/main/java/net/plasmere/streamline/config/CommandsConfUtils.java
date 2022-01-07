@@ -1110,6 +1110,57 @@ public class CommandsConfUtils {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.configs.votes.permission");
     }
+    // PlayTime.
+    public static boolean comBPlayTime() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.configs.playtime.enabled");
+    }
+    public static String comBPlayTimeBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.configs.playtime.base");
+    }
+    public static List<String> comBPlayTimeAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.configs.playtime.aliases");
+    }
+    public static String comBPlayTimePerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.configs.playtime.permission");
+    }
+    // MSBExecute.
+    public static boolean comBMSBExecute() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.configs.msbexecute.enabled");
+    }
+    public static String comBMSBExecuteBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.configs.msbexecute.base");
+    }
+    public static List<String> comBMSBExecuteAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.configs.msbexecute.aliases");
+    }
+    public static String comBMSBExecutePerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.configs.msbexecute.permission");
+    }
+    // MSBQuery.
+    public static boolean comBMSBQuery() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.configs.msbquery.enabled");
+    }
+    public static String comBMSBQueryBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.configs.msbquery.base");
+    }
+    public static List<String> comBMSBQueryAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.configs.msbquery.aliases");
+    }
+    public static String comBMSBQueryPerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.configs.msbquery.permission");
+    }
     // ... Messaging.
     // Ignore.
     public static boolean comBIgnore() {

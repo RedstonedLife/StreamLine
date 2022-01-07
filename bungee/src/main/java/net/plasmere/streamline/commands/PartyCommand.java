@@ -27,7 +27,9 @@ public class PartyCommand extends SLCommand {
             SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
 
             if (player == null) {
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                        .replace("%class%", this.getClass().getName())
+                );
                 return;
             }
 
@@ -36,7 +38,9 @@ public class PartyCommand extends SLCommand {
                 try {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParJoinAliases())) {
@@ -49,14 +53,18 @@ public class PartyCommand extends SLCommand {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                                .replace("%class%", this.getClass().getName())
+                        );
                         e.printStackTrace();
                     }
                 } else {
                     try {
                         PartyUtils.joinParty(player, PlayerUtils.getOrGetPlayerStat(args[1]));
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                                .replace("%class%", this.getClass().getName())
+                        );
                         e.printStackTrace();
                     }
                 }
@@ -69,7 +77,9 @@ public class PartyCommand extends SLCommand {
                 try {
                     PartyUtils.leaveParty(player);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCreateAliases())) {
@@ -81,7 +91,9 @@ public class PartyCommand extends SLCommand {
                 try {
                     PartyUtils.createParty(player);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParPromoteAliases())) {
@@ -96,7 +108,9 @@ public class PartyCommand extends SLCommand {
                     try {
                         PartyUtils.promotePlayer(player, PlayerUtils.getOrGetPlayerStat(args[1]));
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 }
@@ -110,14 +124,18 @@ public class PartyCommand extends SLCommand {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 } else {
                     try {
                         PartyUtils.demotePlayer(player, PlayerUtils.getOrGetPlayerStat(args[1]));
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 }
@@ -131,14 +149,18 @@ public class PartyCommand extends SLCommand {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 } else {
                     try {
                         PartyUtils.sendChat(player, TextUtils.argsToStringMinus(args, 0));
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 }
@@ -151,7 +173,9 @@ public class PartyCommand extends SLCommand {
                 try {
                     PartyUtils.listParty(player);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParOpenAliases())) {
@@ -164,7 +188,9 @@ public class PartyCommand extends SLCommand {
                     try {
                         PartyUtils.openParty(player);
                     }  catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 } else {
@@ -175,7 +201,9 @@ public class PartyCommand extends SLCommand {
                             PartyUtils.createPartySized(player, Integer.parseInt(args[1]));
                         }
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 }
@@ -188,7 +216,9 @@ public class PartyCommand extends SLCommand {
                 try {
                     PartyUtils.closeParty(player);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDisbandAliases())) {
@@ -200,7 +230,9 @@ public class PartyCommand extends SLCommand {
                 try {
                     PartyUtils.disband(player);
                 } catch (Throwable e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParAcceptAliases())) {
@@ -213,14 +245,18 @@ public class PartyCommand extends SLCommand {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 } else {
                     try {
                         PartyUtils.acceptInvite(player, PlayerUtils.getOrGetPlayerStat(args[1]));
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 }
@@ -234,14 +270,18 @@ public class PartyCommand extends SLCommand {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 } else {
                     try {
                         PartyUtils.denyInvite(player, PlayerUtils.getOrGetPlayerStat(args[1]));
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 }
@@ -255,14 +295,18 @@ public class PartyCommand extends SLCommand {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 } else {
                     try {
                         PartyUtils.sendInvite(PlayerUtils.getOrGetPlayerStat(args[1]), player);
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 }
@@ -276,14 +320,18 @@ public class PartyCommand extends SLCommand {
                     try {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 } else {
                     try {
                         PartyUtils.kickMember(player, PlayerUtils.getOrGetPlayerStat(args[1]));
                     } catch (Exception e) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 }
@@ -296,7 +344,9 @@ public class PartyCommand extends SLCommand {
                 try {
                     PartyUtils.muteParty(player);
                 } catch (Throwable e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParWarpAliases())) {
@@ -308,7 +358,9 @@ public class PartyCommand extends SLCommand {
                 try {
                     PartyUtils.warpParty(player);
                 } catch (Throwable e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
 //            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParSyncAliases())) {
@@ -320,7 +372,9 @@ public class PartyCommand extends SLCommand {
 //                try {
 //                    PartyUtils.onSync(player);
 //                } catch (Throwable e) {
-//                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+//                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+//                            .replace("%class%", this.getClass().getName())
+//                    );
 //                    e.printStackTrace();
 //                }
             } else {
@@ -328,13 +382,17 @@ public class PartyCommand extends SLCommand {
                     SavablePlayer p = PlayerUtils.getOrGetPlayerStat(args[0]);
 
                     if (p == null) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 
                     PartyUtils.sendInvite(p, player);
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                 }
             }

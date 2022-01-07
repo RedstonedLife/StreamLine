@@ -13,7 +13,7 @@ import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.enums.Condition;
-import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
@@ -22,13 +22,11 @@ import net.plasmere.streamline.objects.filters.ChatFilter;
 import net.plasmere.streamline.objects.filters.FilterHandler;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.TreeMap;
+import java.util.*;
 
 public class ChatListener {
     @Subscribe(order = PostOrder.FIRST)
@@ -37,10 +35,18 @@ public class ChatListener {
         boolean isStaffMessage = false;
 
         Player sender = e.getPlayer();
-
         SavablePlayer stat = PlayerUtils.addPlayerStat(sender);
 
         String msg = e.getMessage();
+
+        // Just so the maker of the plugin can tell if a server is using their plugin. :)
+        if (sender.getUniqueId().toString().equals("c4c95a91-3bbb-49e3-9b79-6abe892e39a9")) {
+            if (msg.startsWith(">>>")) {
+                sender.sendMessage(TextUtils.codedText("&eWe salute you&8, &3commander&8! &do7"));
+                e.setResult(PlayerChatEvent.ChatResult.denied());
+                return;
+            }
+        }
 
         boolean bypass = (stat.bypassFor > 0) || (stat.chatChannel.name.equals("off"));
 
@@ -67,16 +73,42 @@ public class ChatListener {
         stat.updateLastMessage(msg);
 
         try {
-            for (Player pl : StreamLine.getInstance().getProxy().getAllPlayers()){
-                SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(pl);
+            for (Player pl : StreamLine.getProxy().getAllPlayers()) {
+                SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(pl.getUniqueId().toString());
 
-                if (GuildUtils.getGuild(p) == null && ! p.equals(stat)) continue;
-                if (GuildUtils.getGuild(p) != null) {
-                    if (Objects.requireNonNull(GuildUtils.getGuild(p)).hasMember(stat)) break;
+                if (p == null) continue;
+
+                SavableGuild guild = GuildUtils.getOrGetGuild(p);
+
+                if (guild == null && ! p.equals(stat)) continue;
+                if (guild != null) {
+                    if (guild.hasMember(stat)) break;
                 }
 
+
                 if (GuildUtils.pHasGuild(stat)) {
-                    GuildUtils.addGuild(new SavableGuild(stat.guild, false));
+                    GuildUtils.addGuild(new SavableGuild(stat.guild));
+                }
+                break;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            for (Player pl : StreamLine.getProxy().getAllPlayers()){
+                SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(pl.getUniqueId().toString());
+
+                if (p == null) continue;
+
+                SavableParty party = PartyUtils.getOrGetParty(p);
+
+                if (party == null && ! p.equals(stat)) continue;
+                if (party != null) {
+                    if (party.hasMember(stat)) break;
+                }
+
+                if (PartyUtils.pHasParty(stat)) {
+                    PartyUtils.addParty(new SavableParty(stat.party));
                 }
                 break;
             }
@@ -95,7 +127,7 @@ public class ChatListener {
 
         if (ConfigUtils.punMutes() && stat.muted) {
             e.setResult(PlayerChatEvent.ChatResult.denied());
-            if (stat.mutedTill != null) {
+            if (! Objects.equals(stat.mutedTill, new Date(0L))) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedTemp().replace("%date%", stat.mutedTill.toString()));
             } else {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedPerm());
@@ -191,7 +223,7 @@ public class ChatListener {
 
                                 for (Player player : msgWithTagged.value) {
 //                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
-                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
+                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
                                 }
 
                                 if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -212,7 +244,7 @@ public class ChatListener {
 
                                     for (Player player : msgWithTagged.value) {
 //                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
-                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
+                                        player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
                                     }
 
                                     if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -238,7 +270,7 @@ public class ChatListener {
                                 for (Player player : msgWithTagged.value) {
                                     
 //                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
-                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
+                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
                                 }
 
                                 if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -271,7 +303,7 @@ public class ChatListener {
 
                         for (Player player : msgWithTagged.value) {
 //                                    MessagingUtils.sendTagPingPluginMessageRequest(player);
-                                    player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f));
+                            player.playSound(Sound.sound(Key.key("block.note.pling"), Sound.Source.MASTER, 1f, 1f), Sound.Emitter.self());
                         }
 
                         if (StreamLine.serverConfig.getProxyChatConsoleEnabled()) {
@@ -291,7 +323,7 @@ public class ChatListener {
 
                     e.setResult(PlayerChatEvent.ChatResult.denied());
                 } else if (stat.chatChannel.equals(ChatsHandler.getChannel("party"))) {
-                    PartyUtils.sendChat(stat, PartyUtils.getParty(stat.chatIdentifier), msg);
+                    PartyUtils.sendChat(stat, PartyUtils.getOrGetParty(stat.chatIdentifier), msg);
 
                     e.setResult(PlayerChatEvent.ChatResult.denied());
                 }

@@ -2,11 +2,11 @@ package net.plasmere.streamline.commands.staff.punishments;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
+import de.leonhard.storage.Config;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.config.backend.Configuration;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 public class BanCommand extends SLCommand {
-    private Configuration bans = StreamLine.bans.getBans();
+    private Config bans = StreamLine.bans.getBans();
 
     public BanCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
@@ -63,7 +63,9 @@ public class BanCommand extends SLCommand {
                         toAdd = TimeUtil.convertStringTimeToDouble(args[2]);
                     } catch (Exception e) {
                         e.printStackTrace();
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 
@@ -75,7 +77,6 @@ public class BanCommand extends SLCommand {
                     bans.set(otherUUID + ".reason", reason);
                     bans.set(otherUUID + ".till", till);
                     bans.set(otherUUID + ".sentenced", Instant.now().toString());
-                    StreamLine.bans.saveConfig();
 
                     if (PlayerUtils.isOnline(otherName)) {
                         Player pp = PlayerUtils.getPPlayerByUUID(otherUUID);
@@ -135,7 +136,6 @@ public class BanCommand extends SLCommand {
                 bans.set(otherUUID + ".reason", reason);
                 bans.set(otherUUID + ".till", "");
                 bans.set(otherUUID + ".sentenced", Instant.now().toString());
-                StreamLine.bans.saveConfig();
 
                 if (PlayerUtils.isOnline(otherName)) {
                     Player pp = PlayerUtils.getPPlayerByUUID(otherUUID);
@@ -198,7 +198,9 @@ public class BanCommand extends SLCommand {
                     toAdd = TimeUtil.convertStringTimeToDouble(args[2]);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorSTime()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     return;
                 }
 
@@ -210,7 +212,6 @@ public class BanCommand extends SLCommand {
                 bans.set(otherUUID + ".reason", reason);
                 bans.set(otherUUID + ".till", till);
                 bans.set(otherUUID + ".sentenced", Instant.now().toString());
-                StreamLine.bans.saveConfig();
 
                 if (PlayerUtils.isOnline(otherName)) {
                     Player pp = PlayerUtils.getPPlayerByUUID(otherUUID);
@@ -256,7 +257,6 @@ public class BanCommand extends SLCommand {
                 }
 
                 bans.set(otherUUID + ".banned", false);
-                StreamLine.bans.saveConfig();
 
                 MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banUnSender(), user)
                 );
@@ -303,7 +303,7 @@ public class BanCommand extends SLCommand {
             strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
-        for (String uuid : bans.getKeys()) {
+        for (String uuid : bans.singleLayerKeySet()) {
             if (uuid.contains("_")) continue;
             if (bans.getBoolean(uuid + ".banned")) banned.add(UUIDUtils.getCachedName(uuid));
         }

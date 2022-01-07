@@ -1,33 +1,30 @@
 package net.plasmere.streamline.objects.savable.users;
 
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
+import net.plasmere.streamline.objects.savable.SavableAdapter;
+import net.plasmere.streamline.objects.savable.SavableFile;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
-import net.plasmere.streamline.utils.PluginUtils;
 import net.plasmere.streamline.utils.TextUtils;
+import net.plasmere.streamline.utils.sql.DataSource;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
-public abstract class SavableUser {
-    private TreeMap<String, String> info = new TreeMap<>();
-    private final String filePrePath = StreamLine.getInstance().getPlDir() + File.separator;
-    private SavableUser savableUser;
+public abstract class SavableUser extends SavableFile {
+    private final SavableUser savableUser;
 
     public File file;
-    public String uuid;
     public String latestName;
     public String displayName;
     public String guild;
     public String party;
-    public String tags;
     public List<String> tagList;
     public int points;
     public String lastFromUUID;
@@ -36,13 +33,9 @@ public abstract class SavableUser {
     public String lastMessage;
     public String lastToMessage;
     public String lastFromMessage;
-    public String ignoreds;
     public List<String> ignoredList;
-    public String friends;
     public List<String> friendList;
-    public String pendingToFriends;
     public List<String> pendingToFriendList;
-    public String pendingFromFriends;
     public List<String> pendingFromFriendList;
     public String latestVersion;
 //    public String latestServer;
@@ -56,57 +49,10 @@ public abstract class SavableUser {
     public boolean pspyvs;
     public boolean gspyvs;
     public boolean scvs;
-
-    public List<String> savedKeys = new ArrayList<>();
-
-    public SavableUser(String fileName) {
-        this(fileName, true);
-    }
-
-    public SavableUser(String fileName, boolean createNew){
-        if (PluginUtils.isLocked()) return;
-
-        this.uuid = fileName;
-        this.savableUser = this;
-        this.latestVersion = "UNKNOWN";
-
-        preConstruct(fileName);
-
-        this.file = new File(StreamLine.getInstance().getPlDir(), uuid + ".properties");
-
-        if (createNew) {
-            try {
-                this.updateWithNewDefaults();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        try {
-            getFromConfigFile();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    public String latestServer;
 
     public SavableUser getSavableUser() {
-        return savableUser;
-    }
-
-//    public void updateSender() {
-//        this.sender = findSender();
-//    }
-
-//    public void updateServer() {
-//        this.latestServer = findServer();
-//    }
-
-    public CommandSource findSender() {
-        if (this.uuid.equals("%")) {
-            return StreamLine.getInstance().getProxy().getConsoleCommandSource();
-        } else {
-            return PlayerUtils.getPPlayerByUUID(this.uuid);
-        }
+        return this.savableUser;
     }
 
     public String findServer() {
@@ -127,735 +73,499 @@ public abstract class SavableUser {
         }
     }
 
-    abstract public void preConstruct(String string);
-
-    public TreeMap<String, String> getInfo() {
-        return info;
-    }
-    public void remKey(String key){
-        info.remove(key);
-    }
-    public File getFile() { return file; }
-
-    public String getFromKey(String key){
-        return info.get(key);
+    public Optional<CommandSource> findSenderOptional() {
+        if (this.uuid.equals("%")) return Optional.ofNullable(StreamLine.getProxy().getConsoleCommandSource());
+        else return Optional.ofNullable(PlayerUtils.getPPlayerByUUID(this.uuid));
     }
 
-//    public int getInfoIntFor(String key) {
-//        for (Integer i : info.keySet()) {
-//            if (info.get(i).key.equals(key)) return i;
-//        }
-//
-//        return 0;
-//    }
-
-    public void updateKey(String key, Object value) {
-        info.remove(key);
-        addKeyValuePair(key, String.valueOf(value));
-        loadVars();
-    }
-
-    public void updateKeyNoLoad(String key, Object value) {
-        info.remove(key);
-        addKeyValuePair(key, String.valueOf(value));
-    }
-
-    public boolean hasProperty(String property) {
-        for (String info : getInfoAsPropertyList()) {
-            if (info.startsWith(property)) return true;
+    public CommandSource findSender() {
+        if (findSenderOptional().isPresent()) {
+            return findSenderOptional().get();
         }
-
-        return false;
+        return null;
     }
 
-    public TreeSet<String> getInfoAsPropertyList() {
-        TreeSet<String> infoList = new TreeSet<>();
-        List<String> keys = new ArrayList<>();
-        for (String key : info.keySet()){
-            if (keys.contains(key)) continue;
-
-            infoList.add(key + "=" + getFromKey(key));
-            keys.add(key);
-        }
-
-        return infoList;
-    }
-
-    public String getFullProperty(String key) throws Exception {
-        if (hasProperty(key)) {
-            return key + "=" + getFromKey(key);
-        } else {
-            throw new Exception("No property saved!");
-        }
-    }
-
-    public void flushInfo(){
-        this.info = new TreeMap<>();
-    }
-
-    public void addKeyValuePair(String key, String value){
-        if (info.containsKey(key)) return;
-
-        info.put(key, value);
-    }
-
-//    public boolean infoContainsKey(String key){
-//        for (Integer i : info.keySet()) {
-//            if (info.get(i).key.equals(key)) return true;
-//        }
-//
-//        return false;
-//    }
-
-    public String stringifyList(List<String> list, String splitter){
-        StringBuilder stringBuilder = new StringBuilder();
-
-        for (int i = 1; i <= list.size(); i++) {
-            if (i < list.size()) {
-                stringBuilder.append(list.get(i - 1)).append(splitter);
-            } else {
-                stringBuilder.append(list.get(i - 1));
-            }
-        }
-
-        return stringBuilder.toString();
-    }
-
-    public void getFromConfigFile() throws IOException {
-        if (file.exists()){
-            Scanner reader = new Scanner(file);
-
-            List<String> keys = new ArrayList<>();
-            while (reader.hasNextLine()) {
-                String data = reader.nextLine();
-                while (data.startsWith("#")) {
-                    data = reader.nextLine();
+    public String grabServer() {
+        if (this.uuid.equals("%")) return ConfigUtils.consoleServer();
+        else {
+            if (findSenderOptional().isPresent()) {
+                Player player = (Player) (findSenderOptional().get());
+                if (player.getCurrentServer().isPresent()) {
+                    return player.getCurrentServer().get().getServer().getServerInfo().getName();
                 }
-                String[] dataSplit = data.split("=", 2);
-                if (keys.contains(dataSplit[0])) continue;
-                keys.add(dataSplit[0]);
-                addKeyValuePair(tryUpdateFormat(dataSplit[0]), dataSplit[1]);
             }
-
-            reader.close();
-
-            if (needUpdate()) {
-                updateWithNewDefaults();
-            }
-
-            loadVars();
-        }
-    }
-
-    public boolean needUpdate() {
-        for (String p : propertiesDefaults()) {
-            String[] things = p.split("=", 2);
-            if (! infoContainsKey(things[0])) return true;
         }
 
-        return false;
+        return MessageConfUtils.nullB();
     }
 
-    public boolean infoContainsKey(String string){
-        return info.containsKey(string);
+    public String getLatestVersion() {
+        if (this instanceof SavableConsole) return /* TODO: ConfigUtils.consoleVersion() */ MessageConfUtils.nullB();
+        if (! StreamLine.viaHolder.isPresent()) return MessageConfUtils.nullB();
+
+        return StreamLine.viaHolder.getProtocol(UUID.fromString(this.uuid)).getName();
     }
 
-    public void updateWithNewDefaults() throws IOException {
-        file.delete();
+    public boolean updateOnline() {
+        if (uuid.equals("%")) this.online = false;
 
-        file.createNewFile();
-
-        FileWriter writer = new FileWriter(file);
-
-        savedKeys = new ArrayList<>();
-
-        for (String p : propertiesDefaults()) {
-            String key = p.split("=", 2)[0];
-            if (savedKeys.contains(key)) continue;
-            savedKeys.add(key);
-
-            String[] propSplit = p.split("=", 2);
-
-            String property = propSplit[0];
-
-            String write = "";
-            try {
-                write = getFullProperty(property);
-            } catch (Exception e) {
-                write = p;
-            }
-
-            writer.write(tryUpdateFormatRaw(write) + "\n");
-        }
-
-        writer.close();
-
-        flushInfo();
-
-        Scanner reader = new Scanner(file);
-
-        while (reader.hasNextLine()) {
-            String data = reader.nextLine();
-            while (data.startsWith("#")) {
-                data = reader.nextLine();
-            }
-
-            if (! data.contains("=")) if (ConfigUtils.debug()) {
-                MessagingUtils.logInfo("PLAYER DATA (" + this.latestName + ") ERROR : data has no split for --> " + data);
-                continue;
-            }
-
-            String[] dataSplit = data.split("=", 2);
-            addKeyValuePair(tryUpdateFormat(dataSplit[0]), dataSplit[1]);
-        }
-
-        reader.close();
-
-        loadVars();
+        this.online = PlayerUtils.isInOnlineList(this.uuid);
+        return this.online;
     }
 
-    public TreeSet<String> propertiesDefaults(){
-        TreeSet<String> defaults = new TreeSet<>();
-        defaults.add("uuid=" + uuid);
-        defaults.add("latest-name=" + latestName);
-        defaults.add("display-name=" + ((displayName == null) ? latestName : displayName));
-        defaults.add("latest-version=" + latestVersion);
-        defaults.add("guild=");
-        defaults.add("party=");
-        defaults.add("tags=" + defaultTags());
-        defaults.add("points=" + (this.uuid.equals("%") ? ConfigUtils.consoleDefaultPoints() : ConfigUtils.pointsDefault()));
-        defaults.add("last-from=");
-        defaults.add("last-to=");
-        defaults.add("last-message=");
-        defaults.add("last-to-message=");
-        defaults.add("last-from-message=");
-        defaults.add("reply-to=");
-        defaults.add("ignored=");
-        defaults.add("friends=");
-        defaults.add("pending-to-friends=");
-        defaults.add("pending-from-friends=");
-        defaults.add("latest-server=" + findServer());
-        defaults.add("sspy=true");
-        defaults.add("gspy=true");
-        defaults.add("pspy=true");
-        defaults.add("sc=false");
-        defaults.add("view-sc=true");
-        defaults.add("sspy-vs=false");
-        defaults.add("pspy-vs=false");
-        defaults.add("gspy-vs=false");
-        defaults.add("sc-vs=true");
-        //defaults.add("");
-        defaults.addAll(addedProperties());
-        return defaults;
+    public SavableUser(CommandSource sender, SavableAdapter.Type type) {
+        this((sender instanceof ConsoleCommandSource) ? "%" : ((Player) sender).getUniqueId().toString(), type);
     }
 
-    abstract public int getPointsFromConfig();
+    public SavableUser(String uuid, SavableAdapter.Type type) {
+        super(uuid, type);
 
-    abstract public TreeSet<String> addedProperties();
+        populateDefaults();
 
-    public String defaultTags(){
-        StringBuilder stringBuilder = new StringBuilder();
+        this.savableUser = this;
+        this.latestVersion = getLatestVersion();
+    }
 
-        int i = 1;
-        for (String tag : getTagsFromConfig()) {
-            if (tag == null) continue;
-            if (tag.equals("")) continue;
-            if (i < tag.length()) {
-                stringBuilder.append(tag).append(",");
-            } else {
-                stringBuilder.append(tag);
-            }
-            i++;
-        }
+    @Override
+    public void populateDefaults() {
+        // Profile.
+        latestName = getOrSetDefault("profile.latest.name", PlayerUtils.getSourceName(findSender()));
+        latestVersion = getOrSetDefault("profile.latest.version", getLatestVersion());
+        latestServer = getOrSetDefault("profile.latest.server", MessageConfUtils.nullB());
+        displayName = getOrSetDefault("profile.display-name", latestName);
+        tagList = getOrSetDefault("profile.tags", getTagsFromConfig());
+        points = getOrSetDefault("profile.points", ConfigUtils.pointsDefault());
+        // Savables.
+        guild = getOrSetDefault("savables.guild", "");
+        party = getOrSetDefault("savables.party", "");
+        // Messaging.
+        lastFromUUID = getOrSetDefault("messaging.last-from.uuid", "");
+        lastFromMessage = getOrSetDefault("messaging.last-from.message", "");
+        lastToUUID = getOrSetDefault("messaging.last-to.uuid", "");
+        lastToMessage = getOrSetDefault("messaging.last-to.message", "");
+        replyToUUID = getOrSetDefault("messaging.reply-to.uuid", "");
+        // Friends.
+        ignoredList = getOrSetDefault("messaging.ignored", new ArrayList<>());
+        friendList = getOrSetDefault("messaging.friends.confirmed", new ArrayList<>());
+        pendingToFriendList = getOrSetDefault("messaging.friends.pending.to", new ArrayList<>());
+        pendingFromFriendList = getOrSetDefault("messaging.friends.pending.from", new ArrayList<>());
+        // Spying.
+        sspy = getOrSetDefault("spying.social.view.toggled", true);
+        sspyvs = getOrSetDefault("spying.social.view.self", false);
+        gspy = getOrSetDefault("spying.guild.view.toggled", true);
+        gspyvs = getOrSetDefault("spying.guild.view.self", false);
+        gspy = getOrSetDefault("spying.party.view.toggled", true);
+        gspyvs = getOrSetDefault("spying.party.view.self", false);
+        // Staff.
+        sc = getOrSetDefault("staff.chat.channel.toggled", false);
+        viewsc = getOrSetDefault("staff.chat.view.toggled", true);
+        scvs = getOrSetDefault("staff.chat.view.self", true);
 
-        return stringBuilder.toString();
+        populateMoreDefaults();
     }
 
     abstract public List<String> getTagsFromConfig();
 
-    public void loadVars() {
-        this.uuid = getFromKey("uuid");
-        this.latestName = getFromKey("latest-name");
-        this.displayName = getFromKey("display-name");
-        this.guild = getFromKey("guild");
-        this.party = getFromKey("party");
-        this.tagList = loadTags();
-        this.points = Integer.parseInt(getFromKey("points") == null ? "0" : getFromKey("points"));
-        this.lastFromUUID = getFromKey("last-from");
-        this.lastToUUID = getFromKey("last-to");
-        this.lastMessage = getFromKey("last-message");
-        this.lastToMessage = getFromKey("last-to-message");
-        this.lastFromMessage = getFromKey("last-from-message");
-        this.replyToUUID = getFromKey("reply-to");
-        this.ignoredList = loadIgnored();
-        this.friendList = loadFriends();
-        this.pendingToFriendList = loadPendingToFriends();
-        this.pendingFromFriendList = loadPendingFromFriends();
-        this.sspy = Boolean.parseBoolean(getFromKey("sspy"));
-        this.gspy = Boolean.parseBoolean(getFromKey("gspy"));
-        this.pspy = Boolean.parseBoolean(getFromKey("pspy"));
-        this.sc = Boolean.parseBoolean(getFromKey("sc"));
-        this.sspyvs = Boolean.parseBoolean(getFromKey("sspy-vs"));
-        this.pspyvs = Boolean.parseBoolean(getFromKey("pspy-vs"));
-        this.gspyvs = Boolean.parseBoolean(getFromKey("gspy-vs"));
-        this.scvs = Boolean.parseBoolean(getFromKey("sc-vs"));
-        this.viewsc = Boolean.parseBoolean(getFromKey("view-sc"));
-//        this.latestServer = getFromKey("latest-server");
+    abstract public void populateMoreDefaults();
 
-        loadMoreVars();
-
-        if (this.latestName == null) {
-            try {
-                if (ConfigUtils.deleteBadStats()) {
-                    this.dispose();
-                }
-                throw new Exception("Bad User Data for user: " + this.uuid + "!");
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-            return;
-        }
-
-        if (this.latestName.equals("null")) {
-            try {
-                if (ConfigUtils.deleteBadStats()) {
-                    this.dispose();
-                }
-                throw new Exception("Bad User Data for user: " + this.uuid + "!");
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-            return;
-        }
+    @Override
+    public void loadValues() {
+        // Profile.
+        latestName = getOrSetDefault("profile.latest.name", latestName);
+        latestVersion = getOrSetDefault("profile.latest.version", latestVersion);
+        latestServer = getOrSetDefault("profile.latest.server", latestServer);
+        displayName = getOrSetDefault("profile.display-name", displayName);
+        tagList = getOrSetDefault("profile.tags", tagList);
+        points = getOrSetDefault("profile.points", points);
+        // Savables.
+        guild = getOrSetDefault("savables.guild", guild);
+        party = getOrSetDefault("savables.party", party);
+        // Messaging.
+        lastFromUUID = getOrSetDefault("messaging.last-from.uuid", lastFromUUID);
+        lastFromMessage = getOrSetDefault("messaging.last-from.message", lastFromMessage);
+        lastToUUID = getOrSetDefault("messaging.last-to.uuid", lastToUUID);
+        lastToMessage = getOrSetDefault("messaging.last-to.message", lastToMessage);
+        replyToUUID = getOrSetDefault("messaging.reply-to.uuid", replyToUUID);
+        // Friends.
+        ignoredList = getOrSetDefault("messaging.ignored", ignoredList);
+        friendList = getOrSetDefault("messaging.friends.confirmed", friendList);
+        pendingToFriendList = getOrSetDefault("messaging.friends.pending.to", pendingToFriendList);
+        pendingFromFriendList = getOrSetDefault("messaging.friends.pending.from", pendingFromFriendList);
+        // Spying.
+        sspy = getOrSetDefault("spying.social.view.toggled", sspy);
+        sspyvs = getOrSetDefault("spying.social.view.self", sspyvs);
+        gspy = getOrSetDefault("spying.guild.view.toggled", gspy);
+        gspyvs = getOrSetDefault("spying.guild.view.self", gspyvs);
+        gspy = getOrSetDefault("spying.party.view.toggled", pspy);
+        gspyvs = getOrSetDefault("spying.party.view.self", pspyvs);
+        // Staff.
+        sc = getOrSetDefault("staff.chat.channel.toggled", sc);
+        viewsc = getOrSetDefault("staff.chat.view.toggled", viewsc);
+        scvs = getOrSetDefault("staff.chat.view.self", scvs);
+        // Online.
+        online = updateOnline();
+        // More.
+        loadMoreValues();
     }
 
-    abstract public void loadMoreVars();
+    abstract public void loadMoreValues();
 
-    public TreeMap<String, String> updatableKeys() {
-        TreeMap<String, String> keys = new TreeMap<>();
-
-        keys.putAll(addedUpdatableKeys());
-
-        keys.put("last-messenger", "last-from");
-
-        return keys;
+    public void saveAll() {
+        // Profile.
+        set("profile.latest.name", latestName);
+        set("profile.latest.version", latestVersion);
+        set("profile.latest.server", latestServer);
+        set("profile.display-name", latestName);
+        set("profile.tags", tagList);
+        set("profile.points", points);
+        // Savables.
+        set("savables.guild", guild);
+        set("savables.party", party);
+        // Messaging.
+        set("messaging.last-from.uuid", lastFromUUID);
+        set("messaging.last-from.message", lastFromMessage);
+        set("messaging.last-to.uuid", lastToUUID);
+        set("messaging.last-to.message", lastToMessage);
+        set("messaging.reply-to.uuid", replyToUUID);
+        // Friends.
+        set("messaging.ignored", ignoredList);
+        set("messaging.friends.confirmed", friendList);
+        set("messaging.friends.pending.to", pendingToFriendList);
+        set("messaging.friends.pending.from", pendingFromFriendList);
+        // Spying.
+        set("spying.social.view.toggled", sspy);
+        set("spying.social.view.self", sspyvs);
+        set("spying.guild.view.toggled", gspy);
+        set("spying.guild.view.self", gspyvs);
+        set("spying.party.view.toggled", pspy);
+        set("spying.party.view.self", pspyvs);
+        // Staff.
+        set("staff.chat.channel.toggled", sc);
+        set("staff.chat.view.toggled", viewsc);
+        set("staff.chat.view.self", scvs);
+        // More.
+        saveMore();
     }
 
-    abstract TreeMap<String, String> addedUpdatableKeys();
+    abstract public void saveMore();
 
-    public String tryUpdateFormat(String from){
-        for (String key : updatableKeys().keySet()) {
-            if (! from.equals(key)) continue;
-
-            return updatableKeys().get(key);
-        }
-
-        return from;
-    }
-
-    public String tryUpdateFormatRaw(String from){
-        String[] fromSplit = from.split("=", 2);
-
-        return tryUpdateFormat(fromSplit[0]) + "=" + fromSplit[1];
-    }
-
-    public void tryAddNewTag(String tag){
-        if (tagList == null) this.tagList = new ArrayList<>();
-
+    public void addTag(String tag) {
+        //        loadValues();
         if (tagList.contains(tag)) return;
 
-        this.tagList.add(tag);
-
-        this.tags = stringifyList(tagList, ",");
-
-        updateKey("tags", this.tags);
+        tagList.add(tag);
+        //        saveAll();
     }
 
-    public void tryRemTag(String tag){
-        if (tagList == null) this.tagList = new ArrayList<>();
-
+    public void removeTag(String tag) {
+        //        loadValues();
         if (! tagList.contains(tag)) return;
 
-        this.tagList.remove(tag);
-
-        this.tags = stringifyList(tagList, ",");
-
-        updateKey("tags", this.tags);
+        tagList.remove(tag);
+        //        saveAll();
     }
 
-    public void tryAddNewIgnored(String uuid){
-        if (ignoredList == null) this.ignoredList = new ArrayList<>();
+    public void addIgnoredPlayer(String uuid) {
+        //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
 
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.ignorePlayer(this, other);
+        }
         if (ignoredList.contains(uuid)) return;
 
-        this.ignoredList.add(uuid);
-
-        this.ignoreds = stringifyList(ignoredList, ",");
-
-        updateKey("ignored", this.ignoreds);
+        ignoredList.add(uuid);
+        //        saveAll();
     }
 
-    public void tryRemIgnored(String uuid){
-        if (ignoredList == null) this.ignoredList = new ArrayList<>();
+    public void removeIgnoredPlayer(String uuid) {
+        //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
 
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.stopIgnoringPlayer(this, other);
+        }
         if (! ignoredList.contains(uuid)) return;
 
-        this.ignoredList.remove(uuid);
-
-        this.ignoreds = stringifyList(ignoredList, ",");
-
-        updateKey("ignored", this.ignoreds);
+        ignoredList.remove(uuid);
+        //        saveAll();
     }
 
-    public void tryAddNewFriend(String uuid){
-        if (friendList == null) this.friendList = new ArrayList<>();
+    public void addFriend(String uuid) {
+        //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
 
-        tryRemPendingToFriend(uuid);
-        tryRemPendingFromFriend(uuid);
-
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.confirmFriendRequest(this, other, true);
+        }
         if (friendList.contains(uuid)) return;
 
-        this.friendList.add(uuid);
-
-        this.friends = stringifyList(friendList, ",");
-
-        updateKey("friends", this.friends);
+        friendList.add(uuid);
+        //        saveAll();
     }
 
-    public void tryRemFriend(String uuid){
-        if (friendList == null) this.friendList = new ArrayList<>();
+    public void setFriendRequestDenied(SavableUser receiver) {
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.confirmFriendRequest(this, receiver, false);
+        }
+    }
 
+    public void removeFriend(String uuid) {
+        //        loadValues();
         if (! friendList.contains(uuid)) return;
 
-        this.friendList.remove(uuid);
-
-        this.friends = stringifyList(friendList, ",");
-
-        updateKey("friends", this.friends);
+        friendList.remove(uuid);
+        //        saveAll();
     }
 
-    public void tryAddNewPendingToFriend(String uuid){
-        if (pendingToFriendList == null) this.pendingToFriendList = new ArrayList<>();
+    public void addPendingToFriend(String uuid) {
+        //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
 
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.sendFriendRequest(this, other);
+        }
         if (pendingToFriendList.contains(uuid)) return;
 
-        this.pendingToFriendList.add(uuid);
-
-        this.pendingToFriends = stringifyList(pendingToFriendList, ",");
-
-        updateKey("pending-to-friends", this.pendingToFriends);
+        pendingToFriendList.add(uuid);
+        //        saveAll();
     }
 
-    public void tryRemPendingToFriend(String uuid){
-        if (pendingToFriendList == null) this.pendingToFriendList = new ArrayList<>();
+    public void removePendingToFriend(String uuid) {
+        //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
 
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.confirmFriendRequest(this, other, false);
+        }
         if (! pendingToFriendList.contains(uuid)) return;
 
-        this.pendingToFriendList.remove(uuid);
-
-        this.pendingToFriends = stringifyList(pendingToFriendList, ",");
-
-        updateKey("pending-to-friends", this.pendingToFriends);
+        pendingToFriendList.remove(uuid);
+        //        saveAll();
     }
 
-    public void tryAddNewPendingFromFriend(String uuid){
-        if (pendingFromFriendList == null) this.pendingFromFriendList = new ArrayList<>();
+    public void addPendingFromFriend(String uuid) {
+        //        loadValues();
+        SavableUser other = PlayerUtils.getOrGetSavableUser(uuid);
+        if (other == null) return;
 
+        if (ConfigUtils.moduleDBUse()) {
+            DataSource.sendFriendRequest(other, this);
+        }
         if (pendingFromFriendList.contains(uuid)) return;
 
-        this.pendingFromFriendList.add(uuid);
-
-        this.pendingFromFriends = stringifyList(pendingFromFriendList, ",");
-
-        updateKey("pending-from-friends", this.pendingFromFriends);
+        pendingFromFriendList.add(uuid);
+        //        saveAll();
     }
 
-    public void tryRemPendingFromFriend(String uuid){
-        if (pendingFromFriendList == null) this.pendingFromFriendList = new ArrayList<>();
-
+    public void removePendingFromFriend(String uuid) {
+        //        loadValues();
         if (! pendingFromFriendList.contains(uuid)) return;
 
-        this.pendingFromFriendList.remove(uuid);
-
-        this.pendingFromFriends = stringifyList(pendingFromFriendList, ",");
-
-        updateKey("pending-from-friends", this.pendingFromFriends);
-    }
-
-    public List<String> loadTags(){
-        List<String> thing = new ArrayList<>();
-
-        String search = "tags";
-
-        try {
-            if (getFromKey(search) == null) return thing;
-            if (getFromKey(search).equals("")) return thing;
-
-            if (! getFromKey(search).contains(",")) {
-                thing.add(getFromKey(search));
-                return thing;
-            }
-
-            for (String t : getFromKey(search).split(",")) {
-                if (t == null) continue;
-                if (t.equals("")) continue;
-
-                try {
-                    thing.add(t);
-                } catch (Exception e) {
-                    //continue;
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public List<String> loadIgnored(){
-        List<String> thing = new ArrayList<>();
-
-        String search = "ignored";
-
-        try {
-            if (getFromKey(search) == null) return thing;
-            if (getFromKey(search).equals("")) return thing;
-
-            if (! getFromKey(search).contains(",")) {
-                thing.add(getFromKey(search));
-                return thing;
-            }
-
-            for (String t : getFromKey(search).split(",")) {
-                if (t == null) continue;
-                if (t.equals("")) continue;
-
-                try {
-                    thing.add(t);
-                } catch (Exception e) {
-                    //continue;
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public List<String> loadFriends(){
-        List<String> thing = new ArrayList<>();
-
-        String search = "friends";
-
-        try {
-            if (getFromKey(search) == null) return thing;
-            if (getFromKey(search).equals("")) return thing;
-
-            if (! getFromKey(search).contains(",")) {
-                thing.add(getFromKey(search));
-                return thing;
-            }
-
-            for (String t : getFromKey(search).split(",")) {
-                if (t == null) continue;
-                if (t.equals("")) continue;
-
-                try {
-                    thing.add(t);
-                } catch (Exception e) {
-                    //continue;
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public List<String> loadPendingToFriends(){
-        List<String> thing = new ArrayList<>();
-
-        String search = "pending-to-friends";
-
-        try {
-            if (getFromKey(search) == null) return thing;
-            if (getFromKey(search).equals("")) return thing;
-
-            if (! getFromKey(search).contains(",")) {
-                thing.add(getFromKey(search));
-                return thing;
-            }
-
-            for (String t : getFromKey(search).split(",")) {
-                if (t == null) continue;
-                if (t.equals("")) continue;
-
-                try {
-                    thing.add(t);
-                } catch (Exception e) {
-                    //continue;
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public List<String> loadPendingFromFriends(){
-        List<String> thing = new ArrayList<>();
-
-        String search = "pending-from-friends";
-
-        try {
-            if (getFromKey(search) == null) return thing;
-            if (getFromKey(search).equals("")) return thing;
-
-            if (! getFromKey(search).contains(",")) {
-                thing.add(getFromKey(search));
-                return thing;
-            }
-
-            for (String t : getFromKey(search).split(",")) {
-                if (t == null) continue;
-                if (t.equals("")) continue;
-
-                try {
-                    thing.add(t);
-                } catch (Exception e) {
-                    //continue;
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public void dispose() throws Throwable {
-        try {
-            PlayerUtils.removeStat(this);
-            this.uuid = null;
-            this.file.delete();
-        } finally {
-            super.finalize();
-        }
+        pendingFromFriendList.remove(uuid);
+        //        saveAll();
     }
 
     public void setPoints(int amount) {
+//        //        loadValues();
         points = amount;
-        updateKey("points", amount);
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
+        //        saveAll();
     }
 
     public void addPoints(int amount) {
+        //        loadValues();
         setPoints(points + amount);
     }
 
-    public void remPoints(int amount) {
+    public void removePoints(int amount) {
+        //        loadValues();
         setPoints(points - amount);
-    }
-
-    public void setLatestServer(String server) {
-        //this.latestServer = server;
-        updateKey("latest-server", server);
     }
 
     public void setSSPY(boolean value) {
         sspy = value;
-        updateKey("sspy", value);
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
+        //        saveAll();
     }
 
-    public void toggleSSPY() { setSSPY(! sspy); }
-
-    public void setGSPY(boolean value) {
-        gspy = value;
-        updateKey("gspy", value);
+    public void toggleSSPY() {
+        //        loadValues();
+        setSSPY(! sspy);
     }
-
-    public void toggleGSPY() { setGSPY(! gspy); }
-
-    public void setPSPY(boolean value) {
-        pspy = value;
-        updateKey("pspy", value);
-    }
-
-    public void togglePSPY() { setPSPY(! pspy); }
-
-    public void setSC(boolean value) {
-        sc = value;
-        updateKey("sc", value);
-    }
-
-    public void toggleSC() { setSC(! sc); }
-
-    public void setSCView(boolean value) {
-        viewsc = value;
-        updateKey("view-sc", value);
-    }
-
-    public void toggleSCView() { setSCView(! viewsc); }
 
     public void setSSPYVS(boolean value) {
         sspyvs = value;
-        updateKey("sspy-vs", value);
+        //        saveAll();
     }
 
-    public void toggleSSPYVS() { setSSPYVS(! sspyvs); }
-
-    public void setPSPYVS(boolean value) {
-        pspyvs = value;
-        updateKey("pspy-vs", value);
+    public void toggleSSPYVS() {
+        //        loadValues();
+        setSSPYVS(! sspyvs);
     }
 
-    public void togglePSPYVS() { setPSPYVS(! pspyvs); }
+    public void setGSPY(boolean value) {
+        gspy = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
+        //        saveAll();
+    }
+
+    public void toggleGSPY() {
+        //        loadValues();
+        setGSPY(! gspy);
+    }
 
     public void setGSPYVS(boolean value) {
         gspyvs = value;
-        updateKey("gspy-vs", value);
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
+        //        saveAll();
     }
 
-    public void toggleGSPYVS() { setGSPYVS(! gspyvs); }
+    public void toggleGSPYVS() {
+        //        loadValues();
+        setGSPYVS(! gspyvs);
+    }
+
+    public void setPSPY(boolean value) {
+        pspy = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
+        //        saveAll();
+    }
+
+    public void togglePSPY() {
+        //        loadValues();
+        setPSPY(! pspy);
+    }
+
+    public void setPSPYVS(boolean value) {
+        pspyvs = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
+        //        saveAll();
+    }
+
+    public void togglePSPYVS() {
+        //        loadValues();
+        setPSPYVS(! pspyvs);
+    }
+
+    public void setSC(boolean value) {
+        sc = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
+        //        saveAll();
+    }
+
+    public void toggleSC() {
+        //        loadValues();
+        setSC(! sc);
+    }
 
     public void setSCVS(boolean value) {
         scvs = value;
-        updateKey("sc-vs", value);
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
+        //        saveAll();
     }
 
-    public void toggleSCVS() { setSCVS(! scvs); }
+    public void toggleSCVS() {
+        //        loadValues();
+        setSCVS(! scvs);
+    }
 
-    public String toString(){
-        return latestName;
+    public void setSCView(boolean value) {
+        viewsc = value;
+        if (ConfigUtils.moduleDBUse()) {
+            if (this instanceof SavablePlayer) DataSource.updatePlayerData((SavablePlayer) this);
+        }
+        //        saveAll();
+    }
+
+    public void toggleSCView() {
+        //        loadValues();
+        setSCView(! viewsc);
     }
 
     public void updateLastMessage(String message){
-        updateKey("last-message", message);
+//        //        loadValues();
+        lastMessage = message;
+        //        saveAll();
     }
 
     public void updateLastToMessage(String message){
-        updateKey("last-to-message", message);
+//        //        loadValues();
+        lastToMessage = message;
+        //        saveAll();
     }
 
     public void updateLastFromMessage(String message){
-        updateKey("last-from-message", message);
+//        //        loadValues();
+        lastFromMessage = message;
+        //        saveAll();
     }
 
     public void updateLastFrom(SavableUser messenger){
-        updateKey("last-from", messenger.uuid);
+//        //        loadValues();
+        lastFromUUID = messenger.uuid;
+        //        saveAll();
     }
 
     public void updateLastTo(SavableUser to){
-        updateKey("last-to", to.uuid);
+//        //        loadValues();
+        lastToUUID = to.uuid;
+        //        saveAll();
     }
 
     public void updateReplyTo(SavableUser to){
-        updateKey("reply-to", to.uuid);
+        //        loadValues();
+        replyToUUID = to.uuid;
+        //        saveAll();
     }
-    
+
+    public void setGuild(String uuid) {
+        this.guild = uuid;
+        //        saveAll();
+    }
+
+    public void setParty(String uuid) {
+        this.party = uuid;
+        //        saveAll();
+    }
+
+    public void setLatestServer(String server) {
+        //this.latestServer = server;
+        latestServer = server;
+        //        saveAll();
+    }
+
+    public void setLatestName(String name) {
+        latestName = name;
+    }
+
+    public void setDisplayName(String name) {
+//        loadValues();
+        displayName = name;
+        //        saveAll();
+    }
+
     public String getName() {
         return latestName;
     }
@@ -868,34 +578,25 @@ public abstract class SavableUser {
         findSender().getPermissionChecker().value(permission);
     }
 
-    public void saveInfo() throws IOException {
-        file.delete();
-
-        file.createNewFile();
-
-        savedKeys = new ArrayList<>();
-        FileWriter writer = new FileWriter(file);
-        for (String s : getInfoAsPropertyList()){
-            String key = s.split("=")[0];
-            if (savedKeys.contains(key)) continue;
-            savedKeys.add(key);
-
-            writer.write(tryUpdateFormatRaw(s) + "\n");
-        }
-        writer.close();
-
-        if (ConfigUtils.debug()) MessagingUtils.logInfo("Just saved SavablePlayer info for player: " + this.uuid + " (SavablePlayer: " + this.latestName + ")");
-    }
-
     public void sendMessage(Component message) {
-        if (this.findSender() != null) {
-            findSender().sendMessage(message);
+        if (this.findSenderOptional().isPresent()) {
+            this.findSenderOptional().get().sendMessage(message);
         }
     }
 
     public void sendMessage(String message) {
-        if (this.findSender() != null) {
-            findSender().sendMessage(TextUtils.codedText(message));
+        if (this.findSenderOptional().isPresent()) {
+            this.findSenderOptional().get().sendMessage(TextUtils.codedText(message));
+        }
+    }
+
+    public void dispose() throws Throwable {
+        try {
+            PlayerUtils.removeStat(this);
+            this.uuid = null;
+            this.file.delete();
+        } finally {
+            super.finalize();
         }
     }
 }

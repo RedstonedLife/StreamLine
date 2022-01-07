@@ -149,8 +149,8 @@ modules:
         use: "stat"
       # When going to discord.
       discord-data:
-        # When using non-embeded (non webhook as well) messages:
-        non-embeded:
+        # When using non-embedded (non webhook as well) messages:
+        non-embedded:
           message: "%sender_absolute% >> %message%"
         channels:
           local:
@@ -241,8 +241,8 @@ modules:
       # Example: "staff,guild,party,friend"
       # --> If a player leaves who is staff, they will be shown (only to staff)
       # --> If a player leaves who is in your guild, they will be shown if not staff (and you are staff)
-      # --> If a player leaves who is in your party, they will be shown if not staff (and you are staff), or in your guild.
-      # --> If a player leaves who is in your friends list, they will be shown if not staff (and you are staff), or in your guild, or in your party.
+    # --> If a player leaves who is in your party, they will be shown if not staff (and you are staff), or in your guild.
+    # --> If a player leaves who is in your friends list, they will be shown if not staff (and you are staff), or in your guild, or in your party.
     # --> If none above, will not be shown.
     # NOTE: per-server connection events can be made with the events module.
     player-leaves-order: "staff,guild,party,friend"
@@ -289,6 +289,13 @@ modules:
         leave: true
       plugin-messaging:
         enabled: true
+      experience:
+        starting:
+          level: 1
+          xp: 0
+        # Amount of xp to get to the next level.
+        # Accepts all player placeholders.
+        equation: "2500 + (2500 * (%player_level% - 1))"
     # Sudoing...
     sudo:
       # Permission for players you don't want to be able to be sudoed.
@@ -338,6 +345,13 @@ modules:
         leave: true
       plugin-messaging:
         enabled: true
+      experience:
+        starting:
+          level: 1
+          xp: 0
+        # Amount of xp to get to the next level.
+        # Accepts: %guild_level%, %guild_current_xp%, %guild_total_xp%
+        equation: "10000 + (10000 * (%guild_level% - 1))"
     # Stats command...
     stats:
       # Enables / disables telling the player when their stats have been created.
@@ -544,6 +558,10 @@ modules:
         run: "on-vote.sl"
     chat-filters:
       enabled: true
+    voice:
+      max:
+        default: 1
+        base-permission: "streamline.voice.limit."
   bstats:
     make-server-discoverable: true
     discoverable-ip: "my.server.net"

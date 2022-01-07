@@ -1,11 +1,12 @@
 package net.plasmere.streamline.objects.configs;
 
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.config.backend.ConfigurationProvider;
-import net.plasmere.streamline.config.backend.YamlConfiguration;
+
 import net.plasmere.streamline.objects.chats.ChatChannel;
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
@@ -20,7 +21,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class ServerConfig {
-    private Configuration serverConfig;
+    private Config serverConfig;
     private final String setstring = "settings.yml";
     private final File scfile = new File(StreamLine.getInstance().getConfDir(), setstring);
 
@@ -38,7 +39,7 @@ public class ServerConfig {
         MessagingUtils.logInfo("Loaded serverConfig!");
     }
 
-    public Configuration getServerConfig() {
+    public Config getServerConfig() {
         reloadConfig();
         return serverConfig;
     }
@@ -51,7 +52,7 @@ public class ServerConfig {
         }
     }
 
-    public Configuration loadConfig(){
+    public Config loadConfig(){
         if (! scfile.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(setstring)){
                 Files.copy(in, scfile.toPath());
@@ -60,28 +61,12 @@ public class ServerConfig {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(scfile); // ???
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public void saveConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(serverConfig, scfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return LightningBuilder.fromFile(scfile).createConfig();
     }
 
     public TreeMap<Integer, String> getComparedMOTD() {
         try {
-            return TextUtils.comparedConfiguration(serverConfig.getSection("motd"));
+            return TextUtils.comparedConfiguration(new ConfigSection(serverConfig.getSection("motd")));
         } catch (Exception e) {
             e.printStackTrace();
             return new TreeMap<>();
@@ -90,7 +75,7 @@ public class ServerConfig {
 
     public TreeMap<Integer, String> getComparedSample() {
         try {
-            return TextUtils.comparedConfiguration(serverConfig.getSection("sample"));
+            return TextUtils.comparedConfiguration(new ConfigSection(serverConfig.getSection("sample")));
         } catch (Exception e) {
             e.printStackTrace();
             return new TreeMap<>();
@@ -110,7 +95,6 @@ public class ServerConfig {
 
     public void setMOTD(String integer, String motd) {
         serverConfig.set("motd." + integer, motd);
-        saveConfig();
         reloadConfig();
     }
 
@@ -121,7 +105,6 @@ public class ServerConfig {
 
     public void setMOTDTime(int time) {
         serverConfig.set("motd-time", time);
-        saveConfig();
         reloadConfig();
     }
 
@@ -139,7 +122,6 @@ public class ServerConfig {
 
     public void setVersion(String version) {
         serverConfig.set("version", version);
-        saveConfig();
         reloadConfig();
     }
 
@@ -150,7 +132,6 @@ public class ServerConfig {
 
     public void setSample(String integer, String sample) {
         serverConfig.set("sample." + integer, sample);
-        saveConfig();
         reloadConfig();
     }
 
@@ -161,7 +142,6 @@ public class ServerConfig {
 
     public void setMaxPlayers(String value) {
         serverConfig.set("max-players", value);
-        saveConfig();
         reloadConfig();
     }
 
@@ -231,7 +211,6 @@ public class ServerConfig {
 
     public void setOnlinePlayers(String value) {
         serverConfig.set("online-players", value);
-        saveConfig();
         reloadConfig();
     }
 
@@ -302,7 +281,6 @@ public class ServerConfig {
 
     public void setProxyChatEnabled(boolean bool) {
         serverConfig.set("proxy-chat.enabled", bool);
-        saveConfig();
         reloadConfig();
     }
 
@@ -317,7 +295,6 @@ public class ServerConfig {
 
     public void setProxyChatConsoleEnabled(boolean bool) {
         serverConfig.set("proxy-chat.to-console", bool);
-        saveConfig();
         reloadConfig();
     }
 
@@ -332,7 +309,6 @@ public class ServerConfig {
 
     public void setChatBasePerm(String set) {
         serverConfig.set("proxy-chat.base-perm", set);
-        saveConfig();
         reloadConfig();
     }
 
@@ -343,13 +319,11 @@ public class ServerConfig {
 
     public void setProxyChatChatsAt(int integer, ChatChannel chatChannel, MessageServerType messageServerType, String set) {
         serverConfig.set("proxy-chat.chats." + chatChannel.name.toLowerCase(Locale.ROOT) + "." + messageServerType.toString().toLowerCase(Locale.ROOT) + "." + integer, set);
-        saveConfig();
         reloadConfig();
     }
 
     public void setTagsPingEnabled(boolean bool) {
         serverConfig.set("proxy-chat.tags.enable-ping", bool);
-        saveConfig();
         reloadConfig();
     }
 
@@ -360,7 +334,6 @@ public class ServerConfig {
 
     public void setTagsPrefix(String prefix) {
         serverConfig.set("proxy-chat.tags.tag-prefix", prefix);
-        saveConfig();
         reloadConfig();
     }
 
@@ -373,7 +346,6 @@ public class ServerConfig {
         serverConfig.set("proxy-chat.emotes." + emote + ".emote", value);
         if (getEmotePermission(emote) == null) setEmotePermission(emote, "");
         if (Objects.equals(getEmotePermission(emote), "")) setEmotePermission(emote, "");
-        saveConfig();
         reloadConfig();
     }
 
@@ -384,7 +356,6 @@ public class ServerConfig {
 
     public void setEmotePermission(String emote, String permission) {
         serverConfig.set("proxy-chat.emotes." + emote + ".permission", permission);
-        saveConfig();
         reloadConfig();
     }
 
@@ -395,12 +366,11 @@ public class ServerConfig {
 
     public TreeSet<String> getEmotes() {
         reloadConfig();
-        return new TreeSet<>(serverConfig.getSection("proxy-chat.emotes").getKeys());
+        return new TreeSet<>(serverConfig.getSection("proxy-chat.emotes").singleLayerKeySet());
     }
 
     public void setAllowGlobal(boolean bool) {
         serverConfig.set("proxy-chat.allow.global", bool);
-        saveConfig();
         reloadConfig();
     }
 
@@ -411,7 +381,6 @@ public class ServerConfig {
 
     public void setAllowLocal(boolean bool) {
         serverConfig.set("proxy-chat.allow.local", bool);
-        saveConfig();
         reloadConfig();
     }
 
@@ -422,7 +391,6 @@ public class ServerConfig {
 
     public void setMaintenanceMode(boolean bool) {
         serverConfig.set("maintenance-mode.enabled", bool);
-        saveConfig();
         reloadConfig();
     }
 
@@ -433,7 +401,6 @@ public class ServerConfig {
 
     public void setObject(String pathTo, Object object) {
         serverConfig.set(pathTo, object);
-        saveConfig();
         reloadConfig();
     }
 }

@@ -432,7 +432,7 @@ public class PlayerUtils {
     public static boolean checkIfMuted(ProxiedPlayer sender, SavablePlayer stat){
         checkAndUpdateIfMuted(stat);
 
-        if (stat.mutedTill != null) {
+        if (! Objects.equals(stat.mutedTill, new Date(0L))) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedTemp().replace("%date%", stat.mutedTill.toString()));
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.punMutedPerm());
@@ -441,7 +441,7 @@ public class PlayerUtils {
     }
 
     public static void checkAndUpdateIfMuted(SavablePlayer stat){
-        if (stat.mutedTill != null) {
+        if (! Objects.equals(stat.mutedTill, new Date(0L))) {
             if (stat.mutedTill.before(Date.from(Instant.now()))) {
                 stat.setMuted(false);
                 stat.removeMutedTill();
@@ -1320,7 +1320,7 @@ public class PlayerUtils {
 
         if (connections.size() <= 0) connections = new HashMap<>();
 
-        List<SavablePlayer> conns = new ArrayList<>(connections.keySet());
+        List<SavablePlayer> conns = new ArrayList<>(connections.singleLayerKeySet());
         List<SavablePlayer> toRemove = new ArrayList<>();
 
         for (SavablePlayer player : conns) {
@@ -1389,8 +1389,8 @@ public class PlayerUtils {
             sufWeight.put(node.getPriority(), node.getMetaValue());
         }
 
-        prefix = preWeight.get(PluginUtils.getCeilingInt(preWeight.keySet()));
-        suffix = sufWeight.get(PluginUtils.getCeilingInt(sufWeight.keySet()));
+        prefix = preWeight.get(PluginUtils.getCeilingInt(preWeight.singleLayerKeySet()));
+        suffix = sufWeight.get(PluginUtils.getCeilingInt(sufWeight.singleLayerKeySet()));
 
         if (prefix == null) prefix = "";
         if (suffix == null) suffix = "";
@@ -1499,7 +1499,7 @@ public class PlayerUtils {
                 preWeight.put(node.getPriority(), node.getMetaValue());
             }
 
-            prefix = preWeight.get(PluginUtils.getCeilingInt(preWeight.keySet()));
+            prefix = preWeight.get(PluginUtils.getCeilingInt(preWeight.singleLayerKeySet()));
 
             if (prefix == null) {
 //            MessagingUtils.logWarning("getLuckPermsPrefix -> prefix == null");
@@ -1523,7 +1523,7 @@ public class PlayerUtils {
             preWeight.put(node.getPriority(), node.getMetaValue());
         }
 
-        prefix = preWeight.get(PluginUtils.getCeilingInt(preWeight.keySet()));
+        prefix = preWeight.get(PluginUtils.getCeilingInt(preWeight.singleLayerKeySet()));
 
         if (prefix == null) {
 //            MessagingUtils.logInfo("LP Pre : prefix == null | prefix = " + prefix);
@@ -1551,7 +1551,7 @@ public class PlayerUtils {
                 sufWeight.put(node.getPriority(), node.getMetaValue());
             }
 
-            suffix = sufWeight.get(PluginUtils.getCeilingInt(sufWeight.keySet()));
+            suffix = sufWeight.get(PluginUtils.getCeilingInt(sufWeight.singleLayerKeySet()));
 
             if (suffix == null) {
 //            MessagingUtils.logWarning("getLuckPermsPrefix -> prefix == null");
@@ -1573,7 +1573,7 @@ public class PlayerUtils {
             sufWeight.put(node.getPriority(), node.getMetaValue());
         }
 
-        suffix = sufWeight.get(PluginUtils.getCeilingInt(sufWeight.keySet()));
+        suffix = sufWeight.get(PluginUtils.getCeilingInt(sufWeight.singleLayerKeySet()));
 
         if (suffix == null) suffix = "";
 
@@ -1829,7 +1829,7 @@ public class PlayerUtils {
     }
 
     public static void tickTeleport() {
-        List<ProxiedPlayer> toTp = new ArrayList<>(teleports.keySet());
+        List<ProxiedPlayer> toTp = new ArrayList<>(teleports.singleLayerKeySet());
 
         for (ProxiedPlayer player : toTp) {
             if (teleports.get(player).key <= 0) {
@@ -1937,7 +1937,7 @@ public class PlayerUtils {
     }
 
     public static String getServer(CommandSender sender) {
-        for (String server : StreamLine.getInstance().getProxy().getServers().keySet()) {
+        for (String server : StreamLine.getInstance().getProxy().getServers().singleLayerKeySet()) {
             for (ProxiedPlayer player : getServeredPPlayers(server)) {
                 if (sender.getName().equals(player.getName())) return server;
             }

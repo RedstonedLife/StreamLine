@@ -29,7 +29,6 @@ import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.objects.timers.ProcessDBUpdateRunnable;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
-import net.plasmere.streamline.utils.sql.Driver;
 
 import java.util.Collection;
 import java.util.List;
@@ -133,7 +132,7 @@ public class JoinLeaveListener implements Listener {
             for (ProxiedPlayer p : StreamLine.getInstance().getProxy().getPlayers()) {
                 if (!p.hasPermission(ConfigUtils.moduleBPlayerJoinsPerm())) continue;
 
-                SavablePlayer other = PlayerUtils.getOrCreatePlayerStat(p);
+                SavablePlayer other = PlayerUtils.getOrGetPlayerStatByUUID(p.getUniqueId().toString());
 
                 label:
                 for (String s : order) {
@@ -478,7 +477,7 @@ public class JoinLeaveListener implements Listener {
             for (ProxiedPlayer p : StreamLine.getInstance().getProxy().getPlayers()) {
                 if (! p.hasPermission(ConfigUtils.moduleBPlayerLeavesPerm())) continue;
 
-                SavablePlayer other = PlayerUtils.getOrCreatePlayerStat(p);
+                SavablePlayer other = PlayerUtils.getOrGetPlayerStatByUUID(p.getUniqueId().toString());
 
                 label:
                 for (String s : order) {
@@ -588,7 +587,7 @@ public class JoinLeaveListener implements Listener {
 
         try {
             for (ProxiedPlayer pl : StreamLine.getInstance().getProxy().getPlayers()){
-                SavablePlayer p = PlayerUtils.getOrCreatePlayerStat(pl);
+                SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(pl.getUniqueId().toString());
 
                 if (GuildUtils.pHasGuild(stat)) {
                     SavableGuild guild = GuildUtils.getGuild(stat);

@@ -1,0 +1,18 @@
+queries:
+  votes:
+    link: "jdbc:mysql://<host>:<port>/<database>"
+    user: "user"
+    pass: "pass"
+    query: "select Votifer from lobby1_users where username = '%arg1%'"
+    set-as: "votes"
+
+executions:
+  create-tables:
+    link: "jdbc:mysql://<host>:<port>/<database>"
+    user: "user"
+    pass: "pass"
+    execution: "create table if not exists `mysqlb_values` ( `identifier` varchar(64) primary key not null, `myValues` varchar(64) )"
+
+values:
+  not-set-yet: "Not Set"
+  error: "Error"

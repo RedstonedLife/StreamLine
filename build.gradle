@@ -15,17 +15,19 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'net.plasmere'
-    version = '1.0.15.0'
+    version = '1.0.15.3'
 
     ext {
         caffeineVersion = '3.0.4'
         dv8tionVersion = '4.3.0_339'
-        geysermcVersion = '1.4.2-SNAPSHOT'
+        geysermcVersion = '2.0.0-SNAPSHOT'
         luckpermsVersion = '5.3'
-        nuvotifierVersion = '2.6.0'
+        nuvotifierVersion = '2.7.3'
         simplixStorageVersion = '3.2.3'
         sqlLiteVersion = '3.36.0.2'
-        viaApiVersion = '4.0.1'
+        viaApiVersion = '4.1.1'
+        hikariCPVersion = '4.0.1'
+        objectHunterVersion = '0.4.8'
     }
 
     java {
@@ -44,6 +46,7 @@ subprojects {
         maven { url 'https://repo.viaversion.com' }
         //JitPack
         maven { url 'https://jitpack.io' }
+        maven { url 'https://mvnrepository.com/artifact' }
     }
 
     jar.enabled = false

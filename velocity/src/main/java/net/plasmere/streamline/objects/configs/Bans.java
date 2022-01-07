@@ -1,10 +1,10 @@
 package net.plasmere.streamline.objects.configs;
 
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.config.backend.Configuration;
-import net.plasmere.streamline.config.backend.ConfigurationProvider;
-import net.plasmere.streamline.config.backend.YamlConfiguration;
+
 import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.io.File;
@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 
 public class Bans {
-    private Configuration bans;
+    private Config bans;
     private final File bfile = new File(StreamLine.getInstance().getConfDir(), "bans.yml");
 
     public Bans(){
@@ -26,7 +26,7 @@ public class Bans {
         bans = loadBans();
     }
 
-    public Configuration getBans() { return bans; }
+    public Config getBans() { return bans; }
 
     public void reloadBans(){
         try {
@@ -36,7 +36,7 @@ public class Bans {
         }
     }
 
-    public Configuration loadBans(){
+    public Config loadBans(){
         if (! bfile.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream("bans.yml")){
                 Files.copy(in, bfile.toPath());
@@ -45,21 +45,6 @@ public class Bans {
             }
         }
 
-        try {
-            bans = ConfigurationProvider.getProvider(YamlConfiguration.class).load(bfile); // ???
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        MessagingUtils.logInfo("Loaded bans!");
-
-        return bans;
-    }
-
-    public void saveConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(bans, bfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return LightningBuilder.fromFile(bfile).createConfig();
     }
 }

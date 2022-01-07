@@ -47,7 +47,9 @@ public class ChatFilterCommand extends SLCommand {
                     ChatFilter filter = FilterHandler.addFilter(new ChatFilter(name, enabled, scriptName, bypassPermission, blocked, regex, replacements));
                     MessagingUtils.sendChatFilterMessage(sender, filter, TextUtils.replaceAllSenderBungee(MessageConfUtils.filtersCommandCreate(), sender));
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                     return;
                 }
@@ -60,7 +62,9 @@ public class ChatFilterCommand extends SLCommand {
                     filter.toggleEnabled();
                     MessagingUtils.sendChatFilterMessage(sender, filter, TextUtils.replaceAllSenderBungee(MessageConfUtils.filtersCommandToggle(), sender));
                 } catch (Exception e) {
-                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                     e.printStackTrace();
                     return;
                 }

@@ -18,10 +18,17 @@ dependencies {
     shadow "net.dv8tion:JDA:${dv8tionVersion}"
 
     implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
-    implementation "org.geysermc:connector:${geysermcVersion}"
+    implementation "org.geysermc:core:${geysermcVersion}"
     implementation "com.viaversion:viaversion-api:${viaApiVersion}"
     implementation "net.kyori:adventure-text-serializer-legacy:${adventureVersion}"
     implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
+
+    implementation "com.zaxxer:HikariCP:${hikariCPVersion}"
+
+    // https://mvnrepository.com/artifact/net.objecthunter/exp4j
+    implementation "net.objecthunter:exp4j:${objectHunterVersion}"
+    shadow "net.objecthunter:exp4j:${objectHunterVersion}"
+
     implementation files('../libs/nuvotifier.jar')
 }
 

@@ -100,7 +100,7 @@ public class ServerConfig {
     public String[] getSampleArray() {
         String[] array = new String[getComparedSample().size()];
         int i = 0;
-        for (int it : getComparedSample().keySet()) {
+        for (int it : getComparedSample().singleLayerKeySet()) {
             array[i] = getComparedSample().get(it);
             i ++;
         }

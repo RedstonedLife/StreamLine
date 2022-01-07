@@ -67,7 +67,7 @@ public class ServerPermissions {
 
     public List<String> getInfoAsPropertyList() {
         List<String> infoList = new ArrayList<>();
-        for (String key : info.keySet()){
+        for (String key : info.singleLayerKeySet()){
             infoList.add(key + "=" + getFromKey(key));
         }
 
@@ -175,7 +175,7 @@ public class ServerPermissions {
     }
 
     public void loadServers(){
-        for (String s : info.keySet()) {
+        for (String s : info.singleLayerKeySet()) {
             servers.put(s, parseServers(s));
         }
     }
@@ -235,7 +235,7 @@ public class ServerPermissions {
     public String toString(){
         StringBuilder stringBuilder = new StringBuilder("[");
 
-        for (String server : servers.keySet()){
+        for (String server : servers.singleLayerKeySet()){
             stringBuilder.append(server).append("(");
             int i = 1;
             for (String allowed : servers.get(server)) {

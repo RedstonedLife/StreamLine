@@ -24,13 +24,15 @@ public class FriendCommand extends SLCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
-        SavableUser stat = PlayerUtils.getOrCreateSavableUser(sender);
+        SavableUser stat = PlayerUtils.getOrGetSavableUser(sender);
 
         if (stat == null) {
-            stat = PlayerUtils.getOrCreateSavableUser(sender);
+            stat = PlayerUtils.getOrGetSavableUser(sender);
             if (stat == null) {
                 MessagingUtils.logSevere("CANNOT INSTANTIATE THE PLAYER: " + sender.getName());
-                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", this.getClass().getName())
+                    );
                 return;
             }
         }
@@ -51,10 +53,12 @@ public class FriendCommand extends SLCommand {
             SavableUser other;
 
             if (args[1].equals("%")) {
-                other = PlayerUtils.getOrCreateSUByUUID("%");
+                other = PlayerUtils.getOrGetSavableUser("%");
             } else {
                 if (! PlayerUtils.exists(args[1])) {
-                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound);
+                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName())
+                            .replace("%class%", this.getClass().getName())
+                    );
                     return;
                 }
 
@@ -163,7 +167,7 @@ public class FriendCommand extends SLCommand {
             List<String> friends = new ArrayList<>();
             List<String> pending = new ArrayList<>();
 
-            SavableUser player = PlayerUtils.getOrCreateSavableUser(sender);
+            SavableUser player = PlayerUtils.getOrGetSavableUser(sender);
 
             if (player == null) return new ArrayList<>();
 

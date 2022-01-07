@@ -139,7 +139,7 @@ public class GuildUtils {
     }
 
     public static boolean exists(String username){
-        File file = new File(StreamLine.getInstance().getGDir(), Objects.requireNonNull(PlayerUtils.getOrCreatePlayerStat(username)).guild + ".properties");
+        File file = new File(StreamLine.getInstance().getGDir(), Objects.requireNonNull(PlayerUtils.getOrGetSavableUser(username)).guild + ".properties");
 
         return file.exists();
     }
@@ -688,7 +688,9 @@ public class GuildUtils {
                 }
             }
         } catch (Exception e) {
-            MessagingUtils.sendBGUserMessage(guild, sender.findSender(), sender.findSender(), MessageConfUtils.bungeeCommandErrorUnd());
+            MessagingUtils.sendBGUserMessage(guild, sender.findSender(), sender.findSender(), MessageConfUtils.bungeeCommandErrorUnd()
+                            .replace("%class%", GuildUtils.class.getName())
+                    );
             e.printStackTrace();
         }
     }
@@ -1499,7 +1501,9 @@ public class GuildUtils {
 //
 //        Category category = DiscordUtils.getCategory(CategoryType.GUILDS);
 //        if (category == null) {
-//            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd());
+//            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+//                            .replace("%class%", this.getClass().getName())
+//                    );
 //            return;
 //        }
 //

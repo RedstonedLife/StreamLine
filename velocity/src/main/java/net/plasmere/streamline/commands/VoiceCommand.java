@@ -42,7 +42,9 @@ public class VoiceCommand extends SLCommand {
 
                     SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
                     if (player == null) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 
@@ -79,7 +81,9 @@ public class VoiceCommand extends SLCommand {
 
                     SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
                     if (player == null) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 
@@ -120,7 +124,9 @@ public class VoiceCommand extends SLCommand {
 
                     SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
                     if (player == null) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 
@@ -163,7 +169,9 @@ public class VoiceCommand extends SLCommand {
 
                     SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
                     if (player == null) {
-                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou());
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
+                            .replace("%class%", this.getClass().getName())
+                    );
                         return;
                     }
 

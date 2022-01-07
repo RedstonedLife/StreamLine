@@ -27,17 +27,23 @@ dependencies {
     shadow "net.kyori:adventure-text-minimessage:${minimessageVersion}"
 
     implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
-    implementation "org.geysermc:connector:${geysermcVersion}"
-    implementation "com.viaversion:viaversion-api:${viaApiVersion}"
+    compileOnly "org.geysermc:core:${geysermcVersion}"
+    compileOnly "com.viaversion:viaversion-api:${viaApiVersion}"
     implementation "org.projectlombok:lombok:${lombokVersion}"
 
     implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
 
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
-    implementation 'mysql:mysql-connector-java:5.1.6'
-    shadow 'mysql:mysql-connector-java:5.1.6'
+    implementation 'mysql:mysql-connector-java:8.0.25'
+    shadow 'mysql:mysql-connector-java:8.0.25'
 
-    implementation files('../libs/nuvotifier.jar')
+    implementation "com.zaxxer:HikariCP:${hikariCPVersion}"
+
+    // https://mvnrepository.com/artifact/net.objecthunter/exp4j
+    implementation "net.objecthunter:exp4j:${objectHunterVersion}"
+    shadow "net.objecthunter:exp4j:${objectHunterVersion}"
+
+    compileOnly files('../libs/nuvotifier.jar')
 }
 
 blossom {

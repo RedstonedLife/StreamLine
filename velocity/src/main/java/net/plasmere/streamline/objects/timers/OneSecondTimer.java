@@ -6,14 +6,12 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.enums.CategoryType;
-import net.plasmere.streamline.objects.enums.SavableType;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.*;
-import net.plasmere.streamline.utils.sql.Driver;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -93,6 +91,7 @@ public class OneSecondTimer implements Runnable {
             }
 
             for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
+                player.updateOnline();
                 PlayerUtils.checkAndUpdateIfMuted(player);
             }
 
@@ -153,9 +152,11 @@ public class OneSecondTimer implements Runnable {
             for (long k : StreamLine.discordData.getVerified().keySet()) {
                 String uuid = StreamLine.discordData.getUUIDOfVerified(k);
                 if (uuid == null) continue;
+                if (uuid.equals("null")) continue;
                 if (uuid.equals("")) continue;
 
                 SavableUser user = PlayerUtils.getOrGetSavableUser(uuid);
+                if (user == null) continue;
 
                 try {
                     for (Guild guild : StreamLine.getJda().getGuilds()) {
@@ -188,6 +189,9 @@ public class OneSecondTimer implements Runnable {
         if (! ConfigUtils.guildsSync()) return;
 
         for (SavableGuild guild : new ArrayList<>(GuildUtils.getGuilds())) {
+            if (guild.name == null) return;
+            if (guild.name.equals("")) return;
+
             List<SavablePlayer> players = new ArrayList<>();
 
             for (SavableUser user : guild.totalMembers) {
@@ -197,7 +201,7 @@ public class OneSecondTimer implements Runnable {
             if (guild.voiceID == 0L) {
                 VoiceChannel channel = DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
                 if (channel == null) continue;
-                guild.updateKey("voice", channel.getIdLong());
+                guild.setVoiceID(channel.getIdLong());
             } else {
                 DiscordUtils.addToVoice(guild.voiceID, players.toArray(new SavablePlayer[0]));
             }
@@ -209,6 +213,9 @@ public class OneSecondTimer implements Runnable {
         if (! ConfigUtils.partiesSync()) return;
 
         for (SavableParty party : new ArrayList<>(PartyUtils.getParties())) {
+            if (party.uuid == null) return;
+            if (party.uuid.equals("")) return;
+
             List<SavablePlayer> players = new ArrayList<>();
 
             for (SavableUser user : party.totalMembers) {
@@ -216,9 +223,13 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (party.voiceID == 0L) {
-                VoiceChannel channel = DiscordUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
+                SavableUser user = PlayerUtils.getOrGetSavableUser(party.uuid);
+
+                if (user == null) continue;
+
+                VoiceChannel channel = DiscordUtils.createVoice(user.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
                 if (channel == null) continue;
-                party.updateKey("voice", channel.getIdLong());
+                party.setVoiceID(channel.getIdLong());
             } else {
                 DiscordUtils.addToVoice(party.voiceID, players.toArray(new SavablePlayer[0]));
             }
