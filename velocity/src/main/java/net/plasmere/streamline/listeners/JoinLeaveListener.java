@@ -112,22 +112,14 @@ public class JoinLeaveListener {
             stat.setChat(StreamLine.chatConfig.getDefaultChannel(), StreamLine.chatConfig.getDefaultIdentifier());
         }
 
-        SavableGuild guild = null;
-        SavableParty party = null;
-
-        if (! GuildUtils.guildIsLoadedAlready(stat)) {
-            guild = GuildUtils.addGuild(new SavableGuild(stat.guild));
-        }
-
-        if (! PartyUtils.hasOnlineMemberAlready(stat)) {
-            party = PartyUtils.addParty(new SavableParty(stat.party));
-        }
+        SavableGuild guild = GuildUtils.addGuildIfNotAlreadyLoaded(stat);
+        SavableParty party = PartyUtils.addPartyIfNotAlreadyLoaded(stat);
 
         String joinsOrder = ConfigUtils.moduleBPlayerJoins();
 
         if (!joinsOrder.equals("")) {
             String[] order = joinsOrder.split(",");
-            for (Player p : StreamLine.getInstance().getProxy().getAllPlayers()) {
+            for (Player p : StreamLine.getProxy().getAllPlayers()) {
                 if (!p.hasPermission(ConfigUtils.moduleBPlayerJoinsPerm())) continue;
 
                 SavablePlayer other = PlayerUtils.getOrGetPlayerStatByUUID(p.getUniqueId().toString());

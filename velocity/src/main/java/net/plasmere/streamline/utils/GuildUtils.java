@@ -151,6 +151,25 @@ public class GuildUtils {
         return guild;
     }
 
+    public static SavableGuild addGuildIfNotAlreadyLoaded(SavableUser user){
+        if (user.guild.equals("")) return null;
+        if (groupsContainsGroupByUUID(user.guild)) return getGuild(user);
+
+        if (! existsByGUID(user.guild)) {
+            user.guild = "";
+            return null;
+        }
+
+        SavableGuild guild = getOrGetGuildByGUID(user.guild);
+        if (guild == null) return null;
+        if (guild.uuid == null) return null;
+        if (guild.uuid.equals("")) return null;
+
+        guild.loadValues();
+
+        return addGuild(guild);
+    }
+
     public static boolean hasGuild(SavableUser player) {
         for (SavableGuild guild : guilds) {
             if (guild.hasMember(player)) return true;
@@ -948,8 +967,6 @@ public class GuildUtils {
                     );
                     return;
                 case MODERATOR:
-                    guild.replaceLeader(player);
-
                     for (SavableUser pl : guild.totalMembers) {
                         if (pl.uuid.equals(guild.uuid)) {
                             MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(promoteLeader, player)
@@ -968,11 +985,11 @@ public class GuildUtils {
                             );
                         }
                     }
+
+                    guild.replaceLeader(player);
                     return;
                 case MEMBER:
                 default:
-                    guild.setModerator(player);
-
                     for (SavableUser pl : guild.totalMembers) {
                         if (pl.uuid.equals(guild.uuid)) {
                             MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(promoteLeader, player)
@@ -991,6 +1008,7 @@ public class GuildUtils {
                             );
                         }
                     }
+                    guild.setModerator(player);
                     break;
             }
 
@@ -1445,15 +1463,16 @@ public class GuildUtils {
         guilds.clear();
 
         for (SavableUser user : PlayerUtils.getStatsOnline()) {
-            SavableGuild guild = getOrGetGuild(user);
+            if (user.guild.equals("")) continue;
+            SavableGuild guild = getOrGetGuildByGUID(user.guild);
+            if (guild == null) continue;
+            if (guild.uuid == null) continue;
+            if (guild.uuid.equals("")) continue;
+            if (groupsContainsGroupByUUID(guild.uuid)) continue;
 
-            if (guild != null) {
-                if (guild.hasMember(user)) continue;
-            }
+            guild.loadValues();
 
-            if (pHasGuild(user)) {
-                addGuild(new SavableGuild(user.guild));
-            }
+            addGuild(guild);
         }
     }
 

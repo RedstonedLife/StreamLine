@@ -189,6 +189,9 @@ public class OneSecondTimer implements Runnable {
         if (! ConfigUtils.guildsSync()) return;
 
         for (SavableGuild guild : new ArrayList<>(GuildUtils.getGuilds())) {
+            if (guild.name == null) return;
+            if (guild.name.equals("")) return;
+
             List<SavablePlayer> players = new ArrayList<>();
 
             for (SavableUser user : guild.totalMembers) {
@@ -210,6 +213,9 @@ public class OneSecondTimer implements Runnable {
         if (! ConfigUtils.partiesSync()) return;
 
         for (SavableParty party : new ArrayList<>(PartyUtils.getParties())) {
+            if (party.uuid == null) return;
+            if (party.uuid.equals("")) return;
+
             List<SavablePlayer> players = new ArrayList<>();
 
             for (SavableUser user : party.totalMembers) {

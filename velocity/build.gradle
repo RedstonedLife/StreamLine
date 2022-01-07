@@ -27,8 +27,8 @@ dependencies {
     shadow "net.kyori:adventure-text-minimessage:${minimessageVersion}"
 
     implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
-    implementation "org.geysermc:core:${geysermcVersion}"
-    implementation "com.viaversion:viaversion-api:${viaApiVersion}"
+    compileOnly "org.geysermc:core:${geysermcVersion}"
+    compileOnly "com.viaversion:viaversion-api:${viaApiVersion}"
     implementation "org.projectlombok:lombok:${lombokVersion}"
 
     implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
@@ -43,7 +43,7 @@ dependencies {
     implementation "net.objecthunter:exp4j:${objectHunterVersion}"
     shadow "net.objecthunter:exp4j:${objectHunterVersion}"
 
-    implementation files('../libs/nuvotifier.jar')
+    compileOnly files('../libs/nuvotifier.jar')
 }
 
 blossom {

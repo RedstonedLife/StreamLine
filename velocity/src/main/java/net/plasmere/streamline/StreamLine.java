@@ -33,6 +33,7 @@ import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.EventsReader;
 import net.plasmere.streamline.libs.Metrics;
 import net.plasmere.streamline.listeners.LPListener;
+import net.plasmere.streamline.objects.configs.obj.MSBConfig;
 import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.configs.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
@@ -59,6 +60,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -98,6 +100,9 @@ public class StreamLine {
 	public static RanksConfig ranksConfig;
 	public static ChatFilters chatFilters;
 	public static DatabaseInfo databaseInfo;
+
+	public static MSBConfig msbConfig;
+	public static TreeMap<String, String> holders = new TreeMap<>();
 
 	public final static String customChannel = "streamline:channel";
 	public final static String[] identifer = customChannel.split(":", 2);
@@ -466,6 +471,8 @@ public class StreamLine {
 			DataSource.verifyTables();
 		}
 
+
+
 		if (ConfigUtils.moduleDEnabled()) {
 			if (ConfigUtils.moduleDPC()) {
 				if (lpHolder.enabled) {
@@ -519,6 +526,8 @@ public class StreamLine {
 		PluginUtils.state = NetworkState.STARTING;
 
 		instance = this;
+		// Teller.
+		getLogger().info("Loading version [v" + getVersion() + "]...");
 
 		// LP Support.
 		lpHolder = new LPHolder();
@@ -530,9 +539,6 @@ public class StreamLine {
 		geyserHolder = new GeyserHolder();
 
 		getProxy().getChannelRegistrar().register(customIdentifier);
-
-		// Teller.
-		getLogger().info("Loading version [v" + getVersion() + "]...");
 
 		// Configs...
 		loadConfigs();
@@ -593,13 +599,8 @@ public class StreamLine {
 
 		// Set up SavableConsole.
 		SavableConsole console = PlayerUtils.applyConsole();
-		if (GuildUtils.existsByGUID(console.guild)) {
-			try {
-				GuildUtils.addGuild(new SavableGuild(console.guild));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		SavableGuild guild = GuildUtils.addGuildIfNotAlreadyLoaded(console);
+		SavableParty party = PartyUtils.addPartyIfNotAlreadyLoaded(console);
 
 		// Setting up SavablePlayer's HistorySave files.
 		if (ConfigUtils.chatHistoryEnabled()) {

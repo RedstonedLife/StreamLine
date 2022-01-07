@@ -153,6 +153,25 @@ public class PartyUtils {
         return group;
     }
 
+    public static SavableParty addPartyIfNotAlreadyLoaded(SavableUser user){
+        if (user.guild.equals("")) return null;
+        if (groupsContainsGroupByUUID(user.guild)) return getParty(user);
+
+        if (! existsByPUID(user.party)) {
+            user.party = "";
+            return null;
+        }
+
+        SavableParty party = getOrGetGroupByGUID(user.guild);
+        if (party == null) return null;
+        if (party.uuid == null) return null;
+        if (party.uuid.equals("")) return null;
+
+        party.loadValues();
+
+        return addParty(party);
+    }
+
     public static boolean hasOnlineMemberAlready(SavableUser stat){
         List<SavableUser> users = new ArrayList<>(PlayerUtils.getStats());
 
@@ -1504,15 +1523,16 @@ public class PartyUtils {
         parties.clear();
 
         for (SavableUser user : PlayerUtils.getStatsOnline()) {
-            SavableParty party = getOrGetParty(user);
+            if (user.party.equals("")) continue;
+            SavableParty group = getOrGetGroupByGUID(user.party);
+            if (group == null) continue;
+            if (group.uuid == null) continue;
+            if (group.uuid.equals("")) continue;
+            if (groupsContainsGroupByUUID(group.uuid)) continue;
 
-            if (party != null) {
-                if (party.hasMember(user)) continue;
-            }
+            group.loadValues();
 
-            if (pHasParty(user)) {
-                addParty(new SavableParty(user.party));
-            }
+            addParty(group);
         }
     }
 

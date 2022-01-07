@@ -2094,3 +2094,13 @@ playtime:
     start: "&eSyncing now...!"
     finish: "&eFinished syncing!"
   top: "&a#%position% &8: &d%player_formatted% &ewith &b%player_play_hours% &chours&8."
+
+mysqlbridger:
+  execute:
+    not-supplied: "&cYou haven't supplied an execution!"
+    not-valid: "&cYou haven't supplied a valid execution!"
+    complete: "&eExecution &7(&c%set%&7) &efinished&8!"
+  query:
+    not-supplied: "&cYou haven't supplied a query!"
+    not-valid: "&cYou haven't supplied a valid query!"
+    complete: "&eExecution &7(&c%set%&7) &efinished&8!"

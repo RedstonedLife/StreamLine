@@ -562,6 +562,8 @@ modules:
       max:
         default: 1
         base-permission: "streamline.voice.limit."
+    mysqlbridger:
+      enabled: true
   bstats:
     make-server-discoverable: true
     discoverable-ip: "my.server.net"

@@ -36,6 +36,18 @@ public class TextUtils {
         return s;
     }
 
+    public static String replaceArgs(String from, String... args) {
+        String to = from;
+
+        int i = 1;
+        for (String arg : args) {
+            to = to.replace("%arg" + i + "%", arg);
+            i ++;
+        }
+
+        return to;
+    }
+
     public static String resize(String text, int digits) {
         try {
             digits = getDigits(digits, text.length());
@@ -503,7 +515,7 @@ public class TextUtils {
     }
 
     public static String replaceAllPlayerBungee(String of, String uuid) {
-        if (! uuid.contains("-")) return replaceAllPlayerBungeeFromDiscord(of, uuid);
+        if (! uuid.contains("-") && ! uuid.equals("%")) return replaceAllPlayerBungeeFromDiscord(of, uuid);
 
         return replaceAllPlayerBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
@@ -610,7 +622,7 @@ public class TextUtils {
     }
 
     public static String replaceAllUserBungee(String of, String uuid) {
-        if (! uuid.contains("-")) return replaceAllUserBungeeFromDiscord(of, uuid);
+        if (! uuid.contains("-") && ! uuid.equals("%")) return replaceAllUserBungeeFromDiscord(of, uuid);
 
         return replaceAllUserBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
@@ -717,7 +729,7 @@ public class TextUtils {
     }
 
     public static String replaceAllSenderBungee(String of, String uuid) {
-        if (! uuid.contains("-")) return replaceAllSenderBungeeFromDiscord(of, uuid);
+        if (! uuid.contains("-") && ! uuid.equals("%")) return replaceAllSenderBungeeFromDiscord(of, uuid);
 
         return replaceAllSenderBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
@@ -919,7 +931,7 @@ public class TextUtils {
     }
 
     public static Collection<RegisteredServer> getServers() {
-        return StreamLine.getInstance().getProxy().getAllServers();
+        return StreamLine.getProxy().getAllServers();
     }
 
     public static int replaceAllPlayerRanks(SavablePlayer player) {

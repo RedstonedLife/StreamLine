@@ -56,7 +56,7 @@ public class SavableGuild extends SavableGroup {
     */
 
     public int getNeededXp() {
-        loadValues();
+//        loadValues();
         int needed = 0;
 
         String function =
@@ -72,19 +72,17 @@ public class SavableGuild extends SavableGroup {
     }
 
     public int xpUntilNextLevel(){
-        loadValues();
-        //        loadValues();
+//        loadValues();
         return getNeededXp() - this.totalXP;
     }
 
     public void addTotalXP(int amount){
-        //        loadValues();
+//        loadValues();
         setTotalXP(amount + this.totalXP);
     }
 
     public void setTotalXP(int amount){
-        loadValues();
-        //        loadValues();
+//        loadValues();
         this.totalXP = amount;
 
         while (xpUntilNextLevel() <= 0) {
@@ -94,12 +92,11 @@ public class SavableGuild extends SavableGroup {
 
         currentXP = getCurrentXP();
 
-        saveAll();
+//        saveAll();
     }
 
     public int getCurrentLevelXP(){
-        loadValues();
-        //        loadValues();
+//        loadValues();
         int xpTill = 0;
         for (int i = 0; i <= this.level; i++) {
             xpTill += getNeededXp();
@@ -109,13 +106,13 @@ public class SavableGuild extends SavableGroup {
     }
 
     public int getCurrentXP(){
-        loadValues();
+//        loadValues();
         return this.totalXP - getCurrentLevelXP();
     }
 
 
     public String setNameReturnOld(String newName) {
-        loadValues();
+//        loadValues();
         String toReturn = this.name;
         this.name = newName;
         return toReturn;

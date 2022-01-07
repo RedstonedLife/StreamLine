@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GeyserHolder {
     public File playerPath = new File(StreamLine.getInstance().getPlDir(), "geyser" + File.separator);
-    public GeyserImpl geyser;
+//    public GeyserImpl geyser;
     public boolean enabled;
     public GeyserFile file;
 
@@ -34,9 +34,9 @@ public class GeyserHolder {
         }
 
         try {
-            this.geyser = GeyserImpl.getInstance();
-            if (this.geyser == null) MessagingUtils.logWarning("Geyser is installed, but we could not get the instance!");
-            else MessagingUtils.logInfo("Geyser is installed! Using Geyser support!");
+//            this.geyser = GeyserImpl.getInstance();
+//            if (this.geyser == null) MessagingUtils.logWarning("Geyser is installed, but we could not get the instance!");
+//            else MessagingUtils.logInfo("Geyser is installed! Using Geyser support!");
             return true;
         } catch (Exception e) {
             return false;
@@ -51,14 +51,14 @@ public class GeyserHolder {
         }
     }
 
-    public void checkConnector(){
-        if (geyser == null) this.geyser = GeyserImpl.getInstance();
-    }
+//    public void checkConnector(){
+//        if (geyser == null) this.geyser = GeyserImpl.getInstance();
+//    }
 
     public List<GeyserSession> getPlayers() {
-        checkConnector();
+//        checkConnector();
 
-        return new ArrayList<>(geyser.onlineConnections());
+        return GeyserImpl.getInstance().onlineConnections();
     }
 
     public String getName(GeyserSession session) {
@@ -70,7 +70,7 @@ public class GeyserHolder {
     }
 
     public boolean isGeyserPlayer(Player player) {
-        checkConnector();
+//        checkConnector();
 
         for (GeyserSession session : getPlayers()) {
             if (getName(session).equals(PlayerUtils.getSourceName(player))) return true;
@@ -80,8 +80,6 @@ public class GeyserHolder {
     }
 
     public boolean isGeyserPlayer(String player) {
-        checkConnector();
-
         for (GeyserSession session : getPlayers()) {
             if (getName(session).equals(player)) return true;
         }
@@ -90,8 +88,6 @@ public class GeyserHolder {
     }
 
     public String getGeyserUUID(String player) {
-        checkConnector();
-
         for (GeyserSession session : getPlayers()) {
             if (getName(session).equals(player)) {
                 return getXUID(session);
@@ -102,8 +98,6 @@ public class GeyserHolder {
     }
 
     public Player getPPlayerByUUID(String uuid){
-        checkConnector();
-
         for (GeyserSession session : getPlayers()) {
             if (getXUID(session).equals(uuid)) StreamLine.getProxy().getPlayer(getName(session));
         }

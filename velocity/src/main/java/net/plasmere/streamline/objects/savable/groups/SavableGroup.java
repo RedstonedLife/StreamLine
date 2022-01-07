@@ -10,6 +10,7 @@ import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.sql.DataSource;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.*;
 
 public abstract class SavableGroup extends SavableFile {
@@ -37,19 +38,21 @@ public abstract class SavableGroup extends SavableFile {
     public SavableGroup(String uuid, SavableAdapter.Type type) {
         super(uuid, type);
 
-        SavableUser user = PlayerUtils.getOrGetSavableUser(uuid);
-        if (user == null) return;
+        if (firstLoad) {
+            SavableUser user = PlayerUtils.getOrGetSavableUser(uuid);
+            if (user == null) return;
 
-        addToTMembers(user);
+            addToTMembers(user);
 
-        switch (type) {
-            case PARTY -> {
-                user.setParty(uuid);
-                this.databaseID = DataSource.createParty(user, (SavableParty) this);
-            }
-            case GUILD -> {
-                user.setGuild(uuid);
-                this.databaseID = DataSource.createGuild(user, (SavableGuild) this);
+            switch (type) {
+                case PARTY -> {
+                    user.setParty(uuid);
+                    this.databaseID = DataSource.createParty(user, (SavableParty) this);
+                }
+                case GUILD -> {
+                    user.setGuild(uuid);
+                    this.databaseID = DataSource.createGuild(user, (SavableGuild) this);
+                }
             }
         }
     }
@@ -157,12 +160,12 @@ public abstract class SavableGroup extends SavableFile {
     }
 
     public SavableUser getMember(String uuid) {
-        loadValues();
+//        loadValues();
         return PlayerUtils.getOrGetSavableUser(uuid);
     }
 
     public void removeUUIDCompletely(String uuid) {
-        loadValues();
+//        loadValues();
         SavableUser user = PlayerUtils.getOrGetSavableUser(uuid);
         if (user == null) return;
 
@@ -170,11 +173,11 @@ public abstract class SavableGroup extends SavableFile {
         members.remove(user);
         totalMembers.remove(user);
 //        invites.remove(user);
-        saveAll();
+//        saveAll();
     }
 
     public boolean hasMember(String uuid){
-        loadValues();
+//        loadValues();
         for (SavableUser user : totalMembers) {
             if (user.uuid.equals(uuid)) return true;
         }
@@ -183,31 +186,31 @@ public abstract class SavableGroup extends SavableFile {
     }
 
     public boolean hasMember(SavableUser stat){
-        loadValues();
+//        loadValues();
         return hasMember(stat.uuid);
     }
 
     public int getSize(){
-        loadValues();
+//        loadValues();
         return totalMembers.size();
     }
 
     public void removeFromModerators(SavableUser stat){
-        loadValues();
+//        loadValues();
         if (! moderators.contains(stat)) return;
         moderators.remove(stat);
-        saveAll();
+//        saveAll();
     }
 
     public void remFromMembers(SavableUser stat){
-        loadValues();
+//        loadValues();
         if (! members.contains(stat)) return;
         members.remove(stat);
-        saveAll();
+//        saveAll();
     }
 
     public void remFromTMembers(SavableUser stat){
-        loadValues();
+//        loadValues();
         if (! totalMembers.contains(stat)) return;
         totalMembers.remove(stat);
 
@@ -219,53 +222,53 @@ public abstract class SavableGroup extends SavableFile {
                 DataSource.removePlayerFromGuild(stat, (SavableGuild) this);
             }
         }
-        saveAll();
+//        saveAll();
     }
 
     public void remFromInvites(SavableUser from, SavableUser stat){
-        loadValues();
+//        loadValues();
         if (! invites.contains(stat)) return;
         invites.remove(stat);
-        saveAll();
+//        saveAll();
     }
 
     public void remFromInvitesCompletely(SavableUser stat){
-        loadValues();
+//        loadValues();
         if (! invites.contains(stat)) return;
         invites.remove(stat);
-        saveAll();
+//        saveAll();
     }
 
     public void addToModerators(SavableUser stat){
-        loadValues();
+//        loadValues();
         if (moderators.contains(stat)) return;
         moderators.add(stat);
-        saveAll();
+//        saveAll();
     }
 
     public void addToMembers(SavableUser stat){
-        loadValues();
+//        loadValues();
         if (members.contains(stat)) return;
         members.add(stat);
-        saveAll();
+//        saveAll();
     }
 
     public void addToTMembers(SavableUser stat){
-        loadValues();
+//        loadValues();
         if (totalMembers.contains(stat)) return;
         totalMembers.add(stat);
-        saveAll();
+//        saveAll();
     }
 
     public void addInvite(SavableUser to) {
-        loadValues();
+//        loadValues();
         if (invites.contains(to)) return;
         invites.add(to);
-        saveAll();
+//        saveAll();
     }
 
     public void addMember(SavableUser stat){
-        loadValues();
+//        loadValues();
         addToTMembers(stat);
         addToMembers(stat);
 
@@ -280,11 +283,11 @@ public abstract class SavableGroup extends SavableFile {
                 DataSource.addPlayerToGuild(stat, (SavableGuild) this);
             }
         }
-        saveAll();
+//        saveAll();
     }
 
     public void removeMemberFromGroup(SavableUser stat){
-        loadValues();
+//        loadValues();
         Random RNG = new Random();
 
         if (uuid.equals(stat.uuid)){
@@ -324,13 +327,13 @@ public abstract class SavableGroup extends SavableFile {
         remFromMembers(stat);
         remFromTMembers(stat);
 
-        saveAll();
+//        saveAll();
     }
 
     public void setMuted(boolean bool) {
-        loadValues();
+//        loadValues();
         isMuted = bool;
-        saveAll();
+//        saveAll();
     }
 
     public void toggleMute(){
@@ -338,9 +341,9 @@ public abstract class SavableGroup extends SavableFile {
     }
 
     public void setPublic(boolean bool){
-        loadValues();
+//        loadValues();
         isPublic = bool;
-        saveAll();
+//        saveAll();
     }
 
     public void togglePublic() {
@@ -359,7 +362,7 @@ public abstract class SavableGroup extends SavableFile {
     }
 
     public void setModerator(SavableUser stat){
-        loadValues();
+//        loadValues();
         Random RNG = new Random();
 
         remFromMembers(stat);
@@ -398,11 +401,11 @@ public abstract class SavableGroup extends SavableFile {
 
         addToModerators(stat);
 
-        saveAll();
+//        saveAll();
     }
 
     public void setMember(SavableUser stat){
-        loadValues();
+//        loadValues();
         Random RNG = new Random();
 
         removeFromModerators(stat);
@@ -442,11 +445,16 @@ public abstract class SavableGroup extends SavableFile {
         addToMembers(stat);
         addToTMembers(stat);
 
-        saveAll();
+//        saveAll();
     }
 
     public void replaceLeader(SavableUser with){
-        loadValues();
+        try {
+            Files.delete(file.toPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        loadValues();
         addToModerators(PlayerUtils.getOrGetSavableUser(uuid));
         removeFromModerators(with);
         remFromMembers(with);
@@ -454,29 +462,38 @@ public abstract class SavableGroup extends SavableFile {
 
         this.uuid = with.uuid;
 
-        file.delete();
+        try {
+            file = new File(type.path, with.uuid + type.suffix);
+            if (file.exists()) Files.delete(file.toPath());
+            file.createNewFile();
+            saveAll();
+            loadValues();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        file = null;
-        file = new File(type.path + uuid + type.suffix);
-        loadValues();
-
-        saveAll();
+        for (SavableUser user : totalMembers) {
+            if (this instanceof SavableGuild) user.guild = with.uuid;
+            if (this instanceof SavableParty) user.party = with.uuid;
+            user.saveAll();
+        }
+//        saveAll();
     }
 
     public void setVoiceID(long voiceID) {
-        loadValues();
+//        loadValues();
         this.voiceID = voiceID;
-        saveAll();
+//        saveAll();
     }
 
     public void setDatabaseID(int id) {
-        loadValues();
+//        loadValues();
         this.databaseID = id;
-        saveAll();
+//        saveAll();
     }
 
     public boolean hasModPerms(String uuid) {
-        loadValues();
+//        loadValues();
         try {
             return hasModPerms(PlayerUtils.getOrGetSavableUser(uuid));
         } catch (Exception e) {
@@ -485,7 +502,7 @@ public abstract class SavableGroup extends SavableFile {
     }
 
     public boolean hasModPerms(SavableUser stat) {
-        loadValues();
+//        loadValues();
         try {
             return moderators.contains(stat) || uuid.equals(stat.uuid);
         } catch (Exception e) {
@@ -494,18 +511,18 @@ public abstract class SavableGroup extends SavableFile {
     }
 
     public void setMaxSize(int size){
-        loadValues();
+//        loadValues();
         SavableUser user = PlayerUtils.getOrGetSavableUser(uuid);
         if (user == null) return;
 
         if (size <= getMaxSize(user))
             this.maxSize = size;
 
-        saveAll();
+//        saveAll();
     }
 
     public int getMaxSize(SavableUser leader){
-        loadValues();
+//        loadValues();
         if (! StreamLine.lpHolder.enabled || leader instanceof SavableConsole) {
             switch (type) {
                 case GUILD -> {
@@ -550,7 +567,7 @@ public abstract class SavableGroup extends SavableFile {
     }
 
     public boolean hasGroupedSize(String group) {
-        loadValues();
+//        loadValues();
         for (String key : ConfigUtils.getGroupSizeConfig().singleLayerKeySet()) {
             if (group.equals(key)) return true;
         }

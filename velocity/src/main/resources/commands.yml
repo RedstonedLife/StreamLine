@@ -844,6 +844,30 @@ commands:
         aliases:
           - "bplaytime"
           - "bpt"
+      # The playtime command.
+      msbexecute:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "msbexecute"
+        # Custom permission.
+        permission: "streamline.command.mysqlbridger.execute"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "dbexecute"
+          - "dbex"
+      # The playtime command.
+      msbquery:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "msbquery"
+        # Custom permission.
+        permission: "streamline.command.mysqlbridger.query"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "dbquery"
+          - "dbq"
     # For messaging commands...
     messaging:
       # The ignore command.

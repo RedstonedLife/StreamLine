@@ -5,6 +5,10 @@ import de.leonhard.storage.LightningBuilder;
 import de.leonhard.storage.Toml;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.lists.SingleSet;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
+import net.plasmere.streamline.objects.savable.users.SavableConsole;
+import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.io.File;
@@ -13,28 +17,34 @@ public abstract class SavableFile {
     public File file;
     public Toml config;
     public String uuid;
-    public SavableAdapter.Type type;
     public boolean enabled;
+    public boolean firstLoad;
+    public SavableAdapter.Type type;
+
+    public String parseFileName(File file) {
+        return file.getName().substring(0, file.getName().lastIndexOf("."));
+    }
 
     public SavableFile(File file) {
         this.file = file;
-        SingleSet<String, SavableAdapter.Type> parsed;
 
         try {
-            if (! this.file.exists()) if (! this.file.createNewFile()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Couldn't create file for UUID: " + this.uuid);
+            if (! this.file.exists()) {
+                if (! this.file.createNewFile()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Couldn't create file for UUID: " + this.uuid);
+                if (this.file.exists()) firstLoad = true;
+            } else {
+                firstLoad = false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try {
-            parsed = SavableAdapter.parseUUIDAndTypeFromFile(this.file);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
+        this.uuid = parseFileName(this.file);
 
-        this.uuid = parsed.key;
-        this.type = parsed.value;
+        if (this instanceof SavableGuild) this.type = SavableAdapter.Type.GUILD;
+        if (this instanceof SavableParty) this.type = SavableAdapter.Type.PARTY;
+        if (this instanceof SavablePlayer) this.type = SavableAdapter.Type.PLAYER;
+        if (this instanceof SavableConsole) this.type = SavableAdapter.Type.CONSOLE;
 
         try {
             this.config = loadFile();
