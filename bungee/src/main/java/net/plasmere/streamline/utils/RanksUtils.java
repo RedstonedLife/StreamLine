@@ -17,7 +17,7 @@ public class RanksUtils {
     private static int OTHER = 0;
 
     public static int fromName(String name){
-        for (int n : StreamLine.ranksConfig.checkedGroups().singleLayerKeySet()) {
+        for (int n : StreamLine.ranksConfig.checkedGroups().keySet()) {
             if (StreamLine.ranksConfig.checkedGroups().get(n).equals(name)) return n;
         }
 
@@ -44,8 +44,6 @@ public class RanksUtils {
     public static String getNewGroup(SavablePlayer player) {
         int intToTest = TextUtils.replaceAllPlayerRanks(player);
 
-        if (StreamLine.ranksConfig.checkedGroups().size() <= 0) return "";
-
         if (intToTest > StreamLine.ranksConfig.checkedGroups().firstKey()) {
             int currentReq = StreamLine.ranksConfig.checkedGroups().lastKey();
             while (intToTest < currentReq) {
@@ -63,7 +61,7 @@ public class RanksUtils {
     }
 
     public static int checkAndChange(SavablePlayer player){
-        if (player == null) return FAILED;
+        if (player == null) return OTHER;
 
         if (! StreamLine.lpHolder.enabled) return FAILED;
 
@@ -72,16 +70,12 @@ public class RanksUtils {
             User user = api.getUserManager().getUser(player.getUniqueId());
             if (user == null) return FAILED;
 
-            String gString = getNewGroup(player);
-            if (gString.equals("")) return FAILED;
-
-            Group group = api.getGroupManager().getGroup(gString);
+            Group group = api.getGroupManager().getGroup(getNewGroup(player));
             if (group == null) return FAILED;
 
             if (getNewGroup(player).equals(user.getPrimaryGroup())) return OTHER;
 
-            if (!canChange(user)) return OTHER;
-
+            if (! canChange(user)) return OTHER;
 
             api.getUserManager().modifyUser(user.getUniqueId(), (User u) -> {
                 // Remove all other inherited groups the user had before.
@@ -93,8 +87,7 @@ public class RanksUtils {
                 // Add the node to the user.
                 u.data().add(node);
             });
-//            user.setPrimaryGroup(group.getName());
-//            api.getUserManager().saveUser(user);
+
             return SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();

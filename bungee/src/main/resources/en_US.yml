@@ -696,8 +696,6 @@ party:
     console: "%sender_absolute% warped %leader_normal%'s party's to their server!"
     # Discord embed title.
     title: "PARTY WARP"
-  sync:
-    sender: "&eSynced your party with discord! You should be able to find a voice channel for your party in the category \"%category%\"!"
 
 # Messages for the stream command:
 stream:
@@ -768,6 +766,8 @@ parties:
     true: "&aTRUE"
     # If not.
     false: "&cFALSE"
+  save: "&eJust saved all of the current parties in the cache!"
+  reload: "&eJust reloaded all cached parties. Make sure to save the parties first! &d/parties save"
 
 # For command "sudo":
 sudo:
@@ -1241,8 +1241,6 @@ guild:
     console: "%sender_absolute% renamed %leader_normal%'s guild to %name% from %old_name%!"
     # Discord embed title.
     title: "GUILD RENAME"
-  sync:
-    sender: "&eSynced your guild with discord! You should be able to find a voice channel for your guild in the category \"%category%\"!"
 
 # Messages for the guilds command:
 guilds:
@@ -1302,6 +1300,8 @@ guilds:
     true: "&aTRUE"
     # If false.
     false: "&cFALSE"
+  save: "&eJust saved all of the current guilds in the cache!"
+  reload: "&eJust reloaded all cached guilds. Make sure to save the guilds first! &d/guilds save"
 
 # Info for stats.
 # Fillers:
@@ -1841,6 +1841,8 @@ getstats:
     not-last: "&d%player_formatted%&8, "
     # If the last stat.
     last: "&d%player_formatted%&8."
+  save: "&eJust saved all of the current users in the cache!"
+  reload: "&eJust reloaded all cached users. Make sure to save the users first! &d/getstats save"
 
 # Settings command...
 settings:
@@ -2078,3 +2080,27 @@ broadcast:
 bypass-proxychat:
   message: "&eYou will now bypass proxychat for &a%messages% &emessages!"
   done: "&eNo longer bypassing proxychat."
+
+playtime:
+  console:
+    toggle: "&eToggled console printing to %toggle%&8!"
+    enabled: "&aTRUE"
+    disabled: "&cFALSE"
+  get: "&ePlayTime of &d%player_formatted%&8: &6%player_play_seconds%"
+  remove: "&eRemoved &6%playtime% &evote(s) from &d%player_formatted%&8! &eCurrent&8: &6%player_play_seconds%"
+  add: "&eAdded &6%playtime% &evote(s) to &d%player_formatted%&8! &eCurrent&8: &6%player_play_seconds%"
+  set: "&eSet &6%playtime% &evote(s) for &d%player_formatted%&8! &eCurrent&8: &6%player_play_seconds%"
+  sync:
+    start: "&eSyncing now...!"
+    finish: "&eFinished syncing!"
+  top: "&a#%position% &8: &d%player_formatted% &ewith &b%player_play_hours% &chours&8."
+
+mysqlbridger:
+  execute:
+    not-supplied: "&cYou haven't supplied an execution!"
+    not-valid: "&cYou haven't supplied a valid execution!"
+    complete: "&eExecution &7(&c%set%&7) &efinished&8!"
+  query:
+    not-supplied: "&cYou haven't supplied a query!"
+    not-valid: "&cYou haven't supplied a valid query!"
+    complete: "&eExecution &7(&c%set%&7) &efinished&8!"

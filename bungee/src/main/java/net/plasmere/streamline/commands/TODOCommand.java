@@ -1,7 +1,10 @@
 package net.plasmere.streamline.commands;
 
 import net.md_5.bungee.api.CommandSender;
+import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
+import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +20,7 @@ public class TODOCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
 }

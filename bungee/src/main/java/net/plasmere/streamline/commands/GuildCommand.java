@@ -5,7 +5,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.GuildUtils;
@@ -25,7 +25,7 @@ public class GuildCommand extends SLCommand {
     @Override
     public void run(CommandSender sender, String[] args) {
         SavableUser stat = PlayerUtils.getOrGetSavableUser(sender);
-        
+
         if (stat == null) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
                             .replace("%class%", this.getClass().getName())
@@ -104,6 +104,17 @@ public class GuildCommand extends SLCommand {
                     e.printStackTrace();
                 }
             } else {
+                if (args[1].equals("")) {
+                    try {
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
+                    } catch (Exception e) {
+                        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
+                                .replace("%class%", this.getClass().getName())
+                        );
+                        e.printStackTrace();
+                    }
+                }
+
                 try {
                     GuildUtils.createGuild(stat, TextUtils.argsToStringMinus(args, 0));
                 } catch (Exception e) {
@@ -392,7 +403,6 @@ public class GuildCommand extends SLCommand {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                 return;
             }
-            
             try {
                 GuildUtils.warpGuild(stat);
             } catch (Throwable e) {
@@ -440,20 +450,6 @@ public class GuildCommand extends SLCommand {
                     e.printStackTrace();
                 }
             }
-//        } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildSyncAliases())) {
-//            if (! sender.hasPermission(CommandsConfUtils.comBGuildSyncPermission())) {
-//                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
-//                return;
-//            }
-//
-//            try {
-//                GuildUtils.onSync(stat);
-//            } catch (Throwable e) {
-//                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
-//                            .replace("%class%", this.getClass().getName())
-//                    );
-//                e.printStackTrace();
-//            }
         } else {
             try {
                 SavableUser user = PlayerUtils.getOrGetSavableUser(args[0]);
@@ -472,9 +468,9 @@ public class GuildCommand extends SLCommand {
         }
 
         try {
-            SavableGuild guild = GuildUtils.getGuild(stat);
+            SavableGuild guild = GuildUtils.getOrGetGuild(stat);
             if (guild == null) return;
-            guild.saveInfo();
+            guild.saveAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -482,13 +478,13 @@ public class GuildCommand extends SLCommand {
 
     // Usage: /guild <join|leave|create|promote|demote|chat|list|open|close|disband|accept|deny|invite|kick|mute|warp>
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args)
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args)
     {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (ProxiedPlayer player : players){
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         strPlayers.add("%");
@@ -512,7 +508,6 @@ public class GuildCommand extends SLCommand {
             tabArgs1.add("mute");
             tabArgs1.add("warp");
             tabArgs1.add("rename");
-//            tabArgs1.add("sync");
 
             return TextUtils.getCompletion(tabArgs1, args[0]);
         }
@@ -558,8 +553,6 @@ public class GuildCommand extends SLCommand {
                 return new ArrayList<>();
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildRenameAliases())) {
                 return new ArrayList<>();
-//            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBGuildSyncAliases())) {
-//                return new ArrayList<>();
             } else {
                 return TextUtils.getCompletion(strPlayers, args[1]);
             }

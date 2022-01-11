@@ -10,6 +10,7 @@ import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class GetStatsCommand extends SLCommand {
     public GetStatsCommand(String base, String perm, String[] aliases){
@@ -18,14 +19,36 @@ public class GetStatsCommand extends SLCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
-        if (PlayerUtils.getStats().size() <= 0) {
-            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsNone());
-            return;
+        if (args.length <= 0) {
+            if (PlayerUtils.getStats().size() <= 0) {
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsNone());
+                return;
+            }
+
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsMessage()
+                    .replace("%stats%", getStats())
+            );
+        } else {
+            switch (args[0]) {
+                case "save" -> {
+                    PlayerUtils.saveAll();
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsSave());
+                }
+                case "reload" -> {
+                    PlayerUtils.reloadAll();
+                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsReload());
+                }
+            }
+        }
+    }
+
+    @Override
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return TextUtils.getCompletion(List.of("save", "reload"), args[0]);
         }
 
-        MessagingUtils.sendBUserMessage(sender, MessageConfUtils.getStatsMessage()
-                .replace("%stats%", getStats())
-        );
+        return new ArrayList<>();
     }
 
     public static String getStats() {
@@ -42,10 +65,5 @@ public class GetStatsCommand extends SLCommand {
         }
 
         return stringBuilder.toString();
-    }
-
-    @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
-        return new ArrayList<>();
     }
 }

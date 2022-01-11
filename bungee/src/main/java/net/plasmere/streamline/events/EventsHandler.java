@@ -5,8 +5,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.events.enums.Condition;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -50,18 +50,20 @@ public class EventsHandler {
 
         if (p == null) return;
 
-        for (Integer i : event.actions.singleLayerKeySet()) {
+        for (Integer i : event.actions.keySet()) {
             switch (event.actions.get(i).key) {
                 case SEND_MESSAGE_TO:
                     MessagingUtils.sendBUserMessage(p, adjust(event, player, i));
                     continue;
                 case RUN_COMMAND_AS_SELF:
+                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(p, adjust(event, player, i));
+                    continue;
                 case SEND_MESSAGE_AS:
 //                    MessagingUtils.sendBUserAsMessage(p, adjust(event, player, i, context));
-                    p.chat(adjust(event, player, i));
+                    player.chat(adjust(event, player, i));
                     continue;
                 case SEND_SERVER:
-                    p.connect(StreamLine.getInstance().getProxy().getServerInfo(adjust(event, player, i)));
+                    player.connect(StreamLine.getInstance().getProxy().getServerInfo(adjust(event, player, i)));
                     continue;
                 case KICK:
                     p.disconnect(TextUtils.codedText(adjust(event, player, i)));
@@ -82,16 +84,16 @@ public class EventsHandler {
                     player.addPoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case TAKE_POINTS:
-                    player.remPoints(Integer.parseInt(event.actions.get(i).value));
+                    player.removePoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case SET_POINTS:
                     player.setPoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case ADD_TAG:
-                    player.tryAddNewTag(event.actions.get(i).value);
+                    player.addTag(event.actions.get(i).value);
                     continue;
                 case REM_TAG:
-                    player.tryRemTag(event.actions.get(i).value);
+                    player.removeTag(event.actions.get(i).value);
                     continue;
                 case SEND_MESSAGE_TO_FRIENDS:
                     for (String uuid : player.friendList){
@@ -104,7 +106,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_PARTY_MEMBERS:
-                    SavableParty party = PartyUtils.getParty(player);
+                    SavableParty party = PartyUtils.getOrGetParty(player);
                     if (party == null) continue;
 
                     for (SavableUser user : party.totalMembers) {
@@ -114,7 +116,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_GUILD_MEMBERS:
-                    SavableGuild guild = GuildUtils.getGuild(player);
+                    SavableGuild guild = GuildUtils.getOrGetGuild(player);
                     if (guild == null) continue;
 
                     for (SavableUser user : guild.totalMembers) {
@@ -158,7 +160,7 @@ public class EventsHandler {
 
         if (p == null) return;
 
-        for (Integer i : event.actions.singleLayerKeySet()) {
+        for (Integer i : event.actions.keySet()) {
             if (ConfigUtils.debug()) MessagingUtils.logInfo("EventsHandler#runEvent() --> i = " + i);
 
             switch (event.actions.get(i).key) {
@@ -166,12 +168,14 @@ public class EventsHandler {
                     MessagingUtils.sendBUserMessage(p, adjust(event, player, i, context));
                     continue;
                 case RUN_COMMAND_AS_SELF:
+                    StreamLine.getInstance().getProxy().getPluginManager().dispatchCommand(p, adjust(event, player, i, context));
+                    continue;
                 case SEND_MESSAGE_AS:
 //                    MessagingUtils.sendBUserAsMessage(p, adjust(event, player, i, context));
-                    p.chat(adjust(event, player, i, context));
+                    player.chat(adjust(event, player, i, context));
                     continue;
                 case SEND_SERVER:
-                    p.connect(StreamLine.getInstance().getProxy().getServerInfo(adjust(event, player, i, context)));
+                    player.connect(StreamLine.getInstance().getProxy().getServerInfo(adjust(event, player, i, context)));
                     continue;
                 case KICK:
                     p.disconnect(TextUtils.codedText(adjust(event, player, i, context)));
@@ -192,16 +196,16 @@ public class EventsHandler {
                     player.addPoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case TAKE_POINTS:
-                    player.remPoints(Integer.parseInt(event.actions.get(i).value));
+                    player.removePoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case SET_POINTS:
                     player.setPoints(Integer.parseInt(event.actions.get(i).value));
                     continue;
                 case ADD_TAG:
-                    player.tryAddNewTag(event.actions.get(i).value);
+                    player.addTag(event.actions.get(i).value);
                     continue;
                 case REM_TAG:
-                    player.tryRemTag(event.actions.get(i).value);
+                    player.removeTag(event.actions.get(i).value);
                     continue;
                 case SEND_MESSAGE_TO_FRIENDS:
                     for (String uuid : player.friendList){
@@ -214,7 +218,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_PARTY_MEMBERS:
-                    SavableParty party = PartyUtils.getParty(player);
+                    SavableParty party = PartyUtils.getOrGetParty(player);
                     if (party == null) continue;
 
                     for (SavableUser person : party.totalMembers) {
@@ -224,7 +228,7 @@ public class EventsHandler {
                     }
                     continue;
                 case SEND_MESSAGE_TO_GUILD_MEMBERS:
-                    SavableGuild guild = GuildUtils.getGuild(player);
+                    SavableGuild guild = GuildUtils.getOrGetGuild(player);
                     if (guild == null) continue;
 
                     for (SavableUser person : guild.totalMembers) {

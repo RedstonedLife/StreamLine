@@ -1,8 +1,8 @@
 package net.plasmere.streamline.commands.staff;
 
-import net.dv8tion.jda.api.JDA;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.dv8tion.jda.api.JDA;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -39,7 +39,7 @@ public class JDAPingerCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
 }

@@ -3,6 +3,7 @@ package net.plasmere.streamline.objects.savable.users;
 import net.md_5.bungee.api.ProxyServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
+import net.plasmere.streamline.objects.savable.SavableAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,32 +16,9 @@ public class SavableConsole extends SavableUser {
     public List<String> savedKeys = new ArrayList<>();
 
     public SavableConsole() {
-        super("%");
-    }
-
-    public SavableConsole(boolean create){
-        super("%", create);
-    }
-
-    @Override
-    public void preConstruct(String string) {
-        this.uuid = "%";
-
-        this.latestName = ConfigUtils.consoleName();
-        this.displayName = ConfigUtils.consoleDisplayName();
-        this.tagList = ConfigUtils.consoleDefaultTags();
+        super("%", SavableAdapter.Type.CONSOLE);
 
         this.server = StreamLine.getInstance().getProxy();
-    }
-
-    @Override
-    public int getPointsFromConfig(){
-        return ConfigUtils.consoleDefaultPoints();
-    }
-
-    @Override
-    public TreeSet<String> addedProperties() {
-        return new TreeSet<>();
     }
 
     @Override
@@ -49,11 +27,19 @@ public class SavableConsole extends SavableUser {
     }
 
     @Override
-    public void loadMoreVars() {
+    public void populateMoreDefaults() {
+        latestName = getOrSetDefault("profile.latest.name", ConfigUtils.consoleName());
+        displayName = getOrSetDefault("profile.display-name", ConfigUtils.consoleDisplayName());
+        tagList = getOrSetDefault("profile.tags", ConfigUtils.consoleDefaultTags());
     }
 
     @Override
-    TreeMap<String, String> addedUpdatableKeys() {
-        return new TreeMap<>();
+    public void loadMoreValues() {
+
+    }
+
+    @Override
+    public void saveMore() {
+
     }
 }

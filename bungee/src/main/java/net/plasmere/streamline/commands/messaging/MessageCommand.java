@@ -25,7 +25,7 @@ public class MessageCommand extends SLCommand {
     public void run(CommandSender sender, String[] args) {
         String thing = "";
 
-        if (PlayerUtils.isInOnlineList(sender.getName())) thing = sender.getName();
+        if (PlayerUtils.isInOnlineList(PlayerUtils.getSourceName(sender))) thing = PlayerUtils.getSourceName(sender);
         else thing = "%";
 
         SavableUser stat = PlayerUtils.getOrGetSavableUser(thing);
@@ -46,16 +46,20 @@ public class MessageCommand extends SLCommand {
                 statTo = PlayerUtils.getSavableUserByUUID("%");
             } else {
                 if (! PlayerUtils.exists(args[0])) {
-                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName())
-                            .replace("%class%", this.getClass().getName())
-                    );
+                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
                     return;
                 }
 
+                MessagingUtils.logInfo(args[0]);
                 statTo = PlayerUtils.getOrGetSavableUser(args[0]);
+//                MessagingUtils.logInfo("1" + statTo.toString());
             }
 
+
+//            MessagingUtils.logInfo("2" + statTo.toString());
+
             if (statTo == null) {
+//                MessagingUtils.logInfo("3" + statTo.toString());
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPlayer());
                 return;
             }
@@ -65,8 +69,8 @@ public class MessageCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> ignored = new ArrayList<>();
 
@@ -82,9 +86,9 @@ public class MessageCommand extends SLCommand {
         for (ProxiedPlayer pl : players) {
             if (sender instanceof ProxiedPlayer) {
                 if (pl.equals(sender)) continue;
-                if (ignored.contains(pl.getName())) continue;
+                if (ignored.contains(PlayerUtils.getSourceName(pl))) continue;
             }
-            strPlayers.add(pl.getName());
+            strPlayers.add(PlayerUtils.getSourceName(pl));
         }
 
         strPlayers.add("%");

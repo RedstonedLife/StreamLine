@@ -9,6 +9,7 @@ bot:
 
 ### DISCORD SETTINGS ###
 discord:
+  # The ID of your server's Discord.
   guild-id: put_id_here
   ## Categories ##
   categories:

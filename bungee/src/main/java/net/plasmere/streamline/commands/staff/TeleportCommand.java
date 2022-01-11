@@ -1,8 +1,8 @@
 package net.plasmere.streamline.commands.staff;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -44,7 +44,7 @@ public class TeleportCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         if (args.length <= 1) {
             return TextUtils.getCompletion(PlayerUtils.getPlayerNamesForAllOnline(), args[0]);
         } else {

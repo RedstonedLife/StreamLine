@@ -33,7 +33,7 @@ public class BypassPCCommand extends SLCommand {
             return;
         }
 
-        SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
+        SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
         if (player == null) {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
                             .replace("%class%", this.getClass().getName())
@@ -56,7 +56,7 @@ public class BypassPCCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
 }

@@ -5,7 +5,8 @@ import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
-import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.savable.SavableAdapter;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
@@ -14,23 +15,12 @@ import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class GuildUtils {
     private static final List<SavableGuild> guilds = new ArrayList<>();
 
     public static List<SavableGuild> getGuilds() {
-        List<SavableGuild> rem = new ArrayList<>();
-
-        for (SavableGuild g : guilds) {
-            if (g.leaderUUID == null) rem.add(g);
-        }
-
-        for (SavableGuild g : rem) {
-            guilds.remove(g);
-        }
-
         return guilds;
     }
     // SavableGuild , Invites
@@ -49,7 +39,7 @@ public class GuildUtils {
                 SavableGuild guild = getOrGetGuild(file.getName().replace(".properties", ""));
 
                 if (guild == null) continue;
-                if (guild.leaderUUID == null) continue;
+                if (guild.uuid == null) continue;
 
                 amount ++;
             } catch (Exception e) {
@@ -78,13 +68,13 @@ public class GuildUtils {
         }
     }
 
-    public static SavableGuild getOrGetGuild(String uuid){
-        SavableGuild guild = getGuild(uuid);
+    public static SavableGuild getOrGetGuild(SavableUser stat) {
+        SavableGuild guild = getGuild(stat);
 
         if (guild == null) {
-            if (existsByUUID(uuid)) {
+            if (existsByGUID(stat.guild)) {
                 try {
-                    guild = new SavableGuild(uuid, false);
+                    guild = new SavableGuild(stat.guild);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -94,27 +84,14 @@ public class GuildUtils {
         return guild;
     }
 
-    public static void loadAllMembersInAllGuilds(){
-        for (SavableGuild guild : guilds) {
-            guild.loadAllMembers();
-        }
+    public static SavableGuild getOrGetGuild(String uuid){
+        return getOrGetGuild(PlayerUtils.getOrGetSavableUser(uuid));
     }
 
-    public static boolean hasOnlineMemberAlready(SavableUser stat){
-        List<SavableUser> users = new ArrayList<>(PlayerUtils.getStats());
-
-        for (SavableUser user : users) {
-            if (user.uuid.equals(stat.uuid)) continue;
-            if (user.guild.equals(stat.guild)) return true;
-        }
-
-        return false;
-    }
-
-    public static SavableGuild getGuild(String uuid) {
+    public static SavableGuild getGuildByGUID(String uuid) {
         try {
             for (SavableGuild guild : guilds) {
-                if (guild.hasMember(PlayerUtils.getOrGetSavableUser(uuid))) {
+                if (guild.uuid.equals(uuid)) {
                     return guild;
                 }
             }
@@ -125,6 +102,74 @@ public class GuildUtils {
         }
     }
 
+    public static SavableGuild getOrGetGuildByGUID(String uuid){
+        SavableGuild guild = getGuildByGUID(uuid);
+
+        if (guild == null) {
+            if (existsByGUID(uuid)) {
+                try {
+                    guild = new SavableGuild(uuid);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return guild;
+    }
+
+    public static boolean guildIsLoadedAlready(SavableUser stat) {
+        return groupsContainsGroupByUUID(stat.guild);
+    }
+
+    public static boolean playerIsInGroupsByUUID(String uuid) {
+        for (SavableGuild guild : guilds) {
+            for (SavableUser user : guild.totalMembers) {
+                if (user.uuid.equals(uuid)) return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean groupsContainsGroupByUUID(String uuid) {
+        for (SavableGuild guild : guilds) {
+            if (guild.uuid.equals(uuid)) return true;
+        }
+
+        return false;
+    }
+
+    public static SavableGuild addGuild(SavableGuild guild){
+        if (groupsContainsGroupByUUID(guild.uuid)) {
+            if (ConfigUtils.debug()) MessagingUtils.logInfo(guild.uuid + " is already in guilds list!");
+            return getOrGetGuildByGUID(guild.uuid);
+        }
+
+        guilds.add(guild);
+
+        return guild;
+    }
+
+    public static SavableGuild addGuildIfNotAlreadyLoaded(SavableUser user){
+        if (user.guild.equals("")) return null;
+        if (groupsContainsGroupByUUID(user.guild)) return getGuild(user);
+
+        if (! existsByGUID(user.guild)) {
+            user.guild = "";
+            return null;
+        }
+
+        SavableGuild guild = getOrGetGuildByGUID(user.guild);
+        if (guild == null) return null;
+        if (guild.uuid == null) return null;
+        if (guild.uuid.equals("")) return null;
+
+        guild.loadValues();
+
+        return addGuild(guild);
+    }
+
     public static boolean hasGuild(SavableUser player) {
         for (SavableGuild guild : guilds) {
             if (guild.hasMember(player)) return true;
@@ -132,16 +177,14 @@ public class GuildUtils {
         return false;
     }
 
-    public static boolean existsByUUID(String uuid){
-        File file = new File(StreamLine.getInstance().getGDir(), uuid + ".properties");
+    public static boolean existsByGUID(String uuid){
+        File file = new File(SavableAdapter.Type.GUILD.path, uuid + SavableAdapter.Type.GUILD.suffix);
 
         return file.exists();
     }
 
     public static boolean exists(String username){
-        File file = new File(StreamLine.getInstance().getGDir(), Objects.requireNonNull(PlayerUtils.getOrGetSavableUser(username)).guild + ".properties");
-
-        return file.exists();
+        return existsByGUID(UUIDUtils.swapToUUID(username));
     }
 
     public static boolean isGuild(SavableGuild guild){
@@ -149,24 +192,21 @@ public class GuildUtils {
     }
 
     public static boolean pHasGuild(SavableUser player) {
-        if (!existsByUUID(player.uuid)) return false;
+        if (!existsByGUID(player.uuid)) return false;
 
         SavableGuild guild;
         try {
-            guild = new SavableGuild(player.guild, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            guild = new SavableGuild(player.guild);
         } catch (NullPointerException e) {
             if (ConfigUtils.debug()) {
                 MessagingUtils.logWarning("SavablePlayer's guild could not be found... Adding now!");
             }
 
-            player.updateKey("guild", player.uuid);
+            player.setGuild(player.uuid);
             return true;
         }
 
-        if (guild.leaderUUID == null) {
+        if (guild.uuid == null) {
             return false;
         }
 
@@ -193,7 +233,16 @@ public class GuildUtils {
     }
 
     public static void createGuild(SavableUser sender, String name) {
-        SavableGuild g = getGuild(sender);
+        if (name == null) {
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
+            return;
+        }
+        if (name.equals("")) {
+            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
+            return;
+        }
+
+        SavableGuild g = getOrGetGuild(sender);
 
         if (g != null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), alreadyMade);
@@ -245,58 +294,17 @@ public class GuildUtils {
         }
     }
 
-    public static void addGuild(SavableGuild guild){
-        SavableGuild g;
-
-        try {
-            g = getGuild(guild.leaderUUID);
-        } catch (Exception e) {
-            return;
-            // Do nothing.
-        }
-
-        if (g != null) return;
-
-        try {
-            if (guilds.size() > 0) {
-                List<SavableGuild> rem = new ArrayList<>();
-
-                for (SavableGuild gu : guilds) {
-                    String s = gu.leaderUUID;
-
-                    if (s == null) {
-                        rem.add(gu);
-                        continue;
-                    }
-
-                    if (s.equals(guild.leaderUUID)) {
-                        rem.add(gu);
-                    }
-                }
-
-                for (SavableGuild gd : rem) {
-                    guilds.remove(gd);
-                }
-            }
-
-            guilds.add(guild);
-        } catch (Exception e){
-            MessagingUtils.logInfo("Error adding guild...");
-            e.printStackTrace();
-        }
-    }
-
     public static boolean hasLeader(String leader){
         List<SavableGuild> toRem = new ArrayList<>();
 
         boolean hasLeader = false;
 
         for (SavableGuild guild : guilds){
-            if (guild.leaderUUID == null) {
+            if (guild.uuid == null) {
                 toRem.add(guild);
                 continue;
             }
-            if (guild.leaderUUID.equals(leader)) hasLeader = true;
+            if (guild.uuid.equals(leader)) hasLeader = true;
         }
 
         for (SavableGuild guild : toRem) {
@@ -312,17 +320,13 @@ public class GuildUtils {
     }
 
     public static void removeGuild(SavableGuild guild){
-        try {
-            guild.saveInfo();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        guild.saveAll();
         guilds.remove(guild);
     }
 
     public static void sendInvite(SavableUser to, SavableUser from) {
         try {
-            SavableGuild guild = getGuild(from);
+            SavableGuild guild = getOrGetGuild(from);
 
             if (! checkPlayer(guild, to, from)) return;
 
@@ -336,7 +340,7 @@ public class GuildUtils {
                 return;
             }
 
-            if (isGuild(getGuild(to))) {
+            if (isGuild(getOrGetGuild(to))) {
                 MessagingUtils.sendBUserMessage(from.findSender(), alreadyHasOneOthers);
                 return;
             }
@@ -352,7 +356,7 @@ public class GuildUtils {
             }
 
             for (SavableUser pl : guild.totalMembers) {
-                if (pl.uuid.equals(guild.leaderUUID)) {
+                if (pl.uuid.equals(guild.uuid)) {
                     MessagingUtils.sendBGUserMessage(guild, from.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(inviteLeader, to)
                     );
                 } else {
@@ -379,7 +383,7 @@ public class GuildUtils {
 
     public static void acceptInvite(SavableUser accepter, SavableUser from) {
         try {
-            SavableGuild guild = getGuild(from);
+            SavableGuild guild = getOrGetGuild(from);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(accepter.findSender(), acceptFailure);
@@ -391,7 +395,7 @@ public class GuildUtils {
                 return;
             }
 
-            if (isGuild(getGuild(accepter))) {
+            if (isGuild(getOrGetGuild(accepter))) {
                 MessagingUtils.sendBUserMessage(accepter.findSender(), alreadyHasOneSelf);
                 return;
             }
@@ -415,7 +419,7 @@ public class GuildUtils {
                 );
 
                 for (SavableUser pl : guild.totalMembers){
-                    if (pl.uuid.equals(guild.leaderUUID)){
+                    if (pl.uuid.equals(guild.uuid)){
                         MessagingUtils.sendBGUserMessage(guild, accepter.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(acceptLeader, accepter)
                                 .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                                 .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
@@ -466,7 +470,7 @@ public class GuildUtils {
 
     public static void denyInvite(SavableUser denier, SavableUser from) {
         try {
-            SavableGuild guild = getGuild(from);
+            SavableGuild guild = getOrGetGuild(from);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(denier.findSender(), denyFailure);
@@ -492,7 +496,7 @@ public class GuildUtils {
                 );
 
                 for (SavableUser pl : guild.totalMembers) {
-                    if (pl.uuid.equals(guild.leaderUUID)) {
+                    if (pl.uuid.equals(guild.uuid)) {
                         MessagingUtils.sendBGUserMessage(guild, denier.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(denyLeader, denier)
                                 .replace("%from_formatted%", PlayerUtils.getJustDisplayBungee(from))
                                 .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
@@ -531,7 +535,7 @@ public class GuildUtils {
     }
 
     public static void warpGuild(SavableUser sender){
-        SavableGuild guild = getGuild(sender);
+        SavableGuild guild = getOrGetGuild(sender);
 
         if (!isGuild(guild) || guild == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -556,19 +560,9 @@ public class GuildUtils {
         if (sender instanceof SavablePlayer && sender.online) {
             try {
                 for (SavableUser player : new ArrayList<>(guild.totalMembers)) {
-                    if (!player.online) continue;
-
-                    ProxiedPlayer m = PlayerUtils.getPPlayerByUUID(player.uuid);
-
-                    if (m == null) continue;
-
-                    if (player.equals(sender)) {
-                        MessagingUtils.sendBGUserMessage(guild, player.findSender(), m, warpSender);
-                    } else {
-                        MessagingUtils.sendBGUserMessage(guild, player.findSender(), m, warpMembers);
-                    }
-
-                    m.connect(((SavablePlayer) sender).getServer().getInfo());
+                    SavablePlayer p = (SavablePlayer) player;
+                    if (! p.online) continue;
+                    p.player.connect(StreamLine.getInstance().getProxy().getServerInfo(((SavablePlayer) sender).getServer().getName()));
                 }
             } catch (ConcurrentModificationException e) {
                 e.printStackTrace();
@@ -583,7 +577,7 @@ public class GuildUtils {
     }
 
     public static void muteGuild(SavableUser sender){
-        SavableGuild guild = getGuild(sender);
+        SavableGuild guild = getOrGetGuild(sender);
 
         if (!isGuild(guild) || guild == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -631,7 +625,7 @@ public class GuildUtils {
     }
 
     public static void kickMember(SavableUser sender, SavableUser player) {
-        SavableGuild guild = getGuild(sender);
+        SavableGuild guild = getOrGetGuild(sender);
 
         if (!isGuild(guild) || guild == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), kickFailure);
@@ -661,14 +655,14 @@ public class GuildUtils {
         try {
             if (sender.equals(player)) {
                 MessagingUtils.sendBGUserMessage(guild, sender.findSender(), sender.findSender(),  kickSelf);
-            } else if (player.equals(PlayerUtils.getOrCreateSUByUUID(guild.leaderUUID))) {
+            } else if (player.equals(PlayerUtils.getOrGetSavableUser(guild.uuid))) {
                 MessagingUtils.sendBGUserMessage(guild, sender.findSender(), sender.findSender(),  noPermission);
             } else {
                 for (SavableUser pl : guild.totalMembers) {
                     if (pl.equals(sender)) {
                         MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(kickSender, player)
                         );
-                    } else if (! pl.uuid.equals(guild.leaderUUID)) {
+                    } else if (! pl.uuid.equals(guild.uuid)) {
                         MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(kickUser, player)
                         );
                     } else {
@@ -677,7 +671,7 @@ public class GuildUtils {
                     }
                 }
 
-                guild.removeMemberFromGuild(player);
+                guild.removeMemberFromGroup(player);
             }
 
             if (ConfigUtils.moduleDEnabled()) {
@@ -696,7 +690,7 @@ public class GuildUtils {
     }
 
     public static void info(SavableUser sender){
-        SavableGuild guild = getGuild(sender);
+        SavableGuild guild = getOrGetGuild(sender);
 
         if (!isGuild(guild) || guild == null) {
             MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -713,7 +707,7 @@ public class GuildUtils {
 
     public static void disband(SavableUser sender) {
         try {
-            SavableGuild guild = getGuild(sender);
+            SavableGuild guild = getOrGetGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -725,7 +719,7 @@ public class GuildUtils {
                 return;
             }
 
-            if (! guild.leaderUUID.equals(sender.uuid)) {
+            if (! guild.uuid.equals(sender.uuid)) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPermission);
                 return;
             }
@@ -733,7 +727,7 @@ public class GuildUtils {
             for (SavableUser pl : guild.totalMembers) {
                 if (! pl.online) continue;
 
-                if (! pl.uuid.equals(guild.leaderUUID)) {
+                if (! pl.uuid.equals(guild.uuid)) {
                     MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), disbandMembers
                     );
                 } else {
@@ -760,7 +754,7 @@ public class GuildUtils {
 
     public static void openGuild(SavableUser sender) {
         try {
-            SavableGuild guild = getGuild(sender);
+            SavableGuild guild = getOrGetGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -808,7 +802,7 @@ public class GuildUtils {
 
     public static void closeGuild(SavableUser sender) {
         try {
-            SavableGuild guild = getGuild(sender);
+            SavableGuild guild = getOrGetGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -856,7 +850,7 @@ public class GuildUtils {
 
     public static void listGuild(SavableUser sender) {
         try {
-            SavableGuild guild = getGuild(sender);
+            SavableGuild guild = getOrGetGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -943,7 +937,7 @@ public class GuildUtils {
 
     public static void promotePlayer(SavableUser sender, SavableUser player) {
         try {
-            SavableGuild guild = getGuild(sender);
+            SavableGuild guild = getOrGetGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -960,7 +954,7 @@ public class GuildUtils {
                 return;
             }
 
-            if (!guild.leaderUUID.equals(sender.uuid)) {
+            if (!guild.uuid.equals(sender.uuid)) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noPermission);
                 return;
             }
@@ -973,10 +967,8 @@ public class GuildUtils {
                     );
                     return;
                 case MODERATOR:
-                    guild.replaceLeader(player);
-
                     for (SavableUser pl : guild.totalMembers) {
-                        if (pl.uuid.equals(guild.leaderUUID)) {
+                        if (pl.uuid.equals(guild.uuid)) {
                             MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(promoteLeader, player)
                                     .replace("%level%", TextUtils.replaceAllPlayerBungee(textLeader, player)
                                     )
@@ -993,13 +985,13 @@ public class GuildUtils {
                             );
                         }
                     }
+
+                    guild.replaceLeader(player);
                     return;
                 case MEMBER:
                 default:
-                    guild.setModerator(player);
-
                     for (SavableUser pl : guild.totalMembers) {
-                        if (pl.uuid.equals(guild.leaderUUID)) {
+                        if (pl.uuid.equals(guild.uuid)) {
                             MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(promoteLeader, player)
                                     .replace("%level%", TextUtils.replaceAllPlayerBungee(textModerator, player)
                                     )
@@ -1016,6 +1008,7 @@ public class GuildUtils {
                             );
                         }
                     }
+                    guild.setModerator(player);
                     break;
             }
 
@@ -1033,7 +1026,7 @@ public class GuildUtils {
 
     public static void demotePlayer(SavableUser sender, SavableUser player) {
         try {
-            SavableGuild guild = getGuild(sender);
+            SavableGuild guild = getOrGetGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1066,7 +1059,7 @@ public class GuildUtils {
                     guild.setMember(player);
 
                     for (SavableUser pl : guild.totalMembers) {
-                        if (pl.uuid.equals(guild.leaderUUID)) {
+                        if (pl.uuid.equals(guild.uuid)) {
                             MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), TextUtils.replaceAllPlayerBungee(demoteLeader, player)
                                     .replace("%level%", TextUtils.replaceAllPlayerBungee(textMember, player)
                                     )
@@ -1107,7 +1100,7 @@ public class GuildUtils {
 
     public static void joinGuild(SavableUser sender, SavableUser from) {
         try {
-            SavableGuild guild = getGuild(from);
+            SavableGuild guild = getOrGetGuild(from);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1119,7 +1112,7 @@ public class GuildUtils {
                 return;
             }
 
-            if (isGuild(getGuild(sender))) {
+            if (isGuild(getOrGetGuild(sender))) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), alreadyHasOneSelf);
                 return;
             }
@@ -1159,7 +1152,7 @@ public class GuildUtils {
 
     public static void leaveGuild(SavableUser sender) {
         try {
-            SavableGuild guild = getGuild(sender);
+            SavableGuild guild = getOrGetGuild(sender);
 
             if (!isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1171,7 +1164,7 @@ public class GuildUtils {
                 return;
             }
 
-            if (PlayerUtils.getOrCreateSUByUUID(guild.leaderUUID).equals(sender)) {
+            if (PlayerUtils.getOrGetSavableUser(guild.uuid).equals(sender)) {
                 for (SavableUser pl : guild.totalMembers) {
                     if (pl.equals(sender)) {
                         MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(), leaveUser);
@@ -1198,7 +1191,7 @@ public class GuildUtils {
                     }
                 }
 
-                guild.removeMemberFromGuild(sender);
+                guild.removeMemberFromGroup(sender);
 
                 if (ConfigUtils.moduleDEnabled()) {
                     if (ConfigUtils.guildToDiscord() && ConfigUtils.guildConsoleLeaves()) {
@@ -1217,7 +1210,7 @@ public class GuildUtils {
 
     public static void sendChat(SavableUser sender, String msg) {
         try {
-            SavableGuild guild = getGuild(sender);
+            SavableGuild guild = getOrGetGuild(sender);
 
             if (! isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1238,7 +1231,7 @@ public class GuildUtils {
 
             for (SavableUser pl : guild.totalMembers) {
                 MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(),
-                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("guild", guild.leaderUUID), "guild", MessageServerType.BUNGEE)
+                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("guild", guild.uuid), "guild", MessageServerType.BUNGEE)
                                 .replace("%message%", msg)
                 );
             }
@@ -1253,13 +1246,13 @@ public class GuildUtils {
             }
 
             if (ConfigUtils.moduleDPC()) {
-                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.leaderUUID, msg);
+                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.uuid, msg);
             }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (ProxiedPlayer pp : PlayerUtils.getOnlinePPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView())) continue;
 
-                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrGetPlayerStatByUUID(pp.getUniqueId().toString());
 
                 if (! them.gspy) continue;
 
@@ -1288,14 +1281,14 @@ public class GuildUtils {
 
             for (SavableUser pl : guild.totalMembers) {
                 MessagingUtils.sendBGUserMessage(guild, sender.findSender(), pl.findSender(),
-                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("guild", guild.leaderUUID), "guild", MessageServerType.BUNGEE)
+                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("guild", guild.uuid), "guild", MessageServerType.BUNGEE)
                                 .replace("%message%", msg)
                 );
             }
 
             if (! sender.chatIdentifier.equals(sender.guild) && ! sender.chatIdentifier.equals("network")) {
                 MessagingUtils.sendBGUserMessage(guild, sender.findSender(), sender.findSender(),
-                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("guild", guild.leaderUUID), "guild", MessageServerType.BUNGEE)
+                        StreamLine.chatConfig.getPermissionedChatMessage(sender, ChatsHandler.getChat("guild", guild.uuid), "guild", MessageServerType.BUNGEE)
                                 .replace("%message%", msg)
                 );
             }
@@ -1310,13 +1303,13 @@ public class GuildUtils {
             }
 
             if (ConfigUtils.moduleDPC()) {
-                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.leaderUUID, msg);
+                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.uuid, msg);
             }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (ProxiedPlayer pp : PlayerUtils.getOnlinePPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView())) continue;
 
-                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrGetPlayerStatByUUID(pp.getUniqueId().toString());
 
                 if (! them.gspy) continue;
 
@@ -1348,10 +1341,10 @@ public class GuildUtils {
 //                }
 //            }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (ProxiedPlayer pp : PlayerUtils.getOnlinePPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView())) continue;
 
-                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrGetPlayerStatByUUID(pp.getUniqueId().toString());
 
                 if (! them.gspy) continue;
 
@@ -1381,10 +1374,10 @@ public class GuildUtils {
 //                }
 //            }
 
-            for (ProxiedPlayer pp : StreamLine.getInstance().getProxy().getPlayers()){
+            for (ProxiedPlayer pp : PlayerUtils.getOnlinePPlayers()){
                 if (! pp.hasPermission(ConfigUtils.guildView())) continue;
 
-                SavablePlayer them = PlayerUtils.getOrCreatePlayerStat(pp);
+                SavablePlayer them = PlayerUtils.getOrGetPlayerStatByUUID(pp.getUniqueId().toString());
 
                 if (! them.gspy) continue;
 
@@ -1397,7 +1390,7 @@ public class GuildUtils {
 
     public static void rename(SavableUser sender, String newName){
         try {
-            SavableGuild guild = getGuild(sender);
+            SavableGuild guild = getOrGetGuild(sender);
 
             if (! isGuild(guild) || guild == null) {
                 MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
@@ -1436,7 +1429,7 @@ public class GuildUtils {
                 }
             }
 
-            guild.updateKey("name", newName);
+            guild.setNameReturnOld(newName);
 
             for (SavableUser pl : guild.totalMembers) {
                 if (pl.equals(sender)) {
@@ -1466,51 +1459,32 @@ public class GuildUtils {
         }
     }
 
-    public static void saveAll(){
-        List<SavableGuild> gs = new ArrayList<>(getGuilds());
+    public static void reloadAll() {
+        guilds.clear();
 
-        for (SavableGuild guild : gs) {
+        for (SavableUser user : PlayerUtils.getStatsOnline()) {
+            if (user.guild.equals("")) continue;
+            SavableGuild guild = getOrGetGuildByGUID(user.guild);
+            if (guild == null) continue;
+            if (guild.uuid == null) continue;
+            if (guild.uuid.equals("")) continue;
+            if (groupsContainsGroupByUUID(guild.uuid)) continue;
+
+            guild.loadValues();
+
+            addGuild(guild);
+        }
+    }
+
+    public static void saveAll(){
+        for (SavableGuild guild : new ArrayList<>(guilds)) {
             try {
-                guild.saveInfo();
+                guild.saveAll();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-
-//    public static void onSync(SavableUser sender) {
-//        SavableGuild guild = getGuild(sender);
-//
-//        if (! isGuild(guild) || guild == null) {
-//            MessagingUtils.sendBUserMessage(sender.findSender(), noGuildFound);
-//            return;
-//        }
-//
-//        if (! guild.hasModPerms(sender)) {
-//            MessagingUtils.sendBGUserMessage(guild, sender.findSender(), sender.findSender(), noPermission);
-//            return;
-//        }
-//
-//        List<SavablePlayer> players = new ArrayList<>();
-//
-//        for (SavableUser user : guild.totalMembers) {
-//            if (user instanceof SavablePlayer) players.add((SavablePlayer) user);
-//        }
-//
-//        DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
-//
-//        Category category = DiscordUtils.getCategory(CategoryType.GUILDS);
-//        if (category == null) {
-//            MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
-//                            .replace("%class%", this.getClass().getName())
-//                    );
-//            return;
-//        }
-//
-//        MessagingUtils.sendBUserMessage(sender, syncSender
-//                .replace("%category%", category.getName())
-//        );
-//    }
 
     // MESSAGES...
     // Text.
@@ -1658,6 +1632,4 @@ public class GuildUtils {
     public static final String renameNonEmpty = StreamLine.config.getMessString("guild.rename.non-empty");
     public static final String renameConsole = StreamLine.config.getMessString("guild.rename.console");
     public static final String renameTitle = StreamLine.config.getMessString("guild.rename.title");
-    // Sync.
-//    public static final String syncSender = StreamLine.config.getMessString("party.sync.sender");
 }

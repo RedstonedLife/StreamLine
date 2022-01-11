@@ -2,7 +2,7 @@ package net.plasmere.streamline.commands.staff.punishments;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.config.Configuration;
+import de.leonhard.storage.Config;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 public class IPBanCommand extends SLCommand {
-    private Configuration bans = StreamLine.bans.getBans();
+    private Config bans = StreamLine.bans.getBans();
 
     public IPBanCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
@@ -108,7 +108,6 @@ public class IPBanCommand extends SLCommand {
                         bans.set(ipToBan + ".reason", reason);
                         bans.set(ipToBan + ".till", till);
                         bans.set(ipToBan + ".sentenced", Instant.now().toString());
-                        StreamLine.bans.saveConfig();
 
                         for (SavablePlayer player : PlayerUtils.getPlayerStatsByIP(ip)) {
                             if (player.online) {
@@ -136,7 +135,7 @@ public class IPBanCommand extends SLCommand {
                                                 sender,
                                                 MessageConfUtils.ipBanEmbed(),
                                                 MessageConfUtils.ipBanBTempDiscord()
-                                                        .replace("%punisher%", sender.getName())
+                                                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                         .replace("%ip%", ip)
                                                         .replace("%reason%", reason)
                                                         .replace("%date%", new Date(Long.parseLong(till)).toString())
@@ -148,7 +147,7 @@ public class IPBanCommand extends SLCommand {
                         }
 
                         MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), MessageConfUtils.ipBanBTempStaff()
-                                .replace("%punisher%", sender.getName())
+                                .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                 .replace("%ip%", ip)
                                 .replace("%reason%", reason)
                                 .replace("%date%", new Date(Long.parseLong(till)).toString())
@@ -177,7 +176,6 @@ public class IPBanCommand extends SLCommand {
                     bans.set(ipToBan + ".reason", reason);
                     bans.set(ipToBan + ".till", "");
                     bans.set(ipToBan + ".sentenced", Instant.now().toString());
-                    StreamLine.bans.saveConfig();
 
                     for (SavablePlayer player : PlayerUtils.getPlayerStatsByIP(ip)) {
                         if (player.online) {
@@ -203,7 +201,7 @@ public class IPBanCommand extends SLCommand {
                                             sender,
                                             MessageConfUtils.ipBanEmbed(),
                                             MessageConfUtils.ipBanBPermDiscord()
-                                                    .replace("%punisher%", sender.getName())
+                                                    .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                     .replace("%ip%", ip)
                                                     .replace("%reason%", reason)
                                             ,
@@ -214,7 +212,7 @@ public class IPBanCommand extends SLCommand {
                     }
 
                     MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), MessageConfUtils.ipBanBPermStaff()
-                            .replace("%punisher%", sender.getName())
+                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                             .replace("%ip%", ip)
                             .replace("%reason%", reason)
                     );
@@ -275,7 +273,6 @@ public class IPBanCommand extends SLCommand {
                     bans.set(ipToBan + ".reason", reason);
                     bans.set(ipToBan + ".till", till);
                     bans.set(ipToBan + ".sentenced", Instant.now().toString());
-                    StreamLine.bans.saveConfig();
 
                     for (SavablePlayer player : PlayerUtils.getPlayerStatsByIP(ip)) {
                         if (player.online) {
@@ -302,7 +299,7 @@ public class IPBanCommand extends SLCommand {
                                         sender,
                                         MessageConfUtils.ipBanEmbed(),
                                         MessageConfUtils.ipBanBTempDiscord()
-                                                .replace("%punisher%", sender.getName())
+                                                .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                 .replace("%ip%", ip)
                                                 .replace("%reason%", reason)
                                                 .replace("%date%", new Date(Long.parseLong(till)).toString())
@@ -313,7 +310,7 @@ public class IPBanCommand extends SLCommand {
                     }
 
                     MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), MessageConfUtils.ipBanBTempStaff()
-                            .replace("%punisher%", sender.getName())
+                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                             .replace("%ip%", ip)
                             .replace("%reason%", reason)
                             .replace("%date%", new Date(Long.parseLong(till)).toString())
@@ -331,7 +328,6 @@ public class IPBanCommand extends SLCommand {
                     }
 
                     bans.set(ipToBan + ".banned", false);
-                    StreamLine.bans.saveConfig();
 
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.ipBanUnSender()
                             .replace("%ip%", ip)
@@ -343,7 +339,7 @@ public class IPBanCommand extends SLCommand {
                                         sender,
                                         MessageConfUtils.ipBanEmbed(),
                                         MessageConfUtils.ipBanUnDiscord()
-                                                .replace("%punisher%", sender.getName())
+                                                .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                 .replace("%ip%", ip)
                                         ,
                                         DiscordBotConfUtils.textChannelIPBans()
@@ -352,13 +348,13 @@ public class IPBanCommand extends SLCommand {
                     }
 
                     MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), MessageConfUtils.ipBanUnStaff()
-                            .replace("%punisher%", sender.getName())
+                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                             .replace("%ip%", ip)
                     );
                 }
             } else if (args[0].equals("check")) {
                 if (args[1].equals("all") || args[1].equals("*")) {
-                    Collection<String> banned = bans.getKeys();
+                    Collection<String> banned = bans.singleLayerKeySet();
                     TreeList<String> bannedIPs = new TreeList<>();
 
                     for (String ban : banned) {
@@ -388,17 +384,17 @@ public class IPBanCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args) {
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> banned = new ArrayList<>();
 
         for (ProxiedPlayer player : players){
             if (sender instanceof ProxiedPlayer) if (player.equals(sender)) continue;
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
-        for (String ip : bans.getKeys()) {
+        for (String ip : bans.singleLayerKeySet()) {
             if (! ip.contains("_")) continue;
             ip = ip.replace("_", ".");
             if (bans.getBoolean(ip + ".banned")) banned.add(ip);

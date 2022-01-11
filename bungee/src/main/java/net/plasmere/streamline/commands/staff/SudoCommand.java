@@ -2,18 +2,18 @@ package net.plasmere.streamline.commands.staff;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
+import net.plasmere.streamline.utils.PlayerUtils;
+import net.plasmere.streamline.utils.PluginUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class SudoCommand extends SLCommand {
     public SudoCommand(String base, String perm, String[] aliases){
@@ -44,20 +44,17 @@ public class SudoCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args) {
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (ProxiedPlayer player : players){
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
-        Collection<Map.Entry<String, Command>> commands = StreamLine.getInstance().getProxy().getPluginManager().getCommands();
-        List<String> strCommands = new ArrayList<>();
+        Collection<String> commands = PluginUtils.getCommandAliases();
 
-        for (Map.Entry<String, Command> com : commands){
-            strCommands.add(com.getValue().getName());
-        }
+        List<String> strCommands = new ArrayList<>(commands);
 
         if (args.length == 1) {
             return TextUtils.getCompletion(strPlayers, args[0]);

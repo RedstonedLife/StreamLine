@@ -6,6 +6,8 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class SLCommand extends Command implements TabExecutor {
     public String base;
@@ -24,20 +26,19 @@ public abstract class SLCommand extends Command implements TabExecutor {
         run(sender, args);
     }
 
-    @Override
-    public boolean hasPermission(CommandSender commandSender) {
-        return commandSender.hasPermission(permission);
-    }
-
-    @Override
-    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
-        if (args == null) return new ArrayList<>();
-        if (args.length <= 0) return new ArrayList<>();
-
-        return tabComplete(sender, args);
-    }
-
     abstract public void run(CommandSender sender, String[] args);
 
-    abstract public Collection<String> tabComplete(CommandSender sender, String[] args);
+    abstract public Collection<String> onTabComplete(CommandSender sender, String[] args);
+
+    public Collection<String> preTabComplete(CommandSender sender, String[] args){
+        if (args == null) args = new String[]{ "" };
+        if (args.length <= 0) args = new String[]{ "" };
+
+        return onTabComplete(sender, args);
+    }
+
+    @Override
+    public boolean hasPermission(CommandSender invocation) {
+        return invocation.hasPermission(permission);
+    }
 }

@@ -61,7 +61,7 @@ public class PingCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         List<String> strings = new ArrayList<>();
 
         if (sender.hasPermission(CommandsConfUtils.comBPingPermOthers()) && CommandsConfUtils.comBPingOthers()) {

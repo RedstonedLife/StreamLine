@@ -1,13 +1,13 @@
 package net.plasmere.streamline.objects.timers;
 
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.enums.CategoryType;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -21,22 +21,36 @@ import java.util.TreeMap;
 public class OneSecondTimer implements Runnable {
     public int countdown;
     public int reset;
+    public int thirty;
 
     public OneSecondTimer() {
         this.countdown = 0;
         this.reset = 1;
+        this.thirty = 0;
     }
 
     @Override
     public void run() {
         if (countdown == 0) {
             done();
+
+            countdown = reset;
         }
 
         countdown--;
     }
 
-    public void done(){
+    public void done() {
+//        thirty --;
+//        if (thirty == 0) {
+//            thirty = 30;
+//
+//            for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()) {
+//                PlayerUtils.getLuckPermsPrefix(player.getUsername(), false);
+//                PlayerUtils.getLuckPermsSuffix(player.getUsername(), false);
+//            }
+//        }
+
         try {
             UUIDUtils.cachedNames = new TreeMap<>();
             UUIDUtils.cachedUUIDs = new TreeMap<>();
@@ -49,8 +63,6 @@ public class OneSecondTimer implements Runnable {
         }
 
         try {
-            countdown = reset;
-
             if (PlayerUtils.getToSave().size() > 0) {
                 for (SavableUser user : new ArrayList<>(PlayerUtils.getToSave())) {
                     PlayerUtils.doSave(user);
@@ -60,23 +72,33 @@ public class OneSecondTimer implements Runnable {
             PlayerUtils.tickConn();
 
             if (StreamLine.lpHolder.enabled) {
-                for (SavablePlayer player : PlayerUtils.getJustPlayersOnline()) {
-                    if (player.latestName == null) continue;
-                    if (player.latestName.equals("")) continue;
-                    PlayerUtils.updateDisplayName(player);
+                for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()) {
+//                    if (player.latestName == null) continue;
+//                    if (player.latestName.equals("")) continue;
+                    SavablePlayer p = PlayerUtils.getOrGetPlayerStatByUUID(player.getUniqueId().toString());
+                    if (p == null) {
+                        if (ConfigUtils.debug())
+                            MessagingUtils.logSevere("SavablePlayer for " + player.getName() + " is null!");
+                        continue;
+                    }
+                    PlayerUtils.updateDisplayName(p);
+//                    if (player.latestName == null) continue;
+//                    if (player.latestName.equals("")) continue;
+//                    PlayerUtils.updateDisplayName(player);
                 }
+            } else {
+                MessagingUtils.logSevere("Luckperms not found! Please install luckperms!");
             }
 
             for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
+                player.updateOnline();
                 PlayerUtils.checkAndUpdateIfMuted(player);
             }
 
             PlayerUtils.tickTeleport();
 
             if (ConfigUtils.moduleDEnabled()) {
-                if (ConfigUtils.boostsEnabled()) {
-                    PlayerUtils.tickBoosts();
-                }
+                PlayerUtils.tickBoosts();
             }
 
             if (ConfigUtils.moduleBRanksEnabled()) {
@@ -111,19 +133,30 @@ public class OneSecondTimer implements Runnable {
         tickGuilds();
         tickGuildSync();
         tickPartySync();
+
+//        if (! StreamLine.databaseInfo.getHost().equals("")) {
+//            for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
+//                if (player.onlineCheck()) {
+//                    for (String key : new TreeMap<>(player.getInfo()).keySet()) {
+//                        Driver.update(SavableType.PLAYER, UUIDUtils.stripUUID(player.uuid), key.replace('-', '_'), player.getInfo().get(key));
+//                    }
+//                }
+//            }
+//        }
     }
 
     public void tickGuilds() {
         if (StreamLine.getJda() == null) return;
 
         if (ConfigUtils.moduleDPCChangeOnVerifyUnchangeable()) {
-            for (long k : StreamLine.discordData.getVerified().singleLayerKeySet()) {
+            for (long k : StreamLine.discordData.getVerified().keySet()) {
                 String uuid = StreamLine.discordData.getUUIDOfVerified(k);
                 if (uuid == null) continue;
                 if (uuid.equals("null")) continue;
                 if (uuid.equals("")) continue;
 
                 SavableUser user = PlayerUtils.getOrGetSavableUser(uuid);
+                if (user == null) continue;
 
                 try {
                     for (Guild guild : StreamLine.getJda().getGuilds()) {
@@ -156,6 +189,9 @@ public class OneSecondTimer implements Runnable {
         if (! ConfigUtils.guildsSync()) return;
 
         for (SavableGuild guild : new ArrayList<>(GuildUtils.getGuilds())) {
+            if (guild.name == null) return;
+            if (guild.name.equals("")) return;
+
             List<SavablePlayer> players = new ArrayList<>();
 
             for (SavableUser user : guild.totalMembers) {
@@ -164,7 +200,8 @@ public class OneSecondTimer implements Runnable {
 
             if (guild.voiceID == 0L) {
                 VoiceChannel channel = DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
-                guild.updateKey("voice", channel.getIdLong());
+                if (channel == null) continue;
+                guild.setVoiceID(channel.getIdLong());
             } else {
                 DiscordUtils.addToVoice(guild.voiceID, players.toArray(new SavablePlayer[0]));
             }
@@ -176,6 +213,9 @@ public class OneSecondTimer implements Runnable {
         if (! ConfigUtils.partiesSync()) return;
 
         for (SavableParty party : new ArrayList<>(PartyUtils.getParties())) {
+            if (party.uuid == null) return;
+            if (party.uuid.equals("")) return;
+
             List<SavablePlayer> players = new ArrayList<>();
 
             for (SavableUser user : party.totalMembers) {
@@ -183,8 +223,13 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (party.voiceID == 0L) {
-                VoiceChannel channel = DiscordUtils.createVoice(party.leader.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
-                party.updateKey("voice", channel.getIdLong());
+                SavableUser user = PlayerUtils.getOrGetSavableUser(party.uuid);
+
+                if (user == null) continue;
+
+                VoiceChannel channel = DiscordUtils.createVoice(user.latestName, CategoryType.PARTIES, players.toArray(new SavablePlayer[0]));
+                if (channel == null) continue;
+                party.setVoiceID(channel.getIdLong());
             } else {
                 DiscordUtils.addToVoice(party.voiceID, players.toArray(new SavablePlayer[0]));
             }

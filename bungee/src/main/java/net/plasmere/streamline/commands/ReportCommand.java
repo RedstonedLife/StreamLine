@@ -5,6 +5,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
+import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
@@ -27,18 +28,18 @@ public class ReportCommand extends SLCommand {
 
         if (ConfigUtils.moduleReportsMToDiscord())
             if (ConfigUtils.moduleDEnabled())
-                MessagingUtils.sendDiscordReportMessage(sender.getName(), true, msg);
+                MessagingUtils.sendDiscordReportMessage(PlayerUtils.getSourceName(sender), true, msg);
         if (ConfigUtils.moduleReportsSendChat())
-            MessagingUtils.sendStaffMessageReport(sender.getName(), true, msg);
+            MessagingUtils.sendStaffMessageReport(PlayerUtils.getSourceName(sender), true, msg);
         if (ConfigUtils.moduleReportsBConfirmation())
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bConfirmReportMessage()
-                    .replace("%reporter%", sender.getName())
+                    .replace("%reporter%", PlayerUtils.getSourceName(sender))
                     .replace("%report%", TextUtils.normalize(args))
             );
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
 }

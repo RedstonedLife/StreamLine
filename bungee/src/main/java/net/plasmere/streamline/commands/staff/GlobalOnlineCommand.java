@@ -1,10 +1,9 @@
 package net.plasmere.streamline.commands.staff;
 
-import net.luckperms.api.model.group.Group;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.connection.Server;
+import net.luckperms.api.model.group.Group;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
@@ -31,7 +30,7 @@ public class GlobalOnlineCommand extends SLCommand {
 
     // Use in a try statement:
     private void compileList(CommandSender sendTo){
-        if (StreamLine.getInstance().getProxy().getOnlineCount() <= 0){
+        if (StreamLine.getInstance().getProxy().getPlayers().size() <= 0){
             sendTo.sendMessage(TextUtils.codedText(MessageConfUtils.onlineMessageNoPlayers()));
             return;
         }
@@ -45,7 +44,7 @@ public class GlobalOnlineCommand extends SLCommand {
 
         MessagingUtils.sendBUserMessage(sendTo,
                 MessageConfUtils.onlineMessageBMain()
-                        .replace("%amount%", Integer.toString(StreamLine.getInstance().getProxy().getOnlineCount()))
+                        .replace("%amount%", Integer.toString(StreamLine.getInstance().getProxy().getPlayers().size()))
                         .replace("%servers%", compileServers())
                         .replace("%online%", Objects.requireNonNull(getOnline(groups)))
         );
@@ -81,18 +80,18 @@ public class GlobalOnlineCommand extends SLCommand {
     }
 
     private String getOnline(Set<Group> groups){
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
 
-        HashMap<ProxiedPlayer, Server> playerServers = new HashMap<>();
+        HashMap<ProxiedPlayer, ServerInfo> playerServers = new HashMap<>();
         HashMap<ProxiedPlayer, String> playerGroup = new HashMap<>();
 
         for (ProxiedPlayer player : players){
-            playerServers.put(player, player.getServer());
+            playerServers.put(player, player.getServer().getInfo());
         }
 
         for (ProxiedPlayer player : players){
             try {
-                playerGroup.put(player, Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(player.getName())).getPrimaryGroup().toLowerCase());
+                playerGroup.put(player, Objects.requireNonNull(StreamLine.lpHolder.api.getUserManager().getUser(PlayerUtils.getSourceName(player))).getPrimaryGroup().toLowerCase());
             } catch (Exception e){
                 e.printStackTrace();
                 playerGroup.put(player, "null");
@@ -115,14 +114,13 @@ public class GlobalOnlineCommand extends SLCommand {
         return msg.toString();
     }
 
-    private String getGroupedPlayers(String group, HashMap<ProxiedPlayer, String> playerGroup, HashMap<ProxiedPlayer, Server> playerServers){
+    private String getGroupedPlayers(String group, HashMap<ProxiedPlayer, String> playerGroup, HashMap<ProxiedPlayer, ServerInfo> playerServers){
         List<ProxiedPlayer> players = new ArrayList<>();
 
-        for (ProxiedPlayer player : playerGroup.singleLayerKeySet()){
+        for (ProxiedPlayer player : playerGroup.keySet()){
             if (group.toLowerCase().equals(playerGroup.get(player).toLowerCase()))
                 players.add(player);
         }
-
 
         return MessageConfUtils.onlineMessageBPlayersMain()
                 .replace("%group%", group.toUpperCase())
@@ -130,20 +128,20 @@ public class GlobalOnlineCommand extends SLCommand {
                 .replace("%playerbulk%", getPlayerBulk(players, playerServers));
     }
 
-    private String getPlayerBulk(List<ProxiedPlayer> players, HashMap<ProxiedPlayer, Server> playerServers){
+    private String getPlayerBulk(List<ProxiedPlayer> players, HashMap<ProxiedPlayer, ServerInfo> playerServers){
         StringBuilder text = new StringBuilder();
 
         int i = 0;
 
         for (ProxiedPlayer player : players){
-            Server server = playerServers.get(player);
+            ServerInfo server = playerServers.get(player);
             if (! (i == players.size() - 1))
                 text.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.onlineMessageBPlayersBulkNotLast(), player)
-                        .replace("%server%", server.getInfo().getName())
+                        .replace("%server%", server.getName())
                 );
             else
                 text.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.onlineMessageBPlayersBulkLast(), player)
-                        .replace("%server%", server.getInfo().getName())
+                        .replace("%server%", server.getName())
                 );
             i++;
         }
@@ -152,7 +150,7 @@ public class GlobalOnlineCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
 }

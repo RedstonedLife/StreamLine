@@ -29,7 +29,7 @@ public class FriendCommand extends SLCommand {
         if (stat == null) {
             stat = PlayerUtils.getOrGetSavableUser(sender);
             if (stat == null) {
-                MessagingUtils.logSevere("CANNOT INSTANTIATE THE PLAYER: " + sender.getName());
+                MessagingUtils.logSevere("CANNOT INSTANTIATE THE PLAYER: " + PlayerUtils.getSourceName(sender));
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
                             .replace("%class%", this.getClass().getName())
                     );
@@ -88,8 +88,8 @@ public class FriendCommand extends SLCommand {
                         return;
                     }
 
-                    stat.tryAddNewPendingToFriend(other.uuid);
-                    other.tryAddNewPendingFromFriend(stat.uuid);
+                    stat.addPendingToFriend(other.uuid);
+                    other.addPendingFromFriend(stat.uuid);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendReqSelf(), other));
                     if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof SavableConsole) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendReqOther(), sender));
@@ -101,10 +101,10 @@ public class FriendCommand extends SLCommand {
                         return;
                     }
 
-                    stat.tryAddNewFriend(other.uuid);
-                    other.tryAddNewFriend(stat.uuid);
-                    other.tryRemPendingToFriend(stat.uuid);
-                    stat.tryRemPendingFromFriend(other.uuid);
+                    stat.addFriend(other.uuid);
+                    other.addFriend(stat.uuid);
+                    other.removePendingToFriend(stat.uuid);
+                    stat.removePendingFromFriend(other.uuid);
 
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendAcceptSelf(), other));
 
@@ -118,8 +118,9 @@ public class FriendCommand extends SLCommand {
                         return;
                     }
 
-                    stat.tryRemPendingFromFriend(other.uuid);
-                    other.tryRemPendingToFriend(stat.uuid);
+                    stat.removePendingFromFriend(other.uuid);
+                    other.removePendingToFriend(stat.uuid);
+                    other.setFriendRequestDenied(stat);
 
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendDenySelf(), other));
                     if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof SavableConsole) {
@@ -137,12 +138,14 @@ public class FriendCommand extends SLCommand {
                         return;
                     }
 
-                    stat.tryRemPendingToFriend(other.uuid);
-                    other.tryRemPendingToFriend(stat.uuid);
-                    stat.tryRemPendingFromFriend(other.uuid);
-                    other.tryRemPendingFromFriend(stat.uuid);
-                    stat.tryRemFriend(other.uuid);
-                    other.tryRemFriend(stat.uuid);
+                    stat.removePendingToFriend(other.uuid);
+                    other.removePendingToFriend(stat.uuid);
+                    stat.removePendingFromFriend(other.uuid);
+                    other.removePendingFromFriend(stat.uuid);
+                    stat.removeFriend(other.uuid);
+                    other.removeFriend(stat.uuid);
+                    stat.setFriendRequestDenied(other);
+                    other.setFriendRequestDenied(stat);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.friendRemSelf(), other));
                     if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof SavableConsole) {
                         MessagingUtils.sendBUserMessage(other.findSender(), TextUtils.replaceAllSenderBungee(MessageConfUtils.friendRemOther(), sender));
@@ -160,9 +163,9 @@ public class FriendCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args) {
         if (sender instanceof ProxiedPlayer) {
-            Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+            Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
             List<String> strPlayers = new ArrayList<>();
             List<String> friends = new ArrayList<>();
             List<String> pending = new ArrayList<>();
@@ -181,7 +184,7 @@ public class FriendCommand extends SLCommand {
 
             for (ProxiedPlayer pl : players) {
                 if (pl.equals(sender)) continue;
-                strPlayers.add(pl.getName());
+                strPlayers.add(PlayerUtils.getSourceName(pl));
             }
 
             strPlayers.add("%");

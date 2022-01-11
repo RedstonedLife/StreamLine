@@ -14,7 +14,7 @@ modules:
   offline-mode: false
   # Enables / disables the database.
   database:
-    use: true
+    use: false
   # Permission that you will give to all of your staff.
   # (Used for staff chats and other staff determined staff modules...)
   staff-permission: "streamline.staff"
@@ -241,7 +241,7 @@ modules:
       # Example: "staff,guild,party,friend"
       # --> If a player leaves who is staff, they will be shown (only to staff)
       # --> If a player leaves who is in your guild, they will be shown if not staff (and you are staff)
-    # --> If a player leaves who is in your party, they will be shown if not staff (and you are staff), or in your guild.
+      # --> If a player leaves who is in your party, they will be shown if not staff (and you are staff), or in your guild.
     # --> If a player leaves who is in your friends list, they will be shown if not staff (and you are staff), or in your guild, or in your party.
     # --> If none above, will not be shown.
     # NOTE: per-server connection events can be made with the events module.
@@ -289,13 +289,6 @@ modules:
         leave: true
       plugin-messaging:
         enabled: true
-      experience:
-        starting:
-          level: 1
-          xp: 0
-        # Amount of xp to get to the next level.
-        # Accepts all player placeholders.
-        equation: "2500 + (2500 * (%player_level% - 1))"
     # Sudoing...
     sudo:
       # Permission for players you don't want to be able to be sudoed.
@@ -350,7 +343,7 @@ modules:
           level: 1
           xp: 0
         # Amount of xp to get to the next level.
-        # Accepts: %guild_level%, %guild_current_xp%, %guild_total_xp%
+        # Accepts: %guild_level%, %guild_current_xp%, %guild_total_xp%, %default_level%
         equation: "10000 + (10000 * (%guild_level% - 1))"
     # Stats command...
     stats:
@@ -370,6 +363,13 @@ modules:
       update-display-names: true
       # Automatically deletes bad player stats. (If they get corrupted.)
       delete-bad: true
+      experience:
+        starting:
+          level: 1
+          xp: 0
+        # Amount of xp to get to the next level.
+        # Accepts all player placeholders and %default_level%
+        equation: "2500 + (2500 * (%player_level% - 1))"
     # For server redirects...
     # This redirects players upon joining the server.
     # Nice if you need to direct certain players to a different server when they join.
@@ -562,6 +562,8 @@ modules:
       max:
         default: 1
         base-permission: "streamline.voice.limit."
+    mysqlbridger:
+      enabled: true
   bstats:
     make-server-discoverable: true
     discoverable-ip: "my.server.net"

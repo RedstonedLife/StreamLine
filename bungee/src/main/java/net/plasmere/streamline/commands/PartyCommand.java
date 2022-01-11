@@ -24,12 +24,12 @@ public class PartyCommand extends SLCommand {
     @Override
     public void run(CommandSender sender, String[] args) {
         if (sender instanceof ProxiedPlayer) {
-            SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStat(((ProxiedPlayer) sender).getName());
 
             if (player == null) {
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
-                        .replace("%class%", this.getClass().getName())
-                );
+                            .replace("%class%", this.getClass().getName())
+                    );
                 return;
             }
 
@@ -54,8 +54,8 @@ public class PartyCommand extends SLCommand {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
-                                .replace("%class%", this.getClass().getName())
-                        );
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 } else {
@@ -63,8 +63,8 @@ public class PartyCommand extends SLCommand {
                         PartyUtils.joinParty(player, PlayerUtils.getOrGetPlayerStat(args[1]));
                     } catch (Exception e) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
-                                .replace("%class%", this.getClass().getName())
-                        );
+                            .replace("%class%", this.getClass().getName())
+                    );
                         e.printStackTrace();
                     }
                 }
@@ -195,7 +195,7 @@ public class PartyCommand extends SLCommand {
                     }
                 } else {
                     try {
-                        if (PartyUtils.getParty(PlayerUtils.getPlayerStat(sender)) != null) {
+                        if (PartyUtils.getOrGetParty(PlayerUtils.getPlayerStat(sender)) != null) {
                             PartyUtils.openPartySized(player, Integer.parseInt(args[1]));
                         } else {
                             PartyUtils.createPartySized(player, Integer.parseInt(args[1]));
@@ -363,20 +363,6 @@ public class PartyCommand extends SLCommand {
                     );
                     e.printStackTrace();
                 }
-//            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParSyncAliases())) {
-//                if (! sender.hasPermission(CommandsConfUtils.comBParSyncPermission())) {
-//                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
-//                    return;
-//                }
-//
-//                try {
-//                    PartyUtils.onSync(player);
-//                } catch (Throwable e) {
-//                    MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
-//                            .replace("%class%", this.getClass().getName())
-//                    );
-//                    e.printStackTrace();
-//                }
             } else {
                 try {
                     SavablePlayer p = PlayerUtils.getOrGetPlayerStat(args[0]);
@@ -403,13 +389,13 @@ public class PartyCommand extends SLCommand {
 
     // Usage: /party <join|leave|create|promote|demote|chat|list|open|close|disband|accept|deny|invite|kick|mute|warp>
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args)
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args)
     {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (ProxiedPlayer player : players){
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         if (args.length > 2) return new ArrayList<>();
@@ -430,20 +416,22 @@ public class PartyCommand extends SLCommand {
             tabArgs1.add("invite");
             tabArgs1.add("mute");
             tabArgs1.add("warp");
-            tabArgs1.add("sync");
 
             return TextUtils.getCompletion(tabArgs1, args[0]);
         }
         if (args.length == 2) {
             if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParJoinAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParJoinPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParLeaveAliases())) {
                 return new ArrayList<>();
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParCreateAliases())) {
                 return new ArrayList<>();
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParPromoteAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParPromotePermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDemoteAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParDemotePermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParChatAliases())) {
                 return new ArrayList<>();
@@ -456,19 +444,21 @@ public class PartyCommand extends SLCommand {
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDisbandAliases())) {
                 return new ArrayList<>();
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParAcceptAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParAcceptPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParDenyAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParDenyPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParInvAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParInvitePermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[1]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParKickAliases())) {
+                if (! sender.hasPermission(CommandsConfUtils.comBParKickPermission())) return new ArrayList<>();
                 return TextUtils.getCompletion(strPlayers, args[0]);
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParMuteAliases())) {
                 return new ArrayList<>();
             } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParWarpAliases())) {
                 return new ArrayList<>();
-//            } else if (MessagingUtils.compareWithList(args[0], CommandsConfUtils.comBParSyncAliases())) {
-//                return new ArrayList<>();
             } else {
                 return TextUtils.getCompletion(strPlayers, args[1]);
             }

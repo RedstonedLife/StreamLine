@@ -45,7 +45,7 @@ public class CommandBuilder extends SLCommand {
         this.events = events;
         this.permissionNeeded = permissionNeeded;
         this.permissionMessage = permissionMessage;
-        this.setPermissionMessage(permissionMessage);
+//        this.setPermissionMessage(permissionMessage);
     }
 
     /**
@@ -101,7 +101,7 @@ public class CommandBuilder extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
 

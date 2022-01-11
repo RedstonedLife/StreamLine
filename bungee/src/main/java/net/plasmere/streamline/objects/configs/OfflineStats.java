@@ -1,10 +1,10 @@
 package net.plasmere.streamline.objects.configs;
 
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
+
 import net.plasmere.streamline.objects.DataChannel;
 import net.plasmere.streamline.utils.MessagingUtils;
 
@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.TreeMap;
 
 public class OfflineStats {
-    private Configuration conf;
+    private Config conf;
     private final String fileString = "offline-stats.yml";
     private final File file = new File(StreamLine.getInstance().getPlDir(), fileString);
     public TreeMap<Long, DataChannel> loadedChannels = new TreeMap<>();
@@ -35,7 +35,7 @@ public class OfflineStats {
         MessagingUtils.logInfo("Loaded offline stats!");
     }
 
-    public Configuration getConf() {
+    public Config getConf() {
         reloadConfig();
         return conf;
     }
@@ -48,7 +48,7 @@ public class OfflineStats {
         }
     }
 
-    public Configuration loadConfig(){
+    public Config loadConfig(){
         if (! file.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(fileString)){
                 Files.copy(in, file.toPath());
@@ -57,23 +57,7 @@ public class OfflineStats {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file); // ???
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public void saveConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(conf, file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return LightningBuilder.fromFile(file).createConfig();
     }
 
    public void addStat(String uuid, String playername) {
@@ -83,14 +67,12 @@ public class OfflineStats {
 
        conf.set(uuid, playername);
        conf.set(playername, uuid);
-       saveConfig();
    }
 
     public void remStat(String uuid, String playername) {
         reloadConfig();
         conf.set(uuid, null);
         conf.set(playername, null);
-        saveConfig();
     }
 
     public String getPlayerName(String uuid) {

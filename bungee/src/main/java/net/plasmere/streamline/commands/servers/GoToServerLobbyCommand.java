@@ -1,12 +1,9 @@
 package net.plasmere.streamline.commands.servers;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.ProxyServer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
@@ -16,7 +13,6 @@ import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.Collection;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TreeSet;
 
 public class GoToServerLobbyCommand extends SLCommand {
@@ -26,7 +22,7 @@ public class GoToServerLobbyCommand extends SLCommand {
 
     @Override
     public void run(CommandSender sender, String[] args){
-        Map<String, ServerInfo> servers = ProxyServer.getInstance().getServers();
+        Collection<ServerInfo> servers = StreamLine.getInstance().getProxy().getServers().values();
         if ( args.length == 0 ) {
             if (sender instanceof ProxiedPlayer) {
                 ProxiedPlayer player = (ProxiedPlayer) sender;
@@ -36,45 +32,34 @@ public class GoToServerLobbyCommand extends SLCommand {
 
                     ServerInfo vanServer = proxy.getServerInfo(CommandsConfUtils.comBLobbyEnd());
 
-                    if (!vanServer.canAccess(player))
-                        player.sendMessage(new TextComponent(ChatColor.RED + "Cannot connect..."));
-                    else {
-                        player.sendMessage(new TextComponent(ChatColor.GREEN + "Connecting now..."));
-                        player.connect(vanServer, ServerConnectEvent.Reason.COMMAND);
-                    }
+                    MessagingUtils.sendBUserMessage(sender, "&aConnecting now...");
+                    player.connect(vanServer);
                 } else {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                 }
             } else {
-                sender.sendMessage(new TextComponent(ChatColor.RED + "Sorry, but only a player can do this..."));
+                MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());
             }
         } else {
             if (!(sender instanceof ProxiedPlayer))
                 return;
 
             ProxiedPlayer player = (ProxiedPlayer) sender;
+            ProxyServer proxy = StreamLine.getInstance().getProxy();
 
-            ServerInfo server = servers.get(args[0]);
-            if (server == null)
-                player.sendMessage(new TextComponent(ChatColor.RED + "No server specified..."));
-            else if (! server.canAccess(player))
-                player.sendMessage(new TextComponent(ChatColor.RED + "Cannot connect..."));
-            else
-            {
-                player.sendMessage(new TextComponent(ChatColor.GREEN + "Connecting now..."));
-                player.connect(server, ServerConnectEvent.Reason.COMMAND);
-            }
+            ServerInfo server = proxy.getServerInfo(args[0]);
+
+            MessagingUtils.sendBUserMessage(sender, "&aConnecting now...");
+            player.connect(server);
         }
     }
 
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args)
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args)
     {
         TreeSet<String> servers = new TreeSet<>();
 
         for (ServerInfo serverInfo : StreamLine.getInstance().getProxy().getServers().values()) {
-            if (! serverInfo.canAccess(sender)) continue;
-
             servers.add(serverInfo.getName().toLowerCase(Locale.ROOT));
         }
 

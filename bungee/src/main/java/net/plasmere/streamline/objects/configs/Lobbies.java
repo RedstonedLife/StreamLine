@@ -234,13 +234,13 @@ public class Lobbies {
         }
         writer.close();
 
-        //MessagingUtils.logInfo("Just saved SavableGuild info for leader (UUID): " + leaderUUID);
+        //MessagingUtils.logInfo("Just saved SavableGuild info for leader (UUID): " + uuid);
     }
 
     public String toString(){
         StringBuilder stringBuilder = new StringBuilder("[");
 
-        for (String server : servers.singleLayerKeySet()){
+        for (String server : servers.keySet()){
             stringBuilder.append(server).append("(");
             int i = 1;
             for (String allowed : servers.get(server)) {

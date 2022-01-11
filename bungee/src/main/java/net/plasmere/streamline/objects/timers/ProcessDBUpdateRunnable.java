@@ -33,8 +33,9 @@ public class ProcessDBUpdateRunnable implements Runnable {
 
     public boolean updatePlayerOnDB(SavablePlayer player) {
         if (! StreamLine.databaseInfo.getHost().equals("")) {
+//            Driver.update(SavableType.PLAYER, UUIDUtils.stripUUID(player.uuid));
 
-            DataSource.updatePlayerData(player);
+
 
             return true;
         }

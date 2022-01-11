@@ -1,6 +1,7 @@
 package net.plasmere.streamline.objects.lists;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.plasmere.streamline.utils.PlayerUtils;
 
 import java.util.Collection;
 import java.util.TreeMap;
@@ -12,22 +13,22 @@ public class ProxiedPlayerSet {
 
     }
 
-    public ProxiedPlayerSet(Collection<? extends ProxiedPlayer> oldProxiedPlayers){
-        addForProxiedPlayers(oldProxiedPlayers);
+    public ProxiedPlayerSet(Collection<? extends ProxiedPlayer> oldPlayers){
+        addForPlayers(oldPlayers);
     }
 
-    public void addForProxiedPlayers(Collection<? extends ProxiedPlayer> oldProxiedPlayers){
-        for (ProxiedPlayer player : oldProxiedPlayers) {
-            addProxiedPlayer(player);
+    public void addForPlayers(Collection<? extends ProxiedPlayer> oldPlayers){
+        for (ProxiedPlayer player : oldPlayers) {
+            addPlayer(player);
         }
     }
 
-    public void addProxiedPlayer(ProxiedPlayer player) {
-        sorted.put(player.getName(), player);
+    public void addPlayer(ProxiedPlayer player) {
+        sorted.put(PlayerUtils.getSourceName(player), player);
     }
 
-    public void remProxiedPlayer(ProxiedPlayer player){
-        sorted.remove(player.getName());
+    public void remPlayer(ProxiedPlayer player){
+        sorted.remove(PlayerUtils.getSourceName(player));
     }
 
     public ProxiedPlayer[] getAll() {

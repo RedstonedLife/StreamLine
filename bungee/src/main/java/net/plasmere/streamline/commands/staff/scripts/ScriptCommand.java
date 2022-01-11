@@ -58,7 +58,7 @@ public class ScriptCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         TreeList<String> scripts = new TreeList<>();
 
         File folder = StreamLine.getInstance().getScriptsDir();

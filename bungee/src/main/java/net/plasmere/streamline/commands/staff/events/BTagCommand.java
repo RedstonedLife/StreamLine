@@ -26,9 +26,7 @@ public class BTagCommand extends SLCommand {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeNeedsMore());
         } else {
             if (! PlayerUtils.exists(args[0])) {
-                MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName())
-                            .replace("%class%", this.getClass().getName())
-                    );
+                MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
                 return;
             }
 
@@ -39,7 +37,7 @@ public class BTagCommand extends SLCommand {
                 return;
             }
 
-            if (! stat.latestName.equals(sender.getName())) {
+            if (! stat.latestName.equals(PlayerUtils.getSourceName(sender))) {
                 if (! sender.hasPermission(CommandsConfUtils.comBBTagOPerm())) {
                     MessagingUtils.sendBUserMessage(sender, MessageConfUtils.noPerm());
                     return;
@@ -87,10 +85,10 @@ public class BTagCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         if (! sender.hasPermission(CommandsConfUtils.comBBTagPerm())) return new ArrayList<>();
 
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> secondTab = new ArrayList<>();
 
@@ -100,7 +98,7 @@ public class BTagCommand extends SLCommand {
 
         if (args.length == 1) {
             for (ProxiedPlayer player : players) {
-                strPlayers.add(player.getName());
+                strPlayers.add(PlayerUtils.getSourceName(player));
             }
 
             return TextUtils.getCompletion(strPlayers, args[0]);

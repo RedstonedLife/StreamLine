@@ -18,17 +18,23 @@ public class DataSource {
     private static HikariDataSource ds;
 
     static {
-        config.setJdbcUrl("jdbc:mysql://%host%:%port%/%database%"
-                .replace("%host%", StreamLine.databaseInfo.getHost())
-                .replace("%port%", String.valueOf(StreamLine.databaseInfo.getPort()))
-                .replace("%database%", StreamLine.databaseInfo.getDatabase()));
-        config.setUsername(StreamLine.databaseInfo.getUser());
-        config.setPassword(StreamLine.databaseInfo.getPass());
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.addDataSourceProperty("allowMultiQueries", "true");
-        ds = new HikariDataSource(config);
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+
+            config.setJdbcUrl("jdbc:mysql://%host%:%port%/%database%"
+                    .replace("%host%", StreamLine.databaseInfo.getHost())
+                    .replace("%port%", String.valueOf(StreamLine.databaseInfo.getPort()))
+                    .replace("%database%", StreamLine.databaseInfo.getDatabase()));
+            config.setUsername(StreamLine.databaseInfo.getUser());
+            config.setPassword(StreamLine.databaseInfo.getPass());
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", "250");
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+            config.addDataSourceProperty("allowMultiQueries", "true");
+            ds = new HikariDataSource(config);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private DataSource() {}
@@ -59,6 +65,13 @@ public class DataSource {
                 int value = 0;
 
                 if(resultSet.next())
+                    //TODO: THIS IS TESTED ONLY ON MARIADB, PLEASE TEST IT ON MYSQL.
+                    query = "ALTER TABLE player_data ADD COLUMN IF NOT EXISTS playedSeconds INT NOT NULL DEFAULT '0';";
+
+                    try(PreparedStatement statement1 = connection.prepareStatement(query)) {
+                        statement1.execute();
+                    }
+
                     value = resultSet.getInt(1);
 
                 if(value != 0) return;
@@ -90,7 +103,7 @@ public class DataSource {
             boolean returnValue = false;
             if(resultSet.next())
                 returnValue = resultSet.getBoolean(1);
-            return returnValue;
+                return returnValue;
 
         } catch (SQLException e) {
             if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
@@ -101,13 +114,13 @@ public class DataSource {
     /**
      * Update data of a player on the Database
      *
-     * @param player The Player data.
+     * @param player The ProxiedPlayer data.
      */
     public static void updatePlayerData(SavablePlayer player)
     {
         if (! ConfigUtils.moduleDBUse()) return;
 
-        String query = "REPLACE INTO player_data (uuid, latestName, displayName, latestIp, latestVersion, latestServer, discordId, mutedUntil, points) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String query = "REPLACE INTO player_data (uuid, latestName, displayName, latestIp, latestVersion, latestServer, discordId, mutedUntil, points, playedSeconds) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         try(Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query))
         {
@@ -120,6 +133,7 @@ public class DataSource {
             statement.setLong(7, player.discordID);
             statement.setDate(8, new java.sql.Date(player.mutedTill.getTime()));
             statement.setInt(9, player.points);
+            statement.setInt(10, player.playSeconds);
 
             statement.execute();
         } catch (SQLException e) {
@@ -159,6 +173,7 @@ public class DataSource {
                 player.totalXP = resultSet.getInt("totalExperience");
                 player.currentXP = resultSet.getInt("currentExperience");
                 player.level = resultSet.getInt("level");
+                player.playSeconds = resultSet.getInt("playedSeconds");
             }
 
             return player;
@@ -173,7 +188,7 @@ public class DataSource {
     /**
      * Add a new ip to a player on the Database
      *
-     * @param player The Player data.
+     * @param player The ProxiedPlayer data.
      * @param address The ip address to add.
      */
     public static void addIpToPlayer(SavablePlayer player, String address)
@@ -205,7 +220,7 @@ public class DataSource {
     /**
      * Add a name to a player on the Database
      *
-     * @param player The Player data.
+     * @param player The ProxiedPlayer data.
      * @param name The new name to add.
      */
     public static void addNameToPlayer(SavablePlayer player, String name)
@@ -235,7 +250,7 @@ public class DataSource {
     /**
      * Update experience data of a player on the Database
      *
-     * @param player The Player data.
+     * @param player The ProxiedPlayer data.
      */
     public static void updatePlayerExperience(SavablePlayer player)
     {
@@ -260,7 +275,7 @@ public class DataSource {
     /**
      * Update chat data of a player on the Database
      *
-     * @param player The Player data.
+     * @param player The ProxiedPlayer data.
      */
     public static void updatePlayerChat(SavablePlayer player)
     {

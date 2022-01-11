@@ -90,28 +90,28 @@ public class DiscordUtils {
             long l = StreamLine.discordData.getIDOfVerified(player.uuid);
 
             Guild guild = jda.getGuildById(DiscordBotConfUtils.guildID());
-            channel = guild.getVoiceChannelById(voiceID);
-            if (channel == null) continue;
+                channel = guild.getVoiceChannelById(voiceID);
+                if (channel == null) continue;
 
-            User user = jda.getUserById(l);
-            if (user == null) continue;
-            Member member = guild.getMember(user);
-            if (member == null) {
-                MessagingUtils.logWarning("Member with id " + l + " returned null!");
-                continue;
+                User user = jda.getUserById(l);
+                if (user == null) continue;
+                Member member = guild.getMember(user);
+                if (member == null) {
+                    MessagingUtils.logWarning("Member with id " + l + " returned null!");
+                    continue;
+                }
+
+                if (isInPermissionOverride(member, channel)) continue;
+
+                channel.createPermissionOverride(member).setAllow(
+                        Permission.VIEW_CHANNEL,
+                        Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
+                        Permission.VOICE_STREAM, Permission.VOICE_USE_VAD,
+                        Permission.VOICE_START_ACTIVITIES, Permission.VIEW_CHANNEL
+                ).complete();
+
+                StreamLine.discordData.addToVoice(l, channel.getIdLong());
             }
-
-            if (isInPermissionOverride(member, channel)) continue;
-
-            channel.createPermissionOverride(member).setAllow(
-                    Permission.VIEW_CHANNEL,
-                    Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
-                    Permission.VOICE_STREAM, Permission.VOICE_USE_VAD,
-                    Permission.VOICE_START_ACTIVITIES, Permission.VIEW_CHANNEL
-            ).complete();
-
-            StreamLine.discordData.addToVoice(l, channel.getIdLong());
-        }
         return channel;
     }
 

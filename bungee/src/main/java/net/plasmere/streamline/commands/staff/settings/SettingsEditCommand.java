@@ -431,7 +431,7 @@ public class SettingsEditCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args) {
         List<String> options = new ArrayList<>();
 
         options.add("set");
@@ -467,12 +467,12 @@ public class SettingsEditCommand extends SLCommand {
             if (args[1].equals("motd") || args[1].equals("sample")) {
                 List<String> keys = new ArrayList<>();
 
-                for (Integer key : StreamLine.serverConfig.getComparedMOTD().singleLayerKeySet()) {
+                for (Integer key : StreamLine.serverConfig.getComparedMOTD().keySet()) {
                     if (keys.contains(String.valueOf(key))) continue;
                     keys.add(String.valueOf(key));
                 }
 
-                for (Integer key : StreamLine.serverConfig.getComparedSample().singleLayerKeySet()) {
+                for (Integer key : StreamLine.serverConfig.getComparedSample().keySet()) {
                     if (keys.contains(String.valueOf(key))) continue;
                     keys.add(String.valueOf(key));
                 }

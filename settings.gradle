@@ -1,7 +1,7 @@
 rootProject.name = 'StreamLine'
 include(
-        'velocity',
-//        'bungee'
+//        'velocity',
+        'bungee'
 )
-findProject(':velocity')?.name = 'StreamLine-Velocity'
-//findProject(':bungee')?.name = 'StreamLine-Bungee'
+//findProject(':velocity')?.name = 'StreamLine-Velocity'
+findProject(':bungee')?.name = 'StreamLine-Bungee'

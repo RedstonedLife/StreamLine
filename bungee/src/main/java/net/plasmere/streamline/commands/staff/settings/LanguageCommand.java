@@ -38,7 +38,7 @@ public class LanguageCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args) {
         TreeSet<String> locales = new TreeSet<>();
 
         locales.addAll(ConfigHandler.acceptableTranslations());

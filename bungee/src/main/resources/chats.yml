@@ -1,6 +1,10 @@
 chats:
   base-permission: "streamline.chat."
+  default-channel: "local"
+  default-identifier: "network"
+  default-just-first-join: true
   local:
+    permission: "streamline.channel.local"
     network-wide:
       identifier: "network"
       bypass-permission: "streamline.chat.bypass.local.network"
@@ -24,6 +28,7 @@ chats:
         2: "&e[&9Discord&e] &d%sender_formatted%&r &7&l>> &e%message%"
         3: "&e[&9Discord&e] &d%sender_formatted%&r &7&l>> &6%message%"
   global:
+    permission: "streamline.channel.global"
     network-wide:
       identifier: "network"
       bypass-permission: "streamline.chat.bypass.global.network"
@@ -47,6 +52,7 @@ chats:
         2: "&e(&dROOM &61&e) &e[&9Discord&e] &d%sender_formatted%&r &7&l>> &e%message%"
         3: "&e(&dROOM &61&e) &e[&9Discord&e] &d%sender_formatted%&r &7&l>> &6%message%"
   guild:
+    permission: "streamline.channel.guild"
     network-wide:
       identifier: "network"
       bypass-permission: "streamline.chat.bypass.guild.network"
@@ -62,6 +68,7 @@ chats:
       discord:
         1: "&e[&9Discord&e] &4TACO &2GUILD &9&l>> &b%sender_formatted% &8: &f%message%"
   party:
+    permission: "streamline.channel.party"
     network-wide:
       identifier: "network"
       bypass-permission: "streamline.chat.bypass.party.network"
@@ -77,6 +84,7 @@ chats:
       discord:
         1: "&e[&9Discord&e] &4TACO &3PARTY &9&l>> &b%sender_formatted% &8: &f%message%"
   rooms:
+    permission: "streamline.channel.rooms"
     network-wide:
       identifier: "network"
       bypass-permission: "streamline.room.network"

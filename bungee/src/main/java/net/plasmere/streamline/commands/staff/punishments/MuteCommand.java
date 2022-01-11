@@ -81,7 +81,7 @@ public class MuteCommand extends SLCommand {
                                             sender,
                                             MessageConfUtils.muteEmbed(),
                                             TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteMTempDiscord(), other)
-                                                    .replace("%punisher%", sender.getName())
+                                                    .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                     .replace("%date%", other.mutedTill.toString())
                                             ,
                                             DiscordBotConfUtils.textChannelMutes()
@@ -91,7 +91,7 @@ public class MuteCommand extends SLCommand {
                     }
 
                     MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMTempStaff(), other)
-                            .replace("%punisher%", sender.getName())
+                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                             .replace("%date%", other.mutedTill.toString())
                     );
 
@@ -121,7 +121,7 @@ public class MuteCommand extends SLCommand {
                                         sender,
                                         MessageConfUtils.muteEmbed(),
                                         TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteMPermDiscord(), other)
-                                                .replace("%punisher%", sender.getName())
+                                                .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                         ,
                                         DiscordBotConfUtils.textChannelMutes()
                                 )
@@ -130,7 +130,7 @@ public class MuteCommand extends SLCommand {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMPermStaff(), other)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                 );
             } else if (args[0].equals("temp")) {
                 if (args.length < 3) {
@@ -172,7 +172,7 @@ public class MuteCommand extends SLCommand {
                                     sender,
                                     MessageConfUtils.muteEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteMTempDiscord(), other)
-                                            .replace("%punisher%", sender.getName())
+                                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                             .replace("%date%", other.mutedTill.toString())
                                     ,
                                     DiscordBotConfUtils.textChannelMutes()
@@ -181,7 +181,7 @@ public class MuteCommand extends SLCommand {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteMTempStaff(), other)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                         .replace("%date%", other.mutedTill.toString())
                 );
             } else if (args[0].equals("remove")) {
@@ -205,7 +205,7 @@ public class MuteCommand extends SLCommand {
                                     sender,
                                     MessageConfUtils.muteEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.muteUnDiscord(), other)
-                                            .replace("%punisher%", sender.getName())
+                                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                     ,
                                     DiscordBotConfUtils.textChannelMutes()
                             )
@@ -213,7 +213,7 @@ public class MuteCommand extends SLCommand {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.muteUnStaff(), other)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                 );
             } else if (args[0].equals("check")) {
                 Date checked = other.mutedTill;
@@ -228,13 +228,13 @@ public class MuteCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args) {
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (ProxiedPlayer player : players){
             if (sender instanceof ProxiedPlayer) if (player.equals(sender)) continue;
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         List<String> options = new ArrayList<>();

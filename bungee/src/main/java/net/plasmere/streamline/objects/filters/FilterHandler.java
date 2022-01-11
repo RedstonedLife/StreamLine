@@ -1,7 +1,10 @@
 package net.plasmere.streamline.objects.filters;
 
-import net.md_5.bungee.config.Configuration;
+
+import de.leonhard.storage.Config;
+import de.leonhard.storage.sections.FlatFileSection;
 import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 import org.apache.commons.collections4.list.TreeList;
 
 import java.util.ArrayList;
@@ -11,7 +14,7 @@ public class FilterHandler {
     public static List<ChatFilter> filters = new ArrayList<>();
 
     public static TreeList<String> getAllFiltersByName() {
-        return new TreeList<>(StreamLine.chatFilters.getConf().getKeys());
+        return new TreeList<>(StreamLine.chatFilters.getConf().singleLayerKeySet());
     }
 
     public static ChatFilter addFilter(ChatFilter filter) {
@@ -22,7 +25,7 @@ public class FilterHandler {
     }
 
     public static ChatFilter remFilter(ChatFilter filter) {
-        if (!filters.contains(filter)) return filter;
+        if (! filters.contains(filter)) return filter;
 
         filters.remove(filter);
         return filter;
@@ -36,15 +39,18 @@ public class FilterHandler {
         return null;
     }
 
-    public static void loadFiltersFromConfiguration(Configuration configuration) {
-        for (String key : configuration.getKeys()) {
+    public static void loadFiltersFromConfiguration(Config configuration) {
+        for (String key : configuration.singleLayerKeySet()) {
             try {
-                Configuration section = configuration.getSection(key);
-                boolean enabled = section.getBoolean("enabled");
-                String regex = section.getString("regex");
-                List<String> replacements = section.getStringList("replace-with");
+                ConfigSection section = new ConfigSection(configuration.getSection(key));
+                boolean enabled = section.s.getBoolean("enabled");
+                String scriptName = section.s.getString("runs-script");
+                String bypassPermission = section.s.getString("bypass-permission");
+                boolean blocked = section.s.getBoolean("blocked");
+                String regex = section.s.getString("regex");
+                List<String> replacements = section.s.getStringList("replace-with");
 
-                ChatFilter filter = new ChatFilter(key, enabled, regex, replacements);
+                ChatFilter filter = new ChatFilter(key, enabled, scriptName, bypassPermission, blocked, regex, replacements);
                 addFilter(filter);
             } catch (Exception e) {
                 e.printStackTrace();

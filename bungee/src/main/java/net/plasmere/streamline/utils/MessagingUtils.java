@@ -2,21 +2,19 @@ package net.plasmere.streamline.utils;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.connection.Server;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.events.EventsHandler;
-import net.plasmere.streamline.objects.SavableGuild;
-import net.plasmere.streamline.objects.SavableParty;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.filters.ChatFilter;
 import net.plasmere.streamline.objects.messaging.BungeeMassMessage;
@@ -76,7 +74,7 @@ public class MessagingUtils {
         }
 
         for (SavableUser player : toUsers) {
-            player.sendMessage(TextUtils.codedText(message));
+            player.sendMessage(TextUtils.codedString(message));
         }
     }
 
@@ -96,7 +94,7 @@ public class MessagingUtils {
         Set<ProxiedPlayer> toPlayers = new HashSet<>();
 
         for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()) {
-            if (player.getName().equals(sender.getName())) continue;
+            if (PlayerUtils.getSourceName(player).equals(PlayerUtils.getSourceName(sender))) continue;
             if (player.hasPermission(toPermission)) toPlayers.add(player);
         }
 
@@ -106,7 +104,7 @@ public class MessagingUtils {
     }
 
     public static void sendBungeeMessage(BungeeMassMessage message){
-        Collection<ProxiedPlayer> staff = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<ProxiedPlayer> staff = PlayerUtils.getOnlinePPlayers();
         Set<ProxiedPlayer> people = new HashSet<>(staff);
         List<ProxiedPlayer> ps = new ArrayList<>(people);
 
@@ -129,28 +127,28 @@ public class MessagingUtils {
         SavableUser player = PlayerUtils.getOrGetSavableUser(message.sender);
 
         message.to.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee((message.title + message.transition + message.message)
-                        .replace("%sender_display%", message.sender.getName()), message.sender)
+                        .replace("%sender_display%", PlayerUtils.getSourceName(message.sender)), message.sender)
                         .replace("%version%", player.latestVersion)
                 )
         );
     }
 
-    public static void sendServerMessageFromUser(ProxiedPlayer player, Server serverFrom, String serverTo, String format, String message) {
+    public static void sendServerMessageFromUser(ProxiedPlayer player, ServerInfo serverFrom, String serverTo, String format, String message) {
         for (ProxiedPlayer p : PlayerUtils.getServeredPPlayers(serverTo)) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
-                    .replace("%server%", serverFrom.getInfo().getName())
+                    .replace("%server%", serverFrom.getName())
             ));
         }
     }
 
-    public static void sendRoomMessageFromUser(ProxiedPlayer player, Server serverFrom, Chat room, String format, String message) {
+    public static void sendRoomMessageFromUser(ProxiedPlayer player, ServerInfo serverFrom, Chat room, String format, String message) {
         for (SavablePlayer p : PlayerUtils.getRoomedPlayers(room)) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
-                    .replace("%server%", serverFrom.getInfo().getName())
+                    .replace("%server%", serverFrom.getName())
                     .replace("%room%", room.identifier)
             ));
         }
@@ -178,30 +176,30 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendServerMessageOtherServerSelf(ProxiedPlayer player, Server serverFrom, String format, String message) {
+    public static void sendServerMessageOtherServerSelf(ProxiedPlayer player, ServerInfo serverFrom, String format, String message) {
         player.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                 .replace("%sender_servered%", getPlayerDisplayName(player))
                 .replace("%message%", message)
-                .replace("%server%", serverFrom.getInfo().getName())
+                .replace("%server%", serverFrom.getName())
         ));
     }
 
-    public static void sendGlobalMessageFromUser(ProxiedPlayer player, Server server, String format, String message) {
+    public static void sendGlobalMessageFromUser(ProxiedPlayer player, ServerInfo server, String format, String message) {
         for (ProxiedPlayer p : PlayerUtils.getOnlinePPlayers()) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
-                    .replace("%server%", server.getInfo().getName())
+                    .replace("%server%", server.getName())
             ));
         }
     }
 
-    public static void sendPermissionedGlobalMessageFromUser(String permission, ProxiedPlayer player, Server server, String format, String message) {
+    public static void sendPermissionedGlobalMessageFromUser(String permission, ProxiedPlayer player, ServerInfo server, String format, String message) {
         for (ProxiedPlayer p : PlayerUtils.getPermissionedOnlineProxied(permission)) {
             p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
                     .replace("%sender_servered%", getPlayerDisplayName(player))
                     .replace("%message%", message)
-                    .replace("%server%", server.getInfo().getName())
+                    .replace("%server%", server.getName())
             ));
         }
     }
@@ -235,7 +233,7 @@ public class MessagingUtils {
 
     public static void sendServerMessageFromDiscord(SavableUser user, ServerInfo server, String format, String message) {
         for (ProxiedPlayer p : PlayerUtils.getServeredPPlayers(server.getName())) {
-            p.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, user)
+            p.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(format, user), user)
                     .replace("%message%", message)
                     .replace("%server%", server.getName())
             ));
@@ -250,11 +248,11 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendMessageFromUserToConsole(ProxiedPlayer player, Server server, String format, String message) {
-        PlayerUtils.getConsoleStat().sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(format, player)
+    public static void sendMessageFromUserToConsole(ProxiedPlayer player, ServerInfo server, String format, String message) {
+        PlayerUtils.getConsoleStat().sendMessage(TextUtils.codedString(TextUtils.replaceAllSenderBungee(format, player)
                 .replace("%sender_servered%", getPlayerDisplayName(player))
                 .replace("%message%", message)
-                .replace("%server%", server.getInfo().getName())
+                .replace("%server%", server.getName())
         ));
     }
 
@@ -262,11 +260,15 @@ public class MessagingUtils {
         sendDisplayPluginMessageRequest(player);
         String string = serveredUsernames.get(player);
 
-        return (string == null) ? PlayerUtils.getOrCreatePlayerStat(player).displayName : string;
+        return (string == null) ? PlayerUtils.getOrGetSavableUser(player).displayName : string;
     }
 
-    public static void sendDisplayPluginMessageRequest(ProxiedPlayer player) {
-        if (PlayerUtils.getServeredPPlayers(player.getServer().getInfo().getName()).size() <= 0) return;
+    public static void sendDisplayPluginMessageRequest(ProxiedPlayer to) {
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("request.displayname"); // the channel could be whatever you want
@@ -274,11 +276,15 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        player.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        to.sendData(StreamLine.customChannel, out.toByteArray());
     }
 
     public static void sendGuildPluginMessageRequest(ProxiedPlayer to, SavableGuild guild) {
-        if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("proxy.send.guild"); // the channel could be whatever you want
@@ -300,11 +306,15 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        to.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        to.sendData(StreamLine.customChannel, out.toByteArray());
     }
 
     public static void sendPartyPluginMessageRequest(ProxiedPlayer to, SavableParty party) {
-        if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("proxy.send.party"); // the channel could be whatever you want
@@ -326,11 +336,15 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        to.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        to.sendData(StreamLine.customChannel, out.toByteArray());
     }
 
     public static void sendSavableUserPluginMessageRequest(ProxiedPlayer to, SavableUser user, String type) {
-        if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("proxy.send.user"); // the channel could be whatever you want
@@ -354,11 +368,15 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        to.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        to.sendData(StreamLine.customChannel, out.toByteArray());
     }
-
+    
     public static void sendTeleportPluginMessageRequest(ProxiedPlayer sender, ProxiedPlayer to) {
-        if (PlayerUtils.getServeredPPlayers(sender.getServer().getInfo().getName()).size() <= 0) return;
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("teleport"); // the channel could be whatever you want
@@ -368,28 +386,36 @@ public class MessagingUtils {
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        sender.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        sender.sendData(StreamLine.customChannel, out.toByteArray());
     }
 
-    public static void sendTagPingPluginMessageRequest(ProxiedPlayer toPing) {
-        if (PlayerUtils.getServeredPPlayers(toPing.getServer().getInfo().getName()).size() <= 0) return;
+    public static void sendTagPingPluginMessageRequest(ProxiedPlayer to) {
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("tag-ping"); // the channel could be whatever you want
-        out.writeUTF(toPing.getUniqueId().toString()); // this data could be whatever you want // THIS IS THE SENDER PLAYER
+        out.writeUTF(to.getUniqueId().toString()); // this data could be whatever you want // THIS IS THE SENDER PLAYER
 
         // we send the data to the server
         // using ServerInfo the packet is being queued if there are no players in the server
         // using only the server to send data the packet will be lost if no players are in it
-        toPing.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        to.sendData(StreamLine.customChannel, out.toByteArray());
     }
 
     public static void sendGuildConfigPluginMessage(ProxiedPlayer to, SavableGuild guild) {
-        if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        try {
+            if (PlayerUtils.getServeredPPlayers(to.getServer().getInfo().getName()).size() <= 0) return;
+        } catch (Exception e) {
+            return;
+        }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("config.guild");
-        out.writeUTF(guild.leaderUUID);
+        out.writeUTF(guild.uuid);
 
         try {
             Scanner reader = new Scanner(guild.file);
@@ -407,11 +433,11 @@ public class MessagingUtils {
             e.printStackTrace();
         }
 
-        to.getServer().getInfo().sendData(StreamLine.customChannel, out.toByteArray());
+        to.sendData(StreamLine.customChannel, out.toByteArray());
     }
 
-    public static void sendStaffMessageFromDiscord(String discordSenderID, String from, String msg){
-        Collection<ProxiedPlayer> staff = StreamLine.getInstance().getProxy().getPlayers();
+    public static void sendStaffMessageFromDiscord(String discordSenderId, String from, String msg){
+        Collection<ProxiedPlayer> staff = PlayerUtils.getOnlinePPlayers();
         Set<ProxiedPlayer> staffs = new HashSet<>(staff);
 
         for (ProxiedPlayer player : staff){
@@ -426,7 +452,7 @@ public class MessagingUtils {
 
         for (ProxiedPlayer player : staffs) {
             player.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungeeFromDiscord(
-                                    TextUtils.replaceAllSenderBungeeFromDiscord(MessageConfUtils.bungeeStaffChatMessage(), discordSenderID), discordSenderID)
+                                    TextUtils.replaceAllSenderBungeeFromDiscord(MessageConfUtils.bungeeStaffChatMessage(), discordSenderId), discordSenderId)
                             .replace("%from_type%", from)
                             .replace("%from%", from)
                             .replace("%message%", msg)
@@ -439,7 +465,7 @@ public class MessagingUtils {
     }
 
     public static void sendStaffMessageReport(String sender, boolean fromBungee, String report){
-        Collection<ProxiedPlayer> staff = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<ProxiedPlayer> staff = PlayerUtils.getOnlinePPlayers();
         Set<ProxiedPlayer> staffs = new HashSet<>(staff);
 
         for (ProxiedPlayer player : staff){
@@ -457,7 +483,7 @@ public class MessagingUtils {
                 player.sendMessage(TextUtils.codedText(MessageConfUtils.bToBReportMessage()
                                 .replace("%reporter%", sender)
                                 .replace("%report%", report)
-                                .replace("%version%", PlayerUtils.getOrCreatePlayerStat(player).latestVersion)
+                                .replace("%version%", PlayerUtils.getOrGetSavableUser(player).latestVersion)
                         )
                 );
             else
@@ -555,7 +581,47 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(message.sender.getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
+                                            .build()
+                            ).queue();
+                } else {
+                    Objects.requireNonNull(jda.getTextChannelById(message.channel))
+                            .sendMessageEmbeds(
+                                    eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
+                                            .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
+                                            .setAuthor("CONSOLE", jda.getSelfUser().getAvatarUrl() , jda.getSelfUser().getAvatarUrl())
+                                            .build()
+                            ).queue();
+                }
+            } else {
+                Objects.requireNonNull(jda.getTextChannelById(message.channel))
+                        .sendMessageEmbeds(
+                                eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
+                                        .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
+                                        .build()
+                        ).queue();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendDiscordEBMessage(DiscordMessage message, boolean useAvatar){
+        if (! ConfigUtils.moduleDEnabled()) {
+            return;
+        }
+
+        JDA jda = StreamLine.getJda();
+        EmbedBuilder eb = new EmbedBuilder();
+
+        try {
+            if (useAvatar) {
+                if (message.sender instanceof ProxiedPlayer) {
+                    Objects.requireNonNull(jda.getTextChannelById(message.channel))
+                            .sendMessageEmbeds(
+                                    eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
+                                            .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(message.sender.getName()), FaceFetcher.getFaceAvatarURL(message.sender.getName()))
                                             .build()
                             ).queue();
                 } else {
@@ -597,46 +663,6 @@ public class MessagingUtils {
         }
     }
 
-    public static void sendDiscordEBMessage(DiscordMessage message, boolean useAvatar){
-        if (! ConfigUtils.moduleDEnabled()) {
-            return;
-        }
-
-        JDA jda = StreamLine.getJda();
-        EmbedBuilder eb = new EmbedBuilder();
-
-        try {
-            if (useAvatar) {
-                if (message.sender instanceof ProxiedPlayer) {
-                    Objects.requireNonNull(jda.getTextChannelById(message.channel))
-                            .sendMessageEmbeds(
-                                    eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
-                                            .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
-                                            .build()
-                            ).queue();
-                } else {
-                    Objects.requireNonNull(jda.getTextChannelById(message.channel))
-                            .sendMessageEmbeds(
-                                    eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
-                                            .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor("CONSOLE", jda.getSelfUser().getAvatarUrl() , jda.getSelfUser().getAvatarUrl())
-                                            .build()
-                            ).queue();
-                }
-            } else {
-                Objects.requireNonNull(jda.getTextChannelById(message.channel))
-                        .sendMessageEmbeds(
-                                eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
-                                        .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                        .build()
-                        ).queue();
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public static void sendDiscordEBMessage(JDA jda, DiscordMessage message){
         if (! ConfigUtils.moduleDEnabled()) return;
 
@@ -649,7 +675,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(message.message, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(message.sender.getName()), FaceFetcher.getFaceAvatarURL(message.sender.getName()))
                                             .build()
                             ).queue();
                 } else {
@@ -744,10 +770,10 @@ public class MessagingUtils {
     }
 
     public static void sendBPUserMessage(SavableParty party, CommandSender sender, CommandSender to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.uuid)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
-                .replace("%maxmax%", party.leaderUUID == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.leaderUUID))))
+                .replace("%maxmax%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.uuid))))
                 .replace("%mods_count%", Integer.toString(party.moderators.size()))
                 .replace("%members_count%", Integer.toString(party.members.size()))
                 .replace("%total_count%", Integer.toString(party.totalMembers.size()))
@@ -758,20 +784,20 @@ public class MessagingUtils {
                 .replace("%invites%", invites(party))
                 .replace("%ispublic%", getIsPublic(party))
                 .replace("%ismuted%", getIsMuted(party))
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(sender).latestVersion)
-                .replace("%leader_display%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_normal%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_absolute%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_formatted%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(sender).latestVersion)
+                .replace("%leader_display%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_normal%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_formatted%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
                 .replace("%size%", Integer.toString(party.getSize()))
         ));
     }
 
     public static void sendBPUserMessageFromDiscord(SavableParty party, String nameUsed, CommandSender to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, party.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, party.uuid)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
-                .replace("%maxmax%", party.leaderUUID == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.leaderUUID))))
+                .replace("%maxmax%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.uuid))))
                 .replace("%mods_count%", Integer.toString(party.moderators.size()))
                 .replace("%members_count%", Integer.toString(party.members.size()))
                 .replace("%total_count%", Integer.toString(party.totalMembers.size()))
@@ -786,19 +812,19 @@ public class MessagingUtils {
                 .replace("%sender_normal%", nameUsed)
                 .replace("%sender_absolute%", nameUsed)
                 .replace("%sender_formatted%", nameUsed)
-                .replace("%leader_display%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_normal%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_absolute%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_formatted%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                .replace("%leader_display%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_normal%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_formatted%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
                 .replace("%size%", Integer.toString(party.getSize()))
         ));
     }
 
     public static void sendBPUserMessageFromDiscord(SavableParty party, SavableUser sender, CommandSender to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), party.uuid)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
-                .replace("%maxmax%", party.leaderUUID == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.leaderUUID))))
+                .replace("%maxmax%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.uuid))))
                 .replace("%mods_count%", Integer.toString(party.moderators.size()))
                 .replace("%members_count%", Integer.toString(party.members.size()))
                 .replace("%total_count%", Integer.toString(party.totalMembers.size()))
@@ -810,10 +836,10 @@ public class MessagingUtils {
                 .replace("%ispublic%", getIsPublic(party))
                 .replace("%ismuted%", getIsMuted(party))
                 .replace("%version%", sender.latestVersion)
-                .replace("%leader_display%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_normal%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_absolute%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_formatted%", party.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                .replace("%leader_display%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_normal%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_absolute%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_formatted%", PlayerUtils.getOrGetSavableUser(party.uuid) == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(party.uuid)))
                 .replace("%size%", Integer.toString(party.getSize()))
         ));
     }
@@ -826,10 +852,10 @@ public class MessagingUtils {
         JDA jda = StreamLine.getJda();
         EmbedBuilder eb = new EmbedBuilder();
 
-        String msg = TextUtils.replaceAllPlayerDiscord(TextUtils.replaceAllSenderDiscord(message.message, message.sender), party.leaderUUID)
+        String msg = TextUtils.replaceAllPlayerDiscord(TextUtils.replaceAllSenderDiscord(message.message, message.sender), party.uuid)
                 .replace("%size%", Integer.toString(party.getSize()))
                 .replace("%max%", Integer.toString(party.maxSize))
-                .replace("%maxmax%", Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.leaderUUID))))
+                .replace("%maxmax%", Integer.toString(party.getMaxSize(PlayerUtils.getOrGetSavableUser(party.uuid))))
                 .replace("%mods_count%", Integer.toString(party.moderators.size()))
                 .replace("%members_count%", Integer.toString(party.members.size()))
                 .replace("%total_count%", Integer.toString(party.totalMembers.size()))
@@ -840,12 +866,12 @@ public class MessagingUtils {
                 .replace("%invites%", invites(party))
                 .replace("%ispublic%", getIsPublic(party))
                 .replace("%ismuted%", getIsMuted(party))
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(message.sender).latestVersion)
-                .replace("%version%", PlayerUtils.getOrCreatePlayerStat((ProxiedPlayer) message.sender).latestVersion)
-                .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_absolute%", PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
-                .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.leaderUUID)))
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(message.sender).latestVersion)
+                .replace("%version%", PlayerUtils.getOrGetPlayerStatByUUID(((ProxiedPlayer) message.sender).getUniqueId().toString()).latestVersion)
+                .replace("%leader_display%", PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_normal%", PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_absolute%", PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
+                .replace("%leader_formatted%", PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(party.uuid)))
                 .replace("%size%", Integer.toString(party.getSize()));
 
         try {
@@ -855,7 +881,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(msg, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(message.sender.getName()), FaceFetcher.getFaceAvatarURL(message.sender.getName()))
                                             .build()
                             ).queue();
                 } else {
@@ -881,12 +907,12 @@ public class MessagingUtils {
     }
 
     public static void sendBGUserMessage(SavableGuild guild, CommandSender sender, CommandSender to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.uuid)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
-                .replace("%mods_count%", Integer.toString(guild.modsByUUID.size()))
-                .replace("%members_count%", Integer.toString(guild.membersByUUID.size()))
-                .replace("%total_count%", Integer.toString(guild.totalMembersByUUID.size()))
+                .replace("%mods_count%", Integer.toString(guild.moderators.size()))
+                .replace("%members_count%", Integer.toString(guild.members.size()))
+                .replace("%total_count%", Integer.toString(guild.totalMembers.size()))
                 .replace("%invites_count%", Integer.toString(guild.invites.size()))
                 .replace("%mods%", modsGuild(guild))
                 .replace("%members%", membersGuild(guild))
@@ -896,29 +922,29 @@ public class MessagingUtils {
                 .replace("%ismuted%", getIsMutedGuild(guild))
                 .replace("%total_xp%", Integer.toString(guild.totalXP))
                 .replace("%current_xp%", Integer.toString(guild.currentXP))
-                .replace("%level%", Integer.toString(guild.lvl))
+                .replace("%level%", Integer.toString(guild.level))
                 .replace("%name%", guild.name)
-                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.lvl + 1)))
+                .replace("%xpneeded%", Integer.toString(guild.getNeededXp()))
                 .replace("%xplevel%", Integer.toString(guild.xpUntilNextLevel()))
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(sender).latestVersion)
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(sender).latestVersion)
                 .replace("%name%", guild.name)
                 .replace("%length%", String.valueOf(guild.name.length()))
                 .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength()))
                 .replace("%codes%", (ConfigUtils.guildIncludeColors() ? GuildUtils.withCodes : GuildUtils.withoutCodes))
-                .replace("%leader_display%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_normal%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_absolute%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_formatted%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                .replace("%leader_display%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_normal%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_absolute%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_formatted%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
         ));
     }
 
     public static void sendBGUserMessageFromDiscord(SavableGuild guild, String nameUsed, CommandSender to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, guild.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(msg, guild.uuid)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
-                .replace("%mods_count%", Integer.toString(guild.modsByUUID.size()))
-                .replace("%members_count%", Integer.toString(guild.membersByUUID.size()))
-                .replace("%total_count%", Integer.toString(guild.totalMembersByUUID.size()))
+                .replace("%mods_count%", Integer.toString(guild.moderators.size()))
+                .replace("%members_count%", Integer.toString(guild.members.size()))
+                .replace("%total_count%", Integer.toString(guild.totalMembers.size()))
                 .replace("%invites_count%", Integer.toString(guild.invites.size()))
                 .replace("%mods%", modsGuild(guild))
                 .replace("%members%", membersGuild(guild))
@@ -928,9 +954,9 @@ public class MessagingUtils {
                 .replace("%ismuted%", getIsMutedGuild(guild))
                 .replace("%total_xp%", Integer.toString(guild.totalXP))
                 .replace("%current_xp%", Integer.toString(guild.currentXP))
-                .replace("%level%", Integer.toString(guild.lvl))
+                .replace("%level%", Integer.toString(guild.level))
                 .replace("%name%", guild.name)
-                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.lvl + 1)))
+                .replace("%xpneeded%", Integer.toString(guild.getNeededXp()))
                 .replace("%xplevel%", Integer.toString(guild.xpUntilNextLevel()))
                 .replace("%name%", guild.name)
                 .replace("%length%", String.valueOf(guild.name.length()))
@@ -940,20 +966,20 @@ public class MessagingUtils {
                 .replace("%sender_normal%", nameUsed)
                 .replace("%sender_absolute%", nameUsed)
                 .replace("%sender_formatted%", nameUsed)
-                .replace("%leader_display%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_normal%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_absolute%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_formatted%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                .replace("%leader_display%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_normal%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_absolute%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_formatted%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
         ));
     }
 
     public static void sendBGUserMessageFromDiscord(SavableGuild guild, SavableUser sender, CommandSender to, String msg){
-        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.leaderUUID)
+        to.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), guild.uuid)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
-                .replace("%mods_count%", Integer.toString(guild.modsByUUID.size()))
-                .replace("%members_count%", Integer.toString(guild.membersByUUID.size()))
-                .replace("%total_count%", Integer.toString(guild.totalMembersByUUID.size()))
+                .replace("%mods_count%", Integer.toString(guild.moderators.size()))
+                .replace("%members_count%", Integer.toString(guild.members.size()))
+                .replace("%total_count%", Integer.toString(guild.totalMembers.size()))
                 .replace("%invites_count%", Integer.toString(guild.invites.size()))
                 .replace("%mods%", modsGuild(guild))
                 .replace("%members%", membersGuild(guild))
@@ -963,19 +989,19 @@ public class MessagingUtils {
                 .replace("%ismuted%", getIsMutedGuild(guild))
                 .replace("%total_xp%", Integer.toString(guild.totalXP))
                 .replace("%current_xp%", Integer.toString(guild.currentXP))
-                .replace("%level%", Integer.toString(guild.lvl))
+                .replace("%level%", Integer.toString(guild.level))
                 .replace("%name%", guild.name)
-                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.lvl + 1)))
+                .replace("%xpneeded%", Integer.toString(guild.getNeededXp()))
                 .replace("%xplevel%", Integer.toString(guild.xpUntilNextLevel()))
                 .replace("%version%", sender.latestVersion)
                 .replace("%name%", guild.name)
                 .replace("%length%", String.valueOf(guild.name.length()))
                 .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength()))
                 .replace("%codes%", (ConfigUtils.guildIncludeColors() ? GuildUtils.withCodes : GuildUtils.withoutCodes))
-                .replace("%leader_display%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_normal%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_absolute%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_formatted%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
+                .replace("%leader_display%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_normal%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_absolute%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_formatted%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayBungee(PlayerUtils.getOrGetSavableUser(guild.uuid)))
         ));
     }
 
@@ -987,12 +1013,12 @@ public class MessagingUtils {
         JDA jda = StreamLine.getJda();
         EmbedBuilder eb = new EmbedBuilder();
 
-        String msg = TextUtils.replaceAllPlayerDiscord(TextUtils.replaceAllSenderDiscord(message.message, message.sender), guild.leaderUUID)
+        String msg = TextUtils.replaceAllPlayerDiscord(TextUtils.replaceAllSenderDiscord(message.message, message.sender), guild.uuid)
                 .replace("%size%", Integer.toString(guild.getSize()))
                 .replace("%max%", Integer.toString(guild.maxSize))
-                .replace("%mods_count%", Integer.toString(guild.modsByUUID.size()))
-                .replace("%members_count%", Integer.toString(guild.membersByUUID.size()))
-                .replace("%total_count%", Integer.toString(guild.totalMembersByUUID.size()))
+                .replace("%mods_count%", Integer.toString(guild.moderators.size()))
+                .replace("%members_count%", Integer.toString(guild.members.size()))
+                .replace("%total_count%", Integer.toString(guild.totalMembers.size()))
                 .replace("%invites_count%", Integer.toString(guild.invites.size()))
                 .replace("%mods%", modsGuild(guild))
                 .replace("%members%", membersGuild(guild))
@@ -1002,19 +1028,19 @@ public class MessagingUtils {
                 .replace("%ismuted%", getIsMutedGuild(guild))
                 .replace("%total_xp%", Integer.toString(guild.totalXP))
                 .replace("%current_xp%", Integer.toString(guild.currentXP))
-                .replace("%level%", Integer.toString(guild.lvl))
+                .replace("%level%", Integer.toString(guild.level))
                 .replace("%name%", guild.name)
-                .replace("%xpneeded%", Integer.toString(guild.getNeededXp(guild.lvl + 1)))
+                .replace("%xpneeded%", Integer.toString(guild.getNeededXp()))
                 .replace("%xplevel%", Integer.toString(guild.xpUntilNextLevel()))
-                .replace("%version%", PlayerUtils.getOrCreateSavableUser(message.sender).latestVersion)
+                .replace("%version%", PlayerUtils.getOrGetSavableUser(message.sender).latestVersion)
                 .replace("%name%", guild.name)
                 .replace("%length%", String.valueOf(guild.name.length()))
                 .replace("%max_length%", String.valueOf(ConfigUtils.guildMaxLength()))
                 .replace("%codes%", (ConfigUtils.guildIncludeColors() ? GuildUtils.withCodes : GuildUtils.withoutCodes))
-                .replace("%leader_display%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_normal%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_absolute%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)))
-                .replace("%leader_formatted%", guild.leaderUUID == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.leaderUUID)));
+                .replace("%leader_display%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_normal%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getOffOnRegDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_absolute%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)))
+                .replace("%leader_formatted%", guild.uuid == null ? MessageConfUtils.nullB() : PlayerUtils.getJustDisplayDiscord(PlayerUtils.getOrGetSavableUser(guild.uuid)));
 
         try {
             if (ConfigUtils.moduleAvatarUse()) {
@@ -1023,7 +1049,7 @@ public class MessagingUtils {
                             .sendMessageEmbeds(
                                     eb.setTitle(TextUtils.replaceAllSenderBungee(message.title, message.sender))
                                             .setDescription(TextUtils.replaceAllSenderBungee(msg, message.sender))
-                                            .setAuthor(message.sender.getName(), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()), FaceFetcher.getFaceAvatarURL(((ProxiedPlayer) message.sender).getName()))
+                                            .setAuthor(PlayerUtils.getSourceName(message.sender), FaceFetcher.getFaceAvatarURL(message.sender.getName()), FaceFetcher.getFaceAvatarURL(message.sender.getName()))
                                             .build()
                             ).queue();
                 } else {
@@ -1049,7 +1075,7 @@ public class MessagingUtils {
     }
 
     public static void sendStatUserMessage(SavableUser user, CommandSender sender, String msg){
-        SavableGuild guild = GuildUtils.getGuild(user);
+        SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
         if (user instanceof SavableConsole) {
             SavableConsole player = PlayerUtils.getConsoleStat();
@@ -1070,8 +1096,8 @@ public class MessagingUtils {
                     .replace("%guild_members%", (guild != null ? Integer.toString(guild.totalMembers.size()) : PlayerUtils.notSet))
                     .replace("%guild_xp_total%", (guild != null ? Integer.toString(guild.totalXP) : PlayerUtils.notSet))
                     .replace("%guild_xp_current%", (guild != null ? Integer.toString(guild.currentXP) : PlayerUtils.notSet))
-                    .replace("%guild_lvl%", (guild != null ? Integer.toString(guild.lvl) : PlayerUtils.notSet))
-                    .replace("%guild_leader%", (guild != null ? PlayerUtils.getOrGetSavableUser(guild.leaderUUID).displayName : PlayerUtils.notSet))
+                    .replace("%guild_lvl%", (guild != null ? Integer.toString(guild.level) : PlayerUtils.notSet))
+                    .replace("%guild_leader%", (guild != null ? PlayerUtils.getOrGetSavableUser(guild.uuid).displayName : PlayerUtils.notSet))
                     .replace("%guild_uuid%", (guild != null ? player.guild : PlayerUtils.notSet))
                     .replace("%version%", player.latestVersion)
             ));
@@ -1090,8 +1116,8 @@ public class MessagingUtils {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(TextUtils.replaceAllPlayerBungee(msg, user), sender)
                     .replace("%total_xp%", Integer.toString(player.totalXP))
                     .replace("%xp%", Integer.toString(player.getCurrentXP()))
-                    .replace("%level%", Integer.toString(player.lvl))
-                    .replace("%xpneeded%", Integer.toString(player.getNeededXp(player.lvl + 1)))
+                    .replace("%level%", Integer.toString(player.level))
+                    .replace("%xpneeded%", Integer.toString(player.getNeededXp()))
                     .replace("%xplevel%", Integer.toString(player.xpUntilNextLevel()))
                     .replace("%playtime%", TextUtils.truncate(Double.toString(player.getPlayHours()), 3))
                     .replace("%version%", player.latestVersion)
@@ -1107,8 +1133,8 @@ public class MessagingUtils {
                     .replace("%guild_members%", (guild != null ? Integer.toString(guild.totalMembers.size()) : PlayerUtils.notSet))
                     .replace("%guild_xp_total%", (guild != null ? Integer.toString(guild.totalXP) : PlayerUtils.notSet))
                     .replace("%guild_xp_current%", (guild != null ? Integer.toString(guild.currentXP) : PlayerUtils.notSet))
-                    .replace("%guild_lvl%", (guild != null ? Integer.toString(guild.lvl) : PlayerUtils.notSet))
-                    .replace("%guild_leader%", (guild != null ? PlayerUtils.getOrGetSavableUser(guild.leaderUUID).displayName : PlayerUtils.notSet))
+                    .replace("%guild_lvl%", (guild != null ? Integer.toString(guild.level) : PlayerUtils.notSet))
+                    .replace("%guild_leader%", (guild != null ? PlayerUtils.getOrGetSavableUser(guild.uuid).displayName : PlayerUtils.notSet))
                     .replace("%guild_uuid%", (guild != null ? player.guild : PlayerUtils.notSet))
                     .replace("%sspy%", (player.sspy ? PlayerUtils.sspyT : PlayerUtils.sspyF))
                     .replace("%gspy%", (player.gspy ? PlayerUtils.gspyT : PlayerUtils.gspyF))
@@ -1164,7 +1190,7 @@ public class MessagingUtils {
     }
 
     public static void sendEventUserMessage(SavableUser from, SavableUser to, String msg) {
-        to.sendMessage(TextUtils.codedText(msg
+        to.sendMessage(TextUtils.codedString(msg
                 .replace("%from_display%", PlayerUtils.getOffOnDisplayBungee(from))
                 .replace("%from_normal%", PlayerUtils.getOffOnRegBungee(from))
                 .replace("%from_absolute%", PlayerUtils.getAbsoluteBungee(from))
@@ -1180,8 +1206,10 @@ public class MessagingUtils {
 
     public static void sendBUserMessage(CommandSender sender, String msg){
         if (sender instanceof ProxiedPlayer) {
+            SavablePlayer player = PlayerUtils.getOrGetPlayerStat(((ProxiedPlayer) sender).getUniqueId().toString());
+
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
-                    .replace("%version%", PlayerUtils.getOrCreatePlayerStat((ProxiedPlayer) sender).latestVersion)
+                    .replace("%version%", (player != null ? player.latestVersion : MessageConfUtils.nullB()))
             ));
         } else {
             sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)));
@@ -1190,7 +1218,7 @@ public class MessagingUtils {
 
     public static void sendBUserMessage(SavableUser sender, String msg){
         if (sender instanceof SavablePlayer) {
-            sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
+            sender.sendMessage(TextUtils.codedString(TextUtils.replaceAllSenderBungee(msg, sender)
                     .replace("%version%", Objects.requireNonNull(sender).latestVersion)
             ));
         }
@@ -1213,14 +1241,14 @@ public class MessagingUtils {
     }
 
     public static void sendBUserAsMessage(CommandSender as, String msg){
-        ServerInfo serverInfo = StreamLine.getInstance().getProxy().getPlayer(as.getName()).getServer().getInfo();
+        ServerInfo server = StreamLine.getInstance().getProxy().getPlayer(PlayerUtils.getSourceName(as)).getServer().getInfo();
 
-        Collection<ProxiedPlayer> players = serverInfo.getPlayers();
+        Collection<ProxiedPlayer> players = server.getPlayers();
 
         if (as instanceof ProxiedPlayer) {
             for (ProxiedPlayer player : players) {
                 player.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, as)
-                        .replace("%version%", PlayerUtils.getOrCreatePlayerStat((ProxiedPlayer) as).latestVersion)
+                        .replace("%version%", PlayerUtils.getOrGetPlayerStatByUUID(((ProxiedPlayer) as).getUniqueId().toString()).latestVersion)
                 ));
             }
         } else {
@@ -1237,7 +1265,7 @@ public class MessagingUtils {
     }
 
     public static void sendBCLHBroadcast(CommandSender sender, String msg, String hoverPrefix){
-        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
+        for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()) {
             player.sendMessage(TextUtils.clhText(msg, hoverPrefix));
         }
     }
@@ -1366,17 +1394,8 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (String m : guild.modsByUUID){
-            SavableUser player;
-            try {
-                player = PlayerUtils.getOrGetPlayerStatByUUID(m);
-            } catch (Exception e) {
-                continue;
-            }
-
-//            if (player == null) continue;
-
-            if (i < guild.modsByUUID.size()){
+        for (SavableUser player : guild.moderators){
+            if (i < guild.moderators.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.guildsModsNLast(), player)
                         .replace("%version%", player == null ? MessageConfUtils.nullB() : Objects.requireNonNull(player).latestVersion)
                 );
@@ -1396,17 +1415,8 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (String m : guild.membersByUUID){
-            SavableUser player;
-            try {
-                player = PlayerUtils.getOrGetPlayerStatByUUID(m);
-            } catch (Exception e) {
-                continue;
-            }
-
-//            if (player == null) continue;
-
-            if (i < guild.membersByUUID.size()){
+        for (SavableUser player : guild.members){
+            if (i < guild.members.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.guildsMemsNLast(), player)
                         .replace("%version%", player == null ? MessageConfUtils.nullB() : Objects.requireNonNull(player).latestVersion)
                 );
@@ -1426,17 +1436,8 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (String m : guild.totalMembersByUUID){
-            SavableUser player;
-            try {
-                player = PlayerUtils.getOrGetPlayerStatByUUID(m);
-            } catch (Exception e) {
-                continue;
-            }
-
-//            if (player == null) continue;
-
-            if (i < guild.totalMembersByUUID.size()){
+        for (SavableUser player : guild.totalMembers){
+            if (i < guild.totalMembers.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.guildsTMemsNLast(), player)
                         .replace("%version%", player == null ? MessageConfUtils.nullB() : Objects.requireNonNull(player).latestVersion)
                 );
@@ -1456,16 +1457,7 @@ public class MessagingUtils {
         StringBuilder msg = new StringBuilder();
 
         int i = 1;
-        for (String m : guild.invitesByUUID){
-            SavableUser player;
-            try {
-                player = PlayerUtils.getOrGetPlayerStatByUUID(m);
-            } catch (Exception e) {
-                continue;
-            }
-
-//            if (player == null) continue;
-
+        for (SavableUser player : guild.invites){
             if (i < guild.invites.size()){
                 msg.append(TextUtils.replaceAllPlayerBungee(MessageConfUtils.guildsInvsNLast(), player)
                         .replace("%version%", player == null ? MessageConfUtils.nullB() : Objects.requireNonNull(player).latestVersion)

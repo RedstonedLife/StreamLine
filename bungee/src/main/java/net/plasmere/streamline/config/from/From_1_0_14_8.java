@@ -19,15 +19,20 @@ public class From_1_0_14_8 extends From{
 
     @Override
     public void setupConfigFix() {
+        addUpdatedConfigEntry("modules.discord.proxy-chat.display-names.verifying.change.unchangeable", true);
+
+        addUpdatedConfigEntry("modules.bungee.votifier.enabled", true);
+        addUpdatedConfigEntry("modules.bungee.votifier.on-vote.run", "on-vote.sl");
+
         addUpdatedConfigEntry("modules.discord.guilds.sync", true);
         addUpdatedConfigEntry("modules.discord.parties.sync", true);
+
+        addUpdatedConfigEntry("modules.bungee.voice.max.default", 1);
+        addUpdatedConfigEntry("modules.bungee.voice.max.base-permission", "streamline.voice.limit.");
     }
 
     @Override
     public void setupLocalesFix() {
-//        addUpdatedLocalesEntry("party.sync.sender", "&eSynced your party with discord! You should be able to find a voice channel for your party in the category \"%category%\"!", "en_US");
-//        addUpdatedLocalesEntry("guild.sync.sender", "&eSynced your guild with discord! You should be able to find a voice channel for your guild in the category \"%category%\"!", "en_US");
-
         addUpdatedLocalesEntry("voice.create", "&eYou have created a voice channel named &c%name%&e!", "en_US");
         addUpdatedLocalesEntry("voice.delete.sender", "&eYou have deleted your voice channel named &c%name%&e!", "en_US");
         addUpdatedLocalesEntry("voice.delete.other", "%sender_formatted% &ehas deleted their voice channel named &c%name% &ethat you were added to!", "en_US");
@@ -38,6 +43,7 @@ public class From_1_0_14_8 extends From{
         addUpdatedLocalesEntry("voice.not-verified", "%player_formatted% &cis not verified with the discord!", "en_US");
         addUpdatedLocalesEntry("voice.no-voice", "&cCould not locate that voice channel!", "en_US");
         addUpdatedLocalesEntry("voice.already-voice", "&cYou already made that voice channel!", "en_US");
+        addUpdatedLocalesEntry("voice.too-many", "&cYou cannot create any more voice channels!", "en_US");
 
         addUpdatedLocalesEntry("broadcast.message.with-prefix", "%prefix% &e%message%", "en_US");
         addUpdatedLocalesEntry("broadcast.message.without-prefix", "&e%message%", "en_US");
@@ -45,9 +51,6 @@ public class From_1_0_14_8 extends From{
 
         addUpdatedLocalesEntry("bypass-proxychat.message", "&eYou will now bypass proxychat for &a%messages% &emessages!", "en_US");
         addUpdatedLocalesEntry("bypass-proxychat.done", "&eNo longer bypassing proxychat.", "en_US");
-
-//        addUpdatedLocalesEntry("party.sync.sender", "&eSynced your party with discord! You should be able to find a voice channel for your party in the category \"%category%\"!", "fr_FR");
-//        addUpdatedLocalesEntry("guild.sync.sender", "&eSynced your guild with discord! You should be able to find a voice channel for your guild in the category \"%category%\"!", "fr_FR");
 
         addUpdatedLocalesEntry("voice.create", "&eYou have created a voice channel named &c%name%&e!", "fr_FR");
         addUpdatedLocalesEntry("voice.delete.sender", "&eYou have deleted your voice channel named &c%name%&e!", "fr_FR");
@@ -59,6 +62,7 @@ public class From_1_0_14_8 extends From{
         addUpdatedLocalesEntry("voice.not-verified", "%player_formatted% &cis not verified with the discord!", "fr_FR");
         addUpdatedLocalesEntry("voice.no-voice", "&cCould not locate that voice channel!", "fr_FR");
         addUpdatedLocalesEntry("voice.already-voice", "&cYou already made that voice channel!", "fr_FR");
+        addUpdatedLocalesEntry("voice.too-many", "&cYou cannot create any more voice channels!", "fr_FR");
 
         addUpdatedLocalesEntry("broadcast.message.with-prefix", "%prefix% &e%message%", "fr_FR");
         addUpdatedLocalesEntry("broadcast.message.without-prefix", "&e%message%", "fr_FR");
@@ -78,24 +82,30 @@ public class From_1_0_14_8 extends From{
         addUpdatedDiscordBotEntry("discord.categories.guilds", "put_id_here");
         addUpdatedDiscordBotEntry("discord.categories.parties", "put_id_here");
         addUpdatedDiscordBotEntry("discord.categories.voice", "put_id_here");
+
+        addUpdatedDiscordBotEntry("discord.guild-id", "put_id_here");
     }
 
     @Override
     public void setupCommandsFix() {
-//        addUpdatedCommandsEntry("commands.bungee.party.aliases.sync", Arrays.asList("sync", "s"));
-//        addUpdatedCommandsEntry("commands.bungee.party.permissions.sync", "streamline.command.party.sync");
-//
-//        addUpdatedCommandsEntry("commands.bungee.guild.aliases.sync", Arrays.asList("sync", "s"));
-//        addUpdatedCommandsEntry("commands.bungee.guild.permissions.sync", "streamline.command.guild.sync");
-
         addUpdatedCommandsEntry("commands.bungee.messaging.voice.enabled", true);
         addUpdatedCommandsEntry("commands.bungee.messaging.voice.base", "voice");
         addUpdatedCommandsEntry("commands.bungee.messaging.voice.permission", "streamline.command.voice");
         addUpdatedCommandsEntry("commands.bungee.messaging.voice.aliases", Arrays.asList("call", "vce"));
+
+        addUpdatedCommandsEntry("commands.bungee.messaging.broadcast.enabled", true);
+        addUpdatedCommandsEntry("commands.bungee.messaging.broadcast.base", "proxybroadcast");
+        addUpdatedCommandsEntry("commands.bungee.messaging.broadcast.permission", "streamline.command.broadcast");
+        addUpdatedCommandsEntry("commands.bungee.messaging.broadcast.aliases", Arrays.asList("pb", "pbroadcast"));
+
+        addUpdatedCommandsEntry("commands.bungee.messaging.bypass.enabled", true);
+        addUpdatedCommandsEntry("commands.bungee.messaging.bypass.base", "bypass-proxychat");
+        addUpdatedCommandsEntry("commands.bungee.messaging.bypass.permission", "streamline.command.bypass-proxychat");
+        addUpdatedCommandsEntry("commands.bungee.messaging.bypass.aliases", Arrays.asList("bppc", "bpc"));
     }
 
     @Override
     public void setupChatsFix() {
-
+        addUpdatedChatsEntry("chats.default-just-first-join", true);
     }
 }

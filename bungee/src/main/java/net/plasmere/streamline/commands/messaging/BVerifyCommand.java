@@ -7,6 +7,7 @@ import net.plasmere.streamline.config.DiscordBotConfUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
+import net.plasmere.streamline.utils.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,14 +23,14 @@ public class BVerifyCommand extends SLCommand {
         if (sender instanceof ProxiedPlayer) {
             long verificationNum = StreamLine.discordData.getVerification(((ProxiedPlayer) sender).getUniqueId().toString());
             MessagingUtils.sendBUserMessage(sender, "&aYour verification number: &6" + verificationNum +
-                    "\n&aGo onto the discord and type &d" + DiscordBotConfUtils.botPrefix() + "verify " + sender.getName() + " " + verificationNum + " &ato verify!");
+                    "\n&aGo onto the discord and type &d" + DiscordBotConfUtils.botPrefix() + "verify " + PlayerUtils.getSourceName(sender) + " " + verificationNum + " &ato verify!");
         } else {
             MessagingUtils.sendBUserMessage(sender, MessageConfUtils.onlyPlayers());
         }
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
 }

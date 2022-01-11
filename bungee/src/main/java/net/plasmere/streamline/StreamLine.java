@@ -22,10 +22,12 @@ import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.EventsReader;
 import net.plasmere.streamline.libs.Metrics;
 import net.plasmere.streamline.listeners.LPListener;
-import net.plasmere.streamline.objects.SavableGuild;
+import net.plasmere.streamline.objects.configs.obj.MSBConfig;
+import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.configs.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
 import net.plasmere.streamline.objects.messaging.DiscordMessage;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.timers.*;
 import net.plasmere.streamline.scripts.ScriptsHandler;
@@ -36,6 +38,7 @@ import net.plasmere.streamline.utils.holders.ViaHolder;
 import net.plasmere.streamline.utils.holders.VoteHolder;
 import net.plasmere.streamline.utils.sql.DataSource;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -46,6 +49,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -67,25 +71,31 @@ public class StreamLine extends Plugin {
 	public static OfflineStats offlineStats;
 	public static ChatConfig chatConfig;
 	public static Votes votes;
+	public static PlayTimeConf playTimeConf;
 	public static RanksConfig ranksConfig;
 	public static ChatFilters chatFilters;
 	public static DatabaseInfo databaseInfo;
 
+	public static MSBConfig msbConfig;
+	public static TreeMap<String, String> holders = new TreeMap<>();
+
 	public final static String customChannel = "streamline:channel";
+//	public final static String[] identifer = customChannel.split(":", 2);
+//	public final static ChannelIdentifier customIdentifier = MinecraftChannelIdentifier.create(identifer[0], identifer[1]);
 
 	private static JDA jda = null;
 	private static boolean isReady = false;
 
-	private final File plDir = new File(getDataFolder() + File.separator + "players" + File.separator);
-	private final File gDir = new File(getDataFolder() + File.separator + "guilds" + File.separator);
-	private final File pDir = new File(getDataFolder() + File.separator + "parties" + File.separator);
-	private final File confDir = new File(getDataFolder() + File.separator + "configs" + File.separator);
-	private final File chatHistoryDir = new File(getDataFolder() + File.separator + "chat-history" + File.separator);
-	private final File scriptsDir = new File(getDataFolder() + File.separator + "scripts" + File.separator);
+	private File plDir() { return new File(getDataFolder() + File.separator + "players" + File.separator); }
+	private File gDir() { return new File(getDataFolder() + File.separator + "guilds" + File.separator); }
+	private File pDir() { return new File(getDataFolder() + File.separator + "parties" + File.separator); }
+	private File confDir() { return new File(getDataFolder() + File.separator + "configs" + File.separator); }
+	private File chatHistoryDir() { return new File(getDataFolder() + File.separator + "chat-history" + File.separator); }
+	private File scriptsDir() { return new File(getDataFolder() + File.separator + "scripts" + File.separator); }
 	private File eventsDir;
 
-	public final File versionFile = new File(getDataFolder(), "version.txt");
-	public final File languageFile = new File(getDataFolder(), "language.txt");
+	public File versionFile() { return new File(getDataFolder(), "version.txt"); }
+	public File languageFile() { return new File(getDataFolder(), "language.txt"); }
 
 	public ScheduledTask guilds;
 	public ScheduledTask players;
@@ -94,27 +104,33 @@ public class StreamLine extends Plugin {
 	public ScheduledTask playtime;
 	public ScheduledTask oneSecTimer;
 	public ScheduledTask motdUpdater;
+	public ScheduledTask groupsDatabaseSyncer;
 
 	private String currentMOTD;
 	private int motdPage;
 
-	public StreamLine(){
-		instance = this;
-	}
+//	@Inject
+//	public StreamLine(ProxyServer serverThing, Logger loggerThing, @DataDirectory Path dataFolderThing, Metrics.Factory metricsFactoryThing){
+//		server = serverThing;
+//		logger = loggerThing;
+//		dataFolder = dataFolderThing;
+//		instance = this;
+//		metricsFactory = metricsFactoryThing;
+//	}
 
 	public File getPlDir() {
-		return plDir;
+		return plDir();
 	}
 	public File getGDir() {
-		return gDir;
+		return gDir();
 	}
 	public File getPDir() {
-		return pDir;
+		return pDir();
 	}
 	public File getEDir() { return eventsDir; }
-	public File getConfDir() { return confDir; }
-	public File getChatHistoryDir() { return chatHistoryDir; }
-	public File getScriptsDir() { return scriptsDir; }
+	public File getConfDir() { return confDir(); }
+	public File getChatHistoryDir() { return chatHistoryDir(); }
+	public File getScriptsDir() { return scriptsDir(); }
 
 	public String getCurrentMOTD() { return currentMOTD; }
 	public int getMotdPage() { return motdPage; }
@@ -141,21 +157,21 @@ public class StreamLine extends Plugin {
 			);
 			jda = jdaBuilder.build().awaitReady();
 		} catch (Exception e) {
-			getLogger().warning("An unknown error occurred building JDA...");
+			MessagingUtils.logWarning("An unknown error occurred building JDA...");
 			return;
 		}
 
 		if (jda.getStatus() == JDA.Status.CONNECTED) {
 			isReady = true;
 
-			getLogger().info("JDA status is connected...");
+			MessagingUtils.logInfo("JDA status is connected...");
 		}
 	}
 
 	public void loadGuilds(){
-		if (! gDir.exists()) {
+		if (! gDir().exists()) {
 			try {
-				gDir.mkdirs();
+				gDir().mkdirs();
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -163,9 +179,9 @@ public class StreamLine extends Plugin {
 	}
 
 	public void loadParties(){
-		if (! pDir.exists()) {
+		if (! pDir().exists()) {
 			try {
-				pDir.mkdirs();
+				pDir().mkdirs();
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -173,9 +189,9 @@ public class StreamLine extends Plugin {
 	}
 
 	public void loadPlayers(){
-		if (! plDir.exists()) {
+		if (! plDir().exists()) {
 			try {
-				plDir.mkdirs();
+				plDir().mkdirs();
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -224,25 +240,26 @@ public class StreamLine extends Plugin {
 
 	public void loadTimers(){
 		try {
-			guilds = getProxy().getScheduler().schedule(this, new GuildXPTimer(ConfigUtils.timePerGiveG()), 0, 1, TimeUnit.SECONDS);
-			players = getProxy().getScheduler().schedule(this, new PlayerXPTimer(ConfigUtils.timePerGiveP()), 0, 1, TimeUnit.SECONDS);
-			clearCachedPlayers = getProxy().getScheduler().schedule(this, new PlayerClearTimer(ConfigUtils.cachedPClear()), 0, 1, TimeUnit.SECONDS);
-			saveCachedPlayers = getProxy().getScheduler().schedule(this, new PlayerSaveTimer(ConfigUtils.cachedPSave()), 0, 1, TimeUnit.SECONDS);
-			playtime = getProxy().getScheduler().schedule(this, new PlaytimeTimer(1), 0, 1, TimeUnit.SECONDS);
-			oneSecTimer = getProxy().getScheduler().schedule(this, new OneSecondTimer(), 0, 1, TimeUnit.SECONDS);
-			motdUpdater = getProxy().getScheduler().schedule(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime()), 0, 1, TimeUnit.SECONDS);
+			guilds = getProxy().getScheduler().schedule(this, new GuildXPTimer(ConfigUtils.timePerGiveG()),0, 1, TimeUnit.SECONDS);
+			players = getProxy().getScheduler().schedule(this, new PlayerXPTimer(ConfigUtils.timePerGiveP()),0, 1, TimeUnit.SECONDS);
+			clearCachedPlayers = getProxy().getScheduler().schedule(this, new PlayerClearTimer(ConfigUtils.cachedPClear()),0, 1, TimeUnit.SECONDS);
+			saveCachedPlayers = getProxy().getScheduler().schedule(this, new PlayerSaveTimer(ConfigUtils.cachedPSave()),0, 1, TimeUnit.SECONDS);
+			playtime = getProxy().getScheduler().schedule(this, new PlaytimeTimer(1),0, 1, TimeUnit.SECONDS);
+			oneSecTimer = getProxy().getScheduler().schedule(this, new OneSecondTimer(),0, 1, TimeUnit.SECONDS);
+			motdUpdater = getProxy().getScheduler().schedule(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime()),0, 1, TimeUnit.SECONDS);
+			groupsDatabaseSyncer = getProxy().getScheduler().schedule(this, new GroupDatabaseSyncTimer(60),0, 1, TimeUnit.SECONDS);
 
 			// DO NOT FORGET TO UPDATE AMOUNT BELOW! :/
-			getLogger().info("Loaded 7 runnable(s) into memory...!");
+			getLogger().info("Loaded 8 runnable(s) into memory...!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void loadServers(){
-		if (! confDir.exists()) {
+		if (! confDir().exists()) {
 			try {
-				confDir.mkdirs();
+				confDir().mkdirs();
 			} catch (Exception e){
 				e.printStackTrace();
 			}
@@ -268,18 +285,18 @@ public class StreamLine extends Plugin {
 
 		if (! PluginUtils.isFreshInstall()) {
 			try {
-				if (!versionFile.exists()) {
-					if (!versionFile.createNewFile()) if (ConfigUtils.debug()) {
+				if (!versionFile().exists()) {
+					if (!versionFile().createNewFile()) if (ConfigUtils.debug()) {
 						MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
 					}
 
-					FileWriter writer = new FileWriter(versionFile);
+					FileWriter writer = new FileWriter(versionFile());
 					writer.write("13.3");
 					writer.close();
 				}
 
-				if (versionFile.exists()) {
-					Scanner reader = new Scanner(versionFile);
+				if (versionFile().exists()) {
+					Scanner reader = new Scanner(versionFile());
 
 					while (reader.hasNextLine()) {
 						String data = reader.nextLine();
@@ -299,20 +316,20 @@ public class StreamLine extends Plugin {
 			}
 
 			try {
-				if (!languageFile.exists()) {
-					if (!languageFile.createNewFile()) if (ConfigUtils.debug()) {
+				if (!languageFile().exists()) {
+					if (!languageFile().createNewFile()) if (ConfigUtils.debug()) {
 						MessagingUtils.logSevere("COULD NOT CREATE LANGUAGE FILE!");
 					}
 
-					FileWriter writer = new FileWriter(languageFile);
+					FileWriter writer = new FileWriter(languageFile());
 					writer.write("# To define which language you want to use.\n");
 					writer.write("# Current supported languages: en_US, fr_FR\n");
 					writer.write("en_US");
 					writer.close();
 				}
 
-				if (languageFile.exists()) {
-					Scanner reader = new Scanner(languageFile);
+				if (languageFile().exists()) {
+					Scanner reader = new Scanner(languageFile());
 
 					while (reader.hasNextLine()) {
 						String data = reader.nextLine();
@@ -332,16 +349,16 @@ public class StreamLine extends Plugin {
 			}
 		} else {
 			try {
-				if (!versionFile.createNewFile()) if (ConfigUtils.debug()) {
+				if (!versionFile().createNewFile()) {
 					MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
 				}
 
-				FileWriter writer = new FileWriter(versionFile);
+				FileWriter writer = new FileWriter(versionFile());
 				writer.write(getDescription().getVersion());
 				writer.close();
 
-				if (versionFile.exists()) {
-					Scanner reader = new Scanner(versionFile);
+				if (versionFile().exists()) {
+					Scanner reader = new Scanner(versionFile());
 
 					while (reader.hasNextLine()) {
 						String data = reader.nextLine();
@@ -360,18 +377,18 @@ public class StreamLine extends Plugin {
 			}
 
 			try {
-				if (!languageFile.createNewFile()) if (ConfigUtils.debug()) {
+				if (!languageFile().createNewFile()) {
 					MessagingUtils.logSevere("COULD NOT CREATE LANGUAGE FILE!");
 				}
 
-				FileWriter writer = new FileWriter(languageFile);
+				FileWriter writer = new FileWriter(languageFile());
 				writer.write("# To define which language you want to use.\n");
 				writer.write("# Current supported languages: en_US, fr_FR\n");
 				writer.write("en_US");
 				writer.close();
 
-				if (languageFile.exists()) {
-					Scanner reader = new Scanner(languageFile);
+				if (languageFile().exists()) {
+					Scanner reader = new Scanner(languageFile());
 
 					while (reader.hasNextLine()) {
 						String data = reader.nextLine();
@@ -414,13 +431,23 @@ public class StreamLine extends Plugin {
 			votes = new Votes();
 		}
 
+		playTimeConf = new PlayTimeConf();
+
 		if (ConfigUtils.moduleBChatFiltersEnabled()) {
-			chatFilters = new ChatFilters();
+			if (ConfigUtils.scriptsEnabled()) {
+				chatFilters = new ChatFilters();
+			} else {
+				MessagingUtils.logSevere("Could not enable chat filters because scripts are not enabled!");
+			}
 		}
 
 		if (ConfigUtils.moduleDBUse()) {
 			databaseInfo = new DatabaseInfo();
 			DataSource.verifyTables();
+		}
+
+		if (ConfigUtils.mysqlbridgerEnabled()) {
+			msbConfig = new MSBConfig();
 		}
 
 		if (ConfigUtils.moduleDEnabled()) {
@@ -433,7 +460,7 @@ public class StreamLine extends Plugin {
 	}
 
 	public void loadChatHistory() {
-		if (! chatHistoryDir.exists()) if (! chatHistoryDir.mkdirs()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Chat history folder could not be made!");
+		if (! chatHistoryDir().exists()) if (! chatHistoryDir().mkdirs()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Chat history folder could not be made!");
 
 		if (ConfigUtils.chatHistoryLoadHistoryStartup()) {
 			PlayerUtils.loadAllChatHistories(false);
@@ -443,9 +470,9 @@ public class StreamLine extends Plugin {
 	public void loadScripts() {
 		if (! ConfigUtils.scriptsEnabled()) return;
 
-		if (! scriptsDir.exists()) if (! scriptsDir.mkdirs()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Scripts folder could not be made!");
+		if (! scriptsDir().exists()) if (! scriptsDir().mkdirs()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Scripts folder could not be made!");
 
-		File file = new File(scriptsDir, "boost.sl");
+		File file = new File(scriptsDir(), "boost.sl");
 
 		if (! file.exists()) {
 			if (ConfigUtils.scriptsCreateDefault()) {
@@ -457,7 +484,7 @@ public class StreamLine extends Plugin {
 			}
 		}
 
-		File[] files = scriptsDir.listFiles();
+		File[] files = scriptsDir().listFiles();
 		if (files != null) {
 			for (File f : files) {
 				if (! f.getName().endsWith(".sl")) continue;
@@ -476,6 +503,8 @@ public class StreamLine extends Plugin {
 		PluginUtils.state = NetworkState.STARTING;
 
 		instance = this;
+		// Teller.
+		getLogger().info("Loading version [v" + getDescription().getVersion() + "]...");
 
 		// LP Support.
 		lpHolder = new LPHolder();
@@ -487,11 +516,7 @@ public class StreamLine extends Plugin {
 		geyserHolder = new GeyserHolder();
 
 		getProxy().registerChannel(customChannel);
-
-		MessagingUtils.logInfo("Package: " + getClass().getPackage().getName());
-
-		// Teller.
-		getLogger().info("Loading version [v" + getProxy().getPluginManager().getPlugin("StreamLine").getDescription().getVersion() + "]...");
+//		getProxy().getChannelRegistrar().register(customIdentifier);
 
 		// Configs...
 		loadConfigs();
@@ -517,7 +542,7 @@ public class StreamLine extends Plugin {
 			Thread initThread = new Thread(this::initJDA, "Streamline - Initialization");
 			initThread.setUncaughtExceptionHandler((t, e) -> {
 				e.printStackTrace();
-				getLogger().severe("Streamline failed to load properly: " + e.getMessage() + ".");
+				MessagingUtils.logSevere("Streamline failed to load properly: " + e.getMessage() + ".");
 			});
 			initThread.start();
 		}
@@ -544,7 +569,7 @@ public class StreamLine extends Plugin {
 		if (viaHolder.enabled) {
 			loadServers();
 		} else {
-			getLogger().severe("Streamline server custom configs have been disabled due to no ViaVersion being detected.");
+			MessagingUtils.logSevere("Streamline server custom configs have been disabled due to no ViaVersion being detected.");
 		}
 
 		// Timers.
@@ -552,13 +577,8 @@ public class StreamLine extends Plugin {
 
 		// Set up SavableConsole.
 		SavableConsole console = PlayerUtils.applyConsole();
-		if (GuildUtils.existsByUUID(console.guild)) {
-			try {
-				GuildUtils.addGuild(new SavableGuild(console.guild, false));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		SavableGuild guild = GuildUtils.addGuildIfNotAlreadyLoaded(console);
+		SavableParty party = PartyUtils.addPartyIfNotAlreadyLoaded(console);
 
 		// Setting up SavablePlayer's HistorySave files.
 		if (ConfigUtils.chatHistoryEnabled()) {
@@ -566,8 +586,10 @@ public class StreamLine extends Plugin {
 		}
 
 		PluginUtils.state = NetworkState.RUNNING;
+		// Setup MOTD.
+		StreamLine.getInstance().setCurrentMOTD(StreamLine.serverConfig.getComparedMOTD().firstEntry().getValue());
 
-		Metrics metrics = new Metrics(this, 13153);
+		Metrics metrics = new Metrics(this, 13213);
 
 		if (ConfigUtils.bstatsMakeDiscoverable()) {
 			metrics.addCustomChart(new Metrics.SimplePie("server_discoverables", new Callable<String>() {
@@ -612,35 +634,31 @@ public class StreamLine extends Plugin {
 				return String.valueOf(ConfigUtils.customChats());
 			}
 		}));
-
-		metrics.addCustomChart(new Metrics.SimplePie("proxy_chat_enabled", new Callable<String>() {
-			@Override
-			public String call() throws Exception {
-				return String.valueOf(serverConfig.getProxyChatEnabled());
-			}
-		}));
 	}
 
 	@Override
 	public void onDisable() {
 		PluginUtils.state = NetworkState.STOPPING;
 
+		String[] identifer = customChannel.split(":", 2);
+
 		getProxy().unregisterChannel(customChannel);
+//		getProxy().getChannelRegistrar().unregister(MinecraftChannelIdentifier.create(identifer[0], identifer[1]));
 
 		if (ConfigUtils.onCloseSafeKick() && ConfigUtils.onCloseKickMessage()) {
 			PlayerUtils.kickAll(MessageConfUtils.kicksStopping());
 		}
 
-		if (ConfigUtils.onCloseMain()) {
-			config.saveConf();
-			config.saveLocales();
-			config.saveDiscordBot();
-			config.saveCommands();
-		}
-
-		if (ConfigUtils.onCloseSettings()) {
-			serverConfig.saveConfig();
-		}
+//		if (ConfigUtils.onCloseMain()) {
+//			config.saveConf();
+//			config.saveLocales();
+//			config.saveDiscordBot();
+//			config.saveCommands();
+//		}
+//
+//		if (ConfigUtils.onCloseSettings()) {
+//			serverConfig.saveConfig();
+//		}
 
 		guilds.cancel();
 		players.cancel();
@@ -649,16 +667,17 @@ public class StreamLine extends Plugin {
 		saveCachedPlayers.cancel();
 		oneSecTimer.cancel();
 		motdUpdater.cancel();
+		groupsDatabaseSyncer.cancel();
 
 		try {
 			if (ConfigUtils.moduleDEnabled()) {
 				if (jda != null) {
 					if (ConfigUtils.moduleShutdowns()) {
 						try {
-//						Objects.requireNonNull(jda.getTextChannelById(ConfigUtils.textChannelOfflineOnline())).sendMessageEmbeds(eb.setDescription("Bot shutting down...!").build()).queue();
+//						Objects.requireNonNull(jda.getTextChannelById(ConfigUtils.textChannelOfflineOnline)).sendMessageEmbeds(eb.setDescription("Bot shutting down...!").build()).queue();
 							MessagingUtils.sendDiscordEBMessage(new DiscordMessage(getProxy().getConsole(), MessageConfUtils.shutdownTitle(), MessageConfUtils.shutdownMessage(), DiscordBotConfUtils.textChannelOfflineOnline()));
 						} catch (Exception e) {
-							getLogger().warning("An unknown error occurred with sending online message: " + e.getMessage());
+							MessagingUtils.logWarning("An unknown error occurred with sending online message: " + e.getMessage());
 						}
 					}
 
@@ -678,7 +697,7 @@ public class StreamLine extends Plugin {
 					try {
 						shutdownTask.get(5, TimeUnit.SECONDS);
 					} catch (Exception e) {
-						getLogger().warning("JDA took too long to shutdown, skipping!");
+						MessagingUtils.logWarning("JDA took too long to shutdown, skipping!");
 					}
 				}
 			}
@@ -687,20 +706,25 @@ public class StreamLine extends Plugin {
 		}
 
 		saveGuilds();
+		saveParties();
 
 		PluginUtils.state = NetworkState.STOPPED;
 	}
 
 	public void saveGuilds(){
 		for (SavableGuild guild : GuildUtils.getGuilds()){
-			try {
-				guild.saveInfo();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			guild.saveAll();
 		}
 
 		getLogger().info("Saved " + GuildUtils.getGuilds().size() + " Guilds!");
+	}
+
+	public void saveParties(){
+		for (SavableParty party : PartyUtils.getParties()){
+			party.saveAll();
+		}
+
+		getLogger().info("Saved " + PartyUtils.getParties().size() + " Parties!");
 	}
 
 	public static StreamLine getInstance() { return instance; }
@@ -709,4 +733,8 @@ public class StreamLine extends Plugin {
 
 	public static void setReady(boolean ready) { isReady = ready; }
 
+	// Utils Getters.
+//	public static DiscordUtils getDiscordUtils() {
+//		return ;
+//	}
 }

@@ -18,7 +18,7 @@ public class ScriptReloadCommand extends SLCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
-        if (sender.hasPermission(CommandsConfUtils.comBScriptRePerm())) {
+        if (sender.hasPermission(CommandsConfUtils.comBEReloadPerm())) {
             ScriptsHandler.unloadScripts();
             StreamLine.getInstance().loadScripts();
 
@@ -31,7 +31,7 @@ public class ScriptReloadCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
 }

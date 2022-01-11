@@ -11,6 +11,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
@@ -32,6 +33,18 @@ public class TextUtils {
         }
 
         return s;
+    }
+
+    public static String replaceArgs(String from, String... args) {
+        String to = from;
+
+        int i = 1;
+        for (String arg : args) {
+            to = to.replace("%arg" + i + "%", arg);
+            i ++;
+        }
+
+        return to;
     }
 
     public static String resize(String text, int digits) {
@@ -60,6 +73,111 @@ public class TextUtils {
         } else {
             return otherSize;
         }
+    }
+
+//    public static TextComponent hexedText(String text) {
+//        text = codedString(text);
+//
+//        try {
+//            //String ntext = text.replace(ConfigUtils.linkPre, "").replace(ConfigUtils.linkSuff, "");
+//
+//            Pattern pattern = Pattern.compile("([<][#][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][>])+", Pattern.CASE_INSENSITIVE);
+//            Matcher matcher = pattern.matcher(stripColor(text));
+//            String found = "";
+//
+//            String textLeft = text;
+//
+//            TextComponent tc = new TextComponent();
+//
+//            int i = 0;
+//            boolean find = false;
+//            TreeMap<Integer, String> founds = new TreeMap<>();
+//
+//            while (matcher.find()) {
+//                find = true;
+//                found = matcher.group(0);
+//
+//                founds.put(i, found);
+//
+//                i ++;
+//            }
+//            if (! find) return new TextComponent(text);
+//
+//            TreeMap<Integer, String> pieces = new TreeMap<>();
+//            int iter = 0;
+//            int from = 0;
+//            for (Integer key : founds.keySet()) {
+//                int at = text.indexOf(founds.get(key), from);
+//                pieces.put(iter, text.substring(at));
+//                from = at;
+//                iter ++;
+//            }
+//
+//            tc = new TextComponent(pieces.get(0));
+//
+//            for (Integer key : pieces.keySet()) {
+//                if (key == 0) continue;
+//
+//                String p = pieces.get(key);
+//                String f = p.substring(0, "<#123456>".length());
+//
+//                String colorHex = f.substring(1, f.indexOf('>'));
+//                String after = p.substring(f.length());
+//
+////                tc.addExtra(new LiteralText(after).styled(style -> style.withColor(Integer.decode(colorHex))));
+//                BaseComponent[] bc = new ComponentBuilder(after).color(ChatColor.of(Color.decode(colorHex))).create();
+//
+//                for (BaseComponent b : bc) {
+//                    tc.addExtra(b);
+//                }
+//            }
+//
+//            return tc;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new TextComponent(text);
+//        }
+//    }
+
+    public static TreeMap<Integer, String> comparedConfiguration(ConfigSection configuration){
+        TreeMap<Integer, String> thing = new TreeMap<>();
+
+        for (String key : configuration.getKeys()) {
+            int it = 0;
+            try {
+                it = Integer.parseInt(key);
+            } catch (Exception e) {
+                continue; // Do nothing.
+            }
+
+            thing.put(it, configuration.s.getString(key));
+        }
+
+        return thing;
+    }
+
+    public static TreeSet<String> getCompletion(List<String> of, String param){
+        return of.stream()
+                .filter(completion -> completion.toLowerCase(Locale.ROOT).startsWith(param.toLowerCase(Locale.ROOT)))
+                .collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    public static TreeSet<String> getCompletion(TreeSet<String> of, String param){
+        return of.stream()
+                .filter(completion -> completion.toLowerCase(Locale.ROOT).startsWith(param.toLowerCase(Locale.ROOT)))
+                .collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    public static TreeSet<String> getCompletion(TreeList<String> of, String param){
+        return of.stream()
+                .filter(completion -> completion.toLowerCase(Locale.ROOT).startsWith(param.toLowerCase(Locale.ROOT)))
+                .collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    public static String stripColor(String string){
+        return ChatColor.stripColor(string)
+                .replaceAll("([<][#][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][>])+", "")
+                .replaceAll("[&][1-9a-f]", "");
     }
 
     public static TextComponent hexedText(String text) {
@@ -93,7 +211,7 @@ public class TextUtils {
             TreeMap<Integer, String> pieces = new TreeMap<>();
             int iter = 0;
             int from = 0;
-            for (Integer key : founds.singleLayerKeySet()) {
+            for (Integer key : founds.keySet()) {
                 int at = text.indexOf(founds.get(key), from);
                 pieces.put(iter, text.substring(at));
                 from = at;
@@ -102,7 +220,7 @@ public class TextUtils {
 
             tc = new TextComponent(pieces.get(0));
 
-            for (Integer key : pieces.singleLayerKeySet()) {
+            for (Integer key : pieces.keySet()) {
                 if (key == 0) continue;
 
                 String p = pieces.get(key);
@@ -125,88 +243,6 @@ public class TextUtils {
             return new TextComponent(text);
         }
     }
-
-    public static TreeMap<Integer, String> comparedConfiguration(Configuration configuration){
-        TreeMap<Integer, String> thing = new TreeMap<>();
-
-        for (String key : configuration.getKeys()) {
-            int it = 0;
-            try {
-                it = Integer.parseInt(key);
-            } catch (Exception e) {
-                continue; // Do nothing.
-            }
-
-            thing.put(it, TextUtils.codedString(configuration.getString(key)));
-        }
-
-        return thing;
-    }
-
-    public static TreeSet<String> getCompletion(List<String> of, String param){
-        return of.stream()
-                .filter(completion -> completion.toLowerCase(Locale.ROOT).startsWith(param.toLowerCase(Locale.ROOT)))
-                .collect(Collectors.toCollection(TreeSet::new));
-    }
-
-    public static TreeSet<String> getCompletion(TreeSet<String> of, String param){
-        return of.stream()
-                .filter(completion -> completion.toLowerCase(Locale.ROOT).startsWith(param.toLowerCase(Locale.ROOT)))
-                .collect(Collectors.toCollection(TreeSet::new));
-    }
-
-    public static TreeSet<String> getCompletion(TreeList<String> of, String param){
-        return of.stream()
-                .filter(completion -> completion.toLowerCase(Locale.ROOT).startsWith(param.toLowerCase(Locale.ROOT)))
-                .collect(Collectors.toCollection(TreeSet::new));
-    }
-
-    public static String stripColor(String string){
-        return ChatColor.stripColor(string).replaceAll("([<][#][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][>])+", "");
-    }
-
-//    public static TextComponent hexedText(String text){
-//        text = codedString(text);
-//
-//        try {
-//            //String ntext = text.replace(ConfigUtils.linkPre(), "").replace(ConfigUtils.linkSuff, "");
-//
-//            Pattern pattern = Pattern.compile("([<][#][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][1-9a-f][>])+", Pattern.CASE_INSENSITIVE);
-//            Matcher matcher = pattern.matcher(stripColor(text));
-//            String found = "";
-//
-//            String textLeft = text;
-//
-//            TextComponent tc = new TextComponent();
-//
-//            int i = 0;
-//            boolean find = false;
-//
-//            while (matcher.find()) {
-//                find = true;
-//                found = matcher.group(0);
-//                String colorHex = found.substring(1, found.indexOf('>'));
-//                String[] split = textLeft.split(Pattern.quote(found));
-//
-//                if (i == 0) {
-//                    tc.addExtra(codedString(split[0]));
-//                }
-//
-//                BaseComponent[] bc = new ComponentBuilder(split[1]).color(ChatColor.of(Color.decode(colorHex))).create();
-//
-//                for (BaseComponent b : bc) {
-//                    tc.addExtra(b);
-//                }
-//                i ++;
-//            }
-//            if (! find) return new TextComponent(text);
-//
-//            return tc;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new TextComponent(text);
-//        }
-//    }
 
     public static String[] argsMinus(String[] args, int... toRemove) {
         TreeMap<Integer, String> argsSet = new TreeMap<>();
@@ -279,10 +315,6 @@ public class TextUtils {
         return hexedText(text);
     }
 
-    public static String codedString(String text){
-        return ChatColor.translateAlternateColorCodes('&', formatted(newLined(text)));
-    }
-
     public static String formatted(String string) {
         String[] strings = string.split(" ");
 
@@ -348,9 +380,12 @@ public class TextUtils {
 
         String chatColor = isolateChatColor(format);
 
-        TreeMap<Integer, ProxiedPlayer> indexed = getTaggedPlayersIndexed(args, sender.getServer().getInfo().getName());
+        ServerInfo serverConnection = sender.getServer().getInfo();
+        if (serverConnection == null) return new SingleSet<>("", new ArrayList<>());
 
-        for (Integer index : indexed.singleLayerKeySet()) {
+        TreeMap<Integer, ProxiedPlayer> indexed = getTaggedPlayersIndexed(args, serverConnection.getName());
+
+        for (Integer index : indexed.keySet()) {
             args[index] = StreamLine.serverConfig.getTagsPrefix() + args[index];
         }
 
@@ -424,7 +459,7 @@ public class TextUtils {
         int i = 0;
         StringBuilder text = new StringBuilder();
 
-        for (Integer split : splitMsg.singleLayerKeySet()){
+        for (Integer split : splitMsg.keySet()){
             i++;
             if (splitMsg.get(split).equals("")) continue;
 
@@ -473,6 +508,10 @@ public class TextUtils {
     public static String replaceAllPlayerBungee(String of, SavableUser user) {
         if (user == null) return of;
 
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
         return of
                 .replace("%player_uuid%", user.uuid)
 
@@ -483,8 +522,8 @@ public class TextUtils {
 
                 .replace("%player_points%", String.valueOf(user.points))
 
-                .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -494,7 +533,7 @@ public class TextUtils {
                 .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                 .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                 .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
                 .replace("%player_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
@@ -506,7 +545,7 @@ public class TextUtils {
     }
 
     public static String replaceAllPlayerBungee(String of, String uuid) {
-        if (! uuid.contains("-")) return replaceAllPlayerBungeeFromDiscord(of, uuid);
+        if (! uuid.contains("-") && ! uuid.equals("%")) return replaceAllPlayerBungeeFromDiscord(of, uuid);
 
         return replaceAllPlayerBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
@@ -530,6 +569,10 @@ public class TextUtils {
 
             if (user == null) return of;
 
+            if (ConfigUtils.mysqlbridgerEnabled()) {
+                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+            }
+
             return of
                     .replace("%player_uuid%", user.uuid)
 
@@ -540,8 +583,8 @@ public class TextUtils {
 
                     .replace("%player_points%", String.valueOf(user.points))
 
-                    .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                    .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                    .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                    .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                     .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
                     .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -551,7 +594,7 @@ public class TextUtils {
                     .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                     .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                    .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                    .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                     .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                     .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
                     .replace("%player_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
@@ -580,6 +623,10 @@ public class TextUtils {
     public static String replaceAllUserBungee(String of, SavableUser user) {
         if (user == null) return of;
 
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
         return of
                 .replace("%user_uuid%", user.uuid)
 
@@ -590,8 +637,8 @@ public class TextUtils {
 
                 .replace("%user_points%", String.valueOf(user.points))
 
-                .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -601,7 +648,7 @@ public class TextUtils {
                 .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                 .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                 .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
                 .replace("%user_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
@@ -613,7 +660,7 @@ public class TextUtils {
     }
 
     public static String replaceAllUserBungee(String of, String uuid) {
-        if (! uuid.contains("-")) return replaceAllUserBungeeFromDiscord(of, uuid);
+        if (! uuid.contains("-") && ! uuid.equals("%")) return replaceAllUserBungeeFromDiscord(of, uuid);
 
         return replaceAllUserBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
@@ -637,6 +684,10 @@ public class TextUtils {
 
             if (user == null) return of;
 
+            if (ConfigUtils.mysqlbridgerEnabled()) {
+                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+            }
+
             return of
                     .replace("%user_uuid%", user.uuid)
 
@@ -647,8 +698,8 @@ public class TextUtils {
 
                     .replace("%user_points%", String.valueOf(user.points))
 
-                    .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                    .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                    .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                    .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                     .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
                     .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -658,7 +709,7 @@ public class TextUtils {
                     .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                     .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                    .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                    .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                     .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                     .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
                     .replace("%user_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
@@ -687,6 +738,10 @@ public class TextUtils {
     public static String replaceAllSenderBungee(String of, SavableUser user) {
         if (user == null) return of;
 
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
         return of
                 .replace("%sender_uuid%", user.uuid)
 
@@ -697,8 +752,8 @@ public class TextUtils {
 
                 .replace("%sender_points%", String.valueOf(user.points))
 
-                .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -708,7 +763,7 @@ public class TextUtils {
                 .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                 .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                 .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
                 .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
@@ -720,7 +775,7 @@ public class TextUtils {
     }
 
     public static String replaceAllSenderBungee(String of, String uuid) {
-        if (! uuid.contains("-")) return replaceAllSenderBungeeFromDiscord(of, uuid);
+        if (! uuid.contains("-") && ! uuid.equals("%")) return replaceAllSenderBungeeFromDiscord(of, uuid);
 
         return replaceAllSenderBungee(of, PlayerUtils.getOrGetSavableUser(uuid));
     }
@@ -745,6 +800,12 @@ public class TextUtils {
         if (StreamLine.discordData.isVerified(dID)) {
             SavableUser user = PlayerUtils.getOrGetSavableUser(StreamLine.discordData.getUUIDOfVerified(dID));
 
+            if (user == null) return of;
+
+            if (ConfigUtils.mysqlbridgerEnabled()) {
+                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+            }
+
             return of
                     .replace("%sender_uuid%", user.uuid)
 
@@ -755,8 +816,8 @@ public class TextUtils {
 
                     .replace("%sender_points%", String.valueOf(user.points))
 
-                    .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                    .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                    .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                    .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                     .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
                     .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -766,7 +827,7 @@ public class TextUtils {
                     .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
                     .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
-                    .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                    .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                     .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                     .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
                     .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
@@ -795,6 +856,10 @@ public class TextUtils {
     public static String replaceAllPlayerDiscord(String of, SavableUser user) {
         if (user == null) return of;
 
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
         return of
                 .replace("%player_uuid%", user.uuid)
 
@@ -805,8 +870,8 @@ public class TextUtils {
 
                 .replace("%player_points%", String.valueOf(user.points))
 
-                .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%player_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%player_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -816,7 +881,7 @@ public class TextUtils {
                 .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
                 .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
 
-                .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                 .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%player_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
                 .replace("%player_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
@@ -838,6 +903,10 @@ public class TextUtils {
     public static String replaceAllUserDiscord(String of, SavableUser user) {
         if (user == null) return of;
 
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
         return of
                 .replace("%user_uuid%", user.uuid)
 
@@ -848,8 +917,8 @@ public class TextUtils {
 
                 .replace("%user_points%", String.valueOf(user.points))
 
-                .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%user_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%user_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -859,7 +928,7 @@ public class TextUtils {
                 .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
                 .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
 
-                .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                 .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%user_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
                 .replace("%user_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
@@ -881,6 +950,10 @@ public class TextUtils {
     public static String replaceAllSenderDiscord(String of, SavableUser user) {
         if (user == null) return of;
 
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
         return of
                 .replace("%sender_uuid%", user.uuid)
 
@@ -891,8 +964,8 @@ public class TextUtils {
 
                 .replace("%sender_points%", String.valueOf(user.points))
 
-                .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName))
-                .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName))
+                .replace("%sender_prefix%", PlayerUtils.getLuckPermsPrefix(user.latestName, true))
+                .replace("%sender_suffix%", PlayerUtils.getLuckPermsSuffix(user.latestName, true))
 
                 .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
@@ -902,7 +975,7 @@ public class TextUtils {
                 .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
                 .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
 
-                .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).lvl) : ""))
+                .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                 .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
                 .replace("%sender_xp_total%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).totalXP) : ""))
                 .replace("%sender_play_seconds%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlaySecondsAsString() : ""))
@@ -927,7 +1000,7 @@ public class TextUtils {
 
     public static int replaceAllPlayerRanks(SavablePlayer player) {
         String of = ConfigUtils.moduleBRanksUses()
-                .replace("%player_level%", String.valueOf(player.lvl))
+                .replace("%player_level%", String.valueOf(player.level))
                 .replace("%player_xp_current%", String.valueOf(player.currentXP))
                 .replace("%player_xp_total%", String.valueOf(player.totalXP))
                 .replace("%player_play_seconds%", String.valueOf(player.playSeconds))
@@ -949,8 +1022,8 @@ public class TextUtils {
     }
 
     public static boolean equalsAnyServer(String servername) {
-        for (ServerInfo serverInfo : getServers()) {
-            if (serverInfo.getName().equals(servername)) return true;
+        for (ServerInfo server : getServers()) {
+            if (server.getName().equals(servername)) return true;
         }
 
         return false;
@@ -965,5 +1038,9 @@ public class TextUtils {
     public static boolean isNullOrLessThanEqualTo(Object[] thingArray, int lessThanOrEqualTo) {
         if (thingArray == null) return true;
         return thingArray.length <= lessThanOrEqualTo;
+    }
+
+    public static String codedString(String replace) {
+        return ChatColor.translateAlternateColorCodes('&', replace);
     }
 }

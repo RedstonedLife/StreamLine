@@ -1,9 +1,10 @@
 name: StreamLine
 version: ${project.version}
 main: net.plasmere.streamline.StreamLine
-author: Nitrate
+author: Quaint
 depends: []
 softdepends:
   - ViaVersion
   - LuckPerms
   - Geyser
+  - NuVotifier

@@ -23,14 +23,12 @@ public class StatsCommand extends SLCommand {
     public void run(CommandSender sender, String[] args) {
         if (sender instanceof ProxiedPlayer) {
             if (args.length <= 0 || ! CommandsConfUtils.comBStatsOthers()) {
-                PlayerUtils.info(sender, PlayerUtils.getOrGetPlayerStat(sender.getName()));
+                PlayerUtils.info(sender, PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender)));
             } else {
                 SavableUser person = PlayerUtils.getOrGetSavableUser(args[0]);
 
                 if (person == null) {
-                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName())
-                            .replace("%class%", this.getClass().getName())
-                    );
+                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
                     return;
                 }
 
@@ -43,9 +41,7 @@ public class StatsCommand extends SLCommand {
                 SavableUser person = PlayerUtils.getOrGetSavableUser(args[0]);
 
                 if (person == null) {
-                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName())
-                            .replace("%class%", this.getClass().getName())
-                    );
+                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
                     return;
                 }
 
@@ -55,12 +51,12 @@ public class StatsCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (ProxiedPlayer player : players){
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         strPlayers.add("%");

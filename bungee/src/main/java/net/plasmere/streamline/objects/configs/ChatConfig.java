@@ -1,14 +1,16 @@
 package net.plasmere.streamline.objects.configs;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
+import de.leonhard.storage.sections.FlatFileSection;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
+
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.chats.ChatChannel;
 import net.plasmere.streamline.objects.chats.ChatsHandler;
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 import net.plasmere.streamline.objects.enums.MessageServerType;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.MessagingUtils;
@@ -21,7 +23,7 @@ import java.util.Locale;
 import java.util.TreeMap;
 
 public class ChatConfig {
-    private Configuration conf;
+    private Config conf;
     private final String fileString = "chats.yml";
     private final File file = new File(StreamLine.getInstance().getConfDir(), fileString);
 
@@ -40,7 +42,7 @@ public class ChatConfig {
         MessagingUtils.logInfo("Loaded chats settings!");
     }
 
-    public Configuration getConf() {
+    public Config getConf() {
         reloadConfig();
         return conf;
     }
@@ -53,7 +55,7 @@ public class ChatConfig {
         }
     }
 
-    public Configuration loadConfig(){
+    public Config loadConfig(){
         if (! file.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(fileString)){
                 Files.copy(in, file.toPath());
@@ -62,33 +64,21 @@ public class ChatConfig {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file); // ???
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public void saveConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(conf, file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return LightningBuilder.fromFile(file).createConfig();
     }
 
     public void createChannels() {
-        for (String key : conf.getSection("chats").getKeys()){
+        for (String key : new ConfigSection(conf.getSection("chats")).getKeys()) {
             if (key.equals("base-permission")) continue;
             if (key.equals("default-just-first-join")) continue;
             if (key.equals("default-channel")) continue;
             if (key.equals("default-identifier")) continue;
 
-            ChatsHandler.createChatChannel(key, conf.getString("chats." + key + ".permission"));
+            String value = conf.getString("chats." + key + ".permission");
+
+//            MessagingUtils.logWarning("Value = " + value);
+
+            ChatsHandler.createChatChannel(key, value);
         }
 
         ChatsHandler.createChatChannel("off", "");
@@ -96,7 +86,7 @@ public class ChatConfig {
 
     public void createChats() {
         for (ChatChannel chatChannel : ChatsHandler.createdChannels) {
-            for (String chatName : conf.getSection("chats." + chatChannel.name).getKeys()) {
+            for (String chatName : new ConfigSection(conf.getSection("chats." + chatChannel.name)).getKeys()) {
                 if (chatName.equals("permission")) continue;
 
                 String identifier = conf.getString("chats." + chatChannel.name + "." + chatName + ".identifier");
@@ -129,7 +119,6 @@ public class ChatConfig {
 
     public void setChatBasePerm(String set) {
         conf.set("chats.base-permission", set);
-        saveConfig();
         reloadConfig();
     }
 
@@ -140,7 +129,6 @@ public class ChatConfig {
 
     public void setDefaultChannel(String set) {
         conf.set("chats.default-channel", set);
-        saveConfig();
         reloadConfig();
     }
 
@@ -156,7 +144,6 @@ public class ChatConfig {
 
     public void setDefaultIdentifier(String set) {
         conf.set("chats.default-identifier", set);
-        saveConfig();
         reloadConfig();
     }
 
@@ -172,7 +159,6 @@ public class ChatConfig {
 
     public void setDefaultOnFirstJoin(boolean set) {
         conf.set("chats.default-just-first-join", set);
-        saveConfig();
         reloadConfig();
     }
 
@@ -186,7 +172,7 @@ public class ChatConfig {
         return conf.getBoolean("chats.default-just-first-join");
     }
 
-    public TreeMap<Integer, String> getFormatsFromSection(Configuration section) {
+    public TreeMap<Integer, String> getFormatsFromSection(ConfigSection section) {
         reloadConfig();
         TreeMap<Integer, String> map = new TreeMap<>();
 
@@ -208,26 +194,26 @@ public class ChatConfig {
                 MessagingUtils.logSevere("You have an error with your chats! Keys cannot be the same! Skipping...");
                 continue;
             }
-            map.put(thing, section.getString(key));
+            map.put(thing, section.s.getString(key));
         }
 
         return map;
     }
 
-    public Configuration getFormatConfig(ChatChannel chatChannel, String chatName, MessageServerType messageServerType) {
+    public ConfigSection getFormatConfig(ChatChannel chatChannel, String chatName, MessageServerType messageServerType) {
         reloadConfig();
-        return conf.getSection("chats." + chatChannel.name + "." + chatName + "." + messageServerType.toString().toLowerCase(Locale.ROOT));
+        return new ConfigSection(conf.getSection("chats." + chatChannel.name + "." + chatName + "." + messageServerType.toString().toLowerCase(Locale.ROOT)));
     }
 
     public boolean hasChatPermission(SavableUser user, Chat chat, MessageServerType messageServerType) {
-        for (Integer integer : getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).singleLayerKeySet()) {
+        for (Integer integer : getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).keySet()) {
             if (user.hasPermission(getChatBasePerm() + integer)) return true;
         }
         return false;
     }
 
     public boolean hasChatPermission(ProxiedPlayer user, Chat chat, MessageServerType messageServerType) {
-        for (Integer integer : getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).singleLayerKeySet()) {
+        for (Integer integer : getFormatsFromSection(getFormatConfig(chat.chatChannel, chat.name, messageServerType)).keySet()) {
             if (user.hasPermission(getChatBasePerm() + integer)) return true;
         }
         return false;
@@ -325,7 +311,6 @@ public class ChatConfig {
 
     public void setObject(String pathTo, Object object) {
         conf.set(pathTo, object);
-        saveConfig();
         reloadConfig();
     }
 }

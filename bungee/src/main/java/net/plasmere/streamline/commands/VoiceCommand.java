@@ -1,9 +1,8 @@
 package net.plasmere.streamline.commands;
 
-import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
@@ -28,7 +27,7 @@ public class VoiceCommand extends SLCommand {
     }
 
     @Override
-    public void run(CommandSender sender, String[] args){
+    public void run(CommandSender sender, String[] args) {
         if (sender instanceof ProxiedPlayer){
             switch (args[0]) {
                 case "create" -> {
@@ -41,7 +40,7 @@ public class VoiceCommand extends SLCommand {
                         return;
                     }
 
-                    SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
+                    SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
                     if (player == null) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
                             .replace("%class%", this.getClass().getName())
@@ -80,7 +79,7 @@ public class VoiceCommand extends SLCommand {
                         return;
                     }
 
-                    SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
+                    SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
                     if (player == null) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
                             .replace("%class%", this.getClass().getName())
@@ -123,7 +122,7 @@ public class VoiceCommand extends SLCommand {
                         return;
                     }
 
-                    SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
+                    SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
                     if (player == null) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
                             .replace("%class%", this.getClass().getName())
@@ -168,7 +167,7 @@ public class VoiceCommand extends SLCommand {
                         return;
                     }
 
-                    SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
+                    SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
                     if (player == null) {
                         MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorNoYou()
                             .replace("%class%", this.getClass().getName())
@@ -227,7 +226,7 @@ public class VoiceCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         List<String> options = new ArrayList<>();
 
         options.add("create");
@@ -235,9 +234,9 @@ public class VoiceCommand extends SLCommand {
         options.add("add");
         options.add("remove");
 
-        if (sender instanceof ProxyServer) return new ArrayList<>();
+        if (! (sender instanceof ProxiedPlayer)) return new ArrayList<>();
 
-        SavablePlayer player = PlayerUtils.getOrGetPlayerStat(sender.getName());
+        SavablePlayer player = PlayerUtils.getOrGetPlayerStat(PlayerUtils.getSourceName(sender));
         if (player == null) return new ArrayList<>();
 
         if (args.length == 1) {

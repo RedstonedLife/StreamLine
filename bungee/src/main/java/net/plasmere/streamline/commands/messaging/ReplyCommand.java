@@ -20,7 +20,7 @@ public class ReplyCommand extends SLCommand {
     public void run(CommandSender sender, String[] args) {
         String thing = "";
 
-        if (PlayerUtils.isInOnlineList(sender.getName())) thing = sender.getName();
+        if (PlayerUtils.isInOnlineList(PlayerUtils.getSourceName(sender))) thing = PlayerUtils.getSourceName(sender);
         else thing = "%";
 
         SavableUser stat = PlayerUtils.getOrGetSavableUser(thing);
@@ -47,7 +47,7 @@ public class ReplyCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
 }

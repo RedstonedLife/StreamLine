@@ -1,8 +1,8 @@
 package net.plasmere.streamline.discordbot.commands;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
@@ -14,7 +14,7 @@ public class OnlineCommand {
         MessagingUtils.sendDSelfMessage(event,
                 MessageConfUtils.onlineMessageEmbedTitle(),
                 MessageConfUtils.onlineMessageDiscord()
-                        .replace("%amount%", Integer.toString(StreamLine.getInstance().getProxy().getOnlineCount()))
+                        .replace("%amount%", Integer.toString(StreamLine.getInstance().getProxy().getPlayers().size()))
                         .replace("%servers%", compileServers())
                         .replace("%online%", getOnline())
         );
@@ -36,14 +36,14 @@ public class OnlineCommand {
         StringBuilder text = new StringBuilder();
 
         int i = 1;
-        for (ProxiedPlayer player : StreamLine.getInstance().getProxy().getPlayers()){
+        for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()){
             if (!player.hasPermission("streamline.staff.vanish")){
-                if (i < StreamLine.getInstance().getProxy().getPlayers().size())
+                if (i < PlayerUtils.getOnlinePPlayers().size())
                     text.append(PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(player))).append(", ");
                 else
                     text.append(PlayerUtils.getAbsoluteDiscord(PlayerUtils.getOrGetSavableUser(player))).append(".");
             } else {
-                if (i < StreamLine.getInstance().getProxy().getPlayers().size())
+                if (i < PlayerUtils.getOnlinePPlayers().size())
                     text.append("HIDDEN").append(", ");
                 else
                     text.append("HIDDEN").append(".");

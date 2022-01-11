@@ -89,7 +89,7 @@ public class ChatChannelCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         if (args.length <= 1) {
             return TextUtils.getCompletion(ChatsHandler.getChannelsAsStrings(), args[0]);
         }

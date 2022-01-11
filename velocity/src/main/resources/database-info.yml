@@ -1,7 +1,0 @@
-# Set host to '' to disable.
-host: '0.0.0.0'
-port: '3306'
-user: "admin"
-pass: "ChangeMeThisWillNotWorkLikeThis"
-pref: "sl_"
-database: "streamline"

@@ -37,8 +37,8 @@ public class ProxyPingListener implements Listener {
 
         if (ConfigUtils.scMOTD()) {
             response.setDescriptionComponent(TextUtils.clhText(StreamLine.getInstance().getCurrentMOTD()
-                        .replace("%online%", String.valueOf(onlinePlayers))
-                        .replace("%max%", String.valueOf(maxPlayers))
+                            .replace("%online%", String.valueOf(onlinePlayers))
+                            .replace("%max%", String.valueOf(maxPlayers))
                     , ConfigUtils.linkPre()));
 
 //            if (ConfigUtils.debug()) MessagingUtils.logInfo(TextUtils.codedString(StreamLine.getInstance().getCurrentMOTD()

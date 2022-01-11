@@ -24,12 +24,12 @@ public class IgnoreCommand extends SLCommand {
 
     @Override
     public void run(CommandSender sender, String[] args) {
-        SavableUser stat = PlayerUtils.getOrGetSavableUser(sender.getName());
+        SavableUser stat = PlayerUtils.getOrGetSavableUser(PlayerUtils.getSourceName(sender));
 
         if (stat == null) {
             stat = PlayerUtils.getOrGetSavableUser(sender);
             if (stat == null) {
-                MessagingUtils.logSevere("CANNOT INSTANTIATE THE PLAYER: " + sender.getName());
+                MessagingUtils.logSevere("CANNOT INSTANTIATE THE PLAYER: " + PlayerUtils.getSourceName(sender));
                 MessagingUtils.sendBUserMessage(sender, MessageConfUtils.bungeeCommandErrorUnd()
                             .replace("%class%", this.getClass().getName())
                     );
@@ -54,9 +54,7 @@ public class IgnoreCommand extends SLCommand {
                 other = PlayerUtils.getOrGetSavableUser("%");
             } else {
                 if (! PlayerUtils.exists(args[1])) {
-                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName())
-                            .replace("%class%", this.getClass().getName())
-                    );
+                    MessagingUtils.sendBUserMessage(sender, PlayerUtils.noStatsFound.replace("%class%", this.getClass().getName()));
                     return;
                 }
 
@@ -81,7 +79,7 @@ public class IgnoreCommand extends SLCommand {
                         return;
                     }
 
-                    stat.tryAddNewIgnored(other.uuid);
+                    stat.addIgnoredPlayer(other.uuid);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.ignoreAddSelf(), sender)
                     );
                     if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof SavableConsole) {
@@ -101,7 +99,7 @@ public class IgnoreCommand extends SLCommand {
                         return;
                     }
 
-                    stat.tryRemIgnored(other.uuid);
+                    stat.removeIgnoredPlayer(other.uuid);
                     MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.ignoreRemSelf(), sender)
                     );
                     if ((other instanceof SavablePlayer && ((SavablePlayer) other).online) || other instanceof SavableConsole) {
@@ -119,8 +117,8 @@ public class IgnoreCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args) {
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> ignored = new ArrayList<>();
 
@@ -134,7 +132,7 @@ public class IgnoreCommand extends SLCommand {
 
         for (ProxiedPlayer pl : players) {
             if (pl.equals(sender)) continue;
-            strPlayers.add(pl.getName());
+            strPlayers.add(PlayerUtils.getSourceName(pl));
         }
 
         strPlayers.add("%");

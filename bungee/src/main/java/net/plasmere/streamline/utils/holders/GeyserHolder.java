@@ -1,18 +1,21 @@
 package net.plasmere.streamline.utils.holders;
 
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.GeyserFile;
 import net.plasmere.streamline.utils.MessagingUtils;
-import org.geysermc.connector.GeyserConnector;
-import org.geysermc.connector.network.session.GeyserSession;
+import net.plasmere.streamline.utils.PlayerUtils;
+import org.geysermc.geyser.GeyserImpl;
+import org.geysermc.geyser.GeyserMain;
+import org.geysermc.geyser.session.GeyserSession;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GeyserHolder {
     public File playerPath = new File(StreamLine.getInstance().getPlDir(), "geyser" + File.separator);
-    public GeyserConnector connector;
+//    public GeyserImpl geyser;
     public boolean enabled;
     public GeyserFile file;
 
@@ -26,13 +29,14 @@ public class GeyserHolder {
     }
 
     public boolean isPresent(){
-        if (ProxyServer.getInstance().getPluginManager().getPlugin("Geyser") == null) {
+        if (StreamLine.getInstance().getProxy().getPluginManager().getPlugin("geyser") == null && StreamLine.getInstance().getProxy().getPluginManager().getPlugin("Geyser") == null) {
             return false;
         }
 
         try {
-            this.connector = GeyserConnector.getInstance();
-            MessagingUtils.logInfo("Geyser is installed... Using Geyser support...");
+//            this.geyser = GeyserImpl.getInstance();
+//            if (this.geyser == null) MessagingUtils.logWarning("Geyser is installed, but we could not get the instance!");
+//            else MessagingUtils.logInfo("Geyser is installed! Using Geyser support!");
             return true;
         } catch (Exception e) {
             return false;
@@ -47,36 +51,46 @@ public class GeyserHolder {
         }
     }
 
-    public void checkConnector(){
-        if (connector == null) this.connector = GeyserConnector.getInstance();
+//    public void checkConnector(){
+//        if (geyser == null) this.geyser = GeyserImpl.getInstance();
+//    }
+
+    public List<GeyserSession> getPlayers() {
+//        checkConnector();
+
+        return GeyserImpl.getInstance().onlineConnections();
+    }
+
+    public String getName(GeyserSession session) {
+        return session.getPlayerEntity().getNametag();
+    }
+
+    public String getXUID(GeyserSession session) {
+        return session.getAuthData().xuid();
     }
 
     public boolean isGeyserPlayer(ProxiedPlayer player) {
-        checkConnector();
+//        checkConnector();
 
-        for (GeyserSession session : connector.getPlayers()) {
-            if (session.getName().equals(player.getName())) return true;
+        for (GeyserSession session : getPlayers()) {
+            if (getName(session).equals(PlayerUtils.getSourceName(player))) return true;
         }
 
         return false;
     }
 
     public boolean isGeyserPlayer(String player) {
-        checkConnector();
-
-        for (GeyserSession session : connector.getPlayers()) {
-            if (session.getName().equals(player)) return true;
+        for (GeyserSession session : getPlayers()) {
+            if (getName(session).equals(player)) return true;
         }
 
         return false;
     }
 
     public String getGeyserUUID(String player) {
-        checkConnector();
-
-        for (GeyserSession session : connector.getPlayers()) {
-            if (session.getName().equals(player)) {
-                return session.getAuthData().getXboxUUID();
+        for (GeyserSession session : getPlayers()) {
+            if (getName(session).equals(player)) {
+                return getXUID(session);
             }
         }
 
@@ -84,10 +98,8 @@ public class GeyserHolder {
     }
 
     public ProxiedPlayer getPPlayerByUUID(String uuid){
-        checkConnector();
-
-        for (GeyserSession session : connector.getPlayers()) {
-            if (session.getAuthData().getXboxUUID().equals(uuid)) StreamLine.getInstance().getProxy().getPlayer(session.getName());
+        for (GeyserSession session : getPlayers()) {
+            if (getXUID(session).equals(uuid)) StreamLine.getInstance().getProxy().getPlayer(getName(session));
         }
 
         return null;

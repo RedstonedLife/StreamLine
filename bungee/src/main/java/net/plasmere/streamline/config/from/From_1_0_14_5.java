@@ -4,10 +4,10 @@ import net.plasmere.streamline.utils.MessagingUtils;
 
 import java.util.Arrays;
 
-public class From_1_0_14_5 extends From{
+public class From_1_0_14_5 extends From {
     public From_1_0_14_5(String language) {
-        super(language);
-    }
+    super(language);
+}
 
     @Override
     public String versionFrom() {

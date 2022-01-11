@@ -1,9 +1,9 @@
 package net.plasmere.streamline.utils.api;
 
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
 import net.plasmere.streamline.StreamLine;
+
 import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.enums.Action;
@@ -97,7 +97,7 @@ public class EventBuilder {
         if(!f.exists()){
             try{
                 f.createNewFile();
-                Configuration conf = ConfigurationProvider.getProvider(YamlConfiguration.class).load(f);
+                Config conf = LightningBuilder.fromFile(f).createConfig();
                 conf.set("tags",tags);
 
                 for(int i = 0; i<conditions.size(); i++){

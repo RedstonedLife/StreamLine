@@ -11,8 +11,10 @@ import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.List;
+import java.util.Optional;
 
-public class ChannelCommand {public static String usage = "Usage: channel <set | remove> <channel name> <identifier> <bypass: true or false> <joins: true or false> <leaves: true or false> <message-type: normal or embedded>";
+public class ChannelCommand {
+    public static String usage = "Usage: channel <set | remove> <channel name> <identifier> <bypass: true or false> <joins: true or false> <leaves: true or false> <message-type: normal or embedded>";
 
     public static void sendMessage(String command, MessageReceivedEvent event){
         EmbedBuilder eb = new EmbedBuilder();

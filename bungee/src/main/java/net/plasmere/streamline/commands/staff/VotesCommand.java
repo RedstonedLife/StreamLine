@@ -17,9 +17,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class VotesCommand extends SLCommand {
-
-    public VotesCommand(String base, String perm, String[] aliases){
-        super(base, perm, aliases);
+    public VotesCommand(String base, String permission, String... aliases) {
+        super(base, permission, aliases);
     }
 
     @Override
@@ -58,8 +57,8 @@ public class VotesCommand extends SLCommand {
                         votes.remVotes(uuid, Integer.parseInt(args[2]));
 
                         MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllSenderBungee(
-                                TextUtils.replaceAllPlayerBungee(MessageConfUtils.votesRemove(), PlayerUtils.getOrGetSavableUser(args[0])),
-                                PlayerUtils.getOrGetSavableUser(sender))
+                                        TextUtils.replaceAllPlayerBungee(MessageConfUtils.votesRemove(), PlayerUtils.getOrGetSavableUser(args[0])),
+                                        PlayerUtils.getOrGetSavableUser(sender))
                                 .replace("%votes%", args[2])
                         );
                     } catch (Exception e) {
@@ -124,7 +123,7 @@ public class VotesCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         List<ProxiedPlayer> players = new ArrayList<>(PlayerUtils.getOnlinePPlayers());
         List<String> strPlayers = new ArrayList<>();
         List<String> secondTab = new ArrayList<>();

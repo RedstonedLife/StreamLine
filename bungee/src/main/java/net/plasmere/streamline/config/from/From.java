@@ -1,11 +1,11 @@
 package net.plasmere.streamline.config.from;
 
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
+import de.leonhard.storage.sections.FlatFileSection;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigHandler;
-import net.plasmere.streamline.objects.enums.FileEntryRefactorType;
+import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.utils.MessagingUtils;
 
@@ -21,8 +21,8 @@ public abstract class From {
         DISCORDBOT,
         COMMANDS,
         CHATS,
-        RANKS,
         VOTES,
+        RANKS,
     }
 
     // TreeMap < locale name , TreeMap < order , SingleSet < path , stringed value > > >
@@ -34,12 +34,12 @@ public abstract class From {
     public TreeMap<Integer, SingleSet<String, Object>> commands = new TreeMap<>();
     public TreeMap<Integer, SingleSet<String, Object>> chats = new TreeMap<>();
 
-    public Configuration c;
-    public Configuration m;
-    public Configuration sc;
-    public Configuration dis;
-    public Configuration comm;
-    public Configuration ch;
+    public Config c;
+    public Config m;
+    public Config sc;
+    public Config dis;
+    public Config comm;
+    public Config ch;
 
     //    public static final StreamLine inst = StreamLine.getInstance();
     public final String cstring = "config.yml";
@@ -123,7 +123,7 @@ public abstract class From {
         ch = getFirstChats();
     }
 
-    public Configuration getFirstConfig() {
+    public Config getFirstConfig() {
         if (! cfile.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(cstring)){
                 Files.copy(in, cfile.toPath());
@@ -132,18 +132,10 @@ public abstract class From {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(cfile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
+        return LightningBuilder.fromFile(cfile).createConfig();
     }
 
-    public Configuration getFirstTranslations(String language) {
+    public Config getFirstTranslations(String language) {
         if (! translationPath.exists()) if (! translationPath.mkdirs()) MessagingUtils.logSevere("COULD NOT MAKE TRANSLATION FOLDER(S)!");
 
         if (! en_USFile.exists()) {
@@ -162,17 +154,10 @@ public abstract class From {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(mfile(language));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return thing;
+        return LightningBuilder.fromFile(mfile(language)).createConfig();
     }
 
-    public Configuration getFirstServerConfig() {
+    public Config getFirstServerConfig() {
         if (! scfile.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(setstring)){
                 Files.copy(in, scfile.toPath());
@@ -181,18 +166,10 @@ public abstract class From {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(scfile); // ???
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
+        return LightningBuilder.fromFile(scfile).createConfig();
     }
 
-    public Configuration getFirstDiscordBot() {
+    public Config getFirstDiscordBot() {
         if (! disbotFile.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(disbotString)){
                 Files.copy(in, disbotFile.toPath());
@@ -201,18 +178,10 @@ public abstract class From {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(disbotFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
+        return LightningBuilder.fromFile(disbotFile).createConfig();
     }
 
-    public Configuration getFirstCommands() {
+    public Config getFirstCommands() {
         if (! commandFile.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(commandString)){
                 Files.copy(in, commandFile.toPath());
@@ -221,18 +190,10 @@ public abstract class From {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(commandFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
+        return LightningBuilder.fromFile(commandFile).createConfig();
     }
 
-    public Configuration getFirstChats() {
+    public Config getFirstChats() {
         if (! chatsFile.exists()){
             try	(InputStream in = StreamLine.getInstance().getResourceAsStream(chatsString)){
                 Files.copy(in, chatsFile.toPath());
@@ -241,15 +202,7 @@ public abstract class From {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(chatsFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
+        return LightningBuilder.fromFile(chatsFile).createConfig();
     }
 
     public abstract void setupConfigFix();
@@ -258,18 +211,6 @@ public abstract class From {
     public abstract void setupDiscordBotFix();
     public abstract void setupCommandsFix();
     public abstract void setupChatsFix();
-
-//    public void refactorClass(FileType of, String pathTo, FileEntryRefactorType type) {
-//        switch (of) {
-//            case CHATS -> {
-//                switch (type) {
-//                    case INT -> {
-//                        addUpdatedChatsEntry(pathTo, Integer.valueOf(ch.get));
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     public void addUpdatedConfigEntry(String path, Object object) {
         int putInt = 0;
@@ -331,17 +272,9 @@ public abstract class From {
     public int applyConfig() {
         int applied = 0;
 
-        for (int itgr : config.singleLayerKeySet()) {
+        for (int itgr : config.keySet()) {
             c.set(config.get(itgr).key, config.get(itgr).value);
             applied ++;
-        }
-
-        if (applied > 0) {
-            try {
-                ConfigurationProvider.getProvider(YamlConfiguration.class).save(c, cfile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         return applied;
@@ -350,18 +283,10 @@ public abstract class From {
     public int applyLocales() {
         int applied = 0;
 
-        for (String locale : locales.singleLayerKeySet()) {
-            for (int itgr : locales.get(locale).singleLayerKeySet()) {
+        for (String locale : locales.keySet()) {
+            for (int itgr : locales.get(locale).keySet()) {
                 m.set(locales.get(locale).get(itgr).key, locales.get(locale).get(itgr).value);
                 applied ++;
-            }
-
-            if (locales.get(locale).singleLayerKeySet().size() > 0) {
-                try {
-                    ConfigurationProvider.getProvider(YamlConfiguration.class).save(m, mfile(locale));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         }
 
@@ -371,17 +296,9 @@ public abstract class From {
     public int applyServerConfig() {
         int applied = 0;
 
-        for (int itgr : serverConfig.singleLayerKeySet()) {
+        for (int itgr : serverConfig.keySet()) {
             sc.set(serverConfig.get(itgr).key, serverConfig.get(itgr).value);
             applied ++;
-        }
-
-        if (applied > 0) {
-            try {
-                ConfigurationProvider.getProvider(YamlConfiguration.class).save(sc, scfile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         return applied;
@@ -390,17 +307,9 @@ public abstract class From {
     public int applyDiscordBot() {
         int applied = 0;
 
-        for (int itgr : discordBot.singleLayerKeySet()) {
+        for (int itgr : discordBot.keySet()) {
             dis.set(discordBot.get(itgr).key, discordBot.get(itgr).value);
             applied ++;
-        }
-
-        if (applied > 0) {
-            try {
-                ConfigurationProvider.getProvider(YamlConfiguration.class).save(dis, disbotFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         return applied;
@@ -409,17 +318,9 @@ public abstract class From {
     public int applyCommands() {
         int applied = 0;
 
-        for (int itgr : commands.singleLayerKeySet()) {
+        for (int itgr : commands.keySet()) {
             comm.set(commands.get(itgr).key, commands.get(itgr).value);
             applied ++;
-        }
-
-        if (applied > 0) {
-            try {
-                ConfigurationProvider.getProvider(YamlConfiguration.class).save(comm, commandFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         return applied;
@@ -428,96 +329,36 @@ public abstract class From {
     public int applyChats() {
         int applied = 0;
 
-        for (int itgr : chats.singleLayerKeySet()) {
+        for (int itgr : chats.keySet()) {
             ch.set(chats.get(itgr).key, chats.get(itgr).value);
             applied ++;
-        }
-
-        if (applied > 0) {
-            try {
-                ConfigurationProvider.getProvider(YamlConfiguration.class).save(ch, chatsFile);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         return applied;
     }
 
-    public void saveAllConfigurations() {
-        saveConfig();
-        saveLocales();
-        saveSettingsConfig();
-        saveDiscordBot();
-        saveCommands();
-        saveChats();
-    }
-
-    public void saveConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(c, cfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveLocales() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(m, mfile(this.language));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveSettingsConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(sc, scfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveDiscordBot() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(dis, disbotFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveCommands() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(comm, commandFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveChats() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(ch, chatsFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean hasKeys(Configuration configuration) {
+    public boolean hasKeys(ConfigSection configuration) {
         if (configuration.getKeys().size() > 0) return true;
         else return false;
     }
 
-    public void findDeepKeys(Configuration base, String currSearch, FileType toFileType) {
+    public boolean hasKeys(Config configuration) {
+        if (configuration.singleLayerKeySet().size() > 0) return true;
+        else return false;
+    }
+
+    public void findDeepKeys(Config base, String currSearch, FileType toFileType) {
         if (hasKeys(base)) {
             boolean trial = false;
 
             try {
-                trial = hasKeys(base.getSection(currSearch));
+                trial = hasKeys(new ConfigSection(base.getSection(currSearch)));
             } catch (Exception e) {
                 // do nothing
             }
 
             if (trial) {
-                for (String key : base.getSection(currSearch).getKeys()) {
+                for (String key : base.getSection(currSearch).singleLayerKeySet()) {
                     findDeepKeys(base, currSearch + "." + key, toFileType);
                 }
             } else {
@@ -591,11 +432,11 @@ public abstract class From {
         }
     }
 
-    public void iterateDeepPaths(Configuration base, String fromPath, String toPath, String currSearch, FileType fileType, String language) {
+    public void iterateDeepPaths(Config base, String fromPath, String toPath, String currSearch, FileType fileType, String language) {
         boolean trial = false;
 
         try {
-            trial = hasKeys(base.getSection(currSearch));
+            trial = hasKeys(new ConfigSection(base.getSection(currSearch)));
         } catch (Exception e) {
             // do nothing
         }
@@ -611,7 +452,7 @@ public abstract class From {
 //            base.set(newPath, obj);
 //            base.set(currSearch, null);
         } else {
-            for (String key : base.getSection(currSearch).getKeys()) {
+            for (String key : base.getSection(currSearch).singleLayerKeySet()) {
                 iterateDeepPaths(base, fromPath, toPath, currSearch + "." + key, fileType, language);
             }
         }
@@ -675,7 +516,7 @@ public abstract class From {
         }
     }
 
-    public Object setNull(Configuration configuration, String path) {
+    public Object setNull(Config configuration, String path) {
         Object obj = configuration.get(path);
         configuration.set(path, null);
         return obj;
@@ -708,18 +549,18 @@ public abstract class From {
         }
     }
 
-    public void replaceDeep(Configuration base, String currSearch, FileType toFileType, String from, String to) {
+    public void replaceDeep(Config base, String currSearch, FileType toFileType, String from, String to) {
         if (hasKeys(base)) {
             boolean trial = false;
 
             try {
-                trial = hasKeys(base.getSection(currSearch));
+                trial = hasKeys(new ConfigSection(base.getSection(currSearch)));
             } catch (Exception e) {
                 // do nothing
             }
 
             if (trial) {
-                for (String key : base.getSection(currSearch).getKeys()) {
+                for (String key : base.getSection(currSearch).singleLayerKeySet()) {
                     findDeepKeys(base, currSearch + "." + key, toFileType);
                 }
             } else {
@@ -759,8 +600,8 @@ public abstract class From {
         }
     }
 
-    public void replaceLoop(Configuration base, FileType of, String from, String to) {
-        for (String key : base.getKeys()) {
+    public void replaceLoop(Config base, FileType of, String from, String to) {
+        for (String key : base.singleLayerKeySet()) {
             replaceDeep(base, key, of, from, to);
         }
     }
@@ -790,7 +631,7 @@ public abstract class From {
 
     public void applyCatchAlls() {
         MessagingUtils.logSevere("Could not fix occurrences in your server config because it is currently disabled by the plugin maker! (To fix!)");
-        for (String regex : catchAll_values.singleLayerKeySet()) {
+        for (String regex : catchAll_values.keySet()) {
             for (FileType of : FileType.values()) {
                 replaceAllOccurrencesInFiles(of, regex, catchAll_values.get(regex));
             }

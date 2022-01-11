@@ -2,7 +2,7 @@ package net.plasmere.streamline.commands.staff.punishments;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.config.Configuration;
+import de.leonhard.storage.Config;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 public class BanCommand extends SLCommand {
-    private Configuration bans = StreamLine.bans.getBans();
+    private Config bans = StreamLine.bans.getBans();
 
     public BanCommand(String base, String perm, String[] aliases){
         super(base, perm, aliases);
@@ -77,7 +77,6 @@ public class BanCommand extends SLCommand {
                     bans.set(otherUUID + ".reason", reason);
                     bans.set(otherUUID + ".till", till);
                     bans.set(otherUUID + ".sentenced", Instant.now().toString());
-                    StreamLine.bans.saveConfig();
 
                     if (PlayerUtils.isOnline(otherName)) {
                         ProxiedPlayer pp = PlayerUtils.getPPlayerByUUID(otherUUID);
@@ -102,7 +101,7 @@ public class BanCommand extends SLCommand {
                                             sender,
                                             MessageConfUtils.banEmbed(),TextUtils.replaceAllPlayerDiscord(
                                             MessageConfUtils.banBTempDiscord(), user)
-                                                    .replace("%punisher%", sender.getName())
+                                                    .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                     .replace("%reason%", reason)
                                                     .replace("%date%", new Date(Long.parseLong(till)).toString())
                                             ,
@@ -113,7 +112,7 @@ public class BanCommand extends SLCommand {
                     }
 
                     MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempStaff(), user)
-                            .replace("%punisher%", sender.getName())
+                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                             .replace("%reason%", reason)
                             .replace("%date%", new Date(Long.parseLong(till)).toString())
                     );
@@ -137,7 +136,6 @@ public class BanCommand extends SLCommand {
                 bans.set(otherUUID + ".reason", reason);
                 bans.set(otherUUID + ".till", "");
                 bans.set(otherUUID + ".sentenced", Instant.now().toString());
-                StreamLine.bans.saveConfig();
 
                 if (PlayerUtils.isOnline(otherName)) {
                     ProxiedPlayer pp = PlayerUtils.getPPlayerByUUID(otherUUID);
@@ -160,7 +158,7 @@ public class BanCommand extends SLCommand {
                                         sender,
                                         MessageConfUtils.banEmbed(), TextUtils.replaceAllPlayerDiscord(
                                         MessageConfUtils.banBPermDiscord(), user)
-                                                .replace("%punisher%", sender.getName())
+                                                .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                                 .replace("%reason%", reason)
                                         ,
                                         DiscordBotConfUtils.textChannelBans()
@@ -170,7 +168,7 @@ public class BanCommand extends SLCommand {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBPermStaff(), user)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                         .replace("%reason%", reason)
                 );
             } else if (args[0].equals("temp")) {
@@ -214,7 +212,6 @@ public class BanCommand extends SLCommand {
                 bans.set(otherUUID + ".reason", reason);
                 bans.set(otherUUID + ".till", till);
                 bans.set(otherUUID + ".sentenced", Instant.now().toString());
-                StreamLine.bans.saveConfig();
 
                 if (PlayerUtils.isOnline(otherName)) {
                     ProxiedPlayer pp = PlayerUtils.getPPlayerByUUID(otherUUID);
@@ -238,7 +235,7 @@ public class BanCommand extends SLCommand {
                                     sender,
                                     MessageConfUtils.banEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.banBTempDiscord(), user)
-                                            .replace("%punisher%", sender.getName())
+                                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                             .replace("%reason%", reason)
                                             .replace("%date%", new Date(Long.parseLong(till)).toString())
                                     ,
@@ -248,7 +245,7 @@ public class BanCommand extends SLCommand {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.banBTempStaff(), user)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                         .replace("%reason%", reason)
                         .replace("%date%", new Date(Long.parseLong(till)).toString())
                 );
@@ -260,7 +257,6 @@ public class BanCommand extends SLCommand {
                 }
 
                 bans.set(otherUUID + ".banned", false);
-                StreamLine.bans.saveConfig();
 
                 MessagingUtils.sendBUserMessage(sender, TextUtils.replaceAllPlayerBungee(MessageConfUtils.banUnSender(), user)
                 );
@@ -271,7 +267,7 @@ public class BanCommand extends SLCommand {
                                     sender,
                                     MessageConfUtils.banEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.banUnDiscord(), user)
-                                            .replace("%punisher%", sender.getName())
+                                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                     ,
                                     DiscordBotConfUtils.textChannelBans()
                             )
@@ -279,7 +275,7 @@ public class BanCommand extends SLCommand {
                 }
 
                 MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(), TextUtils.replaceAllPlayerBungee(MessageConfUtils.banUnStaff(), user)
-                        .replace("%punisher%", sender.getName())
+                        .replace("%punisher%", PlayerUtils.getSourceName(sender))
                 );
             } else if (args[0].equals("check")) {
                 String reason = bans.getString(otherUUID + ".reason");
@@ -297,17 +293,17 @@ public class BanCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args) {
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
         List<String> banned = new ArrayList<>();
 
         for (ProxiedPlayer player : players){
             if (sender instanceof ProxiedPlayer) if (player.equals(sender)) continue;
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
-        for (String uuid : bans.getKeys()) {
+        for (String uuid : bans.singleLayerKeySet()) {
             if (uuid.contains("_")) continue;
             if (bans.getBoolean(uuid + ".banned")) banned.add(UUIDUtils.getCachedName(uuid));
         }

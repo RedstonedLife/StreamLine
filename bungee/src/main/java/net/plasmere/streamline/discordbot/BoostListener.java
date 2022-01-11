@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 
 public class BoostListener extends ListenerAdapter {
     public BoostListener() {
-        if (! ConfigUtils.moduleDEnabled()) return;
+        if (!ConfigUtils.moduleDEnabled()) return;
         MessagingUtils.logInfo("Boost listener registered!");
     }
 

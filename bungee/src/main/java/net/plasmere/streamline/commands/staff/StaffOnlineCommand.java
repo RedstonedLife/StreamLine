@@ -7,6 +7,7 @@ import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.MessageConfUtils;
 import net.plasmere.streamline.objects.command.SLCommand;
 import net.plasmere.streamline.utils.MessagingUtils;
+import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.TextUtils;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class StaffOnlineCommand extends SLCommand {
     }
 
     public void run(CommandSender sender, String[] args){
-        Collection<ProxiedPlayer> staffs = StreamLine.getInstance().getProxy().getPlayers();
+        Collection<ProxiedPlayer> staffs = PlayerUtils.getOnlinePPlayers();
         Set<ProxiedPlayer> lstaffs = new HashSet<>(staffs);
 
         for (ProxiedPlayer player : staffs){
@@ -61,7 +62,7 @@ public class StaffOnlineCommand extends SLCommand {
     }
 
     @Override
-    public Collection<String> tabComplete(CommandSender sender, String[] args) {
+    public Collection<String> onTabComplete(CommandSender sender, String[] args) {
         return new ArrayList<>();
     }
 }

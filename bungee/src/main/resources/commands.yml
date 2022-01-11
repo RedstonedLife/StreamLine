@@ -235,9 +235,6 @@ commands:
           - "wa"
           - "summon"
           - "warp"
-        sync:
-          - "sync"
-          - "s"
       # All permissions for the command.
       permissions:
         # Join subcommand.
@@ -272,7 +269,6 @@ commands:
         mute: "streamline.command.party.mute"
         # Warp subcommand.
         warp: "streamline.command.party.warp"
-        sync: "streamline.command.party.sync"
     # The guild command.
     guild:
       # Enables / disables the use of the "guild" bungee command.
@@ -378,9 +374,6 @@ commands:
           - "rename"
           - "ren"
           - "rn"
-        sync:
-          - "sync"
-          - "s"
       # All permissions for the command.
       permissions:
         # Join subcommand.
@@ -417,7 +410,6 @@ commands:
         warp: "streamline.command.guild.warp"
         info: "streamline.command.guild.info"
         rename: "streamline.command.guild.rename"
-        sync: "streamline.command.guild.sync"
     # Stats command.
     stats:
       # Enables / disables the use of the "stats" bungee command.
@@ -840,6 +832,42 @@ commands:
         aliases:
           - "bvotes"
           - "bvot"
+      # The playtime command.
+      playtime:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "playtime"
+        # Custom permission.
+        permission: "streamline.command.playtime"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "bplaytime"
+          - "bpt"
+      # The playtime command.
+      msbexecute:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "msbexecute"
+        # Custom permission.
+        permission: "streamline.command.mysqlbridger.execute"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "dbexecute"
+          - "dbex"
+      # The playtime command.
+      msbquery:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "msbquery"
+        # Custom permission.
+        permission: "streamline.command.mysqlbridger.query"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "dbquery"
+          - "dbq"
     # For messaging commands...
     messaging:
       # The ignore command.

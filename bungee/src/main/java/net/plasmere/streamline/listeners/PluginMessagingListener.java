@@ -31,7 +31,7 @@ public class PluginMessagingListener implements Listener {
                 ProxiedPlayer receiver = (ProxiedPlayer) event.getReceiver();
 
                 String data = in.readUTF();
-                if (data.equals("")) data = PlayerUtils.getOrCreatePlayerStat(receiver).displayName;
+                if (data.equals("")) data = PlayerUtils.getOrGetSavableUser(receiver).displayName;
 
                 MessagingUtils.serveredUsernames.put(receiver, data);
             }
@@ -41,7 +41,7 @@ public class PluginMessagingListener implements Listener {
                 ProxiedPlayer receiver = (ProxiedPlayer) event.getReceiver();
 
                 String data = in.readUTF();
-                if (data.equals("")) data = PlayerUtils.getOrCreatePlayerStat(receiver).latestName;
+                if (data.equals("")) data = PlayerUtils.getOrGetSavableUser(receiver).latestName;
                 String scriptName = in.readUTF();
                 if (! scriptName.equals("")) {
                     SavablePlayer player = PlayerUtils.getOrGetPlayerStat(data);

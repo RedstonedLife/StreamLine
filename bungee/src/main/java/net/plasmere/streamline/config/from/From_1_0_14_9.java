@@ -1,7 +1,5 @@
 package net.plasmere.streamline.config.from;
 
-import java.util.Arrays;
-
 public class From_1_0_14_9 extends From{
     public From_1_0_14_9(String language) {
         super(language);

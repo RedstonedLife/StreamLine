@@ -1,10 +1,10 @@
 package net.plasmere.streamline.objects.savable.history;
 
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
+import de.leonhard.storage.Config;
+import de.leonhard.storage.LightningBuilder;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
+
 import net.plasmere.streamline.utils.MessagingUtils;
 import org.apache.commons.collections4.list.TreeList;
 
@@ -14,7 +14,7 @@ import java.time.Instant;
 import java.util.TreeMap;
 
 public class HistorySave {
-    private Configuration conf;
+    private Config conf;
     public String fileString;
     public File file;
     public String uuid;
@@ -35,7 +35,7 @@ public class HistorySave {
         }
     }
 
-    public Configuration loadConfig(){
+    public Config loadConfig(){
         if (! file.exists()){
             try {
                 if (! file.createNewFile()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Could not make HistorySave file " + file.getName() + "!");
@@ -44,23 +44,7 @@ public class HistorySave {
             }
         }
 
-        Configuration thing = new Configuration();
-
-        try {
-            thing = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file); // ???
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return thing;
-    }
-
-    public void saveConfig() {
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(conf, file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return LightningBuilder.fromFile(file).createConfig();
     }
 
     public String addLine(String server, String message) {
@@ -69,17 +53,16 @@ public class HistorySave {
 
     public String addLine(String server, long milliDate, String message) {
         conf.set(server + "." + milliDate, message);
-        saveConfig();
         reloadConfig();
         return message;
     }
 
     public TreeList<String> getTimestamps(String server) {
-        return new TreeList<>(conf.getSection(server).getKeys());
+        return new TreeList<>(conf.getSection(server).singleLayerKeySet());
     }
 
     public TreeList<String> getTalkedInServers() {
-        return new TreeList<>(conf.getKeys());
+        return new TreeList<>(conf.singleLayerKeySet());
     }
 
     public TreeMap<Long, String> getTimestampsWithMessageFrom(String timestampFrom, String server) {
@@ -98,10 +81,6 @@ public class HistorySave {
             try {
                 long timestamp = Long.parseLong(t);
                 if (timestamp >= timestampF) {
-//                    if (map.size() == 0) {
-//                        map.put(timestamp, conf.getString(server + "." + t).substring(2));
-//                        continue;
-//                    }
                     map.put(timestamp, conf.getString(server + "." + t));
                 }
             } catch (Exception e) {

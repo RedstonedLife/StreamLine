@@ -61,7 +61,7 @@ public class KickCommand extends SLCommand {
                                     sender,
                                     MessageConfUtils.kickEmbed(),
                                     TextUtils.replaceAllPlayerDiscord(MessageConfUtils.kickDiscord(), other)
-                                            .replace("%punisher%", sender.getName())
+                                            .replace("%punisher%", PlayerUtils.getSourceName(sender))
                                             .replace("%reason%", reason)
                                     ,
                                     DiscordBotConfUtils.textChannelKicks()
@@ -72,20 +72,20 @@ public class KickCommand extends SLCommand {
 
             MessagingUtils.sendPermissionedMessageNonSelf(sender, ConfigUtils.staffPerm(),
                     TextUtils.replaceAllPlayerBungee(MessageConfUtils.kickStaff(), other)
-                    .replace("%punisher%", sender.getName())
+                    .replace("%punisher%", PlayerUtils.getSourceName(sender))
                     .replace("%reason%", reason)
             );
         }
     }
 
     @Override
-    public Collection<String> tabComplete(final CommandSender sender, final String[] args) {
-        Collection<ProxiedPlayer> players = StreamLine.getInstance().getProxy().getPlayers();
+    public Collection<String> onTabComplete(final CommandSender sender, final String[] args) {
+        Collection<ProxiedPlayer> players = PlayerUtils.getOnlinePPlayers();
         List<String> strPlayers = new ArrayList<>();
 
         for (ProxiedPlayer player : players){
             if (sender instanceof ProxiedPlayer) if (player.equals(sender)) continue;
-            strPlayers.add(player.getName());
+            strPlayers.add(PlayerUtils.getSourceName(player));
         }
 
         if (args.length == 1) {
