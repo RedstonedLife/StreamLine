@@ -18,7 +18,7 @@ import java.io.File;
 import java.util.*;
 
 public abstract class SavableUser extends SavableFile {
-    private final SavableUser savableUser;
+    private SavableUser savableUser;
 
     public File file;
     public String latestName;
@@ -64,7 +64,7 @@ public abstract class SavableUser extends SavableFile {
 
                 if (player == null) return MessageConfUtils.nullB();
 
-                if (player.getCurrentServer().isPresent()) return ConfigUtils.consoleServer();
+                if (player.getCurrentServer().isEmpty()) return MessageConfUtils.nullB();
 
                 return player.getCurrentServer().get().getServerInfo().getName();
             } catch (Exception e) {
@@ -74,6 +74,8 @@ public abstract class SavableUser extends SavableFile {
     }
 
     public Optional<CommandSource> findSenderOptional() {
+        if (this.uuid == null) return Optional.empty();
+        if (this.uuid.equals("")) return Optional.empty();
         if (this.uuid.equals("%")) return Optional.ofNullable(StreamLine.getProxy().getConsoleCommandSource());
         else return Optional.ofNullable(PlayerUtils.getPPlayerByUUID(this.uuid));
     }
@@ -119,6 +121,9 @@ public abstract class SavableUser extends SavableFile {
 
     public SavableUser(String uuid, SavableAdapter.Type type) {
         super(uuid, type);
+
+        if (this.uuid == null) return;
+        if (this.uuid.equals("")) return;
 
         populateDefaults();
 

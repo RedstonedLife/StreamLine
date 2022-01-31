@@ -3,6 +3,7 @@ package net.plasmere.streamline.objects.savable.groups;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.savable.SavableAdapter;
 import net.plasmere.streamline.utils.MathUtils;
+import net.plasmere.streamline.utils.TextUtils;
 import net.plasmere.streamline.utils.sql.DataSource;
 
 public class SavableGuild extends SavableGroup {
@@ -110,6 +111,9 @@ public class SavableGuild extends SavableGroup {
         return this.totalXP - getCurrentLevelXP();
     }
 
+    public String returnDiscordName() {
+        return TextUtils.stripColor(name);
+    }
 
     public String setNameReturnOld(String newName) {
 //        loadValues();

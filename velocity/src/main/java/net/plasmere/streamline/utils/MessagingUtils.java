@@ -9,6 +9,7 @@ import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.kyori.adventure.title.TitlePart;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.config.DiscordBotConfUtils;
@@ -1205,21 +1206,37 @@ public class MessagingUtils {
         ));
     }
 
+    public static void sendBUserTitle(Player player, String msgUnsplit, int fadeIn, int stay, int fadeOut) {
+        msgUnsplit = TextUtils.replaceAllPlayerBungee(msgUnsplit, player);
+
+        if (! msgUnsplit.contains("%next%")) {
+            msgUnsplit = msgUnsplit + "%next% ";
+        }
+
+        String[] split = msgUnsplit.split("%next%");
+
+        try {
+            player.showTitle(TextUtils.codedTitle(split[0], split[1], fadeIn, stay, fadeOut));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void sendBUserMessage(CommandSource sender, String msg){
         if (sender instanceof Player) {
             SavablePlayer player = PlayerUtils.getOrGetPlayerStat(((Player) sender).getUniqueId().toString());
 
-            sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
+            sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), sender)
                     .replace("%version%", (player != null ? player.latestVersion : MessageConfUtils.nullB()))
             ));
         } else {
-            sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)));
+            sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), sender)));
         }
     }
 
     public static void sendBUserMessage(SavableUser sender, String msg){
         if (sender instanceof SavablePlayer) {
-            sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllSenderBungee(msg, sender)
+            sender.sendMessage(TextUtils.codedText(TextUtils.replaceAllPlayerBungee(TextUtils.replaceAllSenderBungee(msg, sender), sender)
                     .replace("%version%", Objects.requireNonNull(sender).latestVersion)
             ));
         }

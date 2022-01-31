@@ -2104,3 +2104,9 @@ mysqlbridger:
     not-supplied: "&cYou haven't supplied a query!"
     not-valid: "&cYou haven't supplied a valid query!"
     complete: "&eExecution &7(&c%set%&7) &efinished&8!"
+
+proxytext:
+  sent: "&eSuccessfully sent text: &r%text%"
+
+proxytitle:
+  sent: "&eSuccessfully sent title &7(&a%fade_in%&8, &a%stay%&8, &a%fade_out%&7)&e:%newline%&r%title%"

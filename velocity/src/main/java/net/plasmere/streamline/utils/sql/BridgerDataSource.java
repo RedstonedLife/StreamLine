@@ -1,84 +1,140 @@
 package net.plasmere.streamline.utils.sql;
 
+import com.velocitypowered.api.proxy.Player;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.objects.lists.SingleSet;
+import net.plasmere.streamline.objects.savable.users.SavableUser;
+import net.plasmere.streamline.utils.PluginUtils;
 import net.plasmere.streamline.utils.TextUtils;
+import net.plasmere.streamline.utils.objects.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public class BridgerDataSource {
-    public static String doQuery(String from, String... args) {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+    public static HashMap<Host, HikariDataSource> loadedHosts = new HashMap<>();
 
+    public static void reloadHikariHosts() {
+        loadedHosts.clear();
+        for (Host host : StreamLine.msbConfig.loadedHosts) {
             HikariConfig config = new HikariConfig();
             HikariDataSource ds;
 
-            SingleSet<String, String> set = StreamLine.msbConfig.getQueryDatabaseSet(from);
-
-            config.setJdbcUrl(StreamLine.msbConfig.getQueryLink(from));
-            config.setUsername(set.key);
-            config.setPassword(set.value);
+            config.setJdbcUrl(host.link);
+            config.setUsername(host.user);
+            config.setPassword(host.pass);
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
             config.addDataSourceProperty("allowMultiQueries", "true");
             ds = new HikariDataSource(config);
 
-            Connection connection = ds.getConnection();
+            loadedHosts.put(host, ds);
+        }
+    }
 
-            String query = StreamLine.msbConfig.getQuery(from);
+    public static String sync(Syncable syncable, SavableUser on) {
+        String pulled = pull(syncable.pullFrom, on);
+        push(syncable.pushTo, pulled, on, syncable.isString);
 
-            query = TextUtils.replaceArgs(query, args);
+        return pulled;
+    }
 
-            PreparedStatement statement = connection.prepareStatement(query);
+    public static String pull(PullAndPushInfo pullFrom, SavableUser on) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
 
-            ResultSet resultSet = statement.executeQuery();
+            HikariDataSource dataSource = loadedHosts.get(pullFrom.getHostAsHost());
+            Connection connection = dataSource.getConnection();
 
-            String toReturn = "";
+            String sql = "SELECT " + pullFrom.column + " FROM " + pullFrom.table + " WHERE " + pullFrom.where;
 
-            while (resultSet.next()) {
-                toReturn = String.valueOf(resultSet.getObject(1));
+            PreparedStatement statement = connection.prepareStatement(TextUtils.replaceAllPlayerBungee(sql, on));
+
+            ResultSet result = statement.executeQuery();
+
+            String pulled = "";
+
+            while (result.next()) {
+                pulled = String.valueOf(result.getObject(1));
             }
 
-            return toReturn;
+            return pulled;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             return StreamLine.msbConfig.getValuesError();
         }
     }
 
-    public static void doExecution(String from, String... args) {
+    public static void push(PullAndPushInfo pushTo, String thing, SavableUser on, boolean isString) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
 
-            HikariConfig config = new HikariConfig();
-            HikariDataSource ds;
+            HikariDataSource dataSource = loadedHosts.get(pushTo.getHostAsHost());
+            Connection connection = dataSource.getConnection();
 
-            SingleSet<String, String> set = StreamLine.msbConfig.getExecutionDatabaseSet(from);
+            String sql;
+            if (! isString) {
+                sql = "UPDATE " + pushTo.table + " SET " + pushTo.column + " = " + thing + " WHERE " + pushTo.where;
+            } else {
+                sql = "UPDATE " + pushTo.table + " SET " + pushTo.column + " = '" + thing + "' WHERE " + pushTo.where;
+            }
 
-            config.setJdbcUrl(StreamLine.msbConfig.getExecutionLink(from));
-            config.setUsername(set.key);
-            config.setPassword(set.value);
-            config.addDataSourceProperty("cachePrepStmts", "true");
-            config.addDataSourceProperty("prepStmtCacheSize", "250");
-            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-            config.addDataSourceProperty("allowMultiQueries", "true");
-            ds = new HikariDataSource(config);
+            PreparedStatement statement = connection.prepareStatement(TextUtils.replaceAllPlayerBungee(sql, on));
 
-            Connection connection = ds.getConnection();
+            statement.execute();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-            String execution = StreamLine.msbConfig.getExecution(from);
+    public static String query(CustomSQLInfo sqlInfo, SavableUser on, String... extra) {
+        SavedQueries q = PluginUtils.getSavedQueryByPlayer(on.uuid);
+        if (q != null) {
+            if (q.getTillExpiry(sqlInfo.identifier) > 0) {
+                return q.getResult(sqlInfo.identifier);
+            }
+        }
 
-            execution = TextUtils.replaceArgs(execution, args);
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
 
-            PreparedStatement statement = connection.prepareStatement(execution);
+            HikariDataSource dataSource = loadedHosts.get(sqlInfo.getHostAsHost());
+            Connection connection = dataSource.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement(TextUtils.replaceAllPlayerBungee(TextUtils.replaceArgs(sqlInfo.sql, extra), on));
+
+            ResultSet result = statement.executeQuery();
+
+            String pulled = "";
+
+            while (result.next()) {
+                pulled = String.valueOf(result.getObject(1));
+            }
+
+            PluginUtils.putQueryResult(on.uuid, sqlInfo.identifier, pulled);
+
+            return pulled;
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            return StreamLine.msbConfig.getValuesError();
+        }
+    }
+
+    public static void execute(CustomSQLInfo sqlInfo, SavableUser on, String... extra) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+
+            HikariDataSource dataSource = loadedHosts.get(sqlInfo.getHostAsHost());
+            Connection connection = dataSource.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement(TextUtils.replaceAllPlayerBungee(TextUtils.replaceArgs(sqlInfo.sql, extra), on));
 
             statement.execute();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | SQLException e) {

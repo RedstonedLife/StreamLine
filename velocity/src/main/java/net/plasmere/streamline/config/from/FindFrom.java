@@ -30,6 +30,7 @@ public class FindFrom {
                 new From_1_0_14_9(language);
                 new From_1_0_15_0(language);
                 new From_1_0_15_2(language);
+                new From_1_0_15_3(language);
                 break;
             case "1.0.14.0":
                 new From_1_0_14_0(language);
@@ -40,6 +41,7 @@ public class FindFrom {
                 new From_1_0_14_9(language);
                 new From_1_0_15_0(language);
                 new From_1_0_15_2(language);
+                new From_1_0_15_3(language);
                 break;
             case "1.0.14.1":
             case "1.0.14.2":
@@ -50,6 +52,7 @@ public class FindFrom {
                 new From_1_0_14_9(language);
                 new From_1_0_15_0(language);
                 new From_1_0_15_2(language);
+                new From_1_0_15_3(language);
                 break;
             case "1.0.14.3":
                 new From_1_0_14_3(language);
@@ -58,6 +61,7 @@ public class FindFrom {
                 new From_1_0_14_9(language);
                 new From_1_0_15_0(language);
                 new From_1_0_15_2(language);
+                new From_1_0_15_3(language);
                 break;
             case "1.0.14.4":
             case "1.0.14.5":
@@ -66,6 +70,7 @@ public class FindFrom {
                 new From_1_0_14_9(language);
                 new From_1_0_15_0(language);
                 new From_1_0_15_2(language);
+                new From_1_0_15_3(language);
                 break;
             case "1.0.14.6":
             case "1.0.14.7":
@@ -74,19 +79,26 @@ public class FindFrom {
                 new From_1_0_14_9(language);
                 new From_1_0_15_0(language);
                 new From_1_0_15_2(language);
+                new From_1_0_15_3(language);
                 break;
             case "1.0.14.9":
                 new From_1_0_14_9(language);
                 new From_1_0_15_0(language);
                 new From_1_0_15_2(language);
+                new From_1_0_15_3(language);
                 break;
             case "1.0.15.0":
                 new From_1_0_15_0(language);
                 new From_1_0_15_2(language);
+                new From_1_0_15_3(language);
                 break;
             case "1.0.15.1":
             case "1.0.15.2":
                 new From_1_0_15_2(language);
+                new From_1_0_15_3(language);
+                break;
+            case "1.0.15.3":
+                new From_1_0_15_3(language);
                 break;
         }
 

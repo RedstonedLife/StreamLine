@@ -53,10 +53,8 @@ public class DataSource {
 
         String query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = ? AND table_name = ?;";
 
-        try (Connection connection = getConnection())
-        {
-            try(PreparedStatement statement = connection.prepareStatement(query))
-            {
+        try (Connection connection = getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, StreamLine.databaseInfo.getDatabase());
                 statement.setString(2, "player_data");
 
@@ -64,28 +62,34 @@ public class DataSource {
 
                 int value = 0;
 
-                if(resultSet.next())
+                if (resultSet.next())
                     //TODO: THIS IS TESTED ONLY ON MARIADB, PLEASE TEST IT ON MYSQL.
                     query = "ALTER TABLE player_data ADD COLUMN IF NOT EXISTS playedSeconds INT NOT NULL DEFAULT '0';";
 
-                    try(PreparedStatement statement1 = connection.prepareStatement(query)) {
-                        statement1.execute();
-                    }
+                try (PreparedStatement statement1 = connection.prepareStatement(query)) {
+                    statement1.execute();
+                }
 
-                    value = resultSet.getInt(1);
+                value = resultSet.getInt(1);
 
-                if(value != 0) return;
+                if (value != 0) return;
             }
 
             query = SQLQueries.CREATE_TABLE.query;
-            try(PreparedStatement statement = connection.prepareStatement(query))
-            {
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.execute();
             }
-
-
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage().endsWith("doesn't exist")) {
+                try (Connection connection = getConnection()) {
+                    query = SQLQueries.CREATE_TABLE.query;
+                    try (PreparedStatement statement = connection.prepareStatement(query)) {
+                        statement.execute();
+                    }
+                } catch (SQLException ex) {
+                    if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while creating new verified tables): " + e.getMessage());
+                }
+            } else if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while verifying tables): " + e.getMessage());
         }
 
     }
@@ -106,7 +110,7 @@ public class DataSource {
                 return returnValue;
 
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while checking if user exists on database): " + e.getMessage());
         }
         return false;
     }
@@ -137,7 +141,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while updating player data): " + e.getMessage());
         }
     }
 
@@ -179,7 +183,7 @@ public class DataSource {
             return player;
 
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while getting player data): " + e.getMessage());
             return null;
         }
 
@@ -213,7 +217,7 @@ public class DataSource {
             statement.execute();
 
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while adding player ip): " + e.getMessage());
         }
     }
 
@@ -243,7 +247,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while adding player name): " + e.getMessage());
         }
     }
 
@@ -268,7 +272,7 @@ public class DataSource {
             statement.execute();
 
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while updating player experience): " + e.getMessage());
         }
     }
 
@@ -292,7 +296,7 @@ public class DataSource {
             statement.execute();
 
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while updating player chat): " + e.getMessage());
         }
     }
 
@@ -318,7 +322,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while sending friend request): " + e.getMessage());
         }
     }
 
@@ -360,7 +364,7 @@ public class DataSource {
             statement.execute();
 
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while confirming friend request): " + e.getMessage());
         }
     }
     //endregion
@@ -385,7 +389,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while ignoring player): " + e.getMessage());
         }
     }
     /**
@@ -407,7 +411,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while stopping ignoring player): " + e.getMessage());
         }
     }
     //endregion
@@ -426,7 +430,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while adding player to party): " + e.getMessage());
         }
     }
 
@@ -444,7 +448,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while removing player from party): " + e.getMessage());
         }
     }
 
@@ -477,7 +481,7 @@ public class DataSource {
             }
 
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while creating party): " + e.getMessage());
             return -1;
         }
     }
@@ -496,7 +500,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while updating party data): " + e.getMessage());
         }
     }
     //endregion
@@ -515,7 +519,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while adding player to guild): " + e.getMessage());
         }
     }
 
@@ -533,7 +537,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while removing player from guild): " + e.getMessage());
         }
     }
 
@@ -572,7 +576,7 @@ public class DataSource {
             }
 
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while creating guild): " + e.getMessage());
             return -1;
         }
     }
@@ -597,7 +601,7 @@ public class DataSource {
 
             statement.execute();
         } catch (SQLException e) {
-            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error: " + e.getMessage());
+            if (e.getMessage() != null) MessagingUtils.logWarning("SQL Error (while updating guild data): " + e.getMessage());
         }
     }
     //endregion

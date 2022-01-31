@@ -12,6 +12,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.kyori.adventure.title.Title;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.configs.obj.ConfigSection;
@@ -20,12 +21,39 @@ import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import org.apache.commons.collections4.list.TreeList;
 
+import java.time.Duration;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class TextUtils {
+    public static Title codedTitle(String main, String sub, int fadeIn, int stay, int fadeOut) {
+        Title.Times times = Title.Times.of(Duration.ofMillis(fadeIn), Duration.ofMillis(stay), Duration.ofMillis(fadeOut));
+
+        return Title.title(codedText(main), codedText(sub), times);
+    }
+
+    public static TextComponent getCodedTextFromList(List<String> strings) {
+        TextComponent textComponent = codedText(strings.get(0));
+
+        for (int i = 1; i < strings.size(); i ++) {
+            textComponent = textComponent.append(codedText("\n" + strings.get(i)));
+        }
+        
+        return textComponent;
+    }
+
+    public static List<String> getCodedPlayerStringListBungee(List<String> strings, CommandSource player) {
+        List<String> toReturn = new ArrayList<>();
+
+        for (String string : strings) {
+            toReturn.add(TextUtils.replaceAllPlayerBungee(string, player));
+        }
+
+        return toReturn;
+    }
+
     public static String removeExtraDot(String string){
         String s = string.replace("..", ".");
 
@@ -482,12 +510,9 @@ public class TextUtils {
     public static String replaceAllPlayerBungee(String of, SavableUser user) {
         if (user == null) return of;
 
-        if (ConfigUtils.mysqlbridgerEnabled()) {
-            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
-        }
-
-        return of
+        of = of
                 .replace("%player_uuid%", user.uuid)
+                .replace("%player_server%", user.findServer())
 
                 .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
@@ -515,7 +540,13 @@ public class TextUtils {
                 .replace("%player_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
                 .replace("%player_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
-                ;
+        ;
+
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
+        return of;
     }
 
     public static String replaceAllPlayerBungee(String of, String uuid) {
@@ -543,12 +574,9 @@ public class TextUtils {
 
             if (user == null) return of;
 
-            if (ConfigUtils.mysqlbridgerEnabled()) {
-                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
-            }
-
-            return of
+            of = of
                     .replace("%player_uuid%", user.uuid)
+                    .replace("%player_server%", user.findServer())
 
                     .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(user))
                     .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
@@ -576,7 +604,13 @@ public class TextUtils {
                     .replace("%player_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
                     .replace("%player_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                     .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
-                    ;
+            ;
+
+            if (ConfigUtils.mysqlbridgerEnabled()) {
+                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+            }
+
+            return of;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
 
@@ -597,12 +631,9 @@ public class TextUtils {
     public static String replaceAllUserBungee(String of, SavableUser user) {
         if (user == null) return of;
 
-        if (ConfigUtils.mysqlbridgerEnabled()) {
-            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
-        }
-
-        return of
+        of = of
                 .replace("%user_uuid%", user.uuid)
+                .replace("%user_server%", user.findServer())
 
                 .replace("%user_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%user_normal%", PlayerUtils.getOffOnRegBungee(user))
@@ -630,7 +661,13 @@ public class TextUtils {
                 .replace("%user_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
                 .replace("%user_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
-                ;
+        ;
+
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
+        return of;
     }
 
     public static String replaceAllUserBungee(String of, String uuid) {
@@ -658,12 +695,9 @@ public class TextUtils {
 
             if (user == null) return of;
 
-            if (ConfigUtils.mysqlbridgerEnabled()) {
-                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
-            }
-
-            return of
+            of = of
                     .replace("%user_uuid%", user.uuid)
+                    .replace("%user_server%", user.findServer())
 
                     .replace("%user_absolute%", PlayerUtils.getAbsoluteBungee(user))
                     .replace("%user_normal%", PlayerUtils.getOffOnRegBungee(user))
@@ -691,7 +725,13 @@ public class TextUtils {
                     .replace("%user_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
                     .replace("%user_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                     .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
-                    ;
+            ;
+
+            if (ConfigUtils.mysqlbridgerEnabled()) {
+                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+            }
+
+            return of;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
 
@@ -712,12 +752,9 @@ public class TextUtils {
     public static String replaceAllSenderBungee(String of, SavableUser user) {
         if (user == null) return of;
 
-        if (ConfigUtils.mysqlbridgerEnabled()) {
-            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
-        }
-
-        return of
+        of = of
                 .replace("%sender_uuid%", user.uuid)
+                .replace("%sender_server%", user.findServer())
 
                 .replace("%sender_absolute%", PlayerUtils.getAbsoluteBungee(user))
                 .replace("%sender_normal%", PlayerUtils.getOffOnRegBungee(user))
@@ -745,7 +782,13 @@ public class TextUtils {
                 .replace("%sender_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
                 .replace("%sender_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
-                ;
+        ;
+
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
+        return of;
     }
 
     public static String replaceAllSenderBungee(String of, String uuid) {
@@ -776,12 +819,9 @@ public class TextUtils {
 
             if (user == null) return of;
 
-            if (ConfigUtils.mysqlbridgerEnabled()) {
-                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
-            }
-
-            return of
+            of = of
                     .replace("%sender_uuid%", user.uuid)
+                    .replace("%sender_server%", user.findServer())
 
                     .replace("%sender_absolute%", PlayerUtils.getAbsoluteBungee(user))
                     .replace("%sender_normal%", PlayerUtils.getOffOnRegBungee(user))
@@ -809,7 +849,13 @@ public class TextUtils {
                     .replace("%sender_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
                     .replace("%sender_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                     .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
-                    ;
+            ;
+
+            if (ConfigUtils.mysqlbridgerEnabled()) {
+                of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+            }
+
+            return of;
         } else {
             User user = StreamLine.getJda().getUserById(dID);
 
@@ -830,17 +876,14 @@ public class TextUtils {
     public static String replaceAllPlayerDiscord(String of, SavableUser user) {
         if (user == null) return of;
 
-        if (ConfigUtils.mysqlbridgerEnabled()) {
-            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
-        }
-
-        return of
+        of = of
                 .replace("%player_uuid%", user.uuid)
+                .replace("%player_server%", user.findServer())
 
-                .replace("%player_absolute%", PlayerUtils.getAbsoluteDiscord(user))
-                .replace("%player_normal%", PlayerUtils.getOffOnRegDiscord(user))
-                .replace("%player_display%", PlayerUtils.getOffOnDisplayDiscord(user))
-                .replace("%player_formatted%", PlayerUtils.getJustDisplayDiscord(user))
+                .replace("%player_absolute%", PlayerUtils.getAbsoluteBungee(user))
+                .replace("%player_normal%", PlayerUtils.getOffOnRegBungee(user))
+                .replace("%player_display%", PlayerUtils.getOffOnDisplayBungee(user))
+                .replace("%player_formatted%", PlayerUtils.getJustDisplayBungee(user))
 
                 .replace("%player_points%", String.valueOf(user.points))
 
@@ -850,10 +893,10 @@ public class TextUtils {
                 .replace("%player_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%player_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
                 .replace("%player_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
-                .replace("%player_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteDiscord(user))
-                .replace("%player_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayDiscord(user))
-                .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
-                .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
+                .replace("%player_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteBungee(user))
+                .replace("%player_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
+                .replace("%player_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
+                .replace("%player_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
                 .replace("%player_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                 .replace("%player_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
@@ -863,7 +906,13 @@ public class TextUtils {
                 .replace("%player_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
                 .replace("%player_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%player_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
-                ;
+        ;
+
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
+        return of;
     }
 
     public static String replaceAllPlayerDiscord(String of, String uuid) {
@@ -877,17 +926,14 @@ public class TextUtils {
     public static String replaceAllUserDiscord(String of, SavableUser user) {
         if (user == null) return of;
 
-        if (ConfigUtils.mysqlbridgerEnabled()) {
-            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
-        }
-
-        return of
+        of = of
                 .replace("%user_uuid%", user.uuid)
+                .replace("%user_server%", user.findServer())
 
-                .replace("%user_absolute%", PlayerUtils.getAbsoluteDiscord(user))
-                .replace("%user_normal%", PlayerUtils.getOffOnRegDiscord(user))
-                .replace("%user_display%", PlayerUtils.getOffOnDisplayDiscord(user))
-                .replace("%user_formatted%", PlayerUtils.getJustDisplayDiscord(user))
+                .replace("%user_absolute%", PlayerUtils.getAbsoluteBungee(user))
+                .replace("%user_normal%", PlayerUtils.getOffOnRegBungee(user))
+                .replace("%user_display%", PlayerUtils.getOffOnDisplayBungee(user))
+                .replace("%user_formatted%", PlayerUtils.getJustDisplayBungee(user))
 
                 .replace("%user_points%", String.valueOf(user.points))
 
@@ -897,10 +943,10 @@ public class TextUtils {
                 .replace("%user_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%user_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
                 .replace("%user_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
-                .replace("%user_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteDiscord(user))
-                .replace("%user_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayDiscord(user))
-                .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
-                .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
+                .replace("%user_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteBungee(user))
+                .replace("%user_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
+                .replace("%user_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
+                .replace("%user_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
                 .replace("%user_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                 .replace("%user_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
@@ -910,7 +956,13 @@ public class TextUtils {
                 .replace("%user_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
                 .replace("%user_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%user_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
-                ;
+        ;
+
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
+        return of;
     }
 
     public static String replaceAllUserDiscord(String of, String uuid) {
@@ -924,17 +976,14 @@ public class TextUtils {
     public static String replaceAllSenderDiscord(String of, SavableUser user) {
         if (user == null) return of;
 
-        if (ConfigUtils.mysqlbridgerEnabled()) {
-            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
-        }
-
-        return of
+        of = of
                 .replace("%sender_uuid%", user.uuid)
+                .replace("%sender_server%", user.findServer())
 
-                .replace("%sender_absolute%", PlayerUtils.getAbsoluteDiscord(user))
-                .replace("%sender_normal%", PlayerUtils.getOffOnRegDiscord(user))
-                .replace("%sender_display%", PlayerUtils.getOffOnDisplayDiscord(user))
-                .replace("%sender_formatted%", PlayerUtils.getJustDisplayDiscord(user))
+                .replace("%sender_absolute%", PlayerUtils.getAbsoluteBungee(user))
+                .replace("%sender_normal%", PlayerUtils.getOffOnRegBungee(user))
+                .replace("%sender_display%", PlayerUtils.getOffOnDisplayBungee(user))
+                .replace("%sender_formatted%", PlayerUtils.getJustDisplayBungee(user))
 
                 .replace("%sender_points%", String.valueOf(user.points))
 
@@ -944,10 +993,10 @@ public class TextUtils {
                 .replace("%sender_guild_name%", PlayerUtils.getPlayerGuildName(user))
                 .replace("%sender_guild_members%", PlayerUtils.getPlayerGuildMembers(user))
                 .replace("%sender_guild_leader_uuid%", PlayerUtils.getPlayerGuildLeaderUUID(user))
-                .replace("%sender_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteDiscord(user))
-                .replace("%sender_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayDiscord(user))
-                .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegDiscord(user))
-                .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayDiscord(user))
+                .replace("%sender_guild_leader_absolute%", PlayerUtils.getPlayerGuildLeaderAbsoluteBungee(user))
+                .replace("%sender_guild_leader_formatted%", PlayerUtils.getPlayerGuildLeaderJustDisplayBungee(user))
+                .replace("%sender_guild_leader_normal%", PlayerUtils.getPlayerGuildLeaderOffOnRegBungee(user))
+                .replace("%sender_guild_leader_display%", PlayerUtils.getPlayerGuildLeaderOffOnDisplayBungee(user))
 
                 .replace("%sender_level%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).level) : ""))
                 .replace("%sender_xp_current%", (user instanceof SavablePlayer ? String.valueOf(((SavablePlayer) user).currentXP) : ""))
@@ -957,7 +1006,13 @@ public class TextUtils {
                 .replace("%sender_play_hours%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayHoursAsString() : ""))
                 .replace("%sender_play_days%", (user instanceof SavablePlayer ? ((SavablePlayer) user).getPlayDaysAsString() : ""))
                 .replace("%sender_votes%", (user instanceof SavablePlayer && ConfigUtils.moduleBRanksEnabled() ? String.valueOf(PlayerUtils.getVotesForPlayer((SavablePlayer) user)) : ""))
-                ;
+        ;
+
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            of  = StreamLine.msbConfig.parsePlaceholder(of, user);
+        }
+
+        return of;
     }
 
     public static String replaceAllSenderDiscord(String of, String uuid) {

@@ -1455,4 +1455,12 @@ public class MessageConfUtils {
     public static String msbQueryComplete() {
         return StreamLine.config.getMessString("mysqlbridger.query.complete");
     }
+
+    public static String proxyTextSent() {
+        return StreamLine.config.getMessString("proxytext.sent");
+    }
+
+    public static String proxyTitleSent() {
+        return StreamLine.config.getMessString("proxytitle.sent");
+    }
 }

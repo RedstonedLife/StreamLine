@@ -971,6 +971,30 @@ commands:
         aliases:
           - "pb"
           - "pbroadcast"
+      # The proxy text command.
+      proxytext:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "proxytext"
+        # Custom permission.
+        permission: "streamline.command.text"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "pt"
+          - "ptext"
+      # The proxy title command.
+      proxytitle:
+        # Enables / disables the use of the command.
+        enabled: true
+        # Main command that the aliases point to.
+        base: "proxytitle"
+        # Custom permission.
+        permission: "streamline.command.title"
+        # All aliases for the command. Listed in yml list format.
+        aliases:
+          - "pti"
+          - "ptitle"
       # The proxychat bypass command.
       bypass:
         # Enables / disables the use of the command.

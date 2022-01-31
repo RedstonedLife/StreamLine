@@ -6,12 +6,20 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.config.ConfigUtils;
+import net.plasmere.streamline.events.Event;
+import net.plasmere.streamline.events.EventsHandler;
+import net.plasmere.streamline.objects.configs.obj.TablistHandler;
+import net.plasmere.streamline.objects.configs.obj.TimedScript;
 import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.enums.CategoryType;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
 import net.plasmere.streamline.utils.*;
+import net.plasmere.streamline.utils.objects.AutoSyncInfo;
+import net.plasmere.streamline.utils.objects.SavedQueries;
+import net.plasmere.streamline.utils.objects.Syncable;
+import net.plasmere.streamline.utils.sql.BridgerDataSource;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -22,6 +30,8 @@ public class OneSecondTimer implements Runnable {
     public int countdown;
     public int reset;
     public int thirty;
+    public int sReset;
+    public int sCount;
 
     public OneSecondTimer() {
         this.countdown = 0;
@@ -143,6 +153,63 @@ public class OneSecondTimer implements Runnable {
 //                }
 //            }
 //        }
+
+        if (ConfigUtils.customTablistEnabled()) {
+            TablistHandler.tickPlayers();
+        }
+
+        if (ConfigUtils.events()) {
+            for (Event event : EventsHandler.getEvents()) {
+                for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
+                    EventsHandler.checkEventConditions(event, player);
+                }
+            }
+        }
+
+        if (ConfigUtils.scriptsEnabled()) {
+            for (TimedScript script : StreamLine.timedScriptsConfig.loadedTimedScripts) {
+                script.tickCountdowns();
+            }
+        }
+
+        if (ConfigUtils.mysqlbridgerEnabled()) {
+            tickMultiDB();
+        }
+    }
+
+    public void tickMultiDB() {
+        AutoSyncInfo syncInfo = StreamLine.msbConfig.getAutoSync();
+        if (syncInfo.interval == -1) return;
+
+        sReset = syncInfo.interval;
+        if (this.sCount <= 0) {
+            this.sCount = this.sReset;
+
+            StreamLine.msbConfig.reloadHosts();
+            StreamLine.msbConfig.reloadSyncables();
+            StreamLine.msbConfig.reloadQueries();
+            StreamLine.msbConfig.reloadExecutions();
+
+            for (Player player : PlayerUtils.getOnlinePPlayers()) {
+                SavableUser user = PlayerUtils.getOrGetSavableUser(player);
+                for (Syncable syncable : StreamLine.msbConfig.loadedSyncables) {
+                    BridgerDataSource.sync(syncable, user);
+                }
+            }
+        }
+
+        if (StreamLine.msbConfig.getResyncSeconds() > 0) {
+            StreamLine.msbConfig.reloadSavedQueries();
+
+            for (Player player : PlayerUtils.getOnlinePPlayers()) {
+                SavedQueries q = PluginUtils.getSavedQueryByPlayer(player.getUniqueId().toString());
+                if (q == null) continue;
+
+                PluginUtils.tickTillExpiry(q);
+            }
+        }
+
+        this.sCount --;
     }
 
     public void tickGuilds() {
@@ -157,6 +224,7 @@ public class OneSecondTimer implements Runnable {
 
                 SavableUser user = PlayerUtils.getOrGetSavableUser(uuid);
                 if (user == null) continue;
+                if (! user.online) continue;
 
                 try {
                     for (Guild guild : StreamLine.getJda().getGuilds()) {
@@ -199,7 +267,7 @@ public class OneSecondTimer implements Runnable {
             }
 
             if (guild.voiceID == 0L) {
-                VoiceChannel channel = DiscordUtils.createVoice(guild.name, CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
+                VoiceChannel channel = DiscordUtils.createVoice(guild.returnDiscordName(), CategoryType.GUILDS, players.toArray(new SavablePlayer[0]));
                 if (channel == null) continue;
                 guild.setVoiceID(channel.getIdLong());
             } else {

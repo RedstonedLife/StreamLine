@@ -15,7 +15,7 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'net.plasmere'
-    version = '1.0.15.3'
+    version = '1.0.15.4'
 
     ext {
         caffeineVersion = '3.0.4'
@@ -26,7 +26,7 @@ subprojects {
         simplixStorageVersion = '3.2.3'
         sqlLiteVersion = '3.36.0.2'
         viaApiVersion = '4.1.1'
-        hikariCPVersion = '4.0.1'
+        hikariCPVersion = '5.0.1'
         objectHunterVersion = '0.4.8'
     }
 

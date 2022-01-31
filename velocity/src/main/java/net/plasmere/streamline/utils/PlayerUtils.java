@@ -1647,6 +1647,16 @@ public class PlayerUtils {
         return StreamLine.getInstance().getProxy().getAllPlayers();
     }
 
+    public static Collection<String> getOnlinePPlayersAsStrings(){
+        List<String> strings = new ArrayList<>();
+
+        for (Player player : getOnlinePPlayers()) {
+            strings.add(player.getUsername());
+        }
+
+        return strings;
+    }
+
     public static List<Player> getServeredPPlayers(String serverName) {
         List<Player> players = new ArrayList<>();
 

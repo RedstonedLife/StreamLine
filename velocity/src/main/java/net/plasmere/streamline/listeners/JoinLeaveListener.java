@@ -19,6 +19,7 @@ import net.plasmere.streamline.events.Event;
 import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.enums.Condition;
 import net.plasmere.streamline.objects.GeyserFile;
+import net.plasmere.streamline.objects.configs.obj.TablistHandler;
 import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.chats.ChatChannel;
@@ -81,7 +82,7 @@ public class JoinLeaveListener {
 
         StreamLine.playTimeConf.setPlayTime(stat.uuid, stat.playSeconds);
 
-        DataSource.updatePlayerData(stat);
+        if (ConfigUtils.moduleDBUse()) DataSource.updatePlayerData(stat);
 
 //        try {
 //            Thread initThread = new Thread(new ProcessDBUpdateRunnable(stat), "Streamline - Database Sync - Join");
@@ -114,6 +115,12 @@ public class JoinLeaveListener {
 
         SavableGuild guild = GuildUtils.addGuildIfNotAlreadyLoaded(stat);
         SavableParty party = PartyUtils.addPartyIfNotAlreadyLoaded(stat);
+
+        if (ConfigUtils.customTablistEnabled()) {
+            if (StreamLine.tablistConfig.isGlobal()) {
+                TablistHandler.tickPlayers();
+            }
+        }
 
         String joinsOrder = ConfigUtils.moduleBPlayerJoins();
 
@@ -234,7 +241,7 @@ public class JoinLeaveListener {
             for (Event event : EventsHandler.getEvents()) {
                 if (! EventsHandler.checkTags(event, stat)) continue;
 
-                if (! (EventsHandler.checkEventConditions(event, stat, Condition.JOIN, "network"))) continue;
+                if (! ( (EventsHandler.checkEventConditions(event, stat, Condition.JOIN, "network")) || (EventsHandler.checkEventConditions(event,stat, Condition.JOIN, "*")))) continue;
 
                 EventsHandler.runEvent(event, stat);
             }
@@ -272,6 +279,16 @@ public class JoinLeaveListener {
 
         partyPM(stat);
 
+        if (ConfigUtils.customTablistEnabled()) {
+            if (StreamLine.tablistConfig.isGlobal()) {
+                TablistHandler.tickPlayers();
+            } else {
+                for (Player p : PlayerUtils.getServeredPPlayers(server.getName())) {
+                    TablistHandler.tickPlayer(p);
+                }
+            }
+        }
+
         try {
             if (ConfigUtils.events()) {
                 for (Event event : EventsHandler.getEvents()) {
@@ -288,8 +305,7 @@ public class JoinLeaveListener {
             if (ConfigUtils.events()) {
                 for (Event event : EventsHandler.getEvents()) {
                     if (! EventsHandler.checkTags(event, stat)) continue;
-
-                    if (! (EventsHandler.checkEventConditions(event, stat, Condition.LEAVE, previousServer.getServerInfo().getName()))) continue;
+                    if (! ( (EventsHandler.checkEventConditions(event, stat, Condition.LEAVE, previousServer.getServerInfo().getName())) || (EventsHandler.checkEventConditions(event,stat, Condition.LEAVE, "*")))) continue;
 
                     EventsHandler.runEvent(event, stat);
                 }
@@ -368,7 +384,7 @@ public class JoinLeaveListener {
 
         stat.updateOnline();
 
-        DataSource.updatePlayerData(stat);
+        if (ConfigUtils.moduleDBUse()) DataSource.updatePlayerData(stat);
 
 //        try {
 //            Thread initThread = new Thread(new ProcessDBUpdateRunnable(stat), "Streamline - Database Sync - Leave");
@@ -480,9 +496,25 @@ public class JoinLeaveListener {
 
         SavableParty party = PartyUtils.getOrGetParty(stat);
 
-        SingleSet<Boolean, ChatChannel> get = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("guild"), stat.guild);
-        if (get.key) {
-            StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("guild"), stat.guild);
+        if (ConfigUtils.customTablistEnabled()) {
+            if (StreamLine.tablistConfig.isGlobal()) {
+                TablistHandler.tickPlayers();
+            } else {
+                try {
+                    for (Player p : PlayerUtils.getServeredPPlayers(player.getCurrentServer().get().getServerInfo().getName())) {
+                        TablistHandler.tickPlayer(p);
+                    }
+                } catch (Exception e) {
+                    TablistHandler.tickPlayers();
+                }
+            }
+        }
+
+        if (guild != null) {
+            SingleSet<Boolean, ChatChannel> get = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("guild"), stat.guild);
+            if (get.key) {
+                StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("guild"), stat.guild);
+            }
         }
 
         if (party != null) {
@@ -507,7 +539,8 @@ public class JoinLeaveListener {
             for (Event event : EventsHandler.getEvents()) {
                 if (!EventsHandler.checkTags(event, stat)) continue;
 
-                if (!(EventsHandler.checkEventConditions(event, stat, Condition.LEAVE, "network"))) continue;
+
+                if (! ( (EventsHandler.checkEventConditions(event, stat, Condition.LEAVE, "network")) || (EventsHandler.checkEventConditions(event,stat, Condition.LEAVE, "*")))) continue;
 
                 EventsHandler.runEvent(event, stat);
             }

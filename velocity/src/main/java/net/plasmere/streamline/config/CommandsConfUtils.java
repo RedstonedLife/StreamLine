@@ -1298,6 +1298,40 @@ public class CommandsConfUtils {
         StreamLine.config.reloadCommands();
         return StreamLine.config.getCommandString("commands.bungee.messaging.broadcast.permission");
     }
+    // Proxy Text.
+    public static boolean comBProxyText() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.messaging.proxytext.enabled");
+    }
+    public static String comBProxyTextBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.proxytext.base");
+    }
+    public static List<String> comBProxyTextAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.messaging.proxytext.aliases");
+    }
+    public static String comBProxyTextPerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.proxytext.permission");
+    }
+    // Proxy Title.
+    public static boolean comBProxyTitle() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandBoolean("commands.bungee.messaging.proxytitle.enabled");
+    }
+    public static String comBProxyTitleBase() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.proxytitle.base");
+    }
+    public static List<String> comBProxyTitleAliases() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandStringList("commands.bungee.messaging.proxytitle.aliases");
+    }
+    public static String comBProxyTitlePerm() {
+        StreamLine.config.reloadCommands();
+        return StreamLine.config.getCommandString("commands.bungee.messaging.proxytitle.permission");
+    }
     // Bypass.
     public static boolean comBBypass() {
         StreamLine.config.reloadCommands();

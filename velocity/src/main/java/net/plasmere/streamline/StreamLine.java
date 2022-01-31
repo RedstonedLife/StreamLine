@@ -33,7 +33,8 @@ import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.EventsReader;
 import net.plasmere.streamline.libs.Metrics;
 import net.plasmere.streamline.listeners.LPListener;
-import net.plasmere.streamline.objects.configs.obj.MSBConfig;
+import net.plasmere.streamline.objects.configs.MSBConfig;
+import net.plasmere.streamline.objects.configs.obj.AliasHandler;
 import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.configs.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
@@ -47,6 +48,7 @@ import net.plasmere.streamline.utils.holders.GeyserHolder;
 import net.plasmere.streamline.utils.holders.LPHolder;
 import net.plasmere.streamline.utils.holders.ViaHolder;
 import net.plasmere.streamline.utils.holders.VoteHolder;
+import net.plasmere.streamline.utils.sql.BridgerDataSource;
 import net.plasmere.streamline.utils.sql.DataSource;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -100,9 +102,11 @@ public class StreamLine {
 	public static RanksConfig ranksConfig;
 	public static ChatFilters chatFilters;
 	public static DatabaseInfo databaseInfo;
+	public static TablistConfig tablistConfig;
+	public static AliasConfig aliasConfig;
+	public static TimedScriptsConfig timedScriptsConfig;
 
 	public static MSBConfig msbConfig;
-	public static TreeMap<String, String> holders = new TreeMap<>();
 
 	public final static String customChannel = "streamline:channel";
 	public final static String[] identifer = customChannel.split(":", 2);
@@ -117,6 +121,7 @@ public class StreamLine {
 	private File confDir() { return new File(getDataFolder() + File.separator + "configs" + File.separator); }
 	private File chatHistoryDir() { return new File(getDataFolder() + File.separator + "chat-history" + File.separator); }
 	private File scriptsDir() { return new File(getDataFolder() + File.separator + "scripts" + File.separator); }
+	private File sqlDir() { return new File(getDataFolder() + File.separator + "sql" + File.separator); }
 	private File eventsDir;
 
 	public File versionFile() { return new File(getDataFolder(), "version.txt"); }
@@ -156,6 +161,7 @@ public class StreamLine {
 	public File getConfDir() { return confDir(); }
 	public File getChatHistoryDir() { return chatHistoryDir(); }
 	public File getScriptsDir() { return scriptsDir(); }
+	public File getSQLDir() { return sqlDir(); }
 
 	public String getCurrentMOTD() { return currentMOTD; }
 	public int getMotdPage() { return motdPage; }
@@ -472,7 +478,18 @@ public class StreamLine {
 		}
 
 		if (ConfigUtils.mysqlbridgerEnabled()) {
+			if (! sqlDir().exists()) if (! sqlDir().mkdirs()) MessagingUtils.logInfo("Could not properly make the SQL folder!");
 			msbConfig = new MSBConfig();
+
+			try {
+				BridgerDataSource.reloadHikariHosts(); // Populate the Hikari Hosts.
+			} catch (Exception e) {
+				MessagingUtils.logSevere("Something is mis-configured! Caught error: " + e.getMessage());
+			}
+		}
+
+		if (ConfigUtils.customTablistEnabled()) {
+			tablistConfig = new TablistConfig();
 		}
 
 		if (ConfigUtils.moduleDEnabled()) {
@@ -516,6 +533,13 @@ public class StreamLine {
 
 				ScriptsHandler.addScript(f);
 			}
+		}
+
+		timedScriptsConfig = new TimedScriptsConfig();
+
+		if (ConfigUtils.customAliasesEnabled()) {
+			aliasConfig = new AliasConfig();
+			AliasHandler.loadAllAliasCommands();
 		}
 	}
 
@@ -691,6 +715,10 @@ public class StreamLine {
 		oneSecTimer.cancel();
 		motdUpdater.cancel();
 		groupsDatabaseSyncer.cancel();
+
+		if (ConfigUtils.customAliasesEnabled()) {
+			AliasHandler.unloadAllAliasCommands();
+		}
 
 		try {
 			if (ConfigUtils.moduleDEnabled()) {
