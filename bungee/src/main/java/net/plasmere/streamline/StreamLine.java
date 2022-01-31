@@ -247,7 +247,9 @@ public class StreamLine extends Plugin {
 			playtime = getProxy().getScheduler().schedule(this, new PlaytimeTimer(1),0, 1, TimeUnit.SECONDS);
 			oneSecTimer = getProxy().getScheduler().schedule(this, new OneSecondTimer(),0, 1, TimeUnit.SECONDS);
 			motdUpdater = getProxy().getScheduler().schedule(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime()),0, 1, TimeUnit.SECONDS);
-			groupsDatabaseSyncer = getProxy().getScheduler().schedule(this, new GroupDatabaseSyncTimer(60),0, 1, TimeUnit.SECONDS);
+			if (ConfigUtils.moduleDBUse()) {
+				groupsDatabaseSyncer = getProxy().getScheduler().schedule(this, new GroupDatabaseSyncTimer(60), 0, 1, TimeUnit.SECONDS);
+			}
 
 			// DO NOT FORGET TO UPDATE AMOUNT BELOW! :/
 			getLogger().info("Loaded 8 runnable(s) into memory...!");
@@ -667,7 +669,9 @@ public class StreamLine extends Plugin {
 		saveCachedPlayers.cancel();
 		oneSecTimer.cancel();
 		motdUpdater.cancel();
-		groupsDatabaseSyncer.cancel();
+		if (ConfigUtils.moduleDBUse()) {
+			groupsDatabaseSyncer.cancel();
+		}
 
 		try {
 			if (ConfigUtils.moduleDEnabled()) {

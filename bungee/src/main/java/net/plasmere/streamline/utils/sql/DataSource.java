@@ -18,22 +18,24 @@ public class DataSource {
     private static HikariDataSource ds;
 
     static {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+        if (ConfigUtils.moduleDBUse()) {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
 
-            config.setJdbcUrl("jdbc:mysql://%host%:%port%/%database%"
-                    .replace("%host%", StreamLine.databaseInfo.getHost())
-                    .replace("%port%", String.valueOf(StreamLine.databaseInfo.getPort()))
-                    .replace("%database%", StreamLine.databaseInfo.getDatabase()));
-            config.setUsername(StreamLine.databaseInfo.getUser());
-            config.setPassword(StreamLine.databaseInfo.getPass());
-            config.addDataSourceProperty("cachePrepStmts", "true");
-            config.addDataSourceProperty("prepStmtCacheSize", "250");
-            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-            config.addDataSourceProperty("allowMultiQueries", "true");
-            ds = new HikariDataSource(config);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
+                config.setJdbcUrl("jdbc:mysql://%host%:%port%/%database%"
+                        .replace("%host%", StreamLine.databaseInfo.getHost())
+                        .replace("%port%", String.valueOf(StreamLine.databaseInfo.getPort()))
+                        .replace("%database%", StreamLine.databaseInfo.getDatabase()));
+                config.setUsername(StreamLine.databaseInfo.getUser());
+                config.setPassword(StreamLine.databaseInfo.getPass());
+                config.addDataSourceProperty("cachePrepStmts", "true");
+                config.addDataSourceProperty("prepStmtCacheSize", "250");
+                config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+                config.addDataSourceProperty("allowMultiQueries", "true");
+                ds = new HikariDataSource(config);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 

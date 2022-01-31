@@ -241,7 +241,7 @@ public class SavablePlayer extends SavableUser {
 
     public void setLatestIP(String ip) {
         this.latestIP = ip;
-        saveAll();
+//        saveAll();
     }
 
     public void setLatestIP(ProxiedPlayer player) {

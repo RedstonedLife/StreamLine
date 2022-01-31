@@ -18,7 +18,7 @@ subprojects {
     version = '1.0.15.3'
 
     ext {
-        caffeineVersion = '3.0.4'
+        caffeineVersion = '3.0.5'
         dv8tionVersion = '4.3.0_339'
         geysermcVersion = '2.0.0-SNAPSHOT'
         luckpermsVersion = '5.3'

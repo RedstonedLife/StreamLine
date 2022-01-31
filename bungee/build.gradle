@@ -1,6 +1,6 @@
 project.ext {
-    adventureVersion = '4.9.2'
-    bungeeVersion = '1.17-R0.1-SNAPSHOT'
+    adventureVersion = '4.9.3'
+    bungeeVersion = '1.18-R0.1-SNAPSHOT'
 }
 
 repositories {
@@ -10,7 +10,7 @@ repositories {
 
 dependencies {
     //BungeeCord
-    implementation "net.md-5:bungeecord-api:${bungeeVersion}"
+    compileOnly "net.md-5:bungeecord-api:${bungeeVersion}"
     //LuckPerms
     compileOnly "net.luckperms:api:${luckpermsVersion}"
     //JDA
@@ -18,9 +18,9 @@ dependencies {
     shadow "net.dv8tion:JDA:${dv8tionVersion}"
 
     implementation "com.github.ben-manes.caffeine:caffeine:${caffeineVersion}"
-    implementation "org.geysermc:core:${geysermcVersion}"
-    implementation "com.viaversion:viaversion-api:${viaApiVersion}"
-    implementation "net.kyori:adventure-text-serializer-legacy:${adventureVersion}"
+    compileOnly "org.geysermc:core:${geysermcVersion}"
+    compileOnly "com.viaversion:viaversion-api:${viaApiVersion}"
+    compileOnly "net.kyori:adventure-text-serializer-legacy:${adventureVersion}"
     implementation "com.github.simplix-softworks:simplixstorage:${simplixStorageVersion}"
 
     implementation "com.zaxxer:HikariCP:${hikariCPVersion}"
@@ -29,7 +29,7 @@ dependencies {
     implementation "net.objecthunter:exp4j:${objectHunterVersion}"
     shadow "net.objecthunter:exp4j:${objectHunterVersion}"
 
-    implementation files('../libs/nuvotifier.jar')
+    compileOnly files('../libs/nuvotifier.jar')
 }
 
 processResources {
