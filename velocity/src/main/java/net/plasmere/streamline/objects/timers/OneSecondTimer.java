@@ -29,14 +29,16 @@ import java.util.TreeMap;
 public class OneSecondTimer implements Runnable {
     public int countdown;
     public int reset;
-    public int thirty;
     public int sReset;
     public int sCount;
+    public int playerRefreshC;
+    public int playerRefreshR;
 
     public OneSecondTimer() {
         this.countdown = 0;
         this.reset = 1;
-        this.thirty = 0;
+        this.playerRefreshR = 10;
+        this.playerRefreshC = 0;
     }
 
     @Override
@@ -51,16 +53,6 @@ public class OneSecondTimer implements Runnable {
     }
 
     public void done() {
-//        thirty --;
-//        if (thirty == 0) {
-//            thirty = 30;
-//
-//            for (Player player : PlayerUtils.getOnlinePPlayers()) {
-//                PlayerUtils.getLuckPermsPrefix(player.getUsername(), false);
-//                PlayerUtils.getLuckPermsSuffix(player.getUsername(), false);
-//            }
-//        }
-
         try {
             UUIDUtils.cachedNames = new TreeMap<>();
             UUIDUtils.cachedUUIDs = new TreeMap<>();
@@ -71,6 +63,23 @@ public class OneSecondTimer implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+//        try {
+//            if (playerRefreshC <= 0) {
+//                playerRefreshC = playerRefreshR;
+//
+//                PlayerUtils.saveAll();
+//
+//                PlayerUtils.clearStats();
+//                for (Player player : PlayerUtils.getOnlinePPlayers()) {
+//                    PlayerUtils.addPlayerStat(player);
+//                }
+//                PlayerUtils.applyConsole();
+//            }
+//            playerRefreshC --;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         try {
             if (PlayerUtils.getToSave().size() > 0) {
@@ -144,18 +153,12 @@ public class OneSecondTimer implements Runnable {
         tickGuildSync();
         tickPartySync();
 
-//        if (! StreamLine.databaseInfo.getHost().equals("")) {
-//            for (SavablePlayer player : PlayerUtils.getJustPlayers()) {
-//                if (player.onlineCheck()) {
-//                    for (String key : new TreeMap<>(player.getInfo()).keySet()) {
-//                        Driver.update(SavableType.PLAYER, UUIDUtils.stripUUID(player.uuid), key.replace('-', '_'), player.getInfo().get(key));
-//                    }
-//                }
-//            }
-//        }
-
-        if (ConfigUtils.customTablistEnabled()) {
-            TablistHandler.tickPlayers();
+        try {
+            if (ConfigUtils.customTablistEnabled()) {
+                TablistHandler.tickPlayers();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (ConfigUtils.events()) {

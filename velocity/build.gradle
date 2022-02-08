@@ -43,6 +43,9 @@ dependencies {
     implementation "net.objecthunter:exp4j:${objectHunterVersion}"
     shadow "net.objecthunter:exp4j:${objectHunterVersion}"
 
+    implementation "com.google.re2j:re2j:${re2jVersion}"
+    shadow "com.google.re2j:re2j:${re2jVersion}"
+
     compileOnly files('../libs/nuvotifier.jar')
 }
 

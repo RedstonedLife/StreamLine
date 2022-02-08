@@ -356,7 +356,7 @@ public class PluginUtils {
     }
 
     public static boolean isFreshInstall() {
-        return ! StreamLine.getInstance().getPlDir().exists() && ! StreamLine.getInstance().getChatHistoryDir().exists() && ! StreamLine.getInstance().getGDir().exists();
+        return StreamLine.constantsConfig.streamlineConstants.isFresh;
     }
 
     public static Map.Entry<Integer, String> findHighestNumberWithBasePermission(SavablePlayer player, String basePermission) {
@@ -404,6 +404,23 @@ public class PluginUtils {
         }
 
         return hasPerm.lastEntry();
+    }
+
+    public static int findHighestNumberWithBasePermissionAsInt(Player player, String basePermission, int defaultIfNull, int max) {
+        String permission = "";
+
+        TreeMap<Integer, String> hasPerm = new TreeMap<>();
+
+        for (int i = 1; i <= max; i ++){
+            permission = basePermission + i;
+            if (player.hasPermission(permission)) hasPerm.put(i, permission);
+        }
+
+        if (hasPerm.isEmpty()) {
+            return defaultIfNull;
+        }
+
+        return hasPerm.lastKey();
     }
 
     public static List<String> getSyncablesAsStrings() {

@@ -4,6 +4,7 @@ import de.leonhard.storage.Config;
 import de.leonhard.storage.LightningBuilder;
 import de.leonhard.storage.sections.FlatFileSection;
 import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.configs.obj.ConfigSection;
 import net.plasmere.streamline.objects.configs.obj.TablistFormat;
 import net.plasmere.streamline.objects.lists.SingleSet;
@@ -117,6 +118,13 @@ public class TablistConfig {
         for (TablistFormat format : grouped) {
             all.put(format.id, format);
         }
+
+//        if (ConfigUtils.debug()) {
+//            MessagingUtils.logInfo("=== Configured Tab Lists ===");
+//            for (TablistFormat format : all.values()) {
+//                MessagingUtils.logInfo("Identifier: " + format.identifier + " | ID (number): " + format.id + " | PlayerName Format: " + format.playerName);
+//            }
+//        }
 
         return all;
     }

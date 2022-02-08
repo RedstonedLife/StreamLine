@@ -24,6 +24,10 @@ public class MessageConfUtils {
         return StreamLine.config.getMessString("no-player");
     }
 
+    public static String notSet() {
+        return StreamLine.config.getMessString("not-set");
+    }
+
     public static String discordErrTitle() {
         return StreamLine.config.getMessString("discord-err-title");
     }

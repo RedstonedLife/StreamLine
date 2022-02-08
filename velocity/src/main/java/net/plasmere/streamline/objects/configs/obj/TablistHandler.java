@@ -5,6 +5,8 @@ import com.velocitypowered.api.proxy.player.TabList;
 import com.velocitypowered.api.proxy.player.TabListEntry;
 import com.velocitypowered.api.util.GameProfile;
 import net.plasmere.streamline.StreamLine;
+import net.plasmere.streamline.config.ConfigUtils;
+import net.plasmere.streamline.utils.MessagingUtils;
 import net.plasmere.streamline.utils.PlayerUtils;
 import net.plasmere.streamline.utils.PluginUtils;
 import net.plasmere.streamline.utils.TextUtils;
@@ -21,7 +23,9 @@ public class TablistHandler {
     public static void tickPlayer(Player player) {
         HashMap<Player, TablistFormat> formats = getAllPlayerTablistFormats();
 
-        TablistFormat format = getPlayerTablistFormat(player);
+        TablistFormat format = formats.get(player);
+
+        if (format == null) format = StreamLine.tablistConfig.getGeneralTablistFormat();
 
         player.sendPlayerListHeaderAndFooter(TextUtils.getCodedTextFromList(TextUtils.getCodedPlayerStringListBungee(format.header, player)), TextUtils.getCodedTextFromList(TextUtils.getCodedPlayerStringListBungee(format.footer, player)));
         updateTablistEntriesFor(player);
@@ -30,15 +34,11 @@ public class TablistHandler {
     public static TablistFormat getPlayerTablistFormat(Player player) {
         StreamLine.tablistConfig.reloadLoadedTablistFormats();
 
-        Map.Entry<Integer, String> highestPerm = PluginUtils.findHighestNumberWithBasePermission(player, StreamLine.tablistConfig.getBasePermission());
+        int highestPerm = PluginUtils.findHighestNumberWithBasePermissionAsInt(player, StreamLine.tablistConfig.getBasePermission(), 0, StreamLine.tablistConfig.loadedTablistFormats.size() - 1);
 
-        TablistFormat format = StreamLine.tablistConfig.loadedTablistFormats.get(0);
+        TablistFormat format = StreamLine.tablistConfig.loadedTablistFormats.get(highestPerm);
 
-        if (highestPerm != null) {
-            format = StreamLine.tablistConfig.loadedTablistFormats.getOrDefault(highestPerm.getKey(), format);
-        }
-
-        return format;
+        return format == null ? StreamLine.tablistConfig.getGeneralTablistFormat() : format;
     }
 
     public static HashMap<Player, TablistFormat> getAllPlayerTablistFormats() {
@@ -59,6 +59,10 @@ public class TablistHandler {
             for (Player p : PlayerUtils.getOnlinePPlayers()) {
                 TablistFormat format = getPlayerTablistFormat(p);
 
+                if (format == null) {
+                    format = StreamLine.tablistConfig.getGeneralTablistFormat();
+                }
+
                 newEntries.add(TabListEntry.builder()
                         .tabList(list)
                         .profile(p.getGameProfile())
@@ -75,6 +79,10 @@ public class TablistHandler {
             for (Player p : PlayerUtils.getServeredPPlayers(serverName)) {
                 TablistFormat format = getPlayerTablistFormat(p);
 
+                if (format == null) {
+                    format = StreamLine.tablistConfig.getGeneralTablistFormat();
+                }
+
                 newEntries.add(TabListEntry.builder()
                         .tabList(list)
                         .profile(p.getGameProfile())
@@ -87,9 +95,10 @@ public class TablistHandler {
             return;
         }
 
-        for (TabListEntry entry : list.getEntries()) {
+        for (TabListEntry entry : player.getTabList().getEntries()) {
             list.removeEntry(entry.getProfile().getId());
         }
+
         for (TabListEntry entry : newEntries) {
             list.addEntry(entry);
         }

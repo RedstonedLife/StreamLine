@@ -42,6 +42,8 @@ import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.timers.*;
+import net.plasmere.streamline.placeholder.RATAPI;
+import net.plasmere.streamline.placeholder.addons.StreamlineExpansion;
 import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
@@ -62,7 +64,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
-import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -107,6 +108,11 @@ public class StreamLine {
 	public static TimedScriptsConfig timedScriptsConfig;
 
 	public static MSBConfig msbConfig;
+	public static RATAPI ratAPI;
+
+	public static ConstantsConfig constantsConfig;
+
+	public static StreamlineExpansion placeholderExpansion;
 
 	public final static String customChannel = "streamline:channel";
 	public final static String[] identifer = customChannel.split(":", 2);
@@ -123,9 +129,6 @@ public class StreamLine {
 	private File scriptsDir() { return new File(getDataFolder() + File.separator + "scripts" + File.separator); }
 	private File sqlDir() { return new File(getDataFolder() + File.separator + "sql" + File.separator); }
 	private File eventsDir;
-
-	public File versionFile() { return new File(getDataFolder(), "version.txt"); }
-	public File languageFile() { return new File(getDataFolder(), "language.txt"); }
 
 	public ScheduledTask guilds;
 	public ScheduledTask players;
@@ -311,137 +314,12 @@ public class StreamLine {
 			}
 		}
 
-		String version = "";
-		String language = "";
+		constantsConfig = new ConstantsConfig();
 
-		if (! PluginUtils.isFreshInstall()) {
-			try {
-				if (!versionFile().exists()) {
-					if (!versionFile().createNewFile()) if (ConfigUtils.debug()) {
-						MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
-					}
-
-					FileWriter writer = new FileWriter(versionFile());
-					writer.write("13.3");
-					writer.close();
-				}
-
-				if (versionFile().exists()) {
-					Scanner reader = new Scanner(versionFile());
-
-					while (reader.hasNextLine()) {
-						String data = reader.nextLine();
-						while (data.startsWith("#")) {
-							data = reader.nextLine();
-						}
-						version = data;
-					}
-
-					reader.close();
-				}
-
-				if (version.equals("")) throw new Exception("Version file could not be read!");
-			} catch (Exception e) {
-				e.printStackTrace();
-				version = "13.3";
-			}
-
-			try {
-				if (!languageFile().exists()) {
-					if (!languageFile().createNewFile()) if (ConfigUtils.debug()) {
-						MessagingUtils.logSevere("COULD NOT CREATE LANGUAGE FILE!");
-					}
-
-					FileWriter writer = new FileWriter(languageFile());
-					writer.write("# To define which language you want to use.\n");
-					writer.write("# Current supported languages: en_US, fr_FR\n");
-					writer.write("en_US");
-					writer.close();
-				}
-
-				if (languageFile().exists()) {
-					Scanner reader = new Scanner(languageFile());
-
-					while (reader.hasNextLine()) {
-						String data = reader.nextLine();
-						while (data.startsWith("#")) {
-							data = reader.nextLine();
-						}
-						language = data;
-					}
-
-					reader.close();
-				}
-
-				if (language.equals("")) throw new Exception("Language file could not be read!");
-			} catch (Exception e) {
-				e.printStackTrace();
-				language = "en_US";
-			}
-		} else {
-			try {
-				if (!versionFile().createNewFile()) {
-					MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
-				}
-
-				FileWriter writer = new FileWriter(versionFile());
-				writer.write(getVersion());
-				writer.close();
-
-				if (versionFile().exists()) {
-					Scanner reader = new Scanner(versionFile());
-
-					while (reader.hasNextLine()) {
-						String data = reader.nextLine();
-						while (data.startsWith("#")) {
-							data = reader.nextLine();
-						}
-						version = data;
-					}
-
-					reader.close();
-				}
-
-				if (version.equals("")) throw new Exception("Version file could not be read!");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			try {
-				if (!languageFile().createNewFile()) {
-					MessagingUtils.logSevere("COULD NOT CREATE LANGUAGE FILE!");
-				}
-
-				FileWriter writer = new FileWriter(languageFile());
-				writer.write("# To define which language you want to use.\n");
-				writer.write("# Current supported languages: en_US, fr_FR\n");
-				writer.write("en_US");
-				writer.close();
-
-				if (languageFile().exists()) {
-					Scanner reader = new Scanner(languageFile());
-
-					while (reader.hasNextLine()) {
-						String data = reader.nextLine();
-						while (data.startsWith("#")) {
-							data = reader.nextLine();
-						}
-						language = data;
-					}
-
-					reader.close();
-				}
-
-				if (language.equals("")) throw new Exception("Language file could not be read!");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		FindFrom.doUpdate(version, language);
+		FindFrom.doUpdate(constantsConfig.streamlineConstants.version, constantsConfig.streamlineConstants.language);
 
 		// Main config.
-		config = new ConfigHandler(language);
+		config = new ConfigHandler(constantsConfig.streamlineConstants.language);
 
 		// Server ConfigHandler.
 		if (ConfigUtils.sc()) {
@@ -632,6 +510,10 @@ public class StreamLine {
 		if (ConfigUtils.chatHistoryEnabled()) {
 			loadChatHistory();
 		}
+
+		// Streamline PlaceholderAPI. (Replace a Thing API.)
+		ratAPI = new RATAPI();
+		placeholderExpansion = new StreamlineExpansion();
 
 		PluginUtils.state = NetworkState.RUNNING;
 		// Setup MOTD.

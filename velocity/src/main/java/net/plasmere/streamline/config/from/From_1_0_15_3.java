@@ -27,6 +27,13 @@ public class From_1_0_15_3 extends From{
     public void setupLocalesFix() {
         addUpdatedLocalesEntry("proxytext.sent", "&eSuccessfully sent text: &r%text%", "en_US");
         addUpdatedLocalesEntry("proxytitle.sent", "&eSuccessfully sent title &7(&a%fade_in%&8, &a%stay%&8, &a%fade_out%&7)&e:\n&r%title%", "en_US");
+
+        addUpdatedLocalesEntry("not-set", "Not Set", "en_US");
+
+        addUpdatedLocalesEntry("proxytext.sent", "&eSuccessfully sent text: &r%text%", "fr_FR");
+        addUpdatedLocalesEntry("proxytitle.sent", "&eSuccessfully sent title &7(&a%fade_in%&8, &a%stay%&8, &a%fade_out%&7)&e:\n&r%title%", "fr_FR");
+
+        addUpdatedLocalesEntry("not-set", "Not Set", "fr_FR");
     }
 
     @Override

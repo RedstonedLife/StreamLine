@@ -15,7 +15,7 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'net.plasmere'
-    version = '1.0.15.4'
+    version = '1.0.16.0'
 
     ext {
         caffeineVersion = '3.0.4'
@@ -28,6 +28,7 @@ subprojects {
         viaApiVersion = '4.1.1'
         hikariCPVersion = '5.0.1'
         objectHunterVersion = '0.4.8'
+        re2jVersion = '1.6'
     }
 
     java {

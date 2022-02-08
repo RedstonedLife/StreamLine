@@ -279,12 +279,14 @@ public class SavablePlayer extends SavableUser {
     }
 
     public void addPlaySecond(int amount){
+//        MessagingUtils.logInfo("Added play second!");
         //        loadValues();
         setPlaySeconds(playSeconds + amount);
     }
 
     public void setPlaySeconds(int amount){
         playSeconds = amount;
+//        MessagingUtils.logInfo("Set play seconds to " + playSeconds + "!");
         //        saveAll();
     }
 
@@ -300,6 +302,7 @@ public class SavablePlayer extends SavableUser {
 
     public double getPlayDays(){
         //        loadValues();
+        if (playSeconds < 300) return 0;
         return playSeconds / (60.0d * 60.0d * 24.0d);
     }
 

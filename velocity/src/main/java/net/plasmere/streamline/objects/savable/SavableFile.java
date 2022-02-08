@@ -31,11 +31,9 @@ public abstract class SavableFile {
         try {
             this.uuid = parseFileName(this.file);
             if (this.uuid == null) {
-                this.dispose();
                 return;
             }
             if (this.uuid.equals("")) {
-                this.dispose();
                 return;
             }
         } catch (Throwable e) {

@@ -11,10 +11,18 @@ public class FindFrom {
     public static void doUpdate(String previousVersion, String language){
 
         if (PluginUtils.isFreshInstall()) {
-            MessagingUtils.logInfo("Smells new in here!");
-            MessagingUtils.logInfo("Please report any issues at https://discord.gg/tny494zXfn :)");
+            MessagingUtils.logWarning("Smells new in here!");
+            MessagingUtils.logWarning("Please, report bugs on our Discord! Invite: https://discord.gg/tny494zXfn");
 
+            StreamLine.constantsConfig.setFresh(false);
             return;
+        }
+
+        if (StreamLine.constantsConfig.streamlineConstants.isBeta) {
+            MessagingUtils.logWarning("You are running a Beta Version!");
+            MessagingUtils.logWarning("Please, report bugs on our Discord! Invite: https://discord.gg/tny494zXfn");
+        } else {
+            StreamLine.constantsConfig.setVersion(StreamLine.getVersion());
         }
 
         // TODO: MAKE SURE TO APPLY ALL PATCHES TO THE FIRST AND UP! (13.3 SHOULD HAVE ALL PATCHES APPLIED!)
@@ -100,22 +108,6 @@ public class FindFrom {
             case "1.0.15.3":
                 new From_1_0_15_3(language);
                 break;
-        }
-
-        try {
-            if (! StreamLine.getInstance().versionFile().delete()) if (ConfigUtils.debug()) {
-                MessagingUtils.logSevere("COULD NOT DELETE VERSION FILE!");
-            }
-
-            if (! StreamLine.getInstance().versionFile().createNewFile()) if (ConfigUtils.debug()) {
-                MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
-            }
-
-            FileWriter writer = new FileWriter(StreamLine.getInstance().versionFile());
-            writer.write(StreamLine.getVersion());
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

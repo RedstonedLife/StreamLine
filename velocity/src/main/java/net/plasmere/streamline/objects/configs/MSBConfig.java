@@ -1,12 +1,13 @@
 package net.plasmere.streamline.objects.configs;
 
+import com.google.re2j.Matcher;
+import com.google.re2j.Pattern;
 import de.leonhard.storage.Config;
 import de.leonhard.storage.LightningBuilder;
 import de.leonhard.storage.sections.FlatFileSection;
 import net.plasmere.streamline.StreamLine;
-import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.savable.users.SavableUser;
-import net.plasmere.streamline.utils.MessagingUtils;
+import net.plasmere.streamline.placeholder.PlaceholderUtils;
 import net.plasmere.streamline.utils.PluginUtils;
 import net.plasmere.streamline.utils.TextUtils;
 import net.plasmere.streamline.utils.objects.*;
@@ -17,10 +18,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MSBConfig {
     Config config;
@@ -49,36 +47,26 @@ public class MSBConfig {
     }
 
     public String parsePlaceholder(String from, SavableUser on) {
-        String pattern = "((%mysqlb_).*?[%])";
+        try {
+            Matcher matcher = PlaceholderUtils.setupMatcher("([%](multidb)[_](.*?)[%])", from);
 
-        Pattern search = Pattern.compile(pattern);
-        Matcher matcher = search.matcher(from);
+            List<PlaceholderValue> pvs = PlaceholderUtils.getMatched(matcher);
 
-        TreeMap<String, String> toReplace = new TreeMap<>();
+//            List<PlaceholderValue> pvs = PlaceholderUtils.getParsed(found);
 
-        int i = 1;
-        while (matcher.find()) {
-            try {
-                String matched = matcher.group(i);
+            TreeMap<String, String> toReplace = new TreeMap<>();
 
-                if (ConfigUtils.debug()) MessagingUtils.logInfo("Found: " + matched);
-
-                if (matched.length() <= "%mysqlb_".length()) {
-                    i ++;
-                    continue;
-                }
-
-                String replace = onRequest(on, matched.substring("%mysqlb_".length()).substring(0, matched.substring("%mysqlb_".length()).length() - 1));
-
-                toReplace.put(matched, replace);
-            } catch (Exception e) {
-                e.printStackTrace();
+            for (PlaceholderValue pv : pvs) {
+                if (pv.isEmpty) continue;
+                pv = pv.setParsed(onRequest(on, pv.params));
+                toReplace.put(pv.unparsed, pv.parsed);
             }
-            i ++;
-        }
 
-        for (String match : toReplace.keySet()) {
-            from = from.replace(match, toReplace.get(match));
+            for (String match : toReplace.keySet()) {
+                from = from.replace(match, toReplace.get(match));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return from;
