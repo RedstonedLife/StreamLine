@@ -79,6 +79,27 @@ public class PlayerUtils {
         return stats;
     }
 
+    public static void clearStats() {
+        stats.clear();
+    }
+
+    public static SavableUser checkAndRemove(SavableUser user) {
+        int i = 0;
+        SavableUser toReturn = null;
+        for (SavableUser u : new ArrayList<>(getStats())) {
+            if (u.uuid.equals(user.uuid)) {
+                i ++;
+                if (i > 1) {
+                    removeStat(u);
+                } else {
+                    toReturn = u;
+                }
+            }
+        }
+
+        return toReturn;
+    }
+
     /* ----------------------------
 
     PlayerUtils <-- Utils.
@@ -1478,77 +1499,84 @@ public class PlayerUtils {
     public static String getPlayerGuildName(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return guild.name;
+    }
+
+    public static String getPlayerGuildNameDiscord(SavableUser user) {
+        SavableGuild guild = GuildUtils.getOrGetGuild(user);
+
+        if (guild == null) return MessageConfUtils.notSet();
+        return guild.returnDiscordName();
     }
 
     public static String getPlayerGuildMembers(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return String.valueOf(guild.totalMembers.size());
     }
 
     public static String getPlayerGuildLeaderUUID(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return guild.uuid;
     }
 
     public static String getPlayerGuildLeaderAbsoluteBungee(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getAbsoluteBungee(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderJustDisplayBungee(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getJustDisplayBungee(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderOffOnRegBungee(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getOffOnRegBungee(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderOffOnDisplayBungee(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getOffOnDisplayBungee(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderAbsoluteDiscord(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getAbsoluteDiscord(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderJustDisplayDiscord(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getJustDisplayDiscord(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderOffOnRegDiscord(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getOffOnRegDiscord(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderOffOnDisplayDiscord(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getOffOnDisplayDiscord(getOrGetSavableUser(guild.uuid));
     }
 
@@ -1645,6 +1673,16 @@ public class PlayerUtils {
 
     public static Collection<Player> getOnlinePPlayers(){
         return StreamLine.getInstance().getProxy().getAllPlayers();
+    }
+
+    public static Collection<String> getOnlinePPlayersAsStrings(){
+        List<String> strings = new ArrayList<>();
+
+        for (Player player : getOnlinePPlayers()) {
+            strings.add(player.getUsername());
+        }
+
+        return strings;
     }
 
     public static List<Player> getServeredPPlayers(String serverName) {
@@ -1836,7 +1874,11 @@ public class PlayerUtils {
     public static void addToSave(SavableUser user){
         if (toSave.contains(user)) return;
 
-        toSave.add(user);
+        try {
+            toSave.add(user);
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
     }
 
     public static void pushSaves(){

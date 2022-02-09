@@ -29,6 +29,18 @@ public abstract class SavableFile {
         this.file = file;
 
         try {
+            this.uuid = parseFileName(this.file);
+            if (this.uuid == null) {
+                return;
+            }
+            if (this.uuid.equals("")) {
+                return;
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        try {
             if (! this.file.exists()) {
                 if (! this.file.createNewFile()) if (ConfigUtils.debug()) MessagingUtils.logWarning("Couldn't create file for UUID: " + this.uuid);
                 if (this.file.exists()) firstLoad = true;
@@ -38,8 +50,6 @@ public abstract class SavableFile {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        this.uuid = parseFileName(this.file);
 
         if (this instanceof SavableGuild) this.type = SavableAdapter.Type.GUILD;
         if (this instanceof SavableParty) this.type = SavableAdapter.Type.PARTY;

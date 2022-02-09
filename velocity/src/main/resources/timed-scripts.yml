@@ -1,0 +1,9 @@
+timed-scripts:
+  # The timed script "timed".
+  timed:
+    # Timed times it will run, in seconds, starting at server start.
+    time:
+      - 2
+      - 5
+    # The script it will run.
+    script: "timed.sl"

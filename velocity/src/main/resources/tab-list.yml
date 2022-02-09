@@ -1,0 +1,25 @@
+# The base of the permission you will give to players for groups. i.e. this permission plus 5 ("streamline.tab.5").
+base-permission: "streamline.tab."
+# General format if player does not have the permissions for a group.
+general:
+  # This is how others see their name in tab list.
+  player-name: '%player_formatted%'
+  header:
+    - '&6BEST &3Network'
+  footer:
+    - '&9&lDiscord&e: &bhttps://discord.gg/tny494zXfn'
+    - '&5&lPatreon&e: &bhttps://www.patreon.com/streamline_project'
+# If you want to give a player a grouped format, you can give them the permission of the base-permission value
+# plus the number of their group. i.e. For group 5: give them "streamline.tab.5" (if you have not changed the
+# value of base-permission above!
+grouped:
+  '1':
+    # This is how others see their name in tab list.
+    player-name: '%player_servered%'
+    header:
+      - '&6BEST &3Network'
+    footer:
+      - '&9&lDiscord&e: &bhttps://discord.gg/tny494zXfn'
+      - '&5&lPatreon&e: &bhttps://www.patreon.com/streamline_project'
+# Toggles if all players will be shown or not.
+is-global: false

@@ -25,6 +25,7 @@ public class PlaytimeTimer implements Runnable {
         countdown = reset;
         try {
             for (SavablePlayer player : PlayerUtils.getJustPlayersOnline()) {
+                player = (SavablePlayer) PlayerUtils.checkAndRemove(player);
                 player.addPlaySecond(1);
             }
 

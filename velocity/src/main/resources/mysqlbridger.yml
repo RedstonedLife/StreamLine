@@ -1,18 +1,52 @@
-queries:
-  votes:
+hosts:
+  lobby1:
     link: "jdbc:mysql://<host>:<port>/<database>"
     user: "user"
     pass: "pass"
-    query: "select Votifer from lobby1_users where username = '%arg1%'"
-    set-as: "votes"
+  query1:
+    link: "jdbc:mysql://<host>:<port>/<database>"
+    user: "user"
+    pass: "pass"
+  execution1:
+    link: "jdbc:mysql://<host>:<port>/<database>"
+    user: "user"
+    pass: "pass"
+
+syncables:
+  votes:
+    is-string: false
+    pull:
+      column: "Votifier"
+      host: "lobby1"
+      table: "lobby1_users"
+      where: "player_uuid = '%cmi_user_uuid%'"
+    push:
+      column: "Votifier"
+      host: "server"
+      table: "cmi_users"
+      where: "player_uuid = '%cmi_user_uuid%'"
+
+auto-sync:
+  # In seconds.
+  every: 30
+  join: true
+  leave: true
+
+queries:
+  votes:
+    host: "query1"
+    sql: "select Votifer from lobby1_users where username = '%arg1%'"
 
 executions:
   create-tables:
-    link: "jdbc:mysql://<host>:<port>/<database>"
-    user: "user"
-    pass: "pass"
-    execution: "create table if not exists `mysqlb_values` ( `identifier` varchar(64) primary key not null, `myValues` varchar(64) )"
+    host: "execution1"
+    sql: "create table if not exists `mysqlb_values` ( `identifier` varchar(64) primary key not null, `myValues` varchar(64) )"
 
 values:
   not-set-yet: "Not Set"
   error: "Error"
+  no-query: "No Query"
+
+resync:
+  # In seconds.
+  every: 60

@@ -56,7 +56,7 @@ public class EventsHandler {
                     MessagingUtils.sendBUserMessage(p, adjust(event, player, i));
                     continue;
                 case RUN_COMMAND_AS_SELF:
-                    StreamLine.getInstance().getProxy().getCommandManager().executeImmediatelyAsync(p, adjust(event, player, i));
+                    StreamLine.getProxy().getCommandManager().executeImmediatelyAsync(p, adjust(event, player, i));
                     continue;
                 case SEND_MESSAGE_AS:
 //                    MessagingUtils.sendBUserAsMessage(p, adjust(event, player, i, context));
@@ -410,6 +410,15 @@ public class EventsHandler {
                 case HAS_POINTS_GREATER_THAN_EQUAL:
                     if (! (triggerer.points >= Integer.parseInt(thing.value))) return false;
                     break;
+                case TIMED:
+                    if (event.reset >= 0 && event.countdown >= 0) {
+                        if (event.countdown == 0) {
+                            event.countdown = event.reset;
+                            return true;
+                        }
+                        event.countdown --;
+                    }
+                    break;
             }
         }
 
@@ -466,6 +475,15 @@ public class EventsHandler {
                     break;
                 case HAS_POINTS_GREATER_THAN_EQUAL:
                     if (! (triggerer.points >= Integer.parseInt(thing.value))) return false;
+                    break;
+                case TIMED:
+                    if (event.reset >= 0 && event.countdown >= 0) {
+                        if (event.countdown == 0) {
+                            event.countdown = event.reset;
+                            return true;
+                        }
+                        event.countdown --;
+                    }
                     break;
             }
         }
@@ -528,6 +546,15 @@ public class EventsHandler {
                     break;
                 case HAS_POINTS_GREATER_THAN_EQUAL:
                     if (! (triggerer.points >= Integer.parseInt(thing.value))) return false;
+                    break;
+                case TIMED:
+                    if (event.reset >= 0 && event.countdown >= 0) {
+                        if (event.countdown == 0) {
+                            event.countdown = event.reset;
+                            return true;
+                        }
+                        event.countdown --;
+                    }
                     break;
             }
         }

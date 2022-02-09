@@ -730,8 +730,16 @@ public class ConfigUtils {
     public static String moduleDDisDataNonEmbeddedMessage() {
         return StreamLine.config.getConfString("modules.discord.proxy-chat.discord-data.non-embedded.message");
     }
-    
+
     public static boolean mysqlbridgerEnabled() {
         return StreamLine.config.getConfBoolean("modules.bungee.mysqlbridger.enabled");
+    }
+
+    public static boolean customTablistEnabled() {
+        return StreamLine.config.getConfBoolean("modules.bungee.custom-tablist.enabled");
+    }
+
+    public static boolean customAliasesEnabled() {
+        return StreamLine.config.getConfBoolean("modules.bungee.custom-aliases.enabled");
     }
 }

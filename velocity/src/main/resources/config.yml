@@ -564,6 +564,10 @@ modules:
         base-permission: "streamline.voice.limit."
     mysqlbridger:
       enabled: true
+    custom-tablist:
+      enabled: false
+    custom-aliases:
+      enabled: true
   bstats:
     make-server-discoverable: true
     discoverable-ip: "my.server.net"

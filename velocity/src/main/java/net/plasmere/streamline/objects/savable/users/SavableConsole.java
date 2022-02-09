@@ -18,6 +18,9 @@ public class SavableConsole extends SavableUser {
     public SavableConsole() {
         super("%", SavableAdapter.Type.CONSOLE);
 
+        if (this.uuid == null) return;
+        if (this.uuid.equals("")) return;
+
         this.server = StreamLine.getProxy();
     }
 

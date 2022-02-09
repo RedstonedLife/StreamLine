@@ -1,6 +1,7 @@
 package net.plasmere.streamline.utils;
 
 import com.velocitypowered.api.command.CommandMeta;
+import com.velocitypowered.api.proxy.Player;
 import net.plasmere.streamline.StreamLine;
 import net.plasmere.streamline.commands.*;
 import net.plasmere.streamline.commands.debug.DeleteStatCommand;
@@ -10,6 +11,7 @@ import net.plasmere.streamline.commands.servers.GoToServerLobbyCommand;
 import net.plasmere.streamline.commands.servers.GoToServerVanillaCommand;
 import net.plasmere.streamline.commands.sql.MSBExecuteCommand;
 import net.plasmere.streamline.commands.sql.MSBQueryCommand;
+import net.plasmere.streamline.commands.sql.MSBSyncCommand;
 import net.plasmere.streamline.commands.staff.*;
 import net.plasmere.streamline.commands.staff.events.BTagCommand;
 import net.plasmere.streamline.commands.staff.events.EventReloadCommand;
@@ -29,14 +31,19 @@ import net.plasmere.streamline.config.CommandsConfUtils;
 import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.listeners.*;
 import net.plasmere.streamline.objects.command.SLCommand;
+import net.plasmere.streamline.objects.configs.obj.AliasSLCommand;
 import net.plasmere.streamline.objects.enums.NetworkState;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
+import net.plasmere.streamline.utils.objects.CustomSQLInfo;
+import net.plasmere.streamline.utils.objects.SavedQueries;
+import net.plasmere.streamline.utils.objects.Syncable;
 
 import java.util.*;
 
 public class PluginUtils {
     public static int commandsAmount = 0;
     public static int listenerAmount = 0;
+    public static int aliasesAmount = 0;
     public static NetworkState state = NetworkState.NULL;
 
     public static boolean isLocked(){
@@ -48,9 +55,19 @@ public class PluginUtils {
         StreamLine.getProxy().getCommandManager().unregister(command.base);
     }
 
+    public static void unregisterCommand(String commandName){
+        commandsAmount --;
+        StreamLine.getProxy().getCommandManager().unregister(commandName);
+    }
+
+    public static void unregisterAlias(String aliasName){
+        aliasesAmount --;
+        StreamLine.getProxy().getCommandManager().unregister(aliasName);
+    }
+
     public static void unregisterListener(StreamLine plugin, Object listener){
         listenerAmount --;
-        plugin.getProxy().getEventManager().unregisterListener(plugin, listener);
+        StreamLine.getProxy().getEventManager().unregisterListener(plugin, listener);
     }
 
     public static void registerCommand(SLCommand command){
@@ -62,9 +79,18 @@ public class PluginUtils {
         StreamLine.getProxy().getCommandManager().register(meta, command);
     }
 
+    public static void registerAlias(AliasSLCommand command){
+        aliasesAmount ++;
+        CommandMeta meta = StreamLine.getProxy().getCommandManager().metaBuilder(command.base)
+                .aliases(command.aliases)
+                .build()
+                ;
+        StreamLine.getProxy().getCommandManager().register(meta, command);
+    }
+
     public static void registerListener(StreamLine plugin, Object listener){
         listenerAmount ++;
-        plugin.getProxy().getEventManager().register(plugin, listener);
+        StreamLine.getProxy().getEventManager().register(plugin, listener);
     }
 
     public static void loadCommands(StreamLine plugin){
@@ -107,6 +133,9 @@ public class PluginUtils {
         }
         if (CommandsConfUtils.comBMSBQuery() && ConfigUtils.mysqlbridgerEnabled()) {
             registerCommand(new MSBQueryCommand(CommandsConfUtils.comBMSBQueryBase(), CommandsConfUtils.comBMSBQueryPerm(), stringListToArray(CommandsConfUtils.comBMSBQueryAliases())));
+        }
+        if (/*CommandsConfUtils.comBMSBQuery() &&*/ ConfigUtils.mysqlbridgerEnabled()) {
+            registerCommand(new MSBSyncCommand("msbsync", "streamline.command.mysqlbridger.sync", stringListToArray(List.of("dbsync", "dbs"))));
         }
         if (CommandsConfUtils.comBPlayTime()) {
             registerCommand(new PlayTimeCommand(CommandsConfUtils.comBPlayTimeBase(), CommandsConfUtils.comBPlayTimePerm(), stringListToArray(CommandsConfUtils.comBPlayTimeAliases())));
@@ -213,6 +242,12 @@ public class PluginUtils {
         }
         if (CommandsConfUtils.comBBroadcast()) {
             registerCommand(new BroadcastCommand(CommandsConfUtils.comBBroadcastBase(), CommandsConfUtils.comBBroadcastPerm(), stringListToArray(CommandsConfUtils.comBBroadcastAliases())));
+        }
+        if (CommandsConfUtils.comBProxyText()) {
+            registerCommand(new TextCommand(CommandsConfUtils.comBProxyTextBase(), CommandsConfUtils.comBProxyTextPerm(), stringListToArray(CommandsConfUtils.comBProxyTextAliases())));
+        }
+        if (CommandsConfUtils.comBProxyTitle()) {
+            registerCommand(new TitleCommand(CommandsConfUtils.comBProxyTitleBase(), CommandsConfUtils.comBProxyTitlePerm(), stringListToArray(CommandsConfUtils.comBProxyTitleAliases())));
         }
         if (CommandsConfUtils.comBBypass()) {
             registerCommand(new BypassPCCommand(CommandsConfUtils.comBBypassBase(), CommandsConfUtils.comBBypassPerm(), stringListToArray(CommandsConfUtils.comBBypassAliases())));
@@ -321,7 +356,7 @@ public class PluginUtils {
     }
 
     public static boolean isFreshInstall() {
-        return ! StreamLine.getInstance().getPlDir().exists() && ! StreamLine.getInstance().getChatHistoryDir().exists() && ! StreamLine.getInstance().getGDir().exists();
+        return StreamLine.constantsConfig.streamlineConstants.isFresh;
     }
 
     public static Map.Entry<Integer, String> findHighestNumberWithBasePermission(SavablePlayer player, String basePermission) {
@@ -337,5 +372,152 @@ public class PluginUtils {
         }
 
         return hasPerm.lastEntry();
+    }
+
+    public static Map.Entry<Integer, String> findHighestNumberWithBasePermission(Player player, String basePermission) {
+        String permission = "";
+
+        TreeMap<Integer, String> hasPerm = new TreeMap<>();
+
+        hasPerm.put(1, basePermission + 1);
+
+        for (int i = 2; i <= 100; i ++){
+            permission = basePermission + i;
+            if (player.hasPermission(permission)) hasPerm.put(i, permission);
+        }
+
+        return hasPerm.lastEntry();
+    }
+
+    public static Map.Entry<Integer, String> findHighestNumberWithBasePermissionOrNull(Player player, String basePermission) {
+        String permission = "";
+
+        TreeMap<Integer, String> hasPerm = new TreeMap<>();
+
+        for (int i = 1; i <= 1000; i ++){
+            permission = basePermission + i;
+            if (player.hasPermission(permission)) hasPerm.put(i, permission);
+        }
+
+        if (hasPerm.isEmpty()) {
+            return null;
+        }
+
+        return hasPerm.lastEntry();
+    }
+
+    public static int findHighestNumberWithBasePermissionAsInt(Player player, String basePermission, int defaultIfNull, int max) {
+        String permission = "";
+
+        TreeMap<Integer, String> hasPerm = new TreeMap<>();
+
+        for (int i = 1; i <= max; i ++){
+            permission = basePermission + i;
+            if (player.hasPermission(permission)) hasPerm.put(i, permission);
+        }
+
+        if (hasPerm.isEmpty()) {
+            return defaultIfNull;
+        }
+
+        return hasPerm.lastKey();
+    }
+
+    public static List<String> getSyncablesAsStrings() {
+        List<String> strings = new ArrayList<>();
+
+        for (Syncable syncable : StreamLine.msbConfig.loadedSyncables) {
+            strings.add(syncable.identifier);
+        }
+
+        return strings;
+    }
+
+    public static Syncable getSyncableByIdentifier(String identifier) {
+        for (Syncable syncable : StreamLine.msbConfig.loadedSyncables) {
+            if (identifier.equals(syncable.identifier)) return syncable;
+        }
+
+        return null;
+    }
+
+    public static List<String> getQueriesAsStrings() {
+        List<String> strings = new ArrayList<>();
+
+        for (CustomSQLInfo sqlInfo : StreamLine.msbConfig.loadedQueries) {
+            strings.add(sqlInfo.identifier);
+        }
+
+        return strings;
+    }
+
+    public static CustomSQLInfo getQueryByIdentifier(String identifier) {
+        for (CustomSQLInfo sqlInfo : StreamLine.msbConfig.loadedQueries) {
+            if (identifier.equals(sqlInfo.identifier)) return sqlInfo;
+        }
+
+        return null;
+    }
+
+    public static List<String> getExecutionsAsStrings() {
+        List<String> strings = new ArrayList<>();
+
+        for (CustomSQLInfo sqlInfo : StreamLine.msbConfig.loadedExecutions) {
+            strings.add(sqlInfo.identifier);
+        }
+
+        return strings;
+    }
+
+    public static CustomSQLInfo getExecutionByIdentifier(String identifier) {
+        for (CustomSQLInfo sqlInfo : StreamLine.msbConfig.loadedExecutions) {
+            if (identifier.equals(sqlInfo.identifier)) return sqlInfo;
+        }
+
+        return null;
+    }
+
+    public static SavedQueries getSavedQueryByPlayer(String playerUUID) {
+        for (SavedQueries q : StreamLine.msbConfig.loadedSavedQueries) {
+            if (q.playerUUID.equals(playerUUID)) return q;
+        }
+
+        return null;
+    }
+
+    public static String getQueryResult(String playerUUID, String identifier) {
+        StreamLine.msbConfig.reloadSavedQueries();
+        SavedQueries q = getSavedQueryByPlayer(playerUUID);
+        if (q == null) return null;
+        return q.getResult(identifier);
+    }
+
+    public static SavedQueries putQueryResult(String playerUUID, String identifer, String result) {
+        SavedQueries q = getSavedQueryByPlayer(playerUUID);
+        if (q == null) {
+            q = createNewSavedQueries(playerUUID);
+        }
+        q = q.append(identifer, StreamLine.msbConfig.getResyncSeconds(), result);
+        StreamLine.msbConfig.addSavedQueries(q);
+        StreamLine.msbConfig.saveQueriedResult(q);
+        return q;
+    }
+
+    public static SavedQueries createNewSavedQueries(String playerUUID) {
+        return StreamLine.msbConfig.addSavedQueries(new SavedQueries(playerUUID));
+    }
+
+    public static void tickTillExpiry(SavedQueries q) {
+        try {
+            for (String identifier : q.results.keySet()) {
+                int tillExpiry = q.getTillExpiry(identifier);
+
+                if (tillExpiry > 0) {
+                    q.updateTillExpiry(identifier, tillExpiry - 1);
+                }
+            }
+        } catch (Exception e) {
+            // do nothing.
+        }
     }
 }

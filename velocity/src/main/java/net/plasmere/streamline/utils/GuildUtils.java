@@ -55,6 +55,8 @@ public class GuildUtils {
     }
 
     public static SavableGuild getGuild(SavableUser stat) {
+        if (stat.guild.equals("")) return null;
+
         try {
             for (SavableGuild guild : guilds) {
                 if (guild.hasMember(stat)) {
@@ -69,16 +71,21 @@ public class GuildUtils {
     }
 
     public static SavableGuild getOrGetGuild(SavableUser stat) {
+        if (stat.guild.equals("")) return null;
+
         SavableGuild guild = getGuild(stat);
 
         if (guild == null) {
             if (existsByGUID(stat.guild)) {
                 try {
                     guild = new SavableGuild(stat.guild);
+                    if (guild.uuid == null) return null;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+        } else {
+            if (guild.uuid == null) return null;
         }
 
         return guild;
@@ -89,6 +96,8 @@ public class GuildUtils {
     }
 
     public static SavableGuild getGuildByGUID(String uuid) {
+        if (uuid.equals("")) return null;
+
         try {
             for (SavableGuild guild : guilds) {
                 if (guild.uuid.equals(uuid)) {
@@ -103,6 +112,8 @@ public class GuildUtils {
     }
 
     public static SavableGuild getOrGetGuildByGUID(String uuid){
+        if (uuid.equals("")) return null;
+
         SavableGuild guild = getGuildByGUID(uuid);
 
         if (guild == null) {
@@ -192,6 +203,8 @@ public class GuildUtils {
     }
 
     public static boolean pHasGuild(SavableUser player) {
+        if (player.guild.equals("")) return false;
+
         if (!existsByGUID(player.uuid)) return false;
 
         SavableGuild guild;

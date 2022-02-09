@@ -14,7 +14,8 @@ public enum SQLQueries {
             "  `mutedUntil` datetime," +
             "  `currentPartyId` int," +
             "  `currentGuildId` int," +
-            "  `points` int DEFAULT 0" +
+            "  `points` int DEFAULT 0," +
+            "  `playedSeconds` int DEFAULT 0" +
             ");" +
             "" +
             "CREATE TABLE IF NOT EXISTS `player_experience` (" +
