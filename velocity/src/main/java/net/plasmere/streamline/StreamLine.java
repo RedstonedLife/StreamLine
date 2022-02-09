@@ -421,10 +421,6 @@ public class StreamLine {
 		}
 	}
 
-    public void onLoad(){
-    	InstanceHolder.setInst(instance);
-	}
-
 	@Subscribe(order = PostOrder.LAST)
 	public void onEnable(ProxyInitializeEvent event){
 		PluginUtils.state = NetworkState.STARTING;
