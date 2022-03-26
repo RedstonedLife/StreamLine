@@ -28,6 +28,19 @@ public class PartyUtils {
     // SavableParty , Invites
     public static Map<SavableParty, List<SavableUser>> invites = new HashMap<>();
 
+    public static void loadAllParties() {
+        File[] files = SavableAdapter.Type.PARTY.path.listFiles();
+        if (files == null) return;
+        if (files.length <= 0) return;
+
+        for (File file : files) {
+            if (! (file.getName().contains("-") || file.getName().equals("%" + SavableAdapter.Type.PARTY.suffix))) continue;
+            if (! file.getName().endsWith(SavableAdapter.Type.PARTY.suffix)) continue;
+
+            addParty(new SavableParty(file.getName().replace(SavableAdapter.Type.PARTY.suffix, "")));
+        }
+    }
+
     public static int allPartiesCount() {
         File[] files = StreamLine.getInstance().getPDir().listFiles();
 
@@ -1343,7 +1356,7 @@ public class PartyUtils {
             }
 
             if (ConfigUtils.moduleDPC()) {
-                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.uuid, msg);
+                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.uuid, msg, false);
             }
 
             for (ProxiedPlayer pp : PlayerUtils.getOnlinePPlayers()){
@@ -1400,7 +1413,7 @@ public class PartyUtils {
             }
 
             if (ConfigUtils.moduleDPC()) {
-                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.uuid, msg);
+                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("party"), party.uuid, msg, false);
             }
 
             for (ProxiedPlayer pp : PlayerUtils.getOnlinePPlayers()){

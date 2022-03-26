@@ -22,11 +22,15 @@ public class OneSecondTimer implements Runnable {
     public int countdown;
     public int reset;
     public int thirty;
+    public int playerRefreshC;
+    public int playerRefreshR;
 
     public OneSecondTimer() {
         this.countdown = 0;
         this.reset = 1;
         this.thirty = 0;
+        this.playerRefreshR = 10;
+        this.playerRefreshC = 0;
     }
 
     @Override
@@ -41,16 +45,6 @@ public class OneSecondTimer implements Runnable {
     }
 
     public void done() {
-//        thirty --;
-//        if (thirty == 0) {
-//            thirty = 30;
-//
-//            for (ProxiedPlayer player : PlayerUtils.getOnlinePPlayers()) {
-//                PlayerUtils.getLuckPermsPrefix(player.getUsername(), false);
-//                PlayerUtils.getLuckPermsSuffix(player.getUsername(), false);
-//            }
-//        }
-
         try {
             UUIDUtils.cachedNames = new TreeMap<>();
             UUIDUtils.cachedUUIDs = new TreeMap<>();
@@ -61,6 +55,23 @@ public class OneSecondTimer implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+//        try {
+//            if (playerRefreshC <= 0) {
+//                playerRefreshC = playerRefreshR;
+//
+//                PlayerUtils.saveAll();
+//
+//                PlayerUtils.clearStats();
+//                for (Player player : PlayerUtils.getOnlinePPlayers()) {
+//                    PlayerUtils.addPlayerStat(player);
+//                }
+//                PlayerUtils.applyConsole();
+//            }
+//            playerRefreshC --;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         try {
             if (PlayerUtils.getToSave().size() > 0) {

@@ -62,13 +62,10 @@ public class ConfigHandler {
 
         ConfigHandler.language = language;
         this.reloadLocales(language);
-        int localeLineNumber = 3;
 
-        MessagingUtils.logWarning("[DEBUG] local locale = " + language + " , this.locale = " + ConfigHandler.language);
+//        MessagingUtils.logWarning("[DEBUG] local locale = " + language + " , this.locale = " + ConfigHandler.language);
 
-        List<String> lines = Files.readAllLines(StreamLine.getInstance().languageFile().toPath(), StandardCharsets.UTF_8);
-        lines.set(localeLineNumber - 1, language);
-        Files.write(StreamLine.getInstance().languageFile().toPath(), lines, StandardCharsets.UTF_8);
+        StreamLine.constantsConfig.setLanguage(language);
     }
 
     public void reloadConfig() {

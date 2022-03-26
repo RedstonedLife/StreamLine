@@ -25,6 +25,8 @@ public class Event {
     public TreeMap<Integer, SingleSet<Action, String>> actions = new TreeMap<>();
     public String name;
     public File file;
+    public int countdown = -1;
+    public int reset = -1;
 
     public Event(File file){
         try {
@@ -36,29 +38,47 @@ public class Event {
             this.actions = compileAction();
             this.file = file;
             this.name = file.getName();
+
+            this.reset = getTimedAmount();
+            this.countdown = this.reset == -1 ? -1 : 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public int getTimedAmount() {
+        for (int i : this.conditions.keySet()) {
+            if (this.conditions.get(i).key == null) continue;
+            if (this.conditions.get(i).key.equals(Condition.TIMED)) {
+                try {
+                    return Integer.parseInt(this.conditions.get(i).value);
+                } catch (Exception e) {
+                    // do nothing
+                }
+            }
+        }
+
+        return -1;
+    }
+
     public TreeMap<Integer, SingleSet<Condition, String>> compileCond() {
         TreeMap<Integer, SingleSet<Condition, String>> c = new TreeMap<>();
 
-        ConfigSection conditionsConf = new ConfigSection(configuration.getSection("conditions"));
+        FlatFileSection conditionsConf = configuration.getSection("conditions");
         int i = 1;
 
         if (ConfigUtils.debug()) {
-            MessagingUtils.logInfo("Amount of conditions --> " + conditionsConf.getKeys().size());
+            MessagingUtils.logInfo("Amount of conditions --> " + conditionsConf.singleLayerKeySet().size());
         }
 
-        for (String string : conditionsConf.getKeys()) {
+        for (String string : conditionsConf.singleLayerKeySet()) {
             try {
-                ConfigSection cond = new ConfigSection(configuration.getSection(conditionsConf.s.getPathPrefix() + string));
+                FlatFileSection cond = configuration.getSection("conditions." + string);
 
                 c.put(i,
                         new SingleSet<>(
-                                Condition.fromString(cond.s.getString("type")),
-                                cond.s.getString("value")
+                                Condition.fromString(cond.getString("type")),
+                                cond.getString("value")
                         )
                 );
             } catch (Exception e) {
@@ -84,17 +104,17 @@ public class Event {
     public TreeMap<Integer, SingleSet<Action, String>> compileAction() {
         TreeMap<Integer, SingleSet<Action, String>> a = new TreeMap<>();
 
-        ConfigSection actionsConf = new ConfigSection(configuration.getSection("actions"));
+        FlatFileSection actionsConf = configuration.getSection("actions");
         int i = 1;
 
-        for (String string : actionsConf.getKeys()) {
+        for (String string : actionsConf.singleLayerKeySet()) {
             try {
-                ConfigSection act = new ConfigSection(configuration.getSection(actionsConf.s.getPathPrefix() + string));
+                FlatFileSection act = configuration.getSection("actions." + string);
 
                 a.put(i,
                         new SingleSet<>(
-                                Action.fromString(act.s.getString("type")),
-                                act.s.getString("value")
+                                Action.fromString(act.getString("type")),
+                                act.getString("value")
                         )
                 );
             } catch (Exception e) {

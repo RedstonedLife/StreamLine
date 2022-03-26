@@ -1204,6 +1204,22 @@ public class MessagingUtils {
         ));
     }
 
+    public static void sendBUserTitle(ProxiedPlayer player, String msgUnsplit, int fadeIn, int stay, int fadeOut) {
+        msgUnsplit = TextUtils.replaceAllPlayerBungee(msgUnsplit, player);
+
+        if (! msgUnsplit.contains("%next%")) {
+            msgUnsplit = msgUnsplit + "%next% ";
+        }
+
+        String[] split = msgUnsplit.split("%next%");
+
+        try {
+            player.sendTitle(TextUtils.codedTitle(split[0], split[1], fadeIn, stay, fadeOut));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void sendBUserMessage(CommandSender sender, String msg){
         if (sender instanceof ProxiedPlayer) {
             SavablePlayer player = PlayerUtils.getOrGetPlayerStat(((ProxiedPlayer) sender).getUniqueId().toString());

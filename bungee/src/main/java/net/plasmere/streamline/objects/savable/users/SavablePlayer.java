@@ -298,6 +298,7 @@ public class SavablePlayer extends SavableUser {
 
     public double getPlayDays(){
         //        loadValues();
+        if (playSeconds < 300) return 0;
         return playSeconds / (60.0d * 60.0d * 24.0d);
     }
 

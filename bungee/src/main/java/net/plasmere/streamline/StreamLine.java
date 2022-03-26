@@ -22,7 +22,8 @@ import net.plasmere.streamline.events.EventsHandler;
 import net.plasmere.streamline.events.EventsReader;
 import net.plasmere.streamline.libs.Metrics;
 import net.plasmere.streamline.listeners.LPListener;
-import net.plasmere.streamline.objects.configs.obj.MSBConfig;
+import net.plasmere.streamline.objects.configs.MSBConfig;
+import net.plasmere.streamline.objects.configs.obj.AliasHandler;
 import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.configs.*;
 import net.plasmere.streamline.objects.enums.NetworkState;
@@ -30,15 +31,17 @@ import net.plasmere.streamline.objects.messaging.DiscordMessage;
 import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.timers.*;
+import net.plasmere.streamline.placeholder.RATAPI;
+import net.plasmere.streamline.placeholder.addons.StreamlineExpansion;
 import net.plasmere.streamline.scripts.ScriptsHandler;
 import net.plasmere.streamline.utils.*;
 import net.plasmere.streamline.utils.holders.GeyserHolder;
 import net.plasmere.streamline.utils.holders.LPHolder;
 import net.plasmere.streamline.utils.holders.ViaHolder;
 import net.plasmere.streamline.utils.holders.VoteHolder;
+import net.plasmere.streamline.utils.sql.BridgerDataSource;
 import net.plasmere.streamline.utils.sql.DataSource;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -75,9 +78,16 @@ public class StreamLine extends Plugin {
 	public static RanksConfig ranksConfig;
 	public static ChatFilters chatFilters;
 	public static DatabaseInfo databaseInfo;
+	public static TablistConfig tablistConfig;
+	public static AliasConfig aliasConfig;
+	public static TimedScriptsConfig timedScriptsConfig;
 
 	public static MSBConfig msbConfig;
-	public static TreeMap<String, String> holders = new TreeMap<>();
+	public static RATAPI ratAPI;
+
+	public static ConstantsConfig constantsConfig;
+
+	public static StreamlineExpansion placeholderExpansion;
 
 	public final static String customChannel = "streamline:channel";
 //	public final static String[] identifer = customChannel.split(":", 2);
@@ -92,10 +102,8 @@ public class StreamLine extends Plugin {
 	private File confDir() { return new File(getDataFolder() + File.separator + "configs" + File.separator); }
 	private File chatHistoryDir() { return new File(getDataFolder() + File.separator + "chat-history" + File.separator); }
 	private File scriptsDir() { return new File(getDataFolder() + File.separator + "scripts" + File.separator); }
+	private File sqlDir() { return new File(getDataFolder() + File.separator + "sql" + File.separator); }
 	private File eventsDir;
-
-	public File versionFile() { return new File(getDataFolder(), "version.txt"); }
-	public File languageFile() { return new File(getDataFolder(), "language.txt"); }
 
 	public ScheduledTask guilds;
 	public ScheduledTask players;
@@ -131,6 +139,7 @@ public class StreamLine extends Plugin {
 	public File getConfDir() { return confDir(); }
 	public File getChatHistoryDir() { return chatHistoryDir(); }
 	public File getScriptsDir() { return scriptsDir(); }
+	public File getSQLDir() { return sqlDir(); }
 
 	public String getCurrentMOTD() { return currentMOTD; }
 	public int getMotdPage() { return motdPage; }
@@ -157,14 +166,14 @@ public class StreamLine extends Plugin {
 			);
 			jda = jdaBuilder.build().awaitReady();
 		} catch (Exception e) {
-			MessagingUtils.logWarning("An unknown error occurred building JDA...");
+			MessagingUtils.logWarning("An unknown error occurred building Discord Bot...  (This typically means you didn't set up your discord-bot.yml correctly OR your bot's token is invalid!)");
 			return;
 		}
 
 		if (jda.getStatus() == JDA.Status.CONNECTED) {
 			isReady = true;
 
-			MessagingUtils.logInfo("JDA status is connected...");
+			MessagingUtils.logInfo("Discord Bot status is connected...");
 		}
 	}
 
@@ -282,137 +291,12 @@ public class StreamLine extends Plugin {
 			}
 		}
 
-		String version = "";
-		String language = "";
+		constantsConfig = new ConstantsConfig();
 
-		if (! PluginUtils.isFreshInstall()) {
-			try {
-				if (!versionFile().exists()) {
-					if (!versionFile().createNewFile()) if (ConfigUtils.debug()) {
-						MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
-					}
-
-					FileWriter writer = new FileWriter(versionFile());
-					writer.write("13.3");
-					writer.close();
-				}
-
-				if (versionFile().exists()) {
-					Scanner reader = new Scanner(versionFile());
-
-					while (reader.hasNextLine()) {
-						String data = reader.nextLine();
-						while (data.startsWith("#")) {
-							data = reader.nextLine();
-						}
-						version = data;
-					}
-
-					reader.close();
-				}
-
-				if (version.equals("")) throw new Exception("Version file could not be read!");
-			} catch (Exception e) {
-				e.printStackTrace();
-				version = "13.3";
-			}
-
-			try {
-				if (!languageFile().exists()) {
-					if (!languageFile().createNewFile()) if (ConfigUtils.debug()) {
-						MessagingUtils.logSevere("COULD NOT CREATE LANGUAGE FILE!");
-					}
-
-					FileWriter writer = new FileWriter(languageFile());
-					writer.write("# To define which language you want to use.\n");
-					writer.write("# Current supported languages: en_US, fr_FR\n");
-					writer.write("en_US");
-					writer.close();
-				}
-
-				if (languageFile().exists()) {
-					Scanner reader = new Scanner(languageFile());
-
-					while (reader.hasNextLine()) {
-						String data = reader.nextLine();
-						while (data.startsWith("#")) {
-							data = reader.nextLine();
-						}
-						language = data;
-					}
-
-					reader.close();
-				}
-
-				if (language.equals("")) throw new Exception("Language file could not be read!");
-			} catch (Exception e) {
-				e.printStackTrace();
-				language = "en_US";
-			}
-		} else {
-			try {
-				if (!versionFile().createNewFile()) {
-					MessagingUtils.logSevere("COULD NOT CREATE VERSION FILE!");
-				}
-
-				FileWriter writer = new FileWriter(versionFile());
-				writer.write(getDescription().getVersion());
-				writer.close();
-
-				if (versionFile().exists()) {
-					Scanner reader = new Scanner(versionFile());
-
-					while (reader.hasNextLine()) {
-						String data = reader.nextLine();
-						while (data.startsWith("#")) {
-							data = reader.nextLine();
-						}
-						version = data;
-					}
-
-					reader.close();
-				}
-
-				if (version.equals("")) throw new Exception("Version file could not be read!");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			try {
-				if (!languageFile().createNewFile()) {
-					MessagingUtils.logSevere("COULD NOT CREATE LANGUAGE FILE!");
-				}
-
-				FileWriter writer = new FileWriter(languageFile());
-				writer.write("# To define which language you want to use.\n");
-				writer.write("# Current supported languages: en_US, fr_FR\n");
-				writer.write("en_US");
-				writer.close();
-
-				if (languageFile().exists()) {
-					Scanner reader = new Scanner(languageFile());
-
-					while (reader.hasNextLine()) {
-						String data = reader.nextLine();
-						while (data.startsWith("#")) {
-							data = reader.nextLine();
-						}
-						language = data;
-					}
-
-					reader.close();
-				}
-
-				if (language.equals("")) throw new Exception("Language file could not be read!");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		FindFrom.doUpdate(version, language);
+		FindFrom.doUpdate(constantsConfig.streamlineConstants.version, constantsConfig.streamlineConstants.language);
 
 		// Main config.
-		config = new ConfigHandler(language);
+		config = new ConfigHandler(constantsConfig.streamlineConstants.language);
 
 		// Server ConfigHandler.
 		if (ConfigUtils.sc()) {
@@ -449,7 +333,14 @@ public class StreamLine extends Plugin {
 		}
 
 		if (ConfigUtils.mysqlbridgerEnabled()) {
+			if (! sqlDir().exists()) if (!sqlDir().mkdirs()) MessagingUtils.logInfo("Could not properly make the SQL folder!");
 			msbConfig = new MSBConfig();
+
+			BridgerDataSource.reloadHikariHosts();
+		}
+
+		if (ConfigUtils.customTablistEnabled()) {
+			tablistConfig = new TablistConfig();
 		}
 
 		if (ConfigUtils.moduleDEnabled()) {
@@ -494,10 +385,13 @@ public class StreamLine extends Plugin {
 				ScriptsHandler.addScript(f);
 			}
 		}
-	}
 
-    public void onLoad(){
-    	InstanceHolder.setInst(instance);
+		timedScriptsConfig = new TimedScriptsConfig();
+
+		if (ConfigUtils.customAliasesEnabled()) {
+			aliasConfig = new AliasConfig();
+			AliasHandler.loadAllAliasCommands();
+		}
 	}
 
 	@Override
@@ -587,6 +481,24 @@ public class StreamLine extends Plugin {
 			loadChatHistory();
 		}
 
+		// Streamline PlaceholderAPI. (Replace a Thing API.)
+		ratAPI = new RATAPI();
+		placeholderExpansion = new StreamlineExpansion();
+
+//		PlayerUtils.loadAllPlayers();
+//		GuildUtils.loadAllGuilds();
+//		PartyUtils.loadAllParties();
+//
+//		for (SavableUser user : PlayerUtils.getStats()) {
+//			for (SavableGuild g : GuildUtils.getGuilds()) {
+//				if (g.hasMember(user)) user.setGuild(g.uuid);
+//			}
+//			for (SavableParty p : PartyUtils.getParties()) {
+//				if (p.hasMember(user)) user.setParty(p.uuid);
+//			}
+//			user.saveAll();
+//		}
+
 		PluginUtils.state = NetworkState.RUNNING;
 		// Setup MOTD.
 		StreamLine.getInstance().setCurrentMOTD(StreamLine.serverConfig.getComparedMOTD().firstEntry().getValue());
@@ -673,6 +585,10 @@ public class StreamLine extends Plugin {
 			groupsDatabaseSyncer.cancel();
 		}
 
+		if (ConfigUtils.customAliasesEnabled()) {
+			AliasHandler.unloadAllAliasCommands();
+		}
+
 		try {
 			if (ConfigUtils.moduleDEnabled()) {
 				if (jda != null) {
@@ -701,7 +617,7 @@ public class StreamLine extends Plugin {
 					try {
 						shutdownTask.get(5, TimeUnit.SECONDS);
 					} catch (Exception e) {
-						MessagingUtils.logWarning("JDA took too long to shutdown, skipping!");
+						MessagingUtils.logWarning("Discord Bot took too long to shutdown, skipping!");
 					}
 				}
 			}

@@ -410,6 +410,15 @@ public class EventsHandler {
                 case HAS_POINTS_GREATER_THAN_EQUAL:
                     if (! (triggerer.points >= Integer.parseInt(thing.value))) return false;
                     break;
+                case TIMED:
+                    if (event.reset >= 0 && event.countdown >= 0) {
+                        if (event.countdown == 0) {
+                            event.countdown = event.reset;
+                            return true;
+                        }
+                        event.countdown --;
+                    }
+                    break;
             }
         }
 
@@ -466,6 +475,15 @@ public class EventsHandler {
                     break;
                 case HAS_POINTS_GREATER_THAN_EQUAL:
                     if (! (triggerer.points >= Integer.parseInt(thing.value))) return false;
+                    break;
+                case TIMED:
+                    if (event.reset >= 0 && event.countdown >= 0) {
+                        if (event.countdown == 0) {
+                            event.countdown = event.reset;
+                            return true;
+                        }
+                        event.countdown --;
+                    }
                     break;
             }
         }
@@ -528,6 +546,15 @@ public class EventsHandler {
                     break;
                 case HAS_POINTS_GREATER_THAN_EQUAL:
                     if (! (triggerer.points >= Integer.parseInt(thing.value))) return false;
+                    break;
+                case TIMED:
+                    if (event.reset >= 0 && event.countdown >= 0) {
+                        if (event.countdown == 0) {
+                            event.countdown = event.reset;
+                            return true;
+                        }
+                        event.countdown --;
+                    }
                     break;
             }
         }

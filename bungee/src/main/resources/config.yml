@@ -2,16 +2,10 @@
 # Enables debug mode.
 debug: false
 
-#### BASICS ####
-# What do you want to be before links found when they are put into hoverable text.
-link-prefix: "&b&o&n"
-
 ### MODULE SETTINGS ###
 modules:
   # Toggles custom chats.
   custom-chats: true
-  # Toggles offline / online UUID things...
-  offline-mode: false
   # Enables / disables the database.
   database:
     use: false
@@ -23,7 +17,7 @@ modules:
   # Discord modules...
   discord:
     # Enables / disables Discord integration.
-    enabled: true
+    enabled: false
     # Enables / disables the Discord main console.
     main-console: true
     # Using avatars... (Profile pictures.)
@@ -104,7 +98,7 @@ modules:
     # Regarding sending messages from Discord to Minecraft chats... (not staff chat.)
     proxy-chat:
       # Want players to be able to send messages to different bungee chats?
-      enabled: true
+      enabled: false
       # Want it to go to the pre-defined channel in 'discord-bot.yml'?
       to-console: true
       # Want people with only a specific role to be able to chat to Minecraft? Defined in 'discord-bot.yml' ('discord.roles.chat').
@@ -185,14 +179,14 @@ modules:
         use-avatar: true
     boosts:
       # Enables boost module.
-      enabled: true
+      enabled: false
       # When someone boosts your discord server.
       upon-boosts:
         run: boost.sl
     guilds:
-      sync: true
+      sync: false
     parties:
-      sync: true
+      sync: false
 
   # Bungee modules...
   bungee:
@@ -241,7 +235,7 @@ modules:
       # Example: "staff,guild,party,friend"
       # --> If a player leaves who is staff, they will be shown (only to staff)
       # --> If a player leaves who is in your guild, they will be shown if not staff (and you are staff)
-      # --> If a player leaves who is in your party, they will be shown if not staff (and you are staff), or in your guild.
+    # --> If a player leaves who is in your party, they will be shown if not staff (and you are staff), or in your guild.
     # --> If a player leaves who is in your friends list, they will be shown if not staff (and you are staff), or in your guild, or in your party.
     # --> If none above, will not be shown.
     # NOTE: per-server connection events can be made with the events module.
@@ -374,7 +368,7 @@ modules:
     # This redirects players upon joining the server.
     # Nice if you need to direct certain players to a different server when they join.
     redirect:
-      enabled: true
+      enabled: false
       # Give this to players per server.
       # Example permission to give to a player: streamline.send.skyblock
       # This example will send the player to the skyblock server on your server upon joining the network.
@@ -385,7 +379,7 @@ modules:
       # This will make it so you can block players from joining a specific server without a certain Minecraft version.
       version-block:
         # Enables this feature.
-        enabled: true
+        enabled: false
         # Permission to override the version block.
         override-permission: "streamline.block.override"
         # File that determines which servers can be accessed on which versions.
@@ -396,7 +390,7 @@ modules:
       # > All configurable by version.
       lobbies:
         # Enables this feature.
-        enabled: true
+        enabled: false
         # Defines the file. (Will be in the configs folder.)
         file: "lobbies.properties"
         # Time in seconds to wait before removing a player who is connecting to any server from the connection list.
@@ -415,7 +409,7 @@ modules:
     # Check the wiki for how to use: https://github.com/xNitrate/StreamLine/wiki/How-to-do-Events
     events:
       # Enables feature.
-      enabled: true
+      enabled: false
       # Folder for events.
       folder: "events"
       # Puts the default event into the folder above when the folder is empty.
@@ -430,7 +424,7 @@ modules:
       # For mutes...
       mutes:
         # Enables / disables mutes.
-        enabled: true
+        enabled: false
         # Enables / disables if mutes should also block all commands.
         hard-mutes: false
         # Makes it so that you can write over previous mutes so that you do not have to unban then reban to change a message.
@@ -442,13 +436,13 @@ modules:
       # For kicks...
       kicks:
         # Make it get put in the specified mutes channel?
-        discord: true
+        discord: false
         # Permission to bypass.
         by-pass: "streamline.bypass.kicks"
       # For bans.
       bans:
         # Enables / disables bans.
-        enabled: true
+        enabled: false
         # Makes it so that you can write over previous bans so that you do not have to unban then reban to change a message.
         replaceable: true
         # Make it get put in the specified bans channel?
@@ -458,7 +452,7 @@ modules:
       # For ipbans.
       ipbans:
         # Enables / disables bans.
-        enabled: true
+        enabled: false
         # Makes it so that you can write over previous ipbans so that you do not have to unban then reban to change a message.
         replaceable: true
         # Make it get put in the specified ipbans channel?
@@ -479,7 +473,7 @@ modules:
     # This is for MOTD, etc.
     server-config:
       # Allows the use of the server configs.
-      enabled: true
+      enabled: false
       # Make the file if file does not exist?
       make-if-not-exist: true
       # Allows the use of the MOTD in the server list.
@@ -545,15 +539,15 @@ modules:
     # Scripts for the plugin.
     scripts:
       # Enables it.
-      enabled: true
+      enabled: false
       # Creates the default script when not found...
       create-default: true
     ranks:
-      enable: true
+      enable: false
       points:
         uses: "%player_votes%"
     votifier:
-      enabled: true
+      enabled: false
       on-vote:
         run: "on-vote.sl"
     chat-filters:
@@ -563,7 +557,11 @@ modules:
         default: 1
         base-permission: "streamline.voice.limit."
     mysqlbridger:
-      enabled: true
+      enabled: false
+    custom-tablist:
+      enabled: false
+    custom-aliases:
+      enabled: false
   bstats:
     make-server-discoverable: true
     discoverable-ip: "my.server.net"

@@ -81,8 +81,9 @@ public abstract class SavableUser extends SavableFile {
     public CommandSender findSender() {
         if (findSenderOptional().isPresent()) {
             return findSenderOptional().get();
+        } else {
+            return PlayerUtils.getPPlayerByUUID(this.uuid);
         }
-        return null;
     }
 
     public String grabServer() {

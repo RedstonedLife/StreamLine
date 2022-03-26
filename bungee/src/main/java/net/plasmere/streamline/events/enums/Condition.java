@@ -23,6 +23,9 @@ public enum Condition {
     HAS_POINTS_LESS_THAN_EQUAL,
     HAS_POINTS_GREATER_THAN,
     HAS_POINTS_GREATER_THAN_EQUAL,
+
+    // Timed...
+    TIMED,
     ;
 
     public static String toString(Condition condition){
@@ -64,6 +67,14 @@ public enum Condition {
                 return "HAS_POINTS_GREATER_THAN";
             case HAS_POINTS_GREATER_THAN_EQUAL:
                 return "HAS_POINTS_GREATER_THAN_EQUAL";
+
+                // Timed.
+
+            case TIMED:
+                return "TIMED";
+
+                // Default.
+
             default:
                 return "";
         }
@@ -110,6 +121,14 @@ public enum Condition {
                 return HAS_POINTS_GREATER_THAN;
             case "HAS_POINTS_GREATER_THAN_EQUAL":
                 return HAS_POINTS_GREATER_THAN_EQUAL;
+
+                // Timed.
+
+            case "TIMED":
+                return TIMED;
+
+                // Default.
+
             default:
                 return null;
         }

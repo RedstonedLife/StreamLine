@@ -132,12 +132,14 @@ public class DiscordData {
         return new SingleSet<>(ifHasChannels(type, identifier), type);
     }
 
-    public void sendDiscordChannel(CommandSender player, ChatChannel type, String identifier, String message) {
+    public void sendDiscordChannel(CommandSender player, ChatChannel type, String identifier, String message, boolean chatOfPlayerBypasses) {
         if (! ConfigUtils.moduleDEnabled()) return;
 
         TreeMap<Long, String> channels = getChannelsByData(type, identifier);
 
         for (Long channel : channels.keySet()) {
+            if (! getChannel(channel).bypass) if (chatOfPlayerBypasses) continue;
+
             switch (channels.get(channel)) {
                 case "normal" -> {
                     if (ConfigUtils.debug()) MessagingUtils.logInfo("Someone just chatted in a normal chat.");

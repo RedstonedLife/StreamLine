@@ -84,34 +84,36 @@ public class DiscordUtils {
         VoiceChannel channel = null;
 
         for (SavablePlayer player : players) {
-            if (! StreamLine.discordData.isVerified(player.uuid)) continue;
+            if (!StreamLine.discordData.isVerified(player.uuid)) continue;
 
             JDA jda = StreamLine.getJda();
             long l = StreamLine.discordData.getIDOfVerified(player.uuid);
 
             Guild guild = jda.getGuildById(DiscordBotConfUtils.guildID());
-                channel = guild.getVoiceChannelById(voiceID);
-                if (channel == null) continue;
+            if (guild == null) return null;
 
-                User user = jda.getUserById(l);
-                if (user == null) continue;
-                Member member = guild.getMember(user);
-                if (member == null) {
-                    MessagingUtils.logWarning("Member with id " + l + " returned null!");
-                    continue;
-                }
+            channel = guild.getVoiceChannelById(voiceID);
+            if (channel == null) continue;
 
-                if (isInPermissionOverride(member, channel)) continue;
-
-                channel.createPermissionOverride(member).setAllow(
-                        Permission.VIEW_CHANNEL,
-                        Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
-                        Permission.VOICE_STREAM, Permission.VOICE_USE_VAD,
-                        Permission.VOICE_START_ACTIVITIES, Permission.VIEW_CHANNEL
-                ).complete();
-
-                StreamLine.discordData.addToVoice(l, channel.getIdLong());
+            User user = jda.getUserById(l);
+            if (user == null) continue;
+            Member member = guild.getMember(user);
+            if (member == null) {
+                MessagingUtils.logWarning("Member with id " + l + " returned null!");
+                continue;
             }
+
+            if (isInPermissionOverride(member, channel)) continue;
+
+            channel.createPermissionOverride(member).setAllow(
+                    Permission.VIEW_CHANNEL,
+                    Permission.VOICE_CONNECT, Permission.VOICE_SPEAK,
+                    Permission.VOICE_STREAM, Permission.VOICE_USE_VAD,
+                    Permission.VOICE_START_ACTIVITIES, Permission.VIEW_CHANNEL
+            ).complete();
+
+            StreamLine.discordData.addToVoice(l, channel.getIdLong());
+        }
         return channel;
     }
 

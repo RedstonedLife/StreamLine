@@ -11,6 +11,8 @@ reload-message: "&aConfiguration reloaded!"
 only-players: "&cSorry, but only online players can use this command...!"
 # SavablePlayer not found...
 no-player: "&cSorry, but that player either does not exist or is not online..."
+# If a value is not set.
+not-set: "Not Set"
 # Discord error title.
 discord-err-title: "ERROR"
 # Error with command.

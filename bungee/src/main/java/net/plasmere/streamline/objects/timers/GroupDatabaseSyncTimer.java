@@ -1,5 +1,6 @@
 package net.plasmere.streamline.objects.timers;
 
+import net.plasmere.streamline.config.ConfigUtils;
 import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.utils.GuildUtils;
@@ -25,6 +26,8 @@ public class GroupDatabaseSyncTimer implements Runnable {
     }
 
     public void done(){
+        if (! ConfigUtils.moduleDBUse()) return;
+
         for (SavableGuild guild : GuildUtils.getGuilds()) {
             guild.syncWithDatabase();
         }

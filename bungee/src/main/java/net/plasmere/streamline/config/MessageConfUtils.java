@@ -24,6 +24,10 @@ public class MessageConfUtils {
         return StreamLine.config.getMessString("no-player");
     }
 
+    public static String notSet() {
+        return StreamLine.config.getMessString("not-set");
+    }
+
     public static String discordErrTitle() {
         return StreamLine.config.getMessString("discord-err-title");
     }
@@ -1454,5 +1458,13 @@ public class MessageConfUtils {
 
     public static String msbQueryComplete() {
         return StreamLine.config.getMessString("mysqlbridger.query.complete");
+    }
+
+    public static String proxyTextSent() {
+        return StreamLine.config.getMessString("proxytext.sent");
+    }
+
+    public static String proxyTitleSent() {
+        return StreamLine.config.getMessString("proxytitle.sent");
     }
 }

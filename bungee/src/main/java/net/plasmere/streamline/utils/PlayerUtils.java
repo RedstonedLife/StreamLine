@@ -2,6 +2,8 @@ package net.plasmere.streamline.utils;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -26,6 +28,7 @@ import net.plasmere.streamline.objects.savable.groups.SavableGuild;
 import net.plasmere.streamline.objects.chats.Chat;
 import net.plasmere.streamline.objects.lists.SingleSet;
 import net.plasmere.streamline.objects.savable.SavableAdapter;
+import net.plasmere.streamline.objects.savable.groups.SavableParty;
 import net.plasmere.streamline.objects.savable.history.HistorySave;
 import net.plasmere.streamline.objects.savable.users.SavableConsole;
 import net.plasmere.streamline.objects.savable.users.SavablePlayer;
@@ -60,6 +63,14 @@ public class PlayerUtils {
     private static Cache<SavablePlayer, String> cachedPrefixes = Caffeine.newBuilder().expireAfterAccess(30L, TimeUnit.MINUTES).build();
     private static Cache<SavablePlayer, String> cachedSuffixes = Caffeine.newBuilder().expireAfterAccess(30L, TimeUnit.MINUTES).build();
 
+    public static void flush() {
+        stats.clear();
+    }
+
+    public static Sound getDefaultPlingSound() {
+        return Sound.sound(Key.key(Key.MINECRAFT_NAMESPACE, "block.note_block.pling"), Sound.Source.MASTER, 1f, 1f);
+    }
+
     public static SavableConsole applyConsole(){
         if (exists("%")) {
             return applyConsole(new SavableConsole());
@@ -76,6 +87,27 @@ public class PlayerUtils {
 
     public static List<SavableUser> getStats() {
         return stats;
+    }
+
+    public static void clearStats() {
+        stats.clear();
+    }
+
+    public static SavableUser checkAndRemove(SavableUser user) {
+        int i = 0;
+        SavableUser toReturn = null;
+        for (SavableUser u : new ArrayList<>(getStats())) {
+            if (u.uuid.equals(user.uuid)) {
+                i ++;
+                if (i > 1) {
+                    removeStat(u);
+                } else {
+                    toReturn = u;
+                }
+            }
+        }
+
+        return toReturn;
     }
 
     /* ----------------------------
@@ -301,13 +333,22 @@ public class PlayerUtils {
     }
 
     public static void reloadAll() {
-        stats.clear();
+        flush();
 
         for (ProxiedPlayer player : getOnlinePPlayers()) {
             addPlayerStat(player);
         }
 
         applyConsole();
+
+        for (SavableUser user : stats) {
+            for (SavableGuild guild : GuildUtils.getGuilds()) {
+                if (guild.hasMember(user)) user.setGuild(guild.uuid);
+            }
+            for (SavableParty party : PartyUtils.getParties()) {
+                if (party.hasMember(user)) user.setGuild(party.uuid);
+            }
+        }
     }
 
     public static int saveAll(){
@@ -499,7 +540,7 @@ public class PlayerUtils {
     public static List<SavablePlayer> getJustPlayers(){
         List<SavablePlayer> players = new ArrayList<>();
 
-        for (SavableUser user : stats) {
+        for (SavableUser user : new ArrayList<>(stats)) {
             if (user instanceof SavablePlayer) {
                 players.add((SavablePlayer) user);
             }
@@ -1477,77 +1518,84 @@ public class PlayerUtils {
     public static String getPlayerGuildName(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return guild.name;
+    }
+
+    public static String getPlayerGuildNameDiscord(SavableUser user) {
+        SavableGuild guild = GuildUtils.getOrGetGuild(user);
+
+        if (guild == null) return MessageConfUtils.notSet();
+        return guild.returnDiscordName();
     }
 
     public static String getPlayerGuildMembers(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return String.valueOf(guild.totalMembers.size());
     }
 
     public static String getPlayerGuildLeaderUUID(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return guild.uuid;
     }
 
     public static String getPlayerGuildLeaderAbsoluteBungee(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getAbsoluteBungee(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderJustDisplayBungee(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getJustDisplayBungee(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderOffOnRegBungee(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getOffOnRegBungee(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderOffOnDisplayBungee(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getOffOnDisplayBungee(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderAbsoluteDiscord(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getAbsoluteDiscord(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderJustDisplayDiscord(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getJustDisplayDiscord(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderOffOnRegDiscord(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getOffOnRegDiscord(getOrGetSavableUser(guild.uuid));
     }
 
     public static String getPlayerGuildLeaderOffOnDisplayDiscord(SavableUser user) {
         SavableGuild guild = GuildUtils.getOrGetGuild(user);
 
-        if (guild == null) return "";
+        if (guild == null) return MessageConfUtils.notSet();
         return getOffOnDisplayDiscord(getOrGetSavableUser(guild.uuid));
     }
 
@@ -1644,6 +1692,16 @@ public class PlayerUtils {
 
     public static Collection<ProxiedPlayer> getOnlinePPlayers(){
         return StreamLine.getInstance().getProxy().getPlayers();
+    }
+
+    public static Collection<String> getOnlinePPlayersAsStrings(){
+        List<String> strings = new ArrayList<>();
+
+        for (ProxiedPlayer player : getOnlinePPlayers()) {
+            strings.add(player.getName());
+        }
+
+        return strings;
     }
 
     public static List<ProxiedPlayer> getServeredPPlayers(String serverName) {
@@ -1835,7 +1893,11 @@ public class PlayerUtils {
     public static void addToSave(SavableUser user){
         if (toSave.contains(user)) return;
 
-        toSave.add(user);
+        try {
+            toSave.add(user);
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
     }
 
     public static void pushSaves(){
@@ -1968,7 +2030,7 @@ public class PlayerUtils {
         if (files.length <= 0) return;
 
         for (File file : files) {
-            if (! file.getName().contains("-")) continue;
+            if (! (file.getName().contains("-") || file.getName().equals("%.toml"))) continue;
             if (! file.getName().endsWith(SavableAdapter.Type.PLAYER.suffix)) continue;
 
             addPlayerStat(file.getName().replace(SavableAdapter.Type.PLAYER.suffix, ""));

@@ -1,5 +1,6 @@
 #### DISCORD BOT ####
 bot:
+  # Invite generator: https://discordapi.com/permissions.html#1099511627775
   # Prefix the bot uses. Default: "."
   prefix: '.'
   # Bot token that the bot uses to connect to your Bot Discord App.

@@ -47,11 +47,11 @@ public abstract class SavableGroup extends SavableFile {
             switch (type) {
                 case PARTY -> {
                     user.setParty(uuid);
-                    this.databaseID = DataSource.createParty(user, (SavableParty) this);
+                    this.databaseID = ConfigUtils.moduleDBUse() ? DataSource.createParty(user, (SavableParty) this) : -1;
                 }
                 case GUILD -> {
                     user.setGuild(uuid);
-                    this.databaseID = DataSource.createGuild(user, (SavableGuild) this);
+                    this.databaseID = ConfigUtils.moduleDBUse() ? DataSource.createGuild(user, (SavableGuild) this) : -1;
                 }
             }
         }
@@ -81,8 +81,8 @@ public abstract class SavableGroup extends SavableFile {
         List<SavableUser> users = new ArrayList<>();
 
         for (String uuid : uuids) {
-            SavableUser u = PlayerUtils.getOrGetSavableUser(uuid);
-
+            SavableUser u = PlayerUtils.addStatByUUID(uuid);
+            if (u == null) continue;
             if (users.contains(u)) continue;
 
             users.add(u);
@@ -145,6 +145,8 @@ public abstract class SavableGroup extends SavableFile {
     abstract public void saveMore();
 
     public void syncWithDatabase() {
+        if (! ConfigUtils.moduleDBUse()) return;
+
         if (this instanceof SavableGuild) {
             DataSource.updateGuildData((SavableGuild) this);
         } else if (this instanceof SavableParty) {

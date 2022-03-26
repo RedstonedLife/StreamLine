@@ -26,6 +26,19 @@ public class GuildUtils {
     // SavableGuild , Invites
     public static Map<SavableGuild, List<SavableUser>> invites = new HashMap<>();
 
+    public static void loadAllGuilds() {
+        File[] files = SavableAdapter.Type.GUILD.path.listFiles();
+        if (files == null) return;
+        if (files.length <= 0) return;
+
+        for (File file : files) {
+            if (! (file.getName().contains("-") || file.getName().equals("%" + SavableAdapter.Type.GUILD.suffix))) continue;
+            if (! file.getName().endsWith(SavableAdapter.Type.GUILD.suffix)) continue;
+
+            addGuild(new SavableGuild(file.getName().replace(SavableAdapter.Type.GUILD.suffix, "")));
+        }
+    }
+
     public static int allGuildsCount() {
         File[] files = StreamLine.getInstance().getGDir().listFiles();
 
@@ -1246,7 +1259,7 @@ public class GuildUtils {
             }
 
             if (ConfigUtils.moduleDPC()) {
-                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.uuid, msg);
+                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.uuid, msg, false);
             }
 
             for (ProxiedPlayer pp : PlayerUtils.getOnlinePPlayers()){
@@ -1303,7 +1316,7 @@ public class GuildUtils {
             }
 
             if (ConfigUtils.moduleDPC()) {
-                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.uuid, msg);
+                StreamLine.discordData.sendDiscordChannel(sender.findSender(), ChatsHandler.getChannel("guild"), guild.uuid, msg, false);
             }
 
             for (ProxiedPlayer pp : PlayerUtils.getOnlinePPlayers()){
