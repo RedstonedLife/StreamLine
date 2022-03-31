@@ -33,7 +33,7 @@ public class UUIDUtils {
         if (username.contains("-")) return username;
 
         if (ConfigUtils.offlineMode()) {
-            String u = StreamLine.offlineStats.getUUID(username);
+            String u = StreamLine.getOfflineStats().getUUID(username);
             if (u != null && u.contains("-")) {
                 cachedUUIDs.put(username, u);
                 if (ConfigUtils.debug()) MessagingUtils.logInfo("$getCachedUUID = " + u);
@@ -59,7 +59,7 @@ public class UUIDUtils {
         if (! uuid.contains("-")) return uuid;
 
         if (ConfigUtils.offlineMode()) {
-            String n = StreamLine.offlineStats.getPlayerName(uuid);
+            String n = StreamLine.getOfflineStats().getPlayerName(uuid);
             if (n != null && n.length() > 0) {
                 cachedNames.put(uuid, n);
                 return n;
@@ -82,7 +82,7 @@ public class UUIDUtils {
         if (username.contains("-")) return getName(username);
 
         if (ConfigUtils.offlineMode()) {
-            return StreamLine.offlineStats.getUUID(username);
+            return StreamLine.getOfflineStats().getUUID(username);
         }
 
         try {
@@ -129,7 +129,7 @@ public class UUIDUtils {
         if (! uuid.contains("-")) return fetch(uuid);
 
         if (ConfigUtils.offlineMode()) {
-            return StreamLine.offlineStats.getPlayerName(uuid);
+            return StreamLine.getOfflineStats().getPlayerName(uuid);
         }
 
         try {

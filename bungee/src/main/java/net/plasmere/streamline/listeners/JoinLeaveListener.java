@@ -62,40 +62,22 @@ public class JoinLeaveListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PostLoginEvent ev) {
-        int debug = 1;
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
         ProxiedPlayer player = ev.getPlayer();
 
         boolean firstJoin = PlayerUtils.existsByUUID(player.getUniqueId().toString());
 
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
-
         if (ConfigUtils.offlineMode()) {
-            StreamLine.offlineStats.addStat(player.getUniqueId().toString(), PlayerUtils.getSourceName(player));
+            StreamLine.getOfflineStats().addStat(player.getUniqueId().toString(), PlayerUtils.getSourceName(player));
         }
-
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
 
         if (holder.enabled && holder.isGeyserPlayer(player) && !file.hasProperty(player.getUniqueId().toString())) {
             file.updateKey(holder.getGeyserUUID(PlayerUtils.getSourceName(player)), PlayerUtils.getSourceName(player));
         }
 
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
-
         SavablePlayer stat = PlayerUtils.addPlayerStat(player);
-
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
 //        if (ConfigUtils.debug()) MessagingUtils.logInfo("SavablePlayer : latestName = " + stat.latestName + " | uuid = " + stat.uuid);
 
         StreamLine.playTimeConf.setPlayTime(stat.uuid, stat.playSeconds);
-
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
 
         if (ConfigUtils.moduleDBUse()) {
             DataSource.updatePlayerData(stat);
@@ -112,23 +94,13 @@ public class JoinLeaveListener implements Listener {
 //            e.printStackTrace();
 //        }
 
-
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
-
         if (ConfigUtils.updateDisplayNames()) {
             PlayerUtils.updateDisplayName(stat);
         }
 
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
-
         stat.addName(PlayerUtils.getSourceName(player));
         stat.addIP(player);
         stat.setLatestIP(player);
-
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
 
         if (StreamLine.chatConfig.getDefaultOnFirstJoin()) {
             if (firstJoin) {
@@ -138,9 +110,6 @@ public class JoinLeaveListener implements Listener {
             stat.setChat(StreamLine.chatConfig.getDefaultChannel(), StreamLine.chatConfig.getDefaultIdentifier());
         }
 
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
-
         SavableGuild guild = GuildUtils.addGuildIfNotAlreadyLoaded(stat);
         SavableParty party = PartyUtils.addPartyIfNotAlreadyLoaded(stat);
 
@@ -149,9 +118,6 @@ public class JoinLeaveListener implements Listener {
                 TablistHandler.tickPlayers();
             }
         }
-
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
 
         String joinsOrder = ConfigUtils.moduleBPlayerJoins();
 
@@ -209,10 +175,6 @@ public class JoinLeaveListener implements Listener {
             }
         }
 
-
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
-
         if (ConfigUtils.moduleDEnabled()) {
             switch (ConfigUtils.moduleDPlayerJoins()) {
                 case "yes":
@@ -249,58 +211,44 @@ public class JoinLeaveListener implements Listener {
                 default:
                     break;
             }
-        }
+            if (ConfigUtils.moduleDPC()) {
+                if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("guild"), stat.guild)) {
+                    StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("guild"), stat.guild);
+                }
 
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
+                if (party != null) {
+                    SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.uuid);
+                    if (get2.key) {
+                        StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("party"), party.uuid);
+                    }
+                }
 
-        if (StreamLine.discordData.ifHasChannels(ChatsHandler.getChannel("guild"), stat.guild)) {
-            StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("guild"), stat.guild);
-        }
+                if (guild != null) {
+                    SingleSet<Boolean, ChatChannel> get3 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("global"), "");
+                    if (get3.key) {
+                        StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("global"), "");
+                    }
+                }
 
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
-
-        if (party != null) {
-            SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.uuid);
-            if (get2.key) {
-                StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("party"), party.uuid);
+                if (!TextUtils.equalsAny(stat.chatChannel.name, List.of("global", "party", "guild", "local"))) {
+                    if (ChatsHandler.chatExists(stat.chatChannel, stat.chatIdentifier)) {
+                        StreamLine.discordData.sendDiscordJoinChannel(player, stat.chatChannel, stat.chatIdentifier);
+                    }
+                }
             }
         }
 
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
-
-        if (guild != null) {
-            SingleSet<Boolean, ChatChannel> get3 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("global"), "");
-            if (get3.key) {
-                StreamLine.discordData.sendDiscordJoinChannel(player, ChatsHandler.getChannel("global"), "");
-            }
-        }
-
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
-
-        if (! TextUtils.equalsAny(stat.chatChannel.name, List.of("global", "party", "guild", "local"))) {
-            if (ChatsHandler.chatExists(stat.chatChannel, stat.chatIdentifier)) {
-                StreamLine.discordData.sendDiscordJoinChannel(player, stat.chatChannel, stat.chatIdentifier);
-            }
-        }
-
-        MessagingUtils.logInfo("Log #" + debug);
-        debug ++;
 
         if (ConfigUtils.events()) {
             for (Event event : EventsHandler.getEvents()) {
-                if (! EventsHandler.checkTags(event, stat)) continue;
+                if (!EventsHandler.checkTags(event, stat)) continue;
 
-                if (! ( (EventsHandler.checkEventConditions(event, stat, Condition.JOIN, "network")) || (EventsHandler.checkEventConditions(event,stat, Condition.JOIN, "*")))) continue;
+                if (!((EventsHandler.checkEventConditions(event, stat, Condition.JOIN, "network")) || (EventsHandler.checkEventConditions(event, stat, Condition.JOIN, "*"))))
+                    continue;
 
                 EventsHandler.runEvent(event, stat);
             }
         }
-
-        MessagingUtils.logInfo("Log #" + debug);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -552,11 +500,38 @@ public class JoinLeaveListener implements Listener {
                 default:
                     break;
             }
+
+            SavableGuild guild = GuildUtils.getOrGetGuild(stat);
+
+            SavableParty party = PartyUtils.getOrGetParty(stat);
+
+            if (ConfigUtils.moduleDPC()) {
+                if (guild != null) {
+                    SingleSet<Boolean, ChatChannel> get = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("guild"), stat.guild);
+                    if (get.key) {
+                        StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("guild"), stat.guild);
+                    }
+                }
+
+                if (party != null) {
+                    SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.uuid);
+                    if (get2.key) {
+                        StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("party"), party.uuid);
+                    }
+                }
+
+                if (!TextUtils.equalsAny(stat.chatChannel.name, List.of("global", "party", "guild", "local"))) {
+                    if (ChatsHandler.chatExists(stat.chatChannel, stat.chatIdentifier)) {
+                        StreamLine.discordData.sendDiscordLeaveChannel(player, stat.chatChannel, stat.chatIdentifier);
+                    }
+                }
+
+                SingleSet<Boolean, ChatChannel> get3 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("global"), "");
+                if (get3.key) {
+                    StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("global"), "");
+                }
+            }
         }
-
-        SavableGuild guild = GuildUtils.getOrGetGuild(stat);
-
-        SavableParty party = PartyUtils.getOrGetParty(stat);
 
         if (ConfigUtils.customTablistEnabled()) {
             if (StreamLine.tablistConfig.isGlobal()) {
@@ -570,31 +545,6 @@ public class JoinLeaveListener implements Listener {
                     TablistHandler.tickPlayers();
                 }
             }
-        }
-
-        if (guild != null) {
-            SingleSet<Boolean, ChatChannel> get = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("guild"), stat.guild);
-            if (get.key) {
-                StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("guild"), stat.guild);
-            }
-        }
-
-        if (party != null) {
-            SingleSet<Boolean, ChatChannel> get2 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("party"), party.uuid);
-            if (get2.key) {
-                StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("party"), party.uuid);
-            }
-        }
-
-        if (! TextUtils.equalsAny(stat.chatChannel.name, List.of("global", "party", "guild", "local"))) {
-            if (ChatsHandler.chatExists(stat.chatChannel, stat.chatIdentifier)) {
-                StreamLine.discordData.sendDiscordLeaveChannel(player, stat.chatChannel, stat.chatIdentifier);
-            }
-        }
-
-        SingleSet<Boolean, ChatChannel> get3 = StreamLine.discordData.ifHasChannelsAsSet(ChatsHandler.getChannel("global"), "");
-        if (get3.key) {
-            StreamLine.discordData.sendDiscordLeaveChannel(player, ChatsHandler.getChannel("global"), "");
         }
 
         if (ConfigUtils.events()) {

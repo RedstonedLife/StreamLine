@@ -15,6 +15,8 @@ import java.util.UUID;
 public class ProxyPingListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onProxyPing(ProxyPingEvent event){
+        if (! ConfigUtils.sc()) return;
+
         ServerPing response = event.getResponse();
 
         if (response == null || (event instanceof Cancellable && ((Cancellable) event).isCancelled())) return;

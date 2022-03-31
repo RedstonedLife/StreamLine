@@ -31,6 +31,8 @@ public class MemberListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
+        if (StreamLine.discordData == null) return;
+
         MessagingUtils.logInfo(event.getUser().getName() + " updated " + event.getMember().getUser().getName() + "'s roles!");
 
         StreamLine.discordData.loadSynced();
@@ -96,6 +98,8 @@ public class MemberListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberUpdateNickname(@NotNull GuildMemberUpdateNicknameEvent event) {
+        if (StreamLine.discordData == null) return;
+
         if (ConfigUtils.moduleDPCChangeOnVerifyUnchangeable()) {
             String uuid = StreamLine.discordData.getUUIDOfVerified(event.getMember().getIdLong());
             if (uuid == null) return;

@@ -1831,6 +1831,8 @@ public class PlayerUtils {
     }
 
     public static void tickBoosts() {
+        if (! ConfigUtils.boostsEnabled()) return;
+
         TreeList<String> boostUUIDs = new TreeList<>(StreamLine.discordData.getBoostQueue());
 
         for (String uuid : boostUUIDs) {

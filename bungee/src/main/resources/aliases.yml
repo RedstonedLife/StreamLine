@@ -1,0 +1,13 @@
+aliases:
+  # The alias "vote"
+  vote:
+    # The permission needed to be able to run this alias.
+    permission: "streamline.alias.vote"
+    # The script it runs when running the command.
+    script: "vote-alias.sl"
+  # The alias "discord"
+  discord:
+    # The permission needed to be able to run this alias.
+    permission: "streamline.alias.discord"
+    # The script it runs when running the command.
+    script: "discord-alias.sl"

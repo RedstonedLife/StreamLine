@@ -71,7 +71,6 @@ public class StreamLine extends Plugin {
 	public static LPHolder lpHolder;
 	public static ServerConfig serverConfig;
 	public static DiscordData discordData;
-	public static OfflineStats offlineStats;
 	public static ChatConfig chatConfig;
 	public static Votes votes;
 	public static PlayTimeConf playTimeConf;
@@ -95,6 +94,7 @@ public class StreamLine extends Plugin {
 
 	private static JDA jda = null;
 	private static boolean isReady = false;
+	private static OfflineStats offlineStats;
 
 	private File plDir() { return new File(getDataFolder() + File.separator + "players" + File.separator); }
 	private File gDir() { return new File(getDataFolder() + File.separator + "guilds" + File.separator); }
@@ -125,6 +125,14 @@ public class StreamLine extends Plugin {
 //		instance = this;
 //		metricsFactory = metricsFactoryThing;
 //	}
+
+	public static OfflineStats getOfflineStats() {
+		if (offlineStats == null) {
+			offlineStats = new OfflineStats();
+		}
+
+		return offlineStats;
+	}
 
 	public File getPlDir() {
 		return plDir();
@@ -255,7 +263,9 @@ public class StreamLine extends Plugin {
 			saveCachedPlayers = getProxy().getScheduler().schedule(this, new PlayerSaveTimer(ConfigUtils.cachedPSave()),0, 1, TimeUnit.SECONDS);
 			playtime = getProxy().getScheduler().schedule(this, new PlaytimeTimer(1),0, 1, TimeUnit.SECONDS);
 			oneSecTimer = getProxy().getScheduler().schedule(this, new OneSecondTimer(),0, 1, TimeUnit.SECONDS);
-			motdUpdater = getProxy().getScheduler().schedule(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime()),0, 1, TimeUnit.SECONDS);
+			if (ConfigUtils.sc()) {
+				motdUpdater = getProxy().getScheduler().schedule(this, new MOTDUpdaterTimer(serverConfig.getMOTDTime()), 0, 1, TimeUnit.SECONDS);
+			}
 			if (ConfigUtils.moduleDBUse()) {
 				groupsDatabaseSyncer = getProxy().getScheduler().schedule(this, new GroupDatabaseSyncTimer(60), 0, 1, TimeUnit.SECONDS);
 			}
@@ -501,7 +511,9 @@ public class StreamLine extends Plugin {
 
 		PluginUtils.state = NetworkState.RUNNING;
 		// Setup MOTD.
-		StreamLine.getInstance().setCurrentMOTD(StreamLine.serverConfig.getComparedMOTD().firstEntry().getValue());
+		if (ConfigUtils.sc()) {
+			StreamLine.getInstance().setCurrentMOTD(StreamLine.serverConfig.getComparedMOTD().firstEntry().getValue());
+		}
 
 		Metrics metrics = new Metrics(this, 13213);
 

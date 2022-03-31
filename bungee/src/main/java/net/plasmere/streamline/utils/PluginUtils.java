@@ -12,6 +12,7 @@ import net.plasmere.streamline.commands.messaging.*;
 import net.plasmere.streamline.commands.servers.GoToServerLobbyCommand;
 import net.plasmere.streamline.commands.sql.MSBExecuteCommand;
 import net.plasmere.streamline.commands.sql.MSBQueryCommand;
+import net.plasmere.streamline.commands.sql.MSBSyncCommand;
 import net.plasmere.streamline.commands.staff.*;
 import net.plasmere.streamline.commands.staff.events.BTagCommand;
 import net.plasmere.streamline.commands.staff.events.EventReloadCommand;
@@ -137,6 +138,9 @@ public class PluginUtils {
         if (CommandsConfUtils.comBMSBQuery() && ConfigUtils.mysqlbridgerEnabled()) {
             registerCommand(new MSBQueryCommand(CommandsConfUtils.comBMSBQueryBase(), CommandsConfUtils.comBMSBQueryPerm(), stringListToArray(CommandsConfUtils.comBMSBQueryAliases())));
         }
+        if (/*CommandsConfUtils.comBMSBQuery() &&*/ ConfigUtils.mysqlbridgerEnabled()) {
+            registerCommand(new MSBSyncCommand("msbsync", "streamline.command.mysqlbridger.sync", stringListToArray(List.of("dbsync", "dbs"))));
+        }
         if (CommandsConfUtils.comBPlayTime()) {
             registerCommand(new PlayTimeCommand(CommandsConfUtils.comBPlayTimeBase(), CommandsConfUtils.comBPlayTimePerm(), stringListToArray(CommandsConfUtils.comBPlayTimeAliases())));
         }
@@ -255,6 +259,12 @@ public class PluginUtils {
         if (CommandsConfUtils.comBBroadcast()) {
             registerCommand(new BroadcastCommand(CommandsConfUtils.comBBroadcastBase(), CommandsConfUtils.comBBroadcastPerm(), stringListToArray(CommandsConfUtils.comBBroadcastAliases())));
         }
+        if (CommandsConfUtils.comBProxyText()) {
+            registerCommand(new TextCommand(CommandsConfUtils.comBProxyTextBase(), CommandsConfUtils.comBProxyTextPerm(), stringListToArray(CommandsConfUtils.comBProxyTextAliases())));
+        }
+        if (CommandsConfUtils.comBProxyTitle()) {
+            registerCommand(new TitleCommand(CommandsConfUtils.comBProxyTitleBase(), CommandsConfUtils.comBProxyTitlePerm(), stringListToArray(CommandsConfUtils.comBProxyTitleAliases())));
+        }
         if (CommandsConfUtils.comBBypass()) {
             registerCommand(new BypassPCCommand(CommandsConfUtils.comBBypassBase(), CommandsConfUtils.comBBypassPerm(), stringListToArray(CommandsConfUtils.comBBypassAliases())));
         }
@@ -263,9 +273,6 @@ public class PluginUtils {
         if (CommandsConfUtils.comBLobby()) {
             registerCommand(new GoToServerLobbyCommand(CommandsConfUtils.comBLobbyBase(), CommandsConfUtils.comBLobbyPerm(), stringListToArray(CommandsConfUtils.comBLobbyAliases())));
         }
-//        if (CommandsConfUtils.comBFabric()) {
-//            registerCommand(new GoToServerVanillaCommand(CommandsConfUtils.comBFabricPerm()));
-//        }
 
         // Parties / Guilds / Stats.
         // // Stats.
@@ -336,7 +343,7 @@ public class PluginUtils {
         registerListener(plugin, new JoinLeaveListener());
         registerListener(plugin, new ProxyPingListener());
         registerListener(plugin, new PluginMessagingListener());
-        if (StreamLine.voteHolder.isPresent()) {
+        if (ConfigUtils.moduleBVotifierEnabled() && StreamLine.voteHolder.isPresent()) {
             PluginUtils.registerListener(plugin, new BasicVoteListener());
         }
 

@@ -158,6 +158,7 @@ public class OneSecondTimer implements Runnable {
 
     public void tickGuilds() {
         if (StreamLine.getJda() == null) return;
+        if (! ConfigUtils.moduleDPCChangeOnVerify()) return;
 
         if (ConfigUtils.moduleDPCChangeOnVerifyUnchangeable()) {
             for (long k : StreamLine.discordData.getVerified().keySet()) {
